@@ -1,0 +1,43 @@
+//===== eAthena Script =======================================
+//= Agit Status Checker
+//===== By: ==================================================
+//= Entwined
+//===== Current Version: =====================================
+//= 1.1
+//===== Compatible With: =====================================
+//= eAthena SVN (SQL only)
+//===== Description: =========================================
+//= Updates WoE status, so CeresCP can display
+//= if WoE is on or off in real time.
+//===== Additional Comments: =================================
+//= Run this SQL query:
+//= ALTER TABLE `ragsrvinfo` ADD `agit_status` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER `drop`;
+//============================================================
+-	script	AGIT_STATUS	-1,{
+OnInit:
+// check if `agit_status` column exists
+if (query_sql("SHOW COLUMNS FROM ragsrvinfo LIKE 'agit_status'", .@dummy$,.@dummy$,.@dummy$,.@dummy$,.@dummy$,.@dummy$) == 0) {
+  // Or... if we have the ALTER privilege, try to add the column
+  query_sql "SELECT DATABASE()", .@rag_db$;
+  query_sql "SHOW GRANTS", .@grants$;
+  for (set .@i,0; .@i<getarraysize(.@grants$); set .@i,.@i+1)
+   if (compare(.@grants$[.@i], "`"+.@rag_db$+"`")) {
+	if (compare(.@grants$[.@i], "ALTER,") || compare(.@grants$[.@i], "ALTER ON"))
+	 query_sql "ALTER TABLE `ragsrvinfo` ADD `agit_status` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER `drop`;";
+	break;
+   }
+
+  // verify
+  if (query_sql("SHOW COLUMNS FROM ragsrvinfo LIKE 'agit_status'", .@dummy$,.@dummy$,.@dummy$,.@dummy$,.@dummy$,.@dummy$) == 0) {
+   debugmes strnpcinfo(3)+" : unable to modify SQL table (needs ALTER privilege)";
+   atcommand "@unloadnpc " + strnpcinfo(3);
+   end;
+  }
+}
+OnAgitStart:
+OnAgitStart2:
+OnAgitEnd:
+OnAgitEnd2:
+query_sql "UPDATE ragsrvinfo SET agit_status = " + (agitcheck() || agitcheck2());
+end;
+}

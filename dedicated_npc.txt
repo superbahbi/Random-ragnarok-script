@@ -1,0 +1,171 @@
+//Author		Goddameit
+//Version		2014/02/27
+//Web___		http://bit.ly/MDuQ9F
+-	script	DedicatedNPCTimer	-1,{
+	function	Endd	;
+OnInit:
+	sleep2 1;
+	.hprecover_delay = 59;
+	setarray .npc_name$[0],"High Priest Magaleta1","High Priest Magaleta2","High Priest Magaleta3";
+	.scbuffer_delay = 59;
+	.npc_total = getarraysize(.npc_name$);
+	for(.@i=0;.@i<.npc_total;.@i++)
+	{
+		.npc_gid[.@i] = getnpcid(0,.npc_name$[.@i]);
+		getmapxy(.npc_om$[.@i],.npc_ox[.@i],.npc_oy[.@i],1,.npc_name$[.@i]);
+	}
+	initnpctimer;
+	end;
+OnTimer1000:
+	for(.@i=0;.@i<.npc_total;.@i++)
+	{
+		if(!.npc_status[.@i])
+		{
+			Endd(.@i);
+			continue;
+		}
+		if(!isloggedin(.npc_status[.@i]) || gettimetick(2)-.npc_time[.@i]>0)
+		{
+			Endd(.@i);
+			continue;
+		}
+		getmapxy(.@npc_pm$,.@npc_px,.@npc_py,0,rid2name(.npc_status[.@i]));
+		getmapxy(.@npc_nm$,.@npc_nx,.@npc_ny,1,.npc_name$[.@i]);
+		if(.@npc_pm$!=.@npc_nm$ || distance(.@npc_px,.@npc_py,.@npc_nx,.@npc_ny) > 15)
+			unitwarp .npc_gid[.@i],.@npc_pm$,.@npc_px,.@npc_py;
+		else
+			unitwalk .npc_gid[.@i],.@npc_px+rand(-3,3),.@npc_py+rand(-3,3);
+		if(.npc_hprecover[.@i]>=.hprecover_delay)
+		{
+			if(attachrid(.npc_status[.@i]))
+			{
+				if(Hp<0)
+				{
+					detachrid;
+					continue;
+				}
+				if(MaxHp/4>=Hp)
+				{
+					percentheal 15,15;
+					specialeffect2 312;
+				}
+			}
+			else
+			{
+				Endd(.@i);
+				continue;
+			}
+			.npc_hprecover[.@i] = 0;
+		}
+		if(.npc_scbuffer[.@i]>=.scbuffer_delay)
+		{
+			if(attachrid(.npc_status[.@i]))
+			{
+				if(Hp<0)
+				{
+					detachrid;
+					continue;
+				}
+				sc_start SC_BLESSING,60000,10;
+				specialeffect2 42;
+				sc_start SC_INC_AGI,60000,10;
+				specialeffect2 37;
+				sc_start SC_IMPOSITIO,60000,10;
+				specialeffect2 84;
+				sc_start SC_MAGNIFICAT,60000,10;
+				specialeffect2 76;
+				sc_start SC_GLORIA,60000,10;
+				specialeffect2 75;
+				sc_start SC_SUFFRAGIUM,60000,10;
+				specialeffect2 88;
+				sc_start SC_ASSUMPTIO,60000,10;
+				specialeffect2 375;
+			}
+			else
+			{
+				Endd(.@i);
+				continue;
+			}
+			.npc_scbuffer[.@i] = 0;
+		}
+		else
+			.npc_scbuffer[.@i]++;
+	}
+	initnpctimer;
+	end;
+OnPCLogoutEvent:
+	if(@ddnpc_id)
+		Endd(@ddnpc_id-1);
+	end;
+	function	Endd	{
+		.@id = getarg(0);
+		.npc_status[.@id] = 0;
+		.npc_time[.@id] = 0;
+		unitwarp .npc_gid[.@id],.npc_om$[.@id],.npc_ox[.@id],.npc_oy[.@id];
+		return;
+	}
+}
+-	script	DedicatedNPCMain	-1,{
+	.@npc_total = getvariableofnpc(.npc_total,"DedicatedNPCTimer");
+	copyarray .@npc_name$,getvariableofnpc(.npc_name$,"DedicatedNPCTimer"),.@npc_total;
+	.@npc_name_use$ = strnpcinfo(0);
+	@id_use = -1;
+	for(.@i=0;.@i<.@npc_total;.@i++)
+		if(.@npc_name$[.@i]==.@npc_name_use$)
+		{
+			@id_use = .@i;
+			break;
+		}
+	if(@id_use == -1)
+		end;
+	if(getvariableofnpc(.npc_status[@id_use],"DedicatedNPCTimer")==getcharid(3))
+	{
+		mes "Hi, any problem?";
+		switch(select("Storage","Repair all","Dismissal"))
+		{
+			case 1:
+				openstorage;
+				break;
+			case 2:
+				repairall;
+				break;
+			case 3:
+				set getvariableofnpc(.npc_status[@id_use],"DedicatedNPCTimer"),0;
+				break;
+		}
+		close2;
+	}else
+	{
+		if(!getvariableofnpc(.npc_status[@id_use],"DedicatedNPCTimer"))
+		{
+			mes "Hi, do you want to hire me?";
+			if(select("No","Yes")==2)
+			{
+				.@bool = 0;
+				for(.@i=0;.@i<.@npc_total;.@i++)
+					if(getvariableofnpc(.npc_status[.@i],"DedicatedNPCTimer")==getcharid(3))
+					{
+						.@bool = 1;
+						break;
+					}
+				if(.@bool)
+					mes "Sorry, you already got one.";
+				else
+				{
+					set getvariableofnpc(.npc_status[@id_use],"DedicatedNPCTimer"),getcharid(3);
+					set getvariableofnpc(.npc_time[@id_use],"DedicatedNPCTimer"),gettimetick(2)+60;
+					set getvariableofnpc(.npc_scbuffer[@id_use],"DedicatedNPCTimer"),60;
+					set getvariableofnpc(.npc_hprecover[@id_use],"DedicatedNPCTimer"),60;
+					mes "Done";
+					@ddnpc_id = @id_use+1;
+				}
+			}
+			close2;
+		}
+	}
+	@id_use = 0;
+	end;
+}
+prontera,155,180,4	duplicate(DedicatedNPCMain)	High Priest Magaleta1	1643
+prontera,157,180,4	duplicate(DedicatedNPCMain)	High Priest Magaleta2	1643
+prontera,159,180,4	duplicate(DedicatedNPCMain)	High Priest Magaleta3	1643

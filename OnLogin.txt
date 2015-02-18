@@ -1,0 +1,34 @@
+-	script	OnPCLoginEvent	-1,{
+OnPCLoginEvent:
+	atcommand "@join #obscure";
+	
+	//if (getgmlevel() >= 40) {
+	//	atcommand "@hide";
+	//	atcommand "@speed 0";
+	//	atcommand "@monsterignore";
+	//}
+	//	if (getgmlevel()>20) {
+	//
+	//		if (getcharid(0) == 150975 // GM-Extinction
+	//		||  getcharid(0) == 150426 // GM-Pentium
+	//		||  getcharid(0) == 150338 // GM-Tim
+	//		||  getcharid(0) == 150007 // GM-Hades
+	//		||  getcharid(0) == 150017 // GM-Serene
+	//		||  getcharid(0) == 150706 // GM-Persephone
+	//		||  getcharid(0) == 151405 // GM-Flux
+	//		||  getcharid(0) == 151406 // GM-Carlisle
+	//		||  getcharid(0) == 151751) // GM-Calintz
+	//		{
+	//			atcommand "@hide";
+	//			atcommand "@speed 1";
+	//			atcommand "@monsterignore";
+	//			end;
+	//		}
+	//		else
+	//		{
+	//			atcommand "@kick "+strcharinfo(0);
+	//			end;
+	//		}
+	//	}
+	end;
+}

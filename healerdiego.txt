@@ -1,0 +1,6 @@
+prontera,155,180,3	script	healerdiego	-1,7,7,{
+end;
+OnTouch:
+    specialeffect2 EF_HEAL2; percentheal 100,100; // heal 100% hp and sp.
+    end;
+}

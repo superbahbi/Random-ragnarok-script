@@ -1,0 +1,21 @@
+prontera,155,204,0	script	killable	-1,10,10,{
+OnTouch:
+	if (!@killable) {
+		@killable = 1; // Variable for keeping track of the status
+		atcommand "@killable"; // Don't remember if it needed a parameter, I think it doesn't
+		addtimer 1000, strnpcinfo(3)+"::OnKillable"; // Will check after a second
+	}
+	end;
+
+OnKillable:
+	getmapxy(.@map$, .@x, .@y, 0);
+	if (.@map$ != "prontera" || // Outside of the map
+		((.@x < 155 - 10 || .@x > 155 + 10) || // Out of the area of effect in X side
+		(.@y < 204 - 10 || .@y > 204 + 10)))
+		{
+			@killable = 0;
+			atcommand "@killable"; // Don't remember if it needed a parameter, I think it doesn't
+		}
+	else addtimer 1000, strnpcinfo(3)+"::OnKillable"; // Will check again after a second until player goes out of the square
+	end;
+}
