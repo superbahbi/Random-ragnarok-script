@@ -1,0 +1,79 @@
+/*==========================================
+* @whosells - List who is vending an item (amount, price, and location)
+*------------------------------------------*/
+int atcommand_shopsearch(const int fd, struct map_session_data* sd, const char* command, const char* message)
+{
+	char item_name[100];
+	int item_id, map_id = 0, j, count = 0;
+	struct map_session_data* pl_sd;
+	struct s_mapiterator* iter;
+	unsigned int MinPrice = battle_config.vending_max_value, MaxPrice = 0;
+	struct item_data *item_data;
+
+	nullpo_retr(-1, sd);
+	
+	memset(item_name, '\0', sizeof(item_name));
+
+	if (!message || !*message || sscanf(message, "%99[^\n]", item_name) < 1) {
+		clif_displaymessage(fd, "Please, enter Item name or its ID (usage: @whosells <item name or ID>).");
+		return -1;
+	}
+	if ((item_data = itemdb_searchname(item_name)) == NULL &&
+	    (item_data = itemdb_exists(atoi(item_name))) == NULL)
+	{
+		clif_displaymessage(fd, msg_txt(19));	// Invalid item ID or name.
+		return -1;
+	}
+
+	item_id = item_data->nameid;
+	map_id = sd->bl.m;
+
+	sprintf(atcmd_output, "Item: '%s'[%d] (%d)",item_data->jname,item_data->slot,item_data->nameid);
+	clif_displaymessage(fd, atcmd_output);
+
+	iter = mapit_getallusers();
+	for ( pl_sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); pl_sd = (TBL_PC*)mapit_next(iter) ) {
+		if ( pl_sd->vender_id ) {	// check if player is vending
+			for (j = 0; j < pl_sd->vend_num; j++) {	// search each item in Vender's shop
+				// check if the item matches
+				if (pl_sd->status.cart[pl_sd->vending[j].index].nameid == item_id) {
+					sprintf(atcmd_output, "(%s %d %d) [%s] is vending %d.  Price: %d", mapindex_id2name(pl_sd->mapindex), pl_sd->bl.x, pl_sd->bl.y, pl_sd->status.name, pl_sd->vending[j].amount, pl_sd->vending[j].value);
+					clif_displaymessage(fd, atcmd_output);
+					
+					// if Vender is on the same map as Player, show mark on minimap
+					if (pl_sd->mapindex == sd->mapindex) clif_viewpoint(sd, 1, 1, pl_sd->bl.x, pl_sd->bl.y, count+1, 0xFFFFFF);
+					
+					if (pl_sd->vending[j].value < MinPrice) MinPrice = pl_sd->vending[j].value;
+					if (pl_sd->vending[j].value > MaxPrice) MaxPrice = pl_sd->vending[j].value;
+					count++;
+				}
+			}
+		}
+	}
+	mapit_free(iter);
+
+	if(count > 0) {
+		sprintf(atcmd_output, "Found %d being vended. Range of prices: %d ~ %d.", count, MinPrice, MaxPrice);
+		clif_displaymessage(fd, atcmd_output);
+	} else
+		clif_displaymessage(fd, "Item not found.");
+
+	return 0;
+}
+
+
+
+
+//====================================
+// 	FIND
+//====================================
+//	{ "whodrops",           1,     atcommand_whodrops },
+//====================================
+
+
+//====================================
+//	add AFTER
+//====================================
+	{ "whosell",            1,     atcommand_shopsearch },
+	{ "whosells",           1,     atcommand_shopsearch },
+//====================================

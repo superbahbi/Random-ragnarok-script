@@ -1,0 +1,362 @@
+Index: npc/battleground/bg_supplier.txt
+===================================================================
+--- npc/battleground/bg_supplier.txt	(revision 0)
++++ npc/battleground/bg_supplier.txt	(working copy)
+@@ -0,0 +1,94 @@
++//===== eAthena Script =======================================
++//= BattleGround Supplier
++//===== By: ==================================================
++//= Brian
++//===== Current Version: =====================================
++//= 1.0
++//===== Compatible With: =====================================
++//= eAthena SVN (+ source edits)
++//===== Description: =========================================
++//= Sells consumables that can ONLY be used on 'bg_consume' maps.
++//===== Additional Comments: =================================
++//= http://www.eathena.ws/board/index.php?showtopic=268355
++//= 1. To use, create a char named "Battleground"
++//= 2. edit the #define BG_CHARID in battleground.h
++//= 3. edit the 'set .@BG_CHARID' in this file (line 43)
++//============================================================
++
++bat_room,165,146,3	script	Telma	701,{
++	mes "[Telma]";
++	mes "Welcome, mighty warrior.";
++	mes "Do you need supplies for your battles?";
++	mes "I can exchange supplies for your badges...";
++	next;
++	
++	switch(select("150 Battleground's Condensed White Potion:90 Battleground's Blue Potion:3 Battleground's Poison Bottle:30 Battleground's Fire Bottle:30 Battleground's Acid Bottle:30 Battleground's Plant Bottle:30 Battleground's Marine Sphere Bottle:15 Battleground's Glistening Coat:50 Battleground's Yellow Gemstone:50 Battleground's Red Gemstone:100 Battleground's Blue Gemstone:5 Battleground's Speed Potion:20 Battleground's Cobweb")) {
++		case 1:		callsub S_BuyConsumableBG,547,150;	// Condensed White Potion
++		case 2:		callsub S_BuyConsumableBG,505,90;	// Blue Potion
++		case 3:		callsub S_BuyConsumableBG,678,3;	// Poison Bottle
++		case 4:		callsub S_BuyConsumableBG,7135,30;	// Fire Bottle
++		case 5:		callsub S_BuyConsumableBG,7136,30;	// Acid Bottle
++		case 6:		callsub S_BuyConsumableBG,7137,30;	// Plant Bottle
++		case 7:		callsub S_BuyConsumableBG,7138,30;	// Marine Sphere Bottle
++		case 8:		callsub S_BuyConsumableBG,7139,15;	// Glistening Coat
++		case 9:		callsub S_BuyConsumableBG,715,50;	// Yellow Gemstone
++		case 10:	callsub S_BuyConsumableBG,716,50;	// Red Gemstone
++		case 11:	callsub S_BuyConsumableBG,717,100;	// Blue Gemstone
++		case 12:	callsub S_BuyConsumableBG,12016,5;	// Speed Potion
++		case 13:	callsub S_BuyConsumableBG,1025,20;	// Cobweb
++	}
++	end;
++
++S_BuyConsumableBG:
++	set .@BG_CHARID, 165100; // character named "Battleground"
++S_BuyConsumable:
++	set .@item_id, getarg(0);
++	set .@amt, getarg(1);
++	
++	mes "[Telma]";
++	mes "How many sets of ^0000FF"+ .@amt +" "+ getitemname(.@item_id) +"s^000000 do you want?";
++	mes "1 = "+ .@amt   +" supplies = 1 badge";
++	mes "2 = "+ .@amt*2 +" supplies = 2 badges";
++	mes "3 = "+ .@amt*3 +" supplies = 3 badges";
++	mes "etc..";
++	next;
++	input .@sets;
++	mes "[Telma]";
++	if (.@sets < 1) {
++		mes "Enter a positive amount, greater than zero.";
++		close;
++	}
++	mes "So you want ^0000FF"+ (.@amt*.@sets) +" "+ getitemname(.@item_id) +"s^000000...";
++	if (.@BG_CHARID) mes "Remember these can only be used in Battlegrounds.";
++	mes "It will cost you "+ .@sets +" badge(s)...";
++	next;
++	switch(select("Give her "+ .@sets +" Bravery Badge(s):Give her "+ .@sets +" Valor Badge(s):Give her "+ (3*.@sets) +" Heroism Badges")) {
++		case 1: set .@badge,7828; set .@cost,1; break;
++		case 2: set .@badge,7829; set .@cost,1; break;
++		case 3: set .@badge,7773; set .@cost,3; break;
++	}
++	mes "[Telma]";
++	if (countitem(.@badge) < (.@cost*.@sets)) {
++		mes "You do not have enough ^FF0000"+getitemname(.@badge)+"s^000000 to buy "+(.@amt*.@sets)+" "+getitemname(.@item_id)+"s.";
++	} else if (!checkweight(.@item_id, .@amt*.@sets)) {
++		mes "You are overweight or have too many items in your inventory.";
++	} else {
++		delitem .@badge, .@cost*.@sets;
++		if (.@BG_CHARID) { // Battleground's Consumables
++			getitem2 .@item_id,(.@amt*.@sets),1,0,0, 254, 0, .@BG_CHARID & 0xFFFF, .@BG_CHARID >> 0x10;
++		} else {
++			getitem .@item_id,(.@amt*.@sets);
++		}
++		mes "Here are your: ^0000FF"+(.@amt*.@sets)+" "+getitemname(.@item_id)+"s^000000!";
++		if (.@BG_CHARID) mes "Remember, they can only be used in Battlegrounds.";
++	}
++	close;
++}
++
++bat_a01	mapflag	bg_consume
++bat_a02	mapflag	bg_consume
++bat_b01	mapflag	bg_consume
++bat_b02	mapflag	bg_consume
++bat_c01	mapflag	bg_consume
++bat_c02	mapflag	bg_consume
++bat_c03	mapflag	bg_consume
+Index: npc/battleground/bg_supplier.txt
+===================================================================
+--- npc/battleground/bg_supplier.txt	(revision 0)
++++ npc/battleground/bg_supplier.txt	(working copy)
+
+Property changes on: npc/battleground/bg_supplier.txt
+___________________________________________________________________
+Added: svn:eol-style
+## -0,0 +1 ##
++native
+Index: npc/scripts_athena.conf
+===================================================================
+--- npc/scripts_athena.conf	(revision 14986)
++++ npc/scripts_athena.conf	(working copy)
+@@ -325,6 +325,7 @@
+ // --------------------- Battle Grounds -------------------------
+ // Common NPCs
+ npc: npc/battleground/bg_common.txt
++npc: npc/battleground/bg_supplier.txt
+ // Tierra Gorge
+ npc: npc/battleground/tierra/tierra_enter.txt
+ npc: npc/battleground/tierra/tierra01.txt
+Index: src/map/atcommand.c
+===================================================================
+--- src/map/atcommand.c	(revision 14986)
++++ src/map/atcommand.c	(working copy)
+@@ -4322,9 +4322,13 @@
+ 	else
+ 		clif_displaymessage(fd, "Autotrade Disabled");
+ 	
++	strcpy(atcmd_output,"BG Flags: ");
+ 	if (map[m_id].flag.battleground)
+-		clif_displaymessage(fd, "Battlegrounds ON");
+-		
++		strcat(atcmd_output, "Battlegrounds ON | ");
++	if (map[m_id].flag.bg_consume)
++		strcat(atcmd_output, "BG items ON | ");
++	clif_displaymessage(fd, atcmd_output);
++	
+ 	strcpy(atcmd_output,"PvP Flags: ");
+ 	if (map[m_id].flag.pvp)
+ 		strcat(atcmd_output, "Pvp ON | ");
+Index: src/map/battleground.h
+===================================================================
+--- src/map/battleground.h	(revision 14986)
++++ src/map/battleground.h	(working copy)
+@@ -8,6 +8,8 @@
+ #include "guild.h"
+ 
+ #define MAX_BG_MEMBERS 30
++#define BG_CHARID 165100 // char named "Battleground"
++#define BG_TRADE 91 // trade mask of BG consumables
+ 
+ struct battleground_member_data {
+ 	unsigned short x, y;
+Index: src/map/clif.c
+===================================================================
+--- src/map/clif.c	(revision 14986)
++++ src/map/clif.c	(working copy)
+@@ -1637,6 +1637,9 @@
+ 			if( sd->status.inventory[i].expire_time )
+ 				continue; // Cannot Sell Rental Items
+ 
++			if( sd->status.inventory[i].card[0]==CARD0_CREATE && MakeDWord(sd->status.inventory[i].card[2],sd->status.inventory[i].card[3])==BG_CHARID && BG_TRADE&8 )
++				continue; // "Battleground's Items"
++
+ 			val=sd->inventory_data[i]->value_sell;
+ 			if( val < 0 )
+ 				continue;
+Index: src/map/map.h
+===================================================================
+--- src/map/map.h	(revision 14986)
++++ src/map/map.h	(working copy)
+@@ -463,6 +463,7 @@
+ 		unsigned gvg_dungeon : 1; // Celest
+ 		unsigned gvg_noparty : 1;
+ 		unsigned battleground : 2; // [BattleGround System]
++		unsigned bg_consume : 1; // allows using Battleground's items
+ 		unsigned nozenypenalty : 1;
+ 		unsigned notrade : 1;
+ 		unsigned noskill : 1;
+Index: src/map/npc.c
+===================================================================
+--- src/map/npc.c	(revision 14986)
++++ src/map/npc.c	(working copy)
+@@ -3030,6 +3030,8 @@
+ 			ShowWarning("npc_parse_mapflag: You can't set GvG and BattleGround flags for the same map! Removing GvG flag from %s (file '%s', line '%d').\n", map[m].name, filepath, strline(buffer,start-buffer));
+ 		}
+ 	}
++	else if (!strcmpi(w3,"bg_consume"))
++		map[m].flag.bg_consume=state;
+ 	else if (!strcmpi(w3,"noexppenalty"))
+ 		map[m].flag.noexppenalty=state;
+ 	else if (!strcmpi(w3,"nozenypenalty"))
+Index: src/map/pc.c
+===================================================================
+--- src/map/pc.c	(revision 14986)
++++ src/map/pc.c	(working copy)
+@@ -260,6 +260,8 @@
+ 			for(i = 0; i < MAX_FAME_LIST; i++){
+ 				if(chemist_fame_list[i].id == char_id)
+ 					return i + 1;
++				// else if(BG_CHARID == char_id)
++					// return 5;
+ 			}
+ 			break;
+ 		case MAPID_TAEKWON: // Taekwon
+@@ -3763,6 +3765,13 @@
+ 		}
+ 	}
+ 
++	// "Battleground's items" can only be used on maps with 'bg_consume' mapflag
++	if( sd->status.inventory[n].card[0]==CARD0_CREATE && 
++	    MakeDWord(sd->status.inventory[n].card[2],sd->status.inventory[n].card[3])==BG_CHARID && 
++	    !map[sd->bl.m].flag.bg_consume 
++	)
++		return 0;
++
+ 	sd->itemid = sd->status.inventory[n].nameid;
+ 	sd->itemindex = n;
+ 	if(sd->catch_target_class != -1) //Abort pet catching.
+@@ -3827,6 +3836,12 @@
+ 		return 1;
+ 	}
+ 
++	if( item_data->card[0]==CARD0_CREATE && MakeDWord(item_data->card[2],item_data->card[3])==BG_CHARID && BG_TRADE&16 )
++	{	// "Battleground's Items"
++		clif_displaymessage (sd->fd, msg_txt(264));
++		return 1;
++	}
++
+ 	if( (w = data->weight*amount) + sd->cart_weight > battle_config.max_cart_weight )
+ 		return 1;
+ 
+@@ -6660,6 +6675,8 @@
+ 		return 0;
+ 	if( !pc_can_give_items(level) ) //check if this GM level can drop items
+ 		return 0;
++	if( item->card[0]==CARD0_CREATE && MakeDWord(item->card[2],item->card[3])==BG_CHARID && BG_TRADE&1 )
++		return 0;
+ 	return (itemdb_isdropable(item, level));
+ }
+ 
+Index: src/map/skill.c
+===================================================================
+--- src/map/skill.c	(revision 14986)
++++ src/map/skill.c	(working copy)
+@@ -8700,7 +8700,11 @@
+ 		if( !require.itemid[i] )
+ 			continue;
+ 		index[i] = pc_search_inventory(sd,require.itemid[i]);
+-		if( index[i] < 0 || sd->status.inventory[index[i]].amount < require.amount[i] ) {
++		if( index[i] < 0 || sd->status.inventory[index[i]].amount < require.amount[i] || 
++		   (sd->status.inventory[index[i]].card[0]==CARD0_CREATE && 
++		    MakeDWord(sd->status.inventory[index[i]].card[2],sd->status.inventory[index[i]].card[3])==BG_CHARID && 
++		    !map[sd->bl.m].flag.bg_consume) // "Battleground's items" can only be used on maps with 'bg_consume' mapflag
++		) {
+ 			if( require.itemid[i] == ITEMID_RED_GEMSTONE )
+ 				clif_skill_fail(sd,skill,7,0);// red gemstone required
+ 			else if( require.itemid[i] == ITEMID_BLUE_GEMSTONE )
+Index: src/map/storage.c
+===================================================================
+--- src/map/storage.c	(revision 14986)
++++ src/map/storage.c	(working copy)
+@@ -6,6 +6,7 @@
+ #include "../common/nullpo.h"
+ #include "../common/malloc.h"
+ #include "../common/showmsg.h"
++#include "../common/utils.h"
+ 
+ #include "map.h" // struct map_session_data
+ #include "storage.h"
+@@ -18,6 +19,7 @@
+ #include "battle.h"
+ #include "atcommand.h"
+ #include "log.h"
++#include "battleground.h"
+ 
+ #include <stdio.h>
+ #include <stdlib.h>
+@@ -144,6 +146,12 @@
+ 		return 1;
+ 	}
+ 	
++	if( item_data->card[0]==CARD0_CREATE && MakeDWord(item_data->card[2],item_data->card[3])==BG_CHARID && BG_TRADE&32 )
++	{	// "Battleground's Items"
++		clif_displaymessage (sd->fd, msg_txt(264));
++		return 1;
++	}
++	
+ 	if( itemdb_isstackable2(data) )
+ 	{//Stackable
+ 		for( i = 0; i < MAX_STORAGE; i++ )
+@@ -405,6 +413,12 @@
+ 		return 1;
+ 	}
+ 
++	if( item_data->card[0]==CARD0_CREATE && MakeDWord(item_data->card[2],item_data->card[3])==BG_CHARID && BG_TRADE&64 )
++	{	// "Battleground's Items"
++		clif_displaymessage (sd->fd, msg_txt(264));
++		return 1;
++	}
++
+ 	if(itemdb_isstackable2(data)){ //Stackable
+ 		for(i=0;i<MAX_GUILD_STORAGE;i++){
+ 			if(compare_item(&stor->items[i], item_data)) {
+Index: src/map/trade.c
+===================================================================
+--- src/map/trade.c	(revision 14986)
++++ src/map/trade.c	(working copy)
+@@ -3,6 +3,7 @@
+ 
+ #include "../common/nullpo.h"
+ #include "../common/socket.h"
++#include "../common/utils.h"
+ #include "clif.h"
+ #include "itemdb.h"
+ #include "map.h"
+@@ -16,6 +17,7 @@
+ #include "intif.h"
+ #include "atcommand.h"
+ #include "log.h"
++#include "battleground.h"
+ 
+ #include <stdio.h>
+ #include <string.h>
+@@ -362,6 +364,14 @@
+ 		return;
+ 	}
+ 
++	if( item->card[0]==CARD0_CREATE && MakeDWord(item->card[2],item->card[3])==BG_CHARID && BG_TRADE&2 && 
++		(pc_get_partner(sd) != target_sd || BG_TRADE&4) )
++	{	// "Battleground's Items"
++		clif_displaymessage (sd->fd, msg_txt(260));
++		clif_tradeitemok(sd, index+2, 1);
++		return;
++	}
++
+ 	//Locate a trade position
+ 	ARR_FIND( 0, 10, trade_i, sd->deal.item[trade_i].index == index || sd->deal.item[trade_i].amount == 0 );
+ 	if( trade_i == 10 ) //No space left
+Index: src/map/vending.c
+===================================================================
+--- src/map/vending.c	(revision 14986)
++++ src/map/vending.c	(working copy)
+@@ -15,6 +15,7 @@
+ #include "skill.h"
+ #include "battle.h"
+ #include "log.h"
++#include "battleground.h"
+ 
+ #include <stdio.h>
+ #include <string.h>
+@@ -288,7 +289,8 @@
+ 		||  !sd->status.cart[index].identify // unidentified item
+ 		||  sd->status.cart[index].attribute == 1 // broken item
+ 		||  sd->status.cart[index].expire_time // It should not be in the cart but just in case
+-		||  !itemdb_cantrade(&sd->status.cart[index], pc_isGM(sd), pc_isGM(sd)) ) // untradeable item
++		||  !itemdb_cantrade(&sd->status.cart[index], pc_isGM(sd), pc_isGM(sd)) // untradeable item
++		||  ( sd->status.cart[index].card[0]==CARD0_CREATE && MakeDWord(sd->status.cart[index].card[2],sd->status.cart[index].card[3])==BG_CHARID && BG_TRADE&2 ) ) // "Battleground's Items"
+ 			continue;
+ 
+ 		sd->vending[i].index = index;

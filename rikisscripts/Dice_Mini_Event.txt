@@ -1,0 +1,93 @@
+//        //=====//     /==/     /==/          /==/      
+//       //     //     /==/     /==/  /=/     /==/         
+//      //=====//              /==/  /=/             /==============/     /========/   /==//===/    /==/     /==/
+//     //=//////    /==/      /==//=/       /==/    /==/==/==/==/==/     /     /  /   /==/         /==/     /==/
+//    // ==        /==/      /==//=/       /==/    /==/  /==/  /==/     ======/  /   /==/         /==/     /==/
+//   //   ==      /==/      /==/  /=/     /==/    /==/  /==/  /==/     / /===/  /   /==/         /==/     /==/
+//  //     ==    /==/      /==/   /=/    /==/    /==/  /==/  /==/     / /===/  /   /==/         /==/=====/==/
+// //       ==  /==/      /==/    /=/   /==/    /==/  /==/  /==/     /========/   /==/         /==///////==/
+// ================ rAthena Script ====================================================================
+//=== Made by Rikimaru
+//==================== Information ====================================================================
+//==== A Mini Dice Event Script
+//================= Version : =========================================================================
+//=== V 1.1   Fixed a typo in the Script [ Rikimaru ]
+//=== V 1.0   Finished Scripting the Daily Reward Script [ Rikimaru ]
+//============== Credits : ============================================================================
+//=== Credits to Rikimaru for the Daily Reward Script
+//=== rAthena Profile Link : http://rathena.org/board/user/434-rikimaru/
+//=====================================================================================================
+//*************************************************************************
+prontera,151,191,5	script	Mini Dice	872,{
+//============================== Settings ============================================
+set .@dicename$,"[ Dice Master ]";
+set .cost,"1000000";//CHANGE THIS TO YOUR ZENY COST AMOUNT
+set .rewardid,7227;//CHANGE THIS TO YOUR REWARDID
+set @rewamount,1;//CHANGE THIS TO YOUR REWARD AMOUNT
+//========================= End of Settings ==========================================
+OnMenu:
+mes .@dicename$;
+mes "Hello " + strcharinfo(0) + " ,do";
+mes "you want to play a round of dice?";
+mes "if you want to play you need to ";
+mes "pay 1.000.000 Zenny every Round.";
+switch(select("Yes,sure!:No,I'm unlucky!")) {
+	case 1:
+	mes .@dicename$;
+	if(Zeny < .cost) goto l_nozeny;
+	set Zeny, Zeny - .cost;
+	mes "Okay we'll start...";
+	set $@ran, rand(1,6);
+	if ($@ran == 6) set .@dice1$,"6";
+	if ($@ran == 5) set .@dice1$,"5";
+	if ($@ran == 4) set .@dice1$,"4";
+	if ($@ran == 3) set .@dice1$,"3";
+	if ($@ran == 2) set .@dice1$,"2";
+	if ($@ran == 1) set .@dice1$,"1";
+	set $@ran2, rand(1,6);
+	if ($@ran2 == 6) set .@dice2$,"6";
+	if ($@ran2 == 5) set .@dice2$,"5";
+	if ($@ran2 == 4) set .@dice2$,"4";
+	if ($@ran2 == 3) set .@dice2$,"3";
+	if ($@ran2 == 2) set .@dice2$,"2";
+	if ($@ran2 == 1) set .@dice2$,"1";
+	next;
+	mes .@dicename$;
+	mes "Okay I've got a " + .@dice1$ + ",";
+	mes "You've got a " + .@dice2$+ " !";
+	next;
+	if(.@dice1$ > .@dice2$) goto l_loose;
+	if(.@dice1$ < .@dice2$) goto l_win;
+	if(.@dice1$ == .@dice2$) goto l_draw;
+	close;
+	case 2:
+	mes .@dicename$;
+	mes "Okay bye!";
+	close;
+	}
+	l_nozeny:
+	mes .@dicename$;
+	mes "Sorry you need more Zenny!";
+	close;
+	l_loose:
+	mes .@dicename$;
+	mes "Haha,sorry you lost.";
+	goto OnMenu;
+	close;
+	l_draw:
+	mes .@dicename$;
+	mes "Draw,let's play again!";
+	goto OnMenu;
+	close;
+	l_win:
+	goto OnPrize;
+	OnPrize:
+	mes .@dicename$;
+	mes "Congratulations! You have won...";
+	mes "Take this as a Prize!";
+	next;
+	mes .@dicename$;
+	getitem .rewardid,@rewamount;
+	mes "Goodbye!";
+	close;
+}

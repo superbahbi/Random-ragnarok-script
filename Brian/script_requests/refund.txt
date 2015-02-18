@@ -1,0 +1,69 @@
+// http://rathena.org/board/topic/53748-refund-script/
+
+prontera,155,188,0	script	Refund NPC	910,{
+	function doRefund;
+	mes "[Refund NPC]";
+	getinventorylist;
+	
+	// build menu list of items
+	for (set .@i,0; .@i < @inventorylist_count; set .@i, .@i +1) {
+		// check if item can be returned
+		if (getd("."+@inventorylist_id[.@i]) && 
+		   !(@inventorylist_card1[.@i] || @inventorylist_card2[.@i] || @inventorylist_card3[.@i] || @inventorylist_card4[.@i])) {
+			// add to menu
+			set .@menu$, .@menu$ + getitemname(@inventorylist_id[.@i]) + " - " 
+			                     + getd("."+@inventorylist_id[.@i]) + " Tickets";
+			// add .@i to arraylist in case they pick "Exchange ALL"
+			set .@exchange[getarraysize(.@exchange)], .@i+1;
+		}
+		set .@menu$, .@menu$ + ":";
+	}
+	if (getstrlen(.@menu$) == @inventorylist_count) {
+		mes "Sorry, there are no refunds for any of your items.";
+		close;
+	}
+	
+	// pick an item, or pick ALL
+	select(.@menu$ + "Exchange ALL");
+	if (@menu == (@inventorylist_count +1)) {
+		// ALL
+		for (set .@i,0; .@i<getarraysize(.@exchange); set .@i,.@i+1)
+			set .@count, .@count + doRefund(.@exchange[.@i]-1);
+	} else {
+		// they picked 1 specific item
+		set .@count, doRefund(@menu -1);
+	}
+	if (.@count) mes "Here are your "+.@count+" "+getitemname(.refund_id)+".";
+	mes "Thank you, come again!";
+	close;
+
+function doRefund {
+	set .@i, getarg(0); // index
+	set .@amt, @inventorylist_amount[.@i];
+	set .@price, getd("."+@inventorylist_id[.@i]);
+	
+	if (countitem2(@inventorylist_id[.@i],@inventorylist_identify[.@i],@inventorylist_refine[.@i],@inventorylist_attribute[.@i], 0,0,0,0) < .@amt) {
+		mes "^FF0000Where did your "+( (.@amt==1) ? "item" : "items" )+" go?!";
+		emotion e_omg;
+		close;
+	} else if (!checkweight(.refund_id, .@price*.@amt)) {
+		mes "^FF0000You are overweight or have too many items in your inventory.";
+		emotion e_swt;
+		close;
+	}
+	delitem2 @inventorylist_id[.@i],.@amt, @inventorylist_identify[.@i],@inventorylist_refine[.@i],@inventorylist_attribute[.@i], 0,0,0,0;
+	getitem .refund_id, .@price*.@amt;
+	dispbottom "[Refund NPC] : returned "+.@amt+" "+getitemname(@inventorylist_id[.@i])+" for "+.@price+" Tickets each";
+	return (.@price*.@amt);
+}
+
+OnInit:
+	set .refund_id, 617; // Item ID of "Ticket" that they will be refunded
+	
+	// set .<item_id>, <amount of tickets to refund>;
+	set .501, 3;
+	set .502, 4;
+	set .503, 15;
+	// etc.
+	end;
+}

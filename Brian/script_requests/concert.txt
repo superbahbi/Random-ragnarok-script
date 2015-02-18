@@ -1,0 +1,52 @@
+// http://www.eathena.ws/board/index.php?showtopic=216208
+// Heres a map, the npc is standing next to the stage and a player will talk to the npc.
+// The npc will ask which song you would us to play and pick one.
+// Then the song will play throughout the whole map until it is done.(the npc goes on 5 minute down time)
+// After 5 minutes the npc reopens for more music requests.
+
+poring_c01,100,100,0	script	Director	910,{
+	mes "[Director]";
+	switch (.song_playing) {
+	case 1:
+		mes "Can you hear Bragi's Poem?";
+		break;
+	case 2:
+		mes "Can you hear Eternal Chaos?";
+		break;
+	case 3:
+		mes "Can you hear Assassin in the Sunset?";
+		break;
+	case 4:
+		mes "Can you hear Der Ring des Nibelungen?";
+		break;
+	default:
+		mes "Hello, which song would you like for us to play?";
+		set .song_playing, select("Bragi's Poem:Eternal Chaos:Assassin in the Sunset:Der Ring des Nibelungen"));
+		mes " ";
+		mes "Enjoy the music!";
+		
+		initnpctimer;
+		switch (.song_playing) {
+		case 1:
+			soundeffectall "bragis_poem.wav",1,strnpcinfo(4);
+			break;
+		case 2:
+			soundeffectall "chaos_of_eternity.wav",1,strnpcinfo(4);
+			break;
+		case 3:
+			soundeffectall "assassin_of_sunset.wav",1,strnpcinfo(4);
+			break;
+		case 4:
+			soundeffectall "ring_of_nibelungen.wav",1,strnpcinfo(4);
+			break;
+		}
+		break;
+	}
+	close;
+
+OnTimer3000:	// 30 seconds later
+	stopnpctimer;
+	set .song_playing, 0;
+	announce "Thank you for listening. If you want us to perform another song please talk to me.", bc_map;
+	end;
+}

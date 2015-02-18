@@ -1,0 +1,140 @@
+//---------------------------------------Inside Event-----------------------------------------------
+quiz_02,55,85,4	script	Lucky Box Event Manager	402,{
+	if (getgmlevel()<2) goto OUT;
+	mes "[Lucky Box Event Manager]";
+	mes "What do you want to do?";
+	switch(select("Close","Re-Open","Select Number")){
+	
+	case 1:
+		mes "Sure?";
+		close2;
+
+		initnpctimer;
+		announce "Lucky Box Event is closing in 30seconds.",bc_all;
+        	end;
+    		OnTimer24000:
+        	announce "Ok 5 seconds more.",bc_all;
+        	end;
+    		OnTimer25000:
+        	announce "4.",bc_all;
+        	end;
+		OnTimer26000:
+    	announce "3.",bc_all;
+ 	end;   	
+		OnTimer27000:
+        	announce "2.",bc_all;
+        	end;
+    		OnTimer28000:
+        	announce "1.",bc_all;
+        	end;
+    		OnTimer29000:
+        	stopnpctimer;
+
+		disablenpc "Lucky Box Event Gate";
+		announce "Lucky Box Event is close.",bc_all;
+		end;
+
+	case 2:
+		enablenpc "Lucky Box Event Gate";
+		announce "Re-Open Lucky Box Event.",bc_all;
+		close;
+	
+	case 3:
+		next;
+		mes "[Lucky Box Event Manager]";
+		mes "Select Number.";	
+		switch(select("1","2","3","4")){
+			case 1:
+				next;
+				mes "[Lucky Box Event Manager]";
+				mes "1?";
+				next;
+				mes "[Lucky Box Event Manager]";
+				mes "Sure?";
+				next;
+				switch(select("Yes","No")){
+				case 1:
+					areawarp "quiz_02",33,73,41,52, "prontera",155,166;	//#1
+					areawarp "quiz_02",45,73,53,52, "quiz_02",55,84;	//#2
+					areawarp "quiz_02",57,73,65,52, "quiz_02",55,84;	//#3
+					areawarp "quiz_02",69,73,77,52, "quiz_02",55,84;	//#4
+					close;
+				case 2:
+					close;
+				}
+			case 2:
+				next;
+				mes "[Lucky Box Event Manager]";
+				mes "2?";
+				next;
+				mes "[Lucky Box Event Manager]";
+				mes "Sure?";
+				next;
+				switch(select("Yes","No")){
+				case 1:
+					areawarp "quiz_02",33,73,41,52, "quiz_02",55,84;	//#1
+					areawarp "quiz_02",45,73,53,52, "prontera",155,166;	//#2
+					areawarp "quiz_02",57,73,65,52, "quiz_02",55,84;	//#3
+					areawarp "quiz_02",69,73,77,52, "quiz_02",55,84;	//#4
+					close;
+				case 2:
+					close;
+				}
+			case 3:
+				next;
+				mes "[Lucky Box Event Manager]";
+				mes "3?";
+				next;
+				mes "[Lucky Box Event Manager]";
+				mes "Sure?";
+				next;
+				switch(select("Yes","No")){
+				case 1:
+					areawarp "quiz_02",33,73,41,52, "quiz_02",55,84;	//#1
+					areawarp "quiz_02",45,73,53,52, "quiz_02",55,84;	//#2
+					areawarp "quiz_02",57,73,65,52, "prontera",155,166;	//#3
+					areawarp "quiz_02",69,73,77,52, "quiz_02",55,84;	//#4
+					close;
+				case 2:
+					close;
+				}
+			case 4:
+				next;
+				mes "[Lucky Box Event Manager]";
+				mes "1?";
+				next;
+				mes "[Lucky Box Event Manager]";
+				mes "Sure?";
+				next;
+				switch(select("Yes","No")){
+				case 1:
+					areawarp "quiz_02",33,73,41,52, "quiz_02",55,84;	//#1
+					areawarp "quiz_02",45,73,53,52, "quiz_02",55,84;	//#2
+					areawarp "quiz_02",57,73,65,52, "quiz_02",55,84;	//#3
+					areawarp "quiz_02",69,73,77,52, "prontera",155,166;	//#4
+					close;
+				case 2:
+					close;
+				}
+		}
+	}
+OUT:
+	end;
+}
+//---------------------------------------------Warper-----------------------------------------------------------
+prontera,156,174,4	script	Lucky Box Event Gate	814,{
+	warp "quiz_02",55,84;
+	end;
+}
+//------------------------------------------warps---------------------------------------------------------------------
+quiz_02,37,80,0	warp	warp1	0,0,quiz_02,37,73
+quiz_02,49,80,0	warp	warp2	0,0,quiz_02,49,73
+quiz_02,61,80,0	warp	warp3	0,0,quiz_02,61,73
+quiz_02,73,80,0	warp	warp4	0,0,quiz_02,73,73
+//-----------------------------------------mapflag-----------------------------------------------------------------
+quiz_02	mapflag	noskill
+quiz_02	mapflag	nosave	SavePoint
+quiz_02	mapflag	noteleport
+quiz_02	mapflag	nowarp
+quiz_02	mapflag	nomemo
+quiz_02	mapflag	noreturn

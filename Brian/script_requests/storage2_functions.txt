@@ -1,0 +1,599 @@
+// data/cardpostfixnametable.txt
+function	script	F_ItemHasPostfix	{
+// getarg(0) = item_id (cards only!)
+	switch( getarg(0) ) {
+	case 4014:
+	case 4022:
+	case 4023:
+	case 4031:
+	case 4032:
+	case 4038:
+	case 4039:
+	case 4041:
+	case 4042:
+	case 4046:
+	case 4050:
+	case 4051:
+	case 4056:
+	case 4059:
+	case 4070:
+	case 4074:
+	case 4077:
+	case 4078:
+	case 4079:
+	case 4091:
+	case 4098:
+	case 4099:
+	case 4101:
+	case 4113:
+	case 4120:
+	case 4128:
+	case 4129:
+	case 4132:
+	case 4136:
+	case 4137:
+	case 4139:
+	case 4142:
+	case 4144:
+	case 4145:
+	case 4148:
+	case 4149:
+	case 4153:
+	case 4156:
+	case 4165:
+	case 4166:
+	case 4167:
+	case 4168:
+	case 4179:
+	case 4180:
+	case 4182:
+	case 4185:
+	case 4187:
+	case 4189:
+	case 4190:
+	case 4191:
+	case 4192:
+	case 4193:
+	case 4196:
+	case 4198:
+	case 4200:
+	case 4202:
+	case 4212:
+	case 4213:
+	case 4222:
+	case 4228:
+	case 4229:
+	case 4234:
+	case 4237:
+	case 4238:
+	case 4243:
+	case 4253:
+	case 4259:
+	case 4265:
+	case 4270:
+	case 4274:
+	case 4278:
+	case 4282:
+	case 4284:
+	case 4289:
+	case 4293:
+	case 4295:
+	case 4298:
+	case 4307:
+	case 4312:
+	case 4315:
+	case 4316:
+	case 4322:
+	case 4323:
+	case 4332:
+	case 4333:
+	case 4336:
+	case 4337:
+	case 4338:
+	case 4339:
+	case 4340:
+	case 4343:
+	case 4344:
+	case 4346:
+	case 4352:
+	case 4353:
+	case 4354:
+	case 4357:
+	case 4359:
+	case 4361:
+	case 4364:
+	case 4365:
+	case 4366:
+	case 4367:
+	case 4369:
+	case 4371:
+	case 4374:
+	case 4381:
+	case 4382:
+	case 4386:
+	case 4387:
+	case 4392:
+	case 4393:
+	case 4400:
+	case 4403:
+	case 4404:
+	case 4405:
+	case 4407:
+	case 4416:
+	case 4417:
+	case 4418:
+	case 4420:
+	case 4421:
+	case 4423:
+	case 4427:
+	case 4428:
+	case 4430:
+	case 4433:
+	case 4439:
+	case 4440:
+	case 4442:
+	case 4443:
+	case 4444:
+	case 4445:
+	case 4447:
+	case 4448:
+	case 4449:
+	case 4451:
+		return 1;
+	default:
+		return 0;
+	}
+}
+
+// data/cardprefixnametable.txt
+function	script	F_GetItemPrefix	{
+// getarg(0) = item_id (cards only!)
+	switch( getarg(0) ) {
+	case 4001: return "Lucky";
+	case 4002: return "Vital";
+	case 4003: return "Hard";
+	case 4004: return "Dexterous";
+	case 4005: return "Hallowed";
+	case 4006: return "Lucky";
+	case 4007: return "Beholder";
+	case 4008: return "Extra";
+	case 4009: return "Light";
+	case 4010: return "Wise";
+	case 4011: return "Dynamic";
+	case 4012: return "Rigid";
+	case 4013: return "Excellent";
+	case 4014: return "of Champion";
+	case 4015: return "Quick";
+	case 4016: return "Speedy";
+	case 4017: return "Stun";
+	case 4018: return "Smart";
+	case 4019: return "Martyr";
+	case 4020: return "Blink";
+	case 4021: return "Skillful";
+	case 4022: return "of Spore";
+	case 4023: return "of Desert";
+	case 4024: return "Drowsy";
+	case 4025: return "Keen";
+	case 4026: return "Shrewd";
+	case 4027: return "Athletic";
+	case 4028: return "Double-forced";
+	case 4029: return "Wolverine";
+	case 4030: return "Windy";
+	case 4031: return "of Ares";
+	case 4032: return "of Athena";
+	case 4033: return "Detoxication";
+	case 4034: return "Clever";
+	case 4035: return "Bloody";
+	case 4036: return "Robust";
+	case 4037: return "Untouchable";
+	case 4038: return "of Health";
+	case 4039: return "of Aristotle";
+	case 4040: return "Teleport";
+	case 4041: return "of Sandman";
+	case 4042: return "of Heman";
+	case 4043: return "Hurricane";
+	case 4044: return "Hiding";
+	case 4045: return "Heavy";
+	case 4046: return "of Cleric";
+	case 4047: return "Ghost";
+	case 4048: return "Poison";
+	case 4049: return "Flammable";
+	case 4050: return "of Hermes";
+	case 4051: return "of Flash";
+	case 4052: return "Erudite";
+	case 4053: return "Healing";
+	case 4054: return "Holy";
+	case 4055: return "Ice";
+	case 4056: return "of Warmth";
+	case 4057: return "Silence";
+	case 4058: return "Cranial";
+	case 4059: return "of Cadi";
+	case 4060: return "Clamorous";
+	case 4061: return "Immortal";
+	case 4062: return "Envenom";
+	case 4063: return "Insecticide";
+	case 4064: return "Nimble";
+	case 4065: return "Underneath";
+	case 4066: return "Brutal";
+	case 4067: return "Atomic";
+	case 4068: return "Chemical";
+	case 4069: return "Saharic";
+	case 4070: return "of Witch";
+	case 4071: return "Angelic";
+	case 4072: return "Solid";
+	case 4073: return "Discount";
+	case 4074: return "of Gargantua";
+	case 4075: return "Hypnotic";
+	case 4076: return "Cursing";
+	case 4077: return "Under a Cast";
+	case 4078: return "of Recovery";
+	case 4079: return "of Mustle";
+	case 4080: return "Fisher";
+	case 4081: return "Glorious";
+	case 4082: return "Gigantic";
+	case 4083: return "Homer's";
+	case 4084: return "Blast";
+	case 4085: return "Damned";
+	case 4086: return "Critical";
+	case 4087: return "Order";
+	case 4088: return "Guard";
+	case 4089: return "Aqua";
+	case 4090: return "Amulet";
+	case 4091: return "of Counter";
+	case 4092: return "Boned";
+	case 4093: return "Cure";
+	case 4094: return "Kingbird";
+	case 4095: return "Genie's";
+	case 4096: return "Venomer's";
+	case 4097: return "Green";
+	case 4098: return "of Zephyrus";
+	case 4099: return "of Ifrit";
+	case 4100: return "Soul-Enchanted";
+	case 4101: return "of Gnome";
+	case 4102: return "Mocking";
+	case 4103: return "Clairvoyant";
+	case 4104: return "Chaos";
+	case 4105: return "Unfrozen";
+	case 4106: return "Ancient";
+	case 4107: return "Fledged";
+	case 4108: return "Innoxious";
+	case 4109: return "Flameguard";
+	case 4110: return "Viper's";
+	case 4111: return "Decussate";
+	case 4112: return "Peerless";
+	case 4113: return "of Ghost";
+	case 4114: return "Poisoning";
+	case 4115: return "Malicious";
+	case 4116: return "Divine";
+	case 4117: return "Hybrid";
+	case 4118: return "Dragoon";
+	case 4119: return "Evil";
+	case 4120: return "of Dragoon";
+	case 4121: return "Perfect";
+	case 4122: return "Adurate";
+	case 4123: return "Bearer's";
+	case 4124: return "Plasterer's";
+	case 4125: return "Aqua";
+	case 4126: return "Titan";
+	case 4127: return "Insomniac";
+	case 4128: return "of Deaf";
+	case 4129: return "of Rogue";
+	case 4130: return "Divine";
+	case 4131: return "Hasty";
+	case 4132: return "of Gemstone";
+	case 4133: return "Immune";
+	case 4134: return "Spiritual";
+	case 4135: return "Mirror";
+	case 4136: return "from Hell";
+	case 4137: return "of Infinity";
+	case 4138: return "Satanic";
+	case 4139: return "of Moonlight";
+	case 4140: return "Liberation";
+	case 4141: return "Deadly";
+	case 4142: return "of Berserk";
+	case 4143: return "Neutral";
+	case 4144: return "of Eternity";
+	case 4145: return "of Bigmouth";
+	case 4146: return "Reflect";
+	case 4147: return "Scythelike";
+	case 4148: return "of Kirin";
+	case 4149: return "of Serenity";
+	case 4150: return "Spell-Proof";
+	case 4151: return "Havoc Bringer's";
+	case 4152: return "Sprightly";
+	case 4153: return "of Cancer";
+	case 4154: return "Sweet Scented";
+	case 4155: return "Deadly Goblin's";
+	case 4156: return "of Fatal Flame";
+	case 4157: return "Piercing";
+	case 4158: return "Slaughter";
+	case 4159: return "De Luxe";
+	case 4160: return "Superior";
+	case 4161: return "Anti-Magic";
+	case 4162: return "Sightless";
+	case 4163: return "Wild";
+	case 4164: return "Fisherman's";
+	case 4165: return "of Insect Soul Eater";
+	case 4166: return "of Jinx";
+	case 4167: return "of Beast Soul Eater";
+	case 4168: return "of Doom";
+	case 4169: return "Spell Master's";
+	case 4170: return "Solidifying";
+	case 4171: return "Soul Draining";
+	case 4172: return "Slicing";
+	case 4173: return "Mesmerizing";
+	case 4174: return "Deviant";
+	case 4175: return "Shoving";
+	case 4176: return "Fatal Serpentine";
+	case 4177: return "Green Stone";
+	case 4178: return "Bow-Master's";
+	case 4179: return "of Highlight";
+	case 4180: return "of Dragon Soul Eater";
+	case 4181: return "Soundless";
+	case 4182: return "of Demon Soul Eater";
+	case 4183: return "Werewolf";
+	case 4184: return "Crushing";
+	case 4185: return "of Wisdom";
+	case 4186: return "Strenuous";
+	case 4187: return "of the Spooky Night";
+	case 4188: return "Red Stone";
+	case 4189: return "of Misfortune";
+	case 4190: return "of Last Laugh";
+	case 4191: return "of the Stix";
+	case 4192: return "of Fatal Pisces";
+	case 4193: return "of Patience";
+	case 4194: return "Overpowering";
+	case 4195: return "Blue Stone";
+	case 4196: return "of Jellopy";
+	case 4197: return "Lucky Streak";
+	case 4198: return "of True Sight";
+	case 4199: return "Dashing";
+	case 4200: return "of Mystical Resistance";
+	case 4201: return "Crippling";
+	case 4202: return "of Exorcism";
+	case 4203: return "Blazing";
+	case 4204: return "Poacher's";
+	case 4205: return "Blue Cubic";
+	case 4206: return "Cubic";
+	case 4207: return "Anti-Small";
+	case 4208: return "Energetic";
+	case 4209: return "Fiddler's";
+	case 4210: return "Pressure";
+	case 4211: return "Virtuoso's";
+	case 4212: return "of Knock-Back";
+	case 4213: return "of Reticence";
+	case 4214: return "Man-Eater's";
+	case 4215: return "Rationing";
+	case 4216: return "Freezing";
+	case 4217: return "Rejuvenating";
+	case 4218: return "Nightmarish";
+	case 4219: return "Magic Stone";
+	case 4220: return "Faithful";
+	case 4221: return "Insect Collector's";
+	case 4222: return "of Sleep";
+	case 4223: return "Stun-Proof";
+	case 4224: return "Monsoon";
+	case 4225: return "Slingshot";
+	case 4226: return "Supreme";
+	case 4227: return "Roast Scented";
+	case 4228: return "of Siesta";
+	case 4229: return "of Torment";
+	case 4230: return "Coward's";
+	case 4231: return "Charging";
+	case 4232: return "Refreshing";
+	case 4233: return "Lucky Fluke";
+	case 4234: return "of Clarity";
+	case 4235: return "Fallen Angel's";
+	case 4236: return "Protective";
+	case 4237: return "of Godly Wrath";
+	case 4238: return "of Doubled Power";
+	case 4239: return "Veteran Hunter's";
+	case 4240: return "Magic-Proof";
+	case 4241: return "Miraculous";
+	case 4242: return "Prime";
+	case 4243: return "of Escape";
+	case 4244: return "Seeker's";
+	case 4245: return "Assassinator's";
+	case 4246: return "Killing";
+	case 4247: return "Starfish's";
+	case 4248: return "Shining Cross";
+	case 4249: return "Witch Doctor's";
+	case 4250: return "Anti-Large";
+	case 4251: return "Invasion";
+	case 4252: return "Four Leaf Clover";
+	case 4253: return "of Royal Guard";
+	case 4254: return "Anti-Medium";
+	case 4255: return "Smashing";
+	case 4256: return "Desirable";
+	case 4257: return "Wing";
+	case 4258: return "Prodigy";
+	case 4259: return "of Nature";
+	case 4260: return "Confusion Resistant";
+	case 4261: return "Bleed Resistant";
+	case 4262: return "Dark Sky";
+	case 4263: return "Bloodlust";
+	case 4264: return "Thunderbolt";
+	case 4265: return "of Dawn";
+	case 4266: return "Magic Resistant";
+	case 4267: return "Dragon Slayer's";
+	case 4268: return "Extending";
+	case 4269: return "Fatasm";
+	case 4270: return "of Venom";
+	case 4271: return "Yellow Stone";
+	case 4272: return "Swift";
+	case 4273: return "Shell";
+	case 4274: return "of Undead Soul Eater";
+	case 4275: return "Undead Killer's";
+	case 4276: return "Crucial";
+	case 4277: return "Dominatrix";
+	case 4278: return "of Magical Immunity";
+	case 4279: return "Soul Collector's";
+	case 4280: return "Blessed";
+	case 4281: return "Diligent";
+	case 4282: return "of Reservoir";
+	case 4283: return "Mana Sphere";
+	case 4284: return "of Caress";
+	case 4285: return "Elven-Enchanted";
+	case 4286: return "Terrorizing";
+	case 4287: return "Magically Shielded";
+	case 4288: return "Maestro";
+	case 4289: return "of Plant Soul Eater";
+	case 4290: return "Mirror";
+	case 4291: return "Deadly Kobold's";
+	case 4292: return "Deadly Plant's";
+	case 4293: return "of Chance";
+	case 4294: return "Sneaky";
+	case 4295: return "of Blackout";
+	case 4296: return "Greedy";
+	case 4297: return "Poaching";
+	case 4298: return "of Mayhem";
+	case 4299: return "Guardian's";
+	case 4300: return "Venomous Charge";
+	case 4301: return "Traumatic";
+	case 4302: return "High Risk";
+	case 4303: return "Mystic";
+	case 4304: return "Shield Master's";
+	case 4305: return "Explosive";
+	case 4306: return "King's";
+	case 4307: return "of Marine Soul Eater";
+	case 4308: return "Power Draining";
+	case 4309: return "Reinforced";
+	case 4310: return "Fatally Evil";
+	case 4311: return "Anti-Evil";
+	case 4312: return "of the Soul";
+	case 4313: return "Bogie";
+	case 4314: return "Fire-Proof";
+	case 4315: return "of Stone Curse";
+	case 4316: return "of Angel Soul Eater";
+	case 4317: return "Aural";
+	case 4318: return "Storm-Bringer's";
+	case 4319: return "Sword-Master's";
+	case 4320: return "Meteoric";
+	case 4321: return "Polymorphic";
+	case 4322: return "of Retaliation";
+	case 4323: return "of Frost";
+	case 4324: return "Arctic";
+	case 4325: return "Vicious";
+	case 4326: return "Ocean Scented";
+	case 4327: return "Spell Flow";
+	case 4328: return "Hyper";
+	case 4329: return "Soul Gain";
+	case 4330: return "Curse Lift";
+	case 4331: return "Evasion";
+	case 4332: return "of Talent";
+	case 4333: return "of Chaotic Venom";
+	case 4334: return "Anti-Sniping";
+	case 4335: return "Gnome";
+	case 4336: return "of Vitality";
+	case 4337: return "of Wild Cat";
+	case 4338: return "of Vital Switching";
+	case 4339: return "of Stone Wall";
+	case 4340: return "of Requiem";
+	case 4341: return "Disarm";
+	case 4342: return "Mammoth";
+	case 4343: return "of Creator";
+	case 4344: return "of Value";
+	case 4345: return "Sylph";
+	case 4346: return "of Power Switching";
+	case 4347: return "Stamina";
+	case 4348: return "Gangster";
+	case 4349: return "Anti Arrow";
+	case 4350: return "Undine";
+	case 4351: return "Low Level";
+	case 4352: return "of Regeneration";
+	case 4353: return "of Rejuvenation";
+	case 4354: return "of Stability";
+	case 4355: return "Healthy";
+	case 4356: return "Magic Cancel";
+	case 4357: return "of Fury";
+	case 4358: return "Listless";
+	case 4359: return "of Shadow";
+	case 4360: return "Assassin";
+	case 4361: return "of Hollgrehenn";
+	case 4362: return "Hit";
+	case 4363: return "Protection";
+	case 4364: return "of Magic Sealing";
+	case 4365: return "of Tempest";
+	case 4366: return "of Caster";
+	case 4367: return "of Squeezing";
+	case 4368: return "Rapid";
+	case 4369: return "of Luck Switching";
+	case 4370: return "Weaken";
+	case 4371: return "of Paladin";
+	case 4372: return "Life Stream";
+	case 4373: return "Cursed";
+	case 4374: return "of Vision";
+	case 4375: return "Extra High Level";
+	case 4376: return "Manaful";
+	case 4377: return "Sweety";
+	case 4378: return "Low Level";
+	case 4379: return "Low Level";
+	case 4380: return "Salamander";
+	case 4381: return "of Wonderer";
+	case 4382: return "of Scholar";
+	case 4383: return "Chaotic";
+	case 4384: return "Magic Eater";
+	case 4385: return "Drink";
+	case 4386: return "of Magic Shelter";
+	case 4387: return "of Agility Switching";
+	case 4388: return "Soul";
+	case 4389: return "Elemental";
+	case 4390: return "Blooding";
+	case 4391: return "Snack";
+	case 4392: return "of Dexterity Switching";
+	case 4393: return "of Inteligence Switching";
+	case 4394: return "Devine Cross";
+	case 4395: return "Slug";
+	case 4396: return "Dull";
+	case 4397: return "Thickheaded";
+	case 4398: return "Darkness";
+	case 4399: return "Penetration";
+	case 4400: return "of Temptation";
+	case 4401: return "Swift";
+	case 4402: return "Strange";
+	case 4403: return "of Reload";
+	case 4404: return "of Chaotic Bleeding";
+	case 4405: return "of Magic Mirror";
+	case 4406: return "Twinkle";
+	case 4407: return "of Elimination";
+	case 4408: return "Abbys";
+	case 4409: return "Panic";
+	case 4410: return "Mad";
+	case 4411: return "Arta's";
+	case 4412: return "Aria";
+	case 4413: return "Resistant";
+	case 4414: return "Gorgon's";
+	case 4415: return "Sweet";
+	case 4416: return "of Yana";
+	case 4417: return "of Flaw";
+	case 4418: return "of Hail";
+	case 4419: return "Jack Frost's";
+	case 4420: return "of Comfort";
+	case 4421: return "of Chinook";
+	case 4422: return "Breezy";
+	case 4423: return "of Sharkia";
+	case 4424: return "Stony";
+	case 4425: return "Beast";
+	case 4426: return "Exceeding";
+	case 4427: return "of Force";
+	case 4428: return "of Shaft";
+	case 4429: return "Nessus's";
+	case 4430: return "of Inferno";
+	case 4431: return "Stygian";
+	case 4432: return "Scorching";
+	case 4433: return "of Ignis";
+	case 4434: return "Miner's";
+	case 4435: return "Outrageous";
+	case 4436: return "Lunatic";
+	case 4437: return "Rabid";
+	case 4438: return "Mental";
+	case 4439: return "of Anathema";
+	case 4440: return "of Ignoring";
+	case 4441: return "Arrogant";
+	default:
+		if (getiteminfo(getarg(0),2) == 6)
+			return "Undecided";
+		else
+			return "";
+	}
+}

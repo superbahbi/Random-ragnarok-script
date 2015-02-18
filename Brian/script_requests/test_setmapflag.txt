@@ -1,0 +1,173 @@
+//====================================
+// 	MapFlag setting NPC
+//====================================
+// by: Brian
+// - temporary, in place of @mapflag
+// - use to set/remove mapflags without restarting server
+//====================================
+
+poring_c01,100,100,0	script	mapflag	802,{
+	mes "[mapflag]";
+if (getgmlevel()==99) {
+	mes "What would you like to do?";
+	menu "SET a mapflag",L_set,"REMOVE a mapflag",L_remove;
+L_set:
+	mes "Enter the name of the map:";
+	mes " ";
+	input .@map$;
+	if (mobcount(.@map$,"") == -1) {
+		mes "^FF0000     Map not found!";
+		close;
+	}
+	mes "Which mapflag do you want to SET?";
+	switch(select("GvG:Indoors:Night:NoBranch:NoIceWall:NoMemo:NoPenalty:NoReturn:NoTeleport:NoWarp:PvP")) {
+	case 1:
+		setmapflag .@map$,mf_gvg;
+		mes "GvG - SET on " + .@map$;
+		break;
+	case 2:
+		setmapflag .@map$,mf_indoors;
+		mes "Indoors - SET on " + .@map$;
+		break;
+	case 3:
+		setmapflag .@map$,mf_nightenabled;
+		mes "Night - SET on " + .@map$;
+		break;
+	case 4:
+		setmapflag .@map$,mf_nobranch;
+		mes "NoBranch - SET on " + .@map$;
+		break;
+	case 5:
+		setmapflag .@map$,mf_noicewall;
+		mes "NoIceWall - SET on " + .@map$;
+		break;
+	case 6:
+		setmapflag .@map$,mf_nomemo;
+		mes "NoMemo - SET on " + .@map$;
+		break;
+	case 7:
+		setmapflag .@map$,mf_nopenalty;
+		setmapflag .@map$,mf_nozenypenalty;
+		mes "NoPenalty - SET on " + .@map$;
+		break;
+	case 8:
+		setmapflag .@map$,mf_noreturn;
+		mes "NoReturn - SET on " + .@map$;
+		break;
+	case 9:
+		setmapflag .@map$,mf_noteleport;
+		mes "NoTeleport - SET on " + .@map$;
+		break;
+	case 10:
+		setmapflag .@map$,mf_nowarp;
+		mes "NoWarp - SET on " + .@map$;
+		break;
+	case 11:
+		setmapflag .@map$,mf_pvp;
+		setmapflag .@map$,mf_pvp_noguild;
+		mes "PvP - SET on " + .@map$;
+		break;
+	}
+	close;
+L_remove:
+	mes "Enter the name of the map:";
+	mes " ";
+	input .@map$;
+	mes "Which mapflag to REMOVE?";
+	switch(select("GvG:Indoors:Night:NoBranch:NoIceWall:NoMemo:NoPenalty:NoReturn:NoTeleport:NoWarp:PvP")) {
+	case 1:
+		removemapflag .@map$,mf_gvg;
+		mes "GvG - SET on " + .@map$;
+		break;
+	case 2:
+		removemapflag .@map$,mf_indoors;
+		mes "Indoors - REMOVED on " + .@map$;
+		break;
+	case 3:
+		removemapflag .@map$,mf_nightenabled;
+		mes "Night - REMOVED on " + .@map$;
+		break;
+	case 4:
+		removemapflag .@map$,mf_nobranch;
+		mes "NoBranch - REMOVED on " + .@map$;
+		break;
+	case 5:
+		removemapflag .@map$,mf_noicewall;
+		mes "NoIceWall - REMOVED on " + .@map$;
+		break;
+	case 6:
+		removemapflag .@map$,mf_nomemo;
+		mes "NoMemo - REMOVED on " + .@map$;
+		break;
+	case 7:
+		removemapflag .@map$,mf_nopenalty;
+		removemapflag .@map$,mf_nozenypenalty;
+		mes "NoPenalty - REMOVED on " + .@map$;
+		break;
+	case 8:
+		removemapflag .@map$,mf_noreturn;
+		mes "NoReturn - REMOVED on " + .@map$;
+		break;
+	case 9:
+		removemapflag .@map$,mf_noteleport;
+		mes "NoTeleport - REMOVED on " + .@map$;
+		break;
+	case 10:
+		removemapflag .@map$,mf_nowarp;
+		mes "NoWarp - REMOVED on " + .@map$;
+		break;
+	case 11:
+		removemapflag .@map$,mf_pvp;
+		removemapflag .@map$,mf_pvp_noguild;
+		mes "PvP - REMOVED on " + .@map$;
+		break;
+	}
+	close;
+	}
+L_cancel:
+	close;
+
+// OnWhisperGlobal:
+// 	WorkInProgress
+}
+
+
+//	prontera,165,145,0	script	EXPflagtest	123,{
+//		mes "[Yo man]";
+//		mes "Setup the map rates";
+//		menu "Job EXP",L_job,"Base  EXP",L_base,"PVP ON",L_pvp,"Reset all flags",-;
+//	
+//		removemapflag "prontera",MF_BEXP;
+//		removemapflag "prontera",MF_JEXP;
+//		removemapflag "prontera",MF_PVP;
+//		close;
+//	
+//		setmapflag "prontera",MF_JEXP,@rate;
+//		setmapflag "prontera",MF_BEXP,@rate;
+//		setmapflag "prontera",MF_PVP;
+//		close;
+//	}
+//	
+//	---------------------------------------
+//	
+//	*setmapflag "<map name>",<flag>;
+//	
+//	This command marks a specified map with a map flag given. Map flags alter the 
+//	behavior of the map, you can see the list of the available ones in 
+//	'db/const.txt' under 'mf_'.
+//	
+//	The map flags alter the behavior of the map regarding teleporting (mf_nomemo, 
+//	mf_noteleport, mf_nowarp, mf_nogo) storing location when disconnected 
+//	(mf_nosave), dead branch usage (mf_nobranch), penalties upon death 
+//	(mf_nopenalty, mf_nozenypenalty), PVP behavior (mf_pvp, mf_pvp_noparty, 
+//	mf_pvp_noguild, mf_nopvp), WoE behavior (mf_gvg,mf_gvg_noparty), ability to use 
+//	skills or open up trade deals (mf_notrade, mf_novending, mf_noskill, mf_noicewall),
+//	current weather effects (mf_snow, mf_fog, mf_sakura, mf_leaves, mf_rain, mf_clouds, 
+//	mf_fireworks) and whether day/night will be in effect on this map (mf_indoors).
+//	
+//	---------------------------------------
+//	*removemapflag "<map name>",<flag>;
+//	
+//	This command removes a mapflag from a specified map. See 'setmapflag'.
+//	
+//	---------------------------------------

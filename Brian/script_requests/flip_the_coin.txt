@@ -1,0 +1,40 @@
+// http://www.eathena.ws/board/index.php?showtopic=214641
+// When you talk to the NPC, he asks if you want to play "Flip The Coin." Yes/no options, obviously. 
+// If you play, it'll cost 5,000,000 zeny. You choose Heads or Tails, and if you win, you "gain" 
+// 5 poring coins but they are not added to your inventory just yet. From then on, every time you 
+// win a toss, your prize variable doubles. 1st win gives you 5, 2nd gives you 10, 3rd you get 20, 
+// and so on. Losing sends you a losing dialogue, obviously. Also, a 3 poring coin consolation prize 
+// would be nice. After the 1st toss, you can also choose the new option "Take the coins and run!" 
+// This function is obvious. The randomizing is easy: But I need help with doubling down and not 
+// receiving your prize until you leave. The item ID for poring coins at my server is 7539.
+
+poring_c01,100,100,0	script	test	910,{
+	mes "Do you want to play ^0000FFFlip the Coin^000000?";
+	if(select("Yes:No")==2) close;
+	if(Zeny < 5000000) {
+		mes "The cost is 5,000,000 zeny.";
+		close;
+	}
+	set Zeny, Zeny - 5000000;
+	
+	// initialize prize to 5 coins
+	set .@prize, 5;
+	
+	while(.@prize) {
+		set .@guess, select("Heads:Tails") - 1;
+		if( rand(2) ) {
+			mes "^FF0000You lose. It was "+( .@guess?"Heads":"Tails" )+".^000000";
+			close;
+		}
+		mes "^008000You win "+.@prize+" Poring Coins!^000000";
+		if(select("Play again:Take the "+ (.@prize*2 - 5) +" coins and run!")==1) {
+			// double the prize
+			set .@prize, .@prize * 2;
+		} else {
+			getitem 7539, .@prize*2 - 5;	// Poring Coin
+			mes "Here are your "+ (.@prize*2 - 5) +" Poring Coins.";
+			set .@prize, 0;
+		}
+	}
+	close;
+}

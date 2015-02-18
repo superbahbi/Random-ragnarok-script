@@ -1,0 +1,95 @@
+// http://rathena.org/board/topic/73230-variable-tied-to-mac-address-i-am-using-harmony/
+// I would like to request a script. I have harmony installer. Can you help me 
+// making this script. I want a npc that gives item. But, the npc can only give 
+// 1 char 1 account. How can I make a sql to check last_mac and last_ip of a 
+// player. So, that they cannot abuse the npc. Thanks! 
+
+/*
+CREATE TABLE IF NOT EXISTS `mac_reg_value` (
+  `mac` VARCHAR(17) NOT NULL DEFAULT '0',
+  `str` VARCHAR(255) NOT NULL DEFAULT '',
+  `value` VARCHAR(255) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`mac`,`str`),
+  KEY `mac` (`mac`)
+) ENGINE=MYISAM;
+*/
+
+prontera,155,180,0	script	once_per_MAC	910,{
+	function get_MAC_variable;
+	function set_MAC_variable;
+	
+	if (get_MAC_variable("$#halloween_event") > 0) {
+		mes "I already gave a prize to someone from your MAC address.";
+	} else {
+		if (!checkweight(909,1)) {
+			mes "You are overweight or carrying too many items.";
+		} else {
+			getitem 909,1; // Jellopy
+			set_MAC_variable "$#halloween_event", 1;
+			mes "Here is your prize!";
+		}
+	}
+	close;
+
+	function get_MAC_variable {
+		// $#variable = MAC variable
+		set .@varname$, strtolower(getarg(0, "null"));
+		set .@is_string, (charat(.@varname$, getstrlen(.@varname$)-1) == "$");
+		if (query_sql("SELECT `value` FROM `mac_reg_value` WHERE `mac`='"+ getmacaddress() +"' AND `str`='"+ escape_sql(.@varname$) +"'", .@value$)) {
+			return (.@is_string ? .@value$ : atoi(.@value$));
+		} else {
+			return (.@is_string ? "" : 0);
+		}
+	}
+	
+	function set_MAC_variable {
+		set .@varname$, strtolower(getarg(0, "null"));
+		set .@is_string, (charat(.@varname$, getstrlen(.@varname$)-1) == "$");
+		set .@value$, getarg(1, (.@is_string ? "" : 0));
+		// trim the trailing "$" so name validation is easier
+		if (.@is_string) set .@varname$, substr(.@varname$, 0,getstrlen(.@varname$) -1);
+		
+		// validate variable name
+		if (.@varname$ == "null") {
+			debugmes "set_MAC_variable - missing variable name";
+			end;
+		} else if (getstrlen(.@varname$) < 3 || substr(.@varname$,0,1) != "$#" ) {
+			debugmes "set_MAC_variable - MAC variables must start with $#";
+			end;
+		}
+		for (set .@i,2; .@i < getstrlen(.@varname$); set .@i,.@i+1) {
+			if (compare("abcdefghijklmnopqrstuvwxyz0123456789_", substr(.@varname$, .@i,.@i)) == 0) {
+				debugmes "set_MAC_variable - variable names can only contain '_' and alphanumeric characters";
+				end;
+			}
+		}
+		
+		// re-add the trailing "$"
+		if (.@is_string) set .@varname$, .@varname$ + "$";
+		
+		// check max lengths
+		if (getstrlen(.@varname$) > 255) {
+			debugmes "set_MAC_variable - variable name longer than 255 characters";
+			end;
+		}
+		if (.@is_string && getstrlen(.@value$) > 255) {
+			debugmes "set_MAC_variable - string value longer than 255 characters";
+			end;
+		} else if (!.@is_string && getstrlen(.@value$) > 9) {
+			query_sql "SELECT ('"+ escape_sql(.@value$) +"' BETWEEN -2147483648 AND 2147483647)", .@valid_int;
+			if (!.@valid_int) {
+				debugmes "set_MAC_variable - integer overflow detected";
+				end;
+			}
+		}
+		
+		if ((.@is_string && .@value$=="") || (!.@is_string && .@value$=="0")) {
+			// value of "" or 0 --> delete variable
+			query_sql "DELETE FROM `mac_reg_value` WHERE `mac`='"+ getmacaddress() +"' AND `str`='"+ escape_sql(.@varname$) +"'";
+		} else {
+			// store the variable!!
+			query_sql "REPLACE INTO `mac_reg_value` (`mac`,`str`,`value`) VALUES ('"+getmacaddress()+"', '"+ escape_sql(.@varname$) +"', '"+ (.@is_string ? escape_sql(.@value$) : atoi(.@value$)) +"')";
+		}
+		return;
+	}
+}

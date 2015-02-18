@@ -1,0 +1,254 @@
+//-----------------------------------------------//
+//-----------------TOF Event--------------------//
+//-----------------------------------------------//
+//-----------------------------------------------//
+//----------JaeRO - Home of Phoenix Pride--------//
+//-----------------------------------------------//
+
+-	script	TOF#disable	-1,{
+
+OnInit:
+disablenpc "TOF Warper";
+end;
+}
+
+poring_c02,216,225,5	script	TOF Event	952,{
+
+	if (getgmlevel() >= 20) goto TOF_Admin;
+	if ($@TOF_Ongoing == 1) {
+	mes "[TOF Event]";
+	mes "TOF Event is still ongoing.";
+	close;
+	}
+	mes "[TOF Event]";
+	mes "Hello " + strcharinfo(0) + ", this NPC is for Event GMs use only.";
+	close;
+	
+TOF_Admin:
+	mes "[TOF Event]";
+	mes "Hello GM " + strcharinfo(0) + ", would you like me to start TOF Event?";
+	menu "Start Event",tof_check,"Reset",reset_TOF,"Warp",warp_TOF,"No Thanks",endTOF;
+	tof_check:
+		next;
+		if ($@TOF_Ongoing == 1) goto al_started;
+		mes "[TOF Event]";
+		mes "Ok, starting Event.";
+		set $@TOF_Ongoing,1;
+		close2;
+		goto startTOFevent;
+	checkprize:
+		next;
+		mes "[TOF Event]";
+		mes "The current prize is ^008000"+ $TOF_item_amount +" "+ getitemname($TOF_item_id) +"^000000";
+		next;
+		goto TOF_Admin;
+	setprize:
+		next;
+		if ($@TOF_Ongoing == 1) goto cant_set;
+		mes "[TOF Event]";
+		mes "What should the prize for winning be? Please input the ID";
+		input $TOF_item_id;
+		next;
+		mes "[TOF Event]";
+		mes "How many of this item should we give away?";
+		input $TOF_item_amount;
+		next;
+		mes "[TOF Event]";
+		mes "So, the prize is ^008000"+ $TOF_item_amount +" "+ getitemname($TOF_item_id) +"^000000? Wonderful dear.";
+		next;
+		goto TOF_Admin;
+	warp_TOF:
+		next;
+		mes "[Manager]";
+		mes "I will now warp you to the TOF Event map.";
+		next;
+		warp "quiz_02",350,368;
+		end;
+	endTOF:
+		next;
+		mes "[TOF Event]";
+		mes "Ok darling, nice seeing you.";
+		close;
+	reset_TOF:
+		mes "[TOF Event]";
+		mes "Resetting Now.";
+		close2;
+		set $@TOF_Ongoing,0;
+		end;
+
+
+cant_set:
+	mes "[TOF Event]";
+	mes "You can't set the Prize while the event is Running";
+	close;
+
+al_started:
+	mes "[TOF Event]";
+	mes "The event is still running";
+	close;
+
+
+TOF_Staff:
+	mes "[TOF Event]";
+	mes "Hello GM " + strcharinfo(0) + ", would you like me to start TOF Event?";
+	menu "Start Event",staff_startTOF,"Reset",staff_reset,"Warp",join_TOF,"No Thanks",staff_cancel;
+	staff_startTOF:
+		next;
+		if ($@TOF_Ongoing == 1) goto started_staff;
+		mes "[TOF Event]";
+		mes "Ok, starting Event.";
+		set $@TOF_Ongoing,1;
+		close2;
+		goto startTOFevent;
+	staff_checkprize:
+		next;
+		mes "[TOF Event]";
+		mes "The current prize is ^008000"+ $TOF_item_amount +" "+ getitemname($TOF_item_id) +"^000000";
+		next;
+		goto TOF_Staff;
+	join_TOF:
+		next;
+		mes "[Manager]";
+		mes "I will now warp you to the TOF Event map.";
+		next;
+		warp "quiz_02",350,368;
+		end;
+	staff_cancel:
+		next;
+		mes "[TOF Event]";
+		mes "Ok, see you later.";
+		close;
+	staff_reset:
+		mes "[TOF Event]";
+		mes "Resetting Now.";
+		close2;
+		set $@TOF_Ongoing,0;
+		killmonsterall "guild_vs2";
+		disablenpc "Summoner";
+		end;
+started_staff:
+	mes "[TOF Event]";
+	mes "The event is still running";
+	close;
+
+startTOFevent:
+announce "TOF Warper: Get Ready for True or False Event.",0;
+sleep2 10000;
+announce "TOF Warper: Warps opening in 1 minute..",0;
+initnpctimer;
+end;
+OnTimer60000:
+announce "TOF Warper: Closing warps in 60 Seconds",0;
+enablenpc "TOF Warper";
+end;
+
+OnTimer90000:
+announce "TOF Warper: Closing warps in 30 secondsn",0;
+sleep2 5000;
+end;
+
+OnTimer110000:
+announce "TOF Warper: Last 10 seconds.",0;
+end;
+
+OnTimer115000:
+announce "TOF Warper: 5.",0;
+end;
+
+OnTimer116000:
+announce "TOF Warper: 4.",0;
+end;
+
+OnTimer117000:
+announce "TOF Warper: 3.",0;
+end;
+
+OnTimer118000:
+announce "TOF Warper: 2.",0;
+end;
+
+OnTimer119000:
+announce "TOF Warper: 1.",0;
+end;
+
+OnTimer120000:
+announce "TOF Warper: Warps are now closed.",0;
+end;
+
+OnTimer121000:
+disablenpc "TOF Warper";
+end;
+}
+//---------TOF Registration---------------
+prontera,155,159,4	script	TOF Warper	952,{
+	mes "[Manager]";
+	mes "I will now warp you to the TOF Event map.";
+	next;
+	warp "quiz_02",350,368;
+	end;
+}
+//----------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------True or False Event-----------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------------
+quiz_02,350,364,8	script	TOF Switch	405,{
+	if (getgmlevel()<2) goto OUT;
+	mes "[True or False Manager]";
+	mes "What do you want to do?";
+	switch(select("Select Answer")){
+
+	case 1:
+		next;
+		mes "[True or False Manager]";
+		mes "Select Answer.";	
+		switch(select("True","False")){
+			case 1:
+				next;
+				mes "[True or False Manager]";
+				mes "True?";
+				next;
+				mes "[True or False Manager]";
+				mes "Sure?";
+				next;
+				switch(select("Yes","No")){
+				case 1:
+					areawarp "quiz_02",324,357,347,334, "quiz_02",350,372;
+					areawarp "quiz_02",352,357,375,334,"prontera",155,166;
+					announce "Answer is True.",bc_map;
+					close;
+				case 2:
+					close;
+				}
+			case 2:
+				next;
+				mes "[True or False Manager]";
+				mes "False?";
+				next;
+				mes "[True or False Manager]";
+				mes "Sure?";
+				next;
+				switch(select("Yes","No")){
+				case 1:
+					areawarp "quiz_02",324,357,347,334,"prontera",155,166;
+					areawarp "quiz_02",352,357,375,334, "quiz_02",350,372;
+					announce "Answer is False.",bc_map;
+					close;
+				case 2:
+					close;
+				}
+		}
+	}
+OUT:
+	end;
+}
+// ----Manager Setting------------
+
+// == Mapflags
+quiz_02,337,364,0	warp	true	0,0,quiz_02,337,345
+quiz_02,362,364,0	warp	false	0,0,quiz_02,363,345
+quiz_02	mapflag	noskill
+quiz_02	mapflag	nosave	SavePoint
+quiz_02	mapflag	noteleport
+quiz_02	mapflag	nowarp
+quiz_02	mapflag	nomemo
+quiz_02	mapflag	notrade
+quiz_02	mapflag	noreturn

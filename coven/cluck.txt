@@ -1,0 +1,156 @@
+//===== Athena Script =====================================
+//= Cluck! Cluck! Boom!
+//===== By Keale of VoidRO ================================
+//= http://voidro.com
+//===== Description =======================================
+//= Click the chicken and try retrieve the item at a low 
+//= chance. If you fail he will nuke, freeze, stone, 
+//= stun, or make you fall asleep.
+//= The prize is configurable and triggered by the NPC.
+//===== Credits ===========================================
+//= LuTze for his 'Chicken of Punishment' script.
+//= BrianL for suggesting the 'switch' command.
+//===== Version ===========================================
+//= v1.1
+//=========================================================
+//= v1.0 - First release.
+//= v1.1 - Using 'switch rand' instead.
+//=========================================================
+
+umbala,106,149,4	script	Cluckers	800,{
+
+if ($@startcluck == 1) goto L_playcluck;
+
+cluckcluck:
+	if (getgmlevel() >= 20) goto cluckadmin;
+		mes "[Cluckers]";
+		mes "Cluck cluck! Cluuuuuck?";
+		mes "Cluck....";
+	close;
+
+OnMinute30:
+	switch(rand(1,4)) {
+	case 1:
+		goto L_cluckannounce;
+		end;
+	case 2:
+
+		end;
+	case 3:
+
+		end;
+	case 4:
+
+		end;
+	case 5:
+
+		end;
+
+}
+	
+cluckadmin:
+		mes "[Cluckers]";
+		mes "Cluck cluck! Cluuuuuck? ^FF0000~Hi GM " + strcharinfo(0) + ", Wanna play today?~^000000";
+		mes "Cluck cluck... CLUCK! ^FF0000~Just tell me what to do!~^000000";
+		switch(select("Start Event:Not today Cluckers")) {
+case 1:
+		next;
+		mes "[Cluckers]";
+		mes "CLUCK! ^FF0000~Sure thing!~^000000";
+		emotion 33;
+		close2;
+		goto L_cluckannounce;
+case 2:
+		next;
+		mes "[Cluckers]";
+		mes "Cluck cluck cluck...";
+		close;
+}
+
+L_cluckannounce:
+		announce "[Cluck! Cluck! Boom!] is about to begin in Umbala!",bc_blue;
+		initnpctimer;
+		end;
+OnTimer10000:
+		announce "Please Hurry Up! if you want to play with the crazy chicken!",bc_blue;
+		end;
+OnTimer20000:
+		announce "Cluckers has eaten one of my items! I'm too scared to retrieve it!",bc_blue;
+		end;
+OnTimer30000:
+		announce "Click the insane chicken and try squeeze out the item, if you're lucky you'll win! Are you ready?",bc_blue;
+		end;
+OnTimer40000:
+		announce "GO! Click the chicken to get the prize!",bc_blue;
+		set $@startcluck,1;
+		end;
+		
+L_playcluck:
+		specialeffect2 2;
+		switch( rand(15) ) {
+case 0:
+		npctalk "CLUUUUUUCK!!!";
+		emotion 23;
+		atcommand "@nuke "+strcharinfo(0);
+		break;
+case 1:
+		npctalk "Cluuuuuck!~";
+		break;
+case 2:
+		atcommand "@nuke "+strcharinfo(0);
+		break;
+case 3:
+		sc_start SC_Freeze,10000,0;
+		break;
+case 4:
+		npctalk "CLUUUUUUUUUCK!!!";
+		emotion 23;
+		atcommand "@nuke "+strcharinfo(0);
+		break;
+case 5:
+		sc_start SC_Sleep,10000,0;
+		break;
+case 6:
+		emotion 29;
+		sc_start SC_Stone,10000,0;
+		break;
+case 7:
+		npctalk "CLUUUUUUCK!!!";
+		emotion 23;
+		atcommand "@nuke "+strcharinfo(0);
+		break;
+case 8:
+		npctalk "Cluck! CLUUUCK!!";
+		emotion 23;
+		atcommand "@nuke "+strcharinfo(0);
+		break;
+case 9:
+		sc_start SC_Stun,10000,0;
+		break;
+case 10:
+		emotion 29;
+		sc_start SC_Sleep,10000,0;
+		break;
+case 11:
+		npctalk "Cluck! Cluck!";
+		break;
+case 12:
+		sc_start SC_Stun,10000,0;
+		break;
+case 13:
+		atcommand "@nuke "+strcharinfo(0);
+		break;
+default:
+		if( rand(50) < 3 ) {
+			npctalk "WOOF!...........";
+			specialeffect2 72;
+			announce "[Cluck! Cluck! Boom!] " + strcharinfo(0) + " Squeezed out the prize! Well done!",0;
+			getitem 7227,1;
+			set $@startcluck,0;
+		} else {
+			npctalk "Cluck! CLUUUCK!!";
+			atcommand "@nuke "+strcharinfo(0);
+			}
+		break;
+	}
+}

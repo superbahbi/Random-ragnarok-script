@@ -1,0 +1,18 @@
+-	script	treasure	-1,{
+OnMinute00:
+	switch(rand(1,3)){
+	case 1:
+			announce "Treasure box will be summoned somewhere in Prontera.",bc_all;
+			monster "prontera.gat",0,0,"treasure Box",1324,1,"Treasure::OnBoxKilled";
+			end;
+	case 2:
+		end;
+
+	case 3:
+		end;
+	}
+
+OnBoxKilled:
+	announce ""+strcharinfo(0)+" found and destroy the tresure box.",bc_all;
+	end;
+}

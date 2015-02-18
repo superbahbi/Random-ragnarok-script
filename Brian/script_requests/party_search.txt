@@ -1,0 +1,33 @@
+// http://www.eathena.ws/board/index.php?showtopic=226093
+
+poring_c01,100,100,0	script	Party and Guild Seeker	910,{
+	mes "[Party and Guild Seeker]";
+	mes "Hello, I am the Party and Guild Seeker! I can help you find a party for leveling, killing MvPs, or help you find a guild to join.";
+	mes " ";
+	mes "Please select an option below!";
+	next;
+	set .@type, select("Find a party for leveling:Find a party for MvPing:Find a guild to join");
+	mes "[Party and Guild Seeker]";
+	
+	// check "cooldown"
+	if (LAST_ANNOUNCE_TIME+300 > gettimetick(2)) {
+		mes "Please wait " + ((LAST_ANNOUNCE_TIME+300 - gettimetick(2))/60 +1) + " minutes before making another announcement.";
+		close;
+	}
+	
+	set LAST_ANNOUNCE_TIME, gettimetick(2);
+	switch( .@type ) {
+	case 1:
+		announce strcharinfo(0)+", level "+BaseLevel+" "+jobname(Class)+", is seeking a party to level with!", bc_all,0x33CCFF;
+		break;
+	case 2:
+		announce strcharinfo(0)+", level "+BaseLevel+" "+jobname(Class)+", is looking for a party to kill MvPs with!", bc_all,0x33CCFF;
+		break;
+	case 3:
+		announce strcharinfo(0)+", level "+BaseLevel+" "+jobname(Class)+", is looking for a a guild to join!", bc_all,0x33CCFF;
+		break;
+	}
+	mes "I have announced your request!";
+	emotion e_no1;
+	close;
+}

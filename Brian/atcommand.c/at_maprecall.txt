@@ -1,0 +1,58 @@
+/*==========================================
+ * Recall all characters on your map to your location
+ *------------------------------------------*/
+int atcommand_maprecall(const int fd, struct map_session_data* sd, const char* command, const char* message)
+{
+	struct map_session_data* pl_sd;
+	struct s_mapiterator* iter;
+	int count;
+	nullpo_retr(-1, sd);
+
+	memset(atcmd_output, '\0', sizeof(atcmd_output));
+
+	if (sd->bl.m >= 0 && map[sd->bl.m].flag.nowarpto && battle_config.any_warp_GM_min_level > pc_isGM(sd)) {
+		clif_displaymessage(fd, "You are not authorized to warp someone to your actual map.");
+		return -1;
+	}
+
+	count = 0;
+	iter = mapit_getallusers();
+	for( pl_sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); pl_sd = (TBL_PC*)mapit_next(iter) )
+	{
+		if (sd->status.account_id != pl_sd->status.account_id && pc_isGM(sd) >= pc_isGM(pl_sd) && pl_sd->bl.m == sd->bl.m)
+		{
+			if ( pl_sd->vender_id || pl_sd->chatID )	//Skip recalling players who are vending or in a chatroom
+				count++;
+			else {
+//				atcommand_raise_sub(pl_sd);		//Ressurect dead people
+				pc_setpos(pl_sd, sd->mapindex, sd->bl.x, sd->bl.y, 2);
+			}
+		}
+	}
+	mapit_free(iter);
+
+	clif_displaymessage(fd, "All characters on your map recalled!");
+	if (count) {
+		sprintf(atcmd_output, "%d player(s) have not been recalled because they are vending or in a chatroom.", count);
+		clif_displaymessage(fd, atcmd_output);
+	}
+
+	return 0;
+}
+
+
+
+
+//====================================
+// 	FIND
+//====================================
+//	{ "guildrecall",       60,     atcommand_guildrecall },
+//	{ "partyrecall",       60,     atcommand_partyrecall },
+//====================================
+
+
+//====================================
+//	add AFTER
+//====================================
+	{ "maprecall",         60,     atcommand_maprecall },
+//====================================

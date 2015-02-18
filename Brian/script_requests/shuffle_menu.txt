@@ -1,0 +1,48 @@
+// http://www.eathena.ws/board/index.php?showtopic=226415
+// Random Menu Title, example: a menu with 3 options: A,B,C 
+// and A,B,C can be changed to random name and random location with 
+// each click / trigger (can be same though , and it's never mind)
+
+poring_c01,100,100,0	script	ShuffleMenu	910,{
+	setarray .@options$[0], "one","two","three","four","five";
+
+	// generate the random order
+	for( set .@i,0; .@i < getarraysize(.@options$); set .@i,.@i+1 ) {
+		while( set(.@rand,rand(1,getarraysize(.@options$))) == getd(".@__tmp_"+.@rand) );
+		setd(".@__tmp_"+.@rand,set(.@array[.@i],.@rand));
+	}
+	// Debug output
+	// for( set .@i,0; .@i < getarraysize(.@array); set .@i,.@i+1 )
+		// dispbottom(.@array[.@i]);
+
+	// arrange the menu options in that order
+	for( set .@i,0; .@i < getarraysize(.@array); set .@i,.@i+1 )
+		set .@menu$, .@menu$ + .@options$[.@array[.@i]-1] + ":";
+	
+	// pick an option
+	set .@picked, .@array[select(.@menu$)-1];
+	
+	// display the corresponding option
+	switch(.@picked) {
+	case 1:
+		mes "ONE!!!111";
+		break;
+	case 2:
+		mes "2 22";
+		break;
+	case 3:
+		mes "Three 333";
+		break;
+	case 4:
+		mes "4444 4444 4444 4444";
+		break;
+	case 5:
+		mes "FIVE 5 5 5 5 5";
+		break;
+	default:
+		// ERROR: you have more options in .@options$[0] than in the 'switch'
+		close;
+	}
+	
+	close;
+}

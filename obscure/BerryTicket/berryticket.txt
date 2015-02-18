@@ -1,0 +1,33 @@
+prontera,175,201,4	script	Berry Lady	814,{
+	mes "[Berry Lady]";
+	mes "What would you like to do?";
+	close2;
+	switch(select("Ygg Berry to Berry Ticket","Berry Ticket to Ygg Berry","Information")) {
+	
+	case 1:
+		if (countitem(607) < 200) goto L_NOTENOUGH;
+		delitem 607,200;
+		getitem 1999,1;
+		close;
+	L_NOTENOUGH:
+		mes "I'm Sorry but you don't have enough ygg berry.";
+		close;
+
+	case 2:
+		if (checkweight(607,200) == 0 ) goto L_OverWeight;
+		if (countitem(1999) < 1) goto L_NOITEMS;
+		delitem 1999,1;
+        		getitem 607,200;
+        		close;
+	L_NOITEMS:
+		mes "[Berry Lady]";
+		mes "Sorry you don't have Berry Ticket";
+		close;
+    	L_OverWeight:
+		mes "[Berry Lady]";
+        		mes "Sorry your overweight";
+        		close;
+
+	}
+
+}

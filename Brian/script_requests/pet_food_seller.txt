@@ -1,0 +1,80 @@
+// http://www.eathena.ws/board/index.php?showtopic=243923
+
+prontera,155,188,0	shop	ALL_pet_food#shop	83,504:-1,507:-1,508:-1,511:-1,518:-1,531:-1,532:-1,534:-1,537:-1,554:-1,711:-1,716:-1,911:-1,929:-1,1002:-1,6094:-1,6095:-1,6096:-1,6097:-1,6098:-1,6099:-1,6100:-1,6104:-1,6105:-1,6106:-1,6107:-1,6108:-1,6109:-1,6110:-1,6111:-1,6112:-1,6113:-1,6114:-1,6115:-1,7766:-1,7821:-1,7822:-1,7823:-1,7824:-1
+
+prontera,157,188,0	script	ALL_pet_food#npc	910,{
+	mes "Which pet?";
+	switch("Alice:Baby Desert Wolf:Baphomet Jr.:Bon Gun:ChonChon:Christmas Goblin:Deleter:Deviruchi:Diabolic:Dokebi:Drops:Dullahan:Evil Nymph:Fire Imp:Goblin Leader:Goblin:Golem:Green Maiden:Hunter Fly:Incubus:Isis:Leaf Cat:Loli Ruri:Lunatic:Mao Guai:Marionette:Medusa:Miyabi Doll:Munak:New Year Doll:Nightmare Terror:Orc Warrior:PecoPeco:Petite:Picky:Poison Spore:Poporing:Poring:Rice Cake:Rocker:Savage Babe:Shinobi:Smokie:Sohee:Spore:Spring Rabbit:Steel ChonChon:Stone Shooter:Succubus:Wanderer:Whisper:White Lady:Yoyo:Zealotus") {
+		case 1:	set .@food_id, 504; break; // Alice
+		case 2:	set .@food_id, 537; break; // Baby Desert Wolf
+		case 3:	set .@food_id, 518; break; // Baphomet Jr.
+		case 4:	set .@food_id, 537; break; // Bon Gun
+		case 5:	set .@food_id, 537; break; // ChonChon
+		case 6:	set .@food_id, 911; break; // Christmas Goblin
+		case 7:	set .@food_id,7822; break; // Deleter
+		case 8:	set .@food_id, 711; break; // Deviruchi
+		case 9:	set .@food_id,7823; break; // Diabolic
+		case 10:	set .@food_id, 537; break; // Dokebi
+		case 11:	set .@food_id, 508; break; // Drops
+		case 12:	set .@food_id,6107; break; // Dullahan
+		case 13:	set .@food_id,6105; break; // Evil Nymph
+		case 14:	set .@food_id,6114; break; // Fire Imp
+		case 15:	set .@food_id,6104; break; // Goblin Leader
+		case 16:	set .@food_id,7821; break; // Goblin
+		case 17:	set .@food_id,6111; break; // Golem
+		case 18:	set .@food_id,6115; break; // Green Maiden
+		case 19:	set .@food_id, 716; break; // Hunter Fly
+		case 20:	set .@food_id,6110; break; // Incubus
+		case 21:	set .@food_id, 537; break; // Isis
+		case 22:	set .@food_id,6096; break; // Leaf Cat
+		case 23:	set .@food_id,6097; break; // Loli Ruri
+		case 24:	set .@food_id, 534; break; // Lunatic
+		case 25:	set .@food_id,6095; break; // Mao Guai
+		case 26:	set .@food_id,6098; break; // Marionette
+		case 27:	set .@food_id,6108; break; // Medusa
+		case 28:	set .@food_id,6106; break; // Miyabi Doll
+		case 29:	set .@food_id, 537; break; // Munak
+		case 30:	set .@food_id, 554; break; // New Year Doll
+		case 31:	set .@food_id,6112; break; // Nightmare Terror
+		case 32:	set .@food_id, 537; break; // Orc Warrior
+		case 33:	set .@food_id, 537; break; // PecoPeco
+		case 34:	set .@food_id, 537; break; // Petite
+		case 35:	set .@food_id, 507; break; // Picky
+		case 36:	set .@food_id, 537; break; // Poison Spore
+		case 37:	set .@food_id, 511; break; // Poporing
+		case 38:	set .@food_id, 531; break; // Poring
+		case 39:	set .@food_id, 511; break; // Rice Cake
+		case 40:	set .@food_id, 537; break; // Rocker
+		case 41:	set .@food_id, 537; break; // Savage Babe
+		case 42:	set .@food_id,6099; break; // Shinobi
+		case 43:	set .@food_id, 537; break; // Smokie
+		case 44:	set .@food_id, 537; break; // Sohee
+		case 45:	set .@food_id, 537; break; // Spore
+		case 46:	set .@food_id,7766; break; // Spring Rabbit
+		case 47:	set .@food_id,1002; break; // Steel ChonChon
+		case 48:	set .@food_id,6109; break; // Stone Shooter
+		case 49:	set .@food_id,6113; break; // Succubus
+		case 50:	set .@food_id,7824; break; // Wanderer
+		case 51:	set .@food_id,6100; break; // Whisper
+		case 52:	set .@food_id,6094; break; // White Lady
+		case 53:	set .@food_id, 532; break; // Yoyo
+		case 54:	set .@food_id, 929; break; // Zealotus
+	}
+	// set .@price, 500; // a fixed price
+	set .@price, getiteminfo(.@food_id,1); // default sell_price
+	
+	mes "How many food?";
+	input .@amt;
+	if (.@amt < 1) {
+		mes "Input a positive number";
+	} else if (.@amt*.@price > Zeny) {
+		mes "You do not have enougy zeny";
+	} else if (!checkweight(.@food_id,.@amt)) {
+		mes "You are overweight or have too many items in your inventory.";
+	} else {
+		set Zeny, Zeny - .@amt*.@price;
+		getitem .@food_id, .@amt;
+		mes "Enjoy your pet food! om nomnom";
+	}
+	close;
+}

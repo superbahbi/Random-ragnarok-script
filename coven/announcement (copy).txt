@@ -1,0 +1,38 @@
+-	script	OnPCLoginEvent	-1,{
+OnPCLoginEvent:
+	if (getgmlevel() == 100) goto ADMIN;
+	if (getgmlevel()<20) goto NOR;
+
+		if (getcharid(0) == 178547
+		||  getcharid(0) == 150869
+		||  getcharid(0) == 151378
+		||  getcharid(0) == 181005
+		||  getcharid(0) == 150389
+		||  getcharid(0) == 173059
+		||  getcharid(0) == 150873
+		||  getcharid(0) == 150688
+		||  getcharid(0) == 152605
+		||  getcharid(0) == 156624
+		||  getcharid(0) == 173276
+		||  getcharid(0) == 2000120
+		||  getcharid(0) == 150001)
+		{
+			atcommand "@hide";
+			atcommand "@speed 1";
+			atcommand "@monsterignore";
+			end;
+		}
+		else
+		{
+			atcommand "@kick "+strcharinfo(0);
+			end;
+		}
+	
+NOR:
+	announce "Welcome! For all your comments and suggestions, post them at Jae Ragnarok Onlince Facebook fanpage and the team will be looking to it right away. Thank you!",bc_self|bc_all;
+	end;
+ADMIN:
+	atcommand "@hide";	atcommand "@speed 1";
+	atcommand "@monsterignore";
+	end;
+}

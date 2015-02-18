@@ -1,0 +1,128 @@
+// = Script made by RIKIMARU on rathena.org
+// = Profile Link :
+// = http://rathena.org/board/user/434-rikimaru/
+// = ENJOY THIS SCRIPT!
+//===================================================================================
+//        //=====//     /==/     /==/          /==/      
+//       //     //     /==/     /==/  /=/     /==/         
+//      //=====//              /==/  /=/             /==============/     /========/   /==//===/    /==/     /==/
+//     //=//////    /==/      /==//=/       /==/    /==/==/==/==/==/     /     /  /   /==/         /==/     /==/
+//    // ==        /==/      /==//=/       /==/    /==/  /==/  /==/     ======/  /   /==/         /==/     /==/
+//   //   ==      /==/      /==/  /=/     /==/    /==/  /==/  /==/     / /===/  /   /==/         /==/     /==/
+//  //     ==    /==/      /==/   /=/    /==/    /==/  /==/  /==/     / /===/  /   /==/         /==/=====/==/
+// //       ==  /==/      /==/    /=/   /==/    /==/  /==/  /==/     /========/   /==/         /==///////==/
+// ================ rAthena Script ==================================================
+// ============== Information =======================================================
+// = Rock,Paper,Scissors Game
+// = Made by :
+// = Rikimaru
+//===== Current Version: =============================================== 
+//= 1.0
+//===== Compatible With: =============================================== 
+//= any rAthena SVN
+//===== Description: =================================================== 
+//= Rock,Paper,Scissors game with a chance of 10 Prizes
+//===== Additional Comments: =========================================== 
+//= 1.0 Finished Scripting the NPC [Rikimaru]
+//====================================================================== 
+//= DO NOT REMOVE MY CREDITS AND CLAIM MY WORK AS YOURS 
+//======================================================================
+prontera,147,174,5	script	Rock,Paper,Scissors	100,{
+// ================ Settings ==================================
+set .@n$,"^0000FF[ Rock,Paper,Scissors ]^000000";
+set .cost,1000;
+set .@player1$,"Rock";
+set .@player2$,"Paper";
+set .@player3$,"Scissors";
+// ============== End of Settings =============================
+OnMenu:
+mes .@n$;
+mes "Hello,do you want to play";
+mes "some Rounds of Rock,Paper,";
+mes "Scissors?It just costs "+.cost+" Zenny.";
+next;
+switch(select("Yes:Cancel")) {
+	case 1:
+	mes .@n$;
+	if(Zeny < .cost) goto l_nozeny;
+	set Zeny, Zeny - .cost;
+	mes "Okay,get ready.";
+	set $@ran, rand(1,3);
+	if ($@ran == 3) set .@npcpick$,"Rock";
+	if ($@ran == 2) set .@npcpick$,"Paper";
+	if ($@ran == 1) set .@npcpick$,"Scissors";
+	next;
+	mes .@n$;
+	mes "What do you want to use?";
+	next;
+	switch(select("Rock:Paper:Scissors")) {
+		case 1:
+		mes .@n$;
+		mes "Okay you've picked Rock";
+		mes "and I've picked "+.@npcpick$+"!";
+		next;
+		if(.@npcpick$ == .@player3$) goto l_win;
+		if(.@npcpick$ == .@player2$) goto l_loose;
+		if(.@npcpick$ == .@player1$) goto l_draw;
+		close;
+		case 2:
+		mes .@n$;
+		mes "Okay you've picked Paper";
+		mes "and I've picked "+.@npcpick$+"!";
+		next;
+		if(.@npcpick$ == .@player3$) goto l_loose;
+		if(.@npcpick$ == .@player2$) goto l_draw;
+		if(.@npcpick$ == .@player1$) goto l_win;
+		close;
+		case 3:
+		mes .@n$;
+		mes "Okay you've picked Scissors";
+		mes "and I've picked "+.@npcpick$+"!";
+		next;
+		if(.@npcpick$ == .@player3$) goto l_draw;
+		if(.@npcpick$ == .@player2$) goto l_win;
+		if(.@npcpick$ == .@player1$) goto l_loose;
+		close;
+		}
+	case 2:
+	close;
+	}
+	l_win:
+	mes .@n$;
+	mes "Congrats you won!";
+	set $@ran2, rand(1,10);
+	if ($@ran2 == 10) set @prize,501;
+	if ($@ran2 == 9) set @prize,502;
+	if ($@ran2 == 8) set @prize,503;
+	if ($@ran2 == 7) set @prize,504;
+	if ($@ran2 == 6) set @prize,505;
+	if ($@ran2 == 5) set @prize,506;
+	if ($@ran2 == 4) set @prize,507;
+	if ($@ran2 == 3) set @prize,508;
+	if ($@ran2 == 2) set @prize,509;
+	if ($@ran2 == 1) set @prize,510;
+	set $@ran3, rand(1,3);
+	if ($@ran3 == 3) set @amount,3;
+	if ($@ran3 == 2) set @amount,2;
+	if ($@ran3 == 1) set @amount,1;
+	next;
+	mes .@n$;
+	mes "Take this Prize!";
+	getitem @prize,@amount;
+	goto OnMenu;
+	close;
+	l_loose:
+	mes .@n$;
+	mes "You lost!Let's play another round!";
+	goto OnMenu;
+	close;
+	l_draw:
+	mes .@n$;
+	mes "This was a draw,you'll get your money back!";
+	mes "but let's play another Round!";
+	set Zeny, Zeny + .cost;
+	goto OnMenu;
+	l_nozeny:
+	mes "Hey,are you kidding me?You need more Money!";
+	close;
+}

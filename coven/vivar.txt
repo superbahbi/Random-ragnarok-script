@@ -1,0 +1,165 @@
+prontera,35,84,5	script	Thor	868,{
+	mes "[Thor]";
+	mes "Yo wasup! I can make you mid-gears in exchange of things that I need.";
+	mes "This will be easy so don't slack off.";
+	next;
+	mes "[Thor]";
+	mes "Here's the list of what I can give you:";
+	next;
+	menu "Peco Ears",peco,"Ears of Ifrit",ears,"Mischievous Fairy",misc,"Black Framed Glasses",blac,"Filir Wings",fili,"Eye of Darkness",eyeo,"Cancel",H_Close;
+	peco:
+		mes "[Thor]";
+		mes "Make sure you ain't wasting my time for I ain't repeating myself for this.";
+		next;
+		mes "1 Hair Band";
+		mes "1 Angel Wing";
+		mes "1 Evil Wing";
+		mes "1 Orange Dyestuff";
+		mes "1 Cobaltblue Dyestuff";
+		mes "300 Feather of Birds";
+		menu "Make",M_peco,"Cancel",H_Close;
+		M_peco:
+			mes "Hmm let me see what you have.";
+			next;
+			if (countitem(2210) < 1) goto H_Lack;
+			if (countitem(2254) < 1) goto H_Lack;
+			if (countitem(2255) < 1) goto H_Lack;
+			if (countitem(980) < 1) goto H_Lack;
+			if (countitem(978) < 1) goto H_Lack;
+			if (countitem(916) < 300) goto H_Lack;
+			mes "[Thor]";
+			mes "Got em bro. Here you go.";
+			next;
+			delitem 2210,1;
+			delitem 2254,1;
+			delitem 2255,1;
+			delitem 980,1;
+			delitem 978,1;
+			delitem 916,300;
+			getitem 5358,1;
+			close;
+	ears:
+		mes "[Thor]";
+		mes "Ok, you have chosen this, I will be needing the following to create this headgear for you:";
+		next;
+		mes "500 Fireproof Potion";
+		mes "250 Lava";
+		mes "125 Burning Hair";
+		mes "3 Platinum Coin";
+		menu "Make",M_ears,"Cancel",H_Close;
+		M_ears:
+			mes "Hmm let me see what you have.";
+			next;
+			if (countitem(12118) < 500) goto H_Lack;
+			if (countitem(7096) < 250) goto H_Lack;
+			if (countitem(7122) < 125) goto H_Lack;
+			if (countitem(677) < 3) goto H_Lack;
+			mes "[Thor]";
+			mes "Got em bro. Here you go.";
+			next;
+			delitem 12118,500;
+			delitem 7096,250;
+			delitem 7122,125;
+			delitem 677,3;
+			getitem 5421,1;
+			close;
+	misc:
+		mes "[Thor]";
+		mes "Ok, you have chosen this, I will be needing the following to create this headgear for you:";
+		next;
+		mes "1 Elven Ears";
+		mes "88 Christmas Cookie Card";
+		mes "88 Cookie Card";
+		mes "88 Well-baked Cookie";
+		menu "Make",M_misc,"Cancel",H_Close;
+		M_misc:
+			mes "Hmm let me see what you have.";
+			next;
+			if (countitem(2286) < 1) goto H_Lack;
+			if (countitem(4235) < 88) goto H_Lack;
+			if (countitem(4293) < 88) goto H_Lack;
+			if (countitem(538) < 88) goto H_Lack;
+			mes "[Thor]";
+			mes "Got em bro. Here you go.";
+			next;
+			delitem 2286,1;
+			delitem 4235,88;
+			delitem 4293,88;
+			delitem 538,88;
+			getitem 5402,1;
+			close;
+	blac:
+		mes "[Thor]";
+		mes "Ok, you have chosen this, I will be needing the following to create this headgear for you:";
+		next;
+		mes "1 Red Glasses";
+		mes "25 Black Dyestuff";
+		mes "1 TCG";
+		menu "Make",M_blac,"Cancel",H_Close;
+		M_blac:
+			mes "Hmm let me see what you have.";
+			next;
+			if (countitem(5288) < 1) goto H_Lack;
+			if (countitem(983) < 25) goto H_Lack;
+			if (countitem(7227) < 1) goto H_Lack;
+			mes "[Thor]";
+			mes "Got em bro. Here you go.";
+			next;
+			delitem 5288,1;
+			delitem 983,25;
+			delitem 7227,1;
+			getitem 5401,1;
+			close;
+	fili:
+		mes "[Thor]";
+		mes "Ok, you have chosen this, I will be needing the following to create this headgear for you:";
+		next;
+		mes "300 Feather";
+		mes "300 Blue Feather";
+		mes "3 Mithril Coin";
+		menu "Make",M_fili,"Cancel",H_Close;
+		M_fili:
+			mes "Hmm let me see what you have.";
+			next;
+			if (countitem(949) < 300) goto H_Lack;
+			if (countitem(7441) < 300) goto H_Lack;
+			if (countitem(674) < 3) goto H_Lack;
+			mes "[Thor]";
+			mes "Got em bro. Here you go.";
+			next;
+			delitem 949,300;
+			delitem 7441,300;
+			delitem 674,3;
+			getitem 5664,1;
+			close;
+	eyeo:
+		mes "[Thor]";
+		mes "Ok, you have chosen this, I will be needing the following to create this headgear for you:";
+		next;
+		mes "1000 Steel";
+		mes "1 Eye of Dullahan";
+		mes "1 TCG";
+		menu "Make",M_eyeo,"Cancel",H_Close;
+		M_eyeo:
+			mes "Hmm let me see what you have.";
+			next;
+			if (countitem(999) < 1000) goto H_Lack;
+			if (countitem(2614) < 1) goto H_Lack;
+			if (countitem(7227) < 1) goto H_Lack;
+			mes "[Thor]";
+			mes "Got em bro. Here you go.";
+			next;
+			delitem 999,1000;
+			delitem 2614,1;
+			delitem 7227,1;
+			getitem 5470,1;
+			close;
+	H_Lack:
+		mes "[Thor]";
+		mes "Now that's time wasting. You don't have all that I need.";
+		close;
+	H_Close:
+		mes "[Thor]";
+		mes "Thanks, see you around.";
+		close;
+}

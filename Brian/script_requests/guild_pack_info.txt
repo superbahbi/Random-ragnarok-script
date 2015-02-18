@@ -1,0 +1,127 @@
+// http://rathena.org/board/topic/78517-guild-pack-information-giver/
+
+/*//==========================================================
+CREATE TABLE IF NOT EXISTS `guildpack_guilds` (
+  `guild_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `guild_name` VARCHAR(24) NOT NULL DEFAULT '',
+  `master_char_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `master_name` VARCHAR(24) NOT NULL DEFAULT '',
+  `redeem_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY  (`guild_id`)
+) ENGINE=MYISAM;
+
+CREATE TABLE IF NOT EXISTS `guildpack_members` (
+  `guild_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `account_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `char_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `name` VARCHAR(30) NOT NULL DEFAULT '',
+  `ip` VARCHAR(15) NOT NULL DEFAULT '',
+  PRIMARY KEY  (`guild_id`,`char_id`),
+  KEY `guild_id` (`guild_id`)
+) ENGINE=MYISAM;
+//==========================================================*/
+
+prontera,155,188,0	script	Guild Pack Info	910,{
+	switch(select( (countitem(21001)?"I have a GM's Approval Card":"") + ":Guild List")) {
+	case 1: // exchanging a GM's Approval Card (21001)
+		mes "[Guild Pack Info]";
+		if (!getcharid(2)) {
+			mes "^FF0000You must be in a guild to receive a guild package.^000000";
+			close;
+		} else if (getcharid(0) != getguildmasterid(getcharid(2))) {
+			mes "Please tell your guild leader ^0000FF"+getguildmaster(getcharid(2))+"^000000 to come and see me personally.";
+			close;
+		} else if (countitem(21001) < 1) {
+			mes "^FF0000You don't have a GM's Approval Card to exchange.^000000";
+			close;
+		}
+		
+		// check if guild has 10 members
+		query_sql "SELECT char_id,account_id,`name` FROM guild_member WHERE guild_id="+getcharid(2), .@char_id,.@account_id,.@name$;
+		if (getarraysize(.@char_id) < .guild_size) {
+			mes "You must have ^FF0000"+.guild_size+"^000000 guild members";
+			mes "(1 leader + "+(.guild_size-1)+" members).";
+			close;
+		}
+		// check if all guild members are online
+		for (set .@i,0; .@i<.guild_size; set .@i,.@i+1) {
+			if (!isloggedin(.@account_id[.@i], .@char_id[.@i])) {
+				mes "^FF0000"+ .@name$[.@i] +"^000000 is offline.";
+				mes "All "+.guild_size+" guild members must be online to receive the guild package.";
+				close;
+			}
+		}
+		// check if any guild members have ALREADY obtained a guild package
+		if (query_sql("SELECT `name`,guild_name FROM guildpack_members " + 
+		      "LEFT JOIN guildpack_guilds ON guildpack_members.guild_id=guildpack_guilds.guild_id " + 
+		      "WHERE account_id IN (SELECT account_id FROM guild_member WHERE guild_id="+getcharid(2)+") LIMIT 1", .@name$,.@guild$) > 0) {
+			mes "^0000FF"+.@name$+"^FF0000 already received a guild pack while in ^0000FF"+.@guild$+"^000000.";
+			mes "Each account can only receive a guild pack once.";
+			close;
+		}
+		mes "Exchange GM's Approval Card for Guild Pack?";
+		if (select("No:Yes, continue") == 1) close;
+		
+		// #SUCCESS - passed all checks
+		delitem 21001,1;
+		for (set .@i,0; .@i<.guild_size; set .@i,.@i+1) {
+			if (.@account_id[.@i] == playerattached()) {
+				getitem 21010,1; // leader
+			} else {
+				getitem 21011,1, .@account_id[.@i]; // each member
+			}
+		}
+		announce "Guild Pack Info : the guild ["+ strcharinfo(2) +"] has obtain a guild package.", bc_all|bc_blue;
+		
+		// record guild
+		query_sql "INSERT INTO guildpack_guilds (guild_id,guild_name,master_char_id,master_name,redeem_time) VALUES " + 
+		          "("+getcharid(2)+",'"+escape_sql(strcharinfo(2))+"', "+getcharid(0)+",'"+escape_sql(strcharinfo(0))+"', NOW())";
+		// record all guild members
+		query_sql "INSERT INTO guildpack_members(guild_id,account_id,char_id,`name`,ip) " + 
+		          "SELECT guild_id,guild_member.account_id,char_id,`name`,last_ip FROM guild_member " + 
+		          "LEFT JOIN login ON guild_member.account_id=login.account_id " + 
+		          "WHERE guild_id="+getcharid(2);
+		break;
+		
+	case 2: // Guild List
+		// get list of guilds
+		query_sql "SELECT guild_id,guild_name FROM guildpack_guilds ORDER BY guild_name ASC", .@guild_id,.@guild_name$;
+		mes "[Guild Pack Info]";
+		if (getarraysize(.@guild_id) == 0) {
+			mes "No guilds have received a guild pack.";
+			close;
+		}
+		for (set .@i,0; .@i<getarraysize(.@guild_id); set .@i,.@i+1)
+			set .@menu$, .@menu$ + .@guild_name$[.@i]+":";
+		// pick a guild
+		set .@GID, .@guild_id[set(.@g,select(.@menu$)-1)];
+		// get info for that guild
+		query_sql "SELECT guildpack_members.char_id, CONCAT(IF(ISNULL(guild_member.char_id),'^FF0000','^008000')," + 
+		          "guildpack_members.`name`), ip FROM guildpack_members " + 
+		          "LEFT JOIN guildpack_guilds ON guildpack_members.guild_id=guildpack_guilds.guild_id " + 
+		          "LEFT JOIN guild_member ON guildpack_members.char_id=guild_member.char_id AND guildpack_members.guild_id=guild_member.guild_id " + 
+		          "WHERE guildpack_members.guild_id="+.@GID+" " + 
+		          "ORDER BY (guildpack_members.char_id=master_char_id) DESC", 
+		          .@char_id, .@colored_name$, .@ip$;
+		// display guild info
+		mes "Guild : " + .@guild_name$[.@g];
+		mes "Status : " + (query_sql("SELECT 1 FROM guild WHERE guild_id="+.@GID,.@i) ? "^008000Active" : "^FF0000Disbanded") + "^000000";
+		mes "Leader : "+.@colored_name$[0]+"^000000 ("+.@ip$[0]+")";
+		mes "Members :";
+		for (set .@i,1; .@i<getarraysize(.@char_id); set .@i,.@i+1)
+			mes "  "+(.@i+1)+". "+.@colored_name$[.@i]+"^000000 ("+.@ip$[.@i]+")";
+		break;
+	}
+	close;
+
+OnInit:
+	set .guild_size, 10;
+	if (query_sql("SHOW TABLES LIKE 'guildpack_guilds'", .@t$) == 0) {
+		debugmes "[Guild Pack Info]: SQL table `guildpack_guilds` not found! Disabling npc.";
+		disablenpc strnpcinfo(3);
+	} else if (query_sql("SHOW TABLES LIKE 'guildpack_members'", .@t$) == 0) {
+		debugmes "[Guild Pack Info]: SQL table `guildpack_members` not found! Disabling npc.";
+		disablenpc strnpcinfo(3);
+	}
+	end;
+}

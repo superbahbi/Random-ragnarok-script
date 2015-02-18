@@ -1,0 +1,52 @@
+disco,110,80,5	script	WoE Prize	835,{
+if ( agitcheck() ) goto L_woeon;
+switch(select("Kriemhild [Primary Castle]:Scarlet Palace [Secondary Castle]")) {
+case 1:
+if ( getcastledata( "prtg_cas01", 1) != getcharid(2) ) goto L_not_owner;
+if ( $castle_claimed[1] ) goto L_claimed;
+if ( getguildmasterid( getcharid(2) ) != getcharid(0) ) goto L_not_gm;
+mes "receiving the reward for this castle";
+getitem 13503,1;
+set $castle_claimed[1], 1;
+close;
+L_not_owner:
+mes "Your guild failed to take this castle";
+mes "If your guild owned a castle ask your guild master to claim reward from me";
+close;
+L_claimed:
+mes "Your guild already received the reward for this castle";
+close;
+L_not_gm:
+mes "Ask your Guild Master to see me";
+close;
+case 2:
+if ( getcastledata( "payg_cas02", 1) != getcharid(2) ) goto L_not_owner2;
+if ( $castle_claimed2[1] ) goto L_claimed2;
+if ( getguildmasterid( getcharid(2) ) != getcharid(0) ) goto L_not_gm2;
+mes "receiving the reward for this castle";
+getitem 13504,1;
+set $castle_claimed2[1], 1;
+close;
+L_not_owner2:
+mes "Your guild failed to take this castle";
+mes "If your guild owned a castle ask your guild master to claim reward from me";
+close;
+L_claimed2:
+mes "Your guild already received the reward for this castle";
+close;
+L_not_gm2:
+mes "Ask your Guild Master to see me";
+close;
+}
+L_woeon:
+mes "A war is currently in progress";
+mes "If your guild owned a castle ask your guild master to see me to claim the reward";
+close;
+OnAgitEnd:
+set $castle_claimed[1], 0; // everytime woe ends the variable resets
+set $castle_claimed2[1], 0; // everytime woe ends the variable resets
+end;
+OnInit:
+waitingroom "Castle Reward",0;
+end;
+} 

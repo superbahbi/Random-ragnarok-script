@@ -1,0 +1,145 @@
+aldebaran,103,158,4	script	Marie Kim	960,{
+	mes "Bonjour ami :)";
+	mes "I am Kim.";
+	mes "I am one of the quintuplets who have specialized in coloring stuffs.";
+	next;
+	mes "[Kim]";
+	mes "I can color your Mage Hat if you like";
+	mes "The fee is low and I know that you can afford it.";
+	next;
+	mes "[Kim]";
+	mes "Now please choose what color would you like.";
+	next;
+	menu "Blue Mage Hat",H_Blue,"Brown Mage Hat",H_Brow,"Gray Mage Hat",H_Gray,"Red Mage Hat",H_Red,"Yellow Mage Hat",H_Yell,"Nevermind",H_Close;
+	H_Blue:
+		mes "[Kim]";
+		mes "I need some money and dye, specifically...";
+		next;
+		mes "1 Mage Hat";
+		mes "10 Cobaltblue Dyestuff";
+		mes "3 Platinum Coin";
+		menu "Make",M_Blue,"Cancel",H_Close;
+		M_Blue:
+			mes "I'll try to mix your ingredients.";
+			mes "If it's enough, then it will be succesful :)";
+			next;
+			if (countitem(5027) < 1) goto H_Lack;
+			if (countitem(978) < 10) goto H_Lack;
+			if (countitem(677) < 3) goto H_Lack;
+			mes "[Kim]";
+			mes "It seems you have brought enough.";
+			mes "Merci ami :)";
+			next;
+			delitem 5027,1;
+			delitem 978,10;
+			delitem 677,3;
+			getitem 5241,1;
+			close;
+	H_Brow:
+		mes "[Kim]";
+		mes "I need some money and dye, specifically...";
+		next;
+		mes "1 Mage Hat";
+		mes "10 Black Dyestuff";
+		mes "3 Platinum Coin";
+		menu "Make",M_Brow,"Cancel",H_Close;
+		M_Brow:
+			mes "I'll try to mix your ingredients.";
+			mes "If it's enough, then it will be succesful :)";
+			next;
+			if (countitem(5027) < 1) goto H_Lack;
+			if (countitem(983) < 10) goto H_Lack;
+			if (countitem(677) < 3) goto H_Lack;
+			mes "[Kim]";
+			mes "It seems you have brought enough.";
+			mes "Merci ami :)";
+			next;
+			delitem 5027,1;
+			delitem 983,10;
+			delitem 677,3;
+			getitem 5240,1;
+			close;
+	H_Gray:
+		mes "[Kim]";
+		mes "I need some money and dye, specifically...";
+		next;
+		mes "1 Mage Hat";
+		mes "10 White Dyestuff";
+		mes "3 Platinum Coin";
+		menu "Make",M_Gray,"Cancel",H_Close;
+		M_Gray:
+			mes "I'll try to mix your ingredients.";
+			mes "If it's enough, then it will be succesful :)";
+			next;
+			if (countitem(5027) < 1) goto H_Lack;
+			if (countitem(982) < 10) goto H_Lack;
+			if (countitem(677) < 3) goto H_Lack;
+			mes "[Kim]";
+			mes "It seems you have brought enough.";
+			mes "Merci ami :)";
+			next;
+			delitem 5027,1;
+			delitem 982,10;
+			delitem 677,3;
+			getitem 5239,1;
+			close;
+	H_Red:
+		mes "[Kim]";
+		mes "I need some money and dye, specifically...";
+		next;
+		mes "1 Mage Hat";
+		mes "10 Scarlet Dyestuff";
+		mes "3 Platinum Coin";
+		menu "Make",M_Red,"Cancel",H_Close;
+		M_Red:
+			mes "I'll try to mix your ingredients.";
+			mes "If it's enough, then it will be succesful :)";
+			next;
+			if (countitem(5027) < 1) goto H_Lack;
+			if (countitem(975) < 10) goto H_Lack;
+			if (countitem(677) < 3) goto H_Lack;
+			mes "[Kim]";
+			mes "It seems you have brought enough.";
+			mes "Merci ami :)";
+			next;
+			delitem 5027,1;
+			delitem 975,10;
+			delitem 677,3;
+			getitem 5238,1;
+			close;
+	H_Yell:
+		mes "[Kim]";
+		mes "I need some money and dye, specifically...";
+		next;
+		mes "1 Mage Hat";
+		mes "10 Lemon Dyestuff";
+		mes "3 Platinum Coin";
+		menu "Make",M_Yell,"Cancel",H_Close;
+		M_Yell:
+			mes "I'll try to mix your ingredients.";
+			mes "If it's enough, then it will be succesful :)";
+			next;
+			if (countitem(5027) < 1) goto H_Lack;
+			if (countitem(976) < 10) goto H_Lack;
+			if (countitem(677) < 3) goto H_Lack;
+			mes "[Kim]";
+			mes "It seems you have brought enough.";
+			mes "Merci ami :)";
+			next;
+			delitem 5027,1;
+			delitem 976,10;
+			delitem 677,3;
+			getitem 5242,1;
+			close;
+	H_Lack:
+		mes "[Kim]";
+		mes "Woah! I think you don't have the right items that I asked.";
+		mes "Please check your inventory :)";
+		close;
+	H_Close:
+		mes "[Kim]";
+		mes "Thank you.";
+		mes "Please also check the skills of my sisters.";
+		mes "They can dye other gears too.";
+		close;
+}

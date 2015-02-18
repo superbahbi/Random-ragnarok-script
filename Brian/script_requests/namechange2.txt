@@ -1,0 +1,18 @@
+// http://www.eathena.ws/board/index.php?showtopic=225576
+// http://sourceforge.net/apps/trac/eathena/changeset/14084/
+
+poring_c01,100,100,0	script	NameChange	910,{
+	// Zeny/Item cost goes here
+	// if(countitem(13962) < 5) {
+		// mes "[Namechange Service]";
+		// mes "It appears that you're lacking some Donation Credit Boxes.";
+		// close;
+	// }
+	// delitem 13962,5;
+	
+	set .@char_id, getcharid(0);	// save their Char ID
+	atcommand "@kick "+strcharinfo(0);
+	// sleep 500;	// (usually not necessary) give the server time to save their char to SQL
+	query_sql "UPDATE `char` SET `rename`=`rename` +1 WHERE char_id="+.@char_id;
+	end;
+}

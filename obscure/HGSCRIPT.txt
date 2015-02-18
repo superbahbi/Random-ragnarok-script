@@ -1,0 +1,193 @@
+prontera,111,246,4	script	Anna	759,{
+	mes "[Anna]";
+	mes "Hello! "+strcharinfo(0)+", I got new hats?";
+	next;
+	mes "[Anna]";
+	mes "Do you want to make one?";
+	next;
+	mes "[Anna]";
+	mes "You just need to bring me some items I need.";
+	next;
+	switch(select("Songkok","Ballon Hat","Evil Snake Lord Hat","Helm Of Abyss","Ship Captain's Hat","Judge Cap","Orchid Hairband","Marcher Hat","Carmen Miranda's Hat","Torch Cap")){
+	Case 1:
+		next;
+		mes "[Anna]"; //songkok
+		mes "1 Biretta"; //2216
+		mes "15pcs Black Dyestuff"; // 983
+		mes "5pcs Lemon Dyestuff"; //976
+		switch(select("Make","Cancel")){
+		Case 1:
+			if(countitem(2216)<1 || countitem(983)<15 || countitem(976)<5)
+			goto notenough;
+			delitem 2216,1;
+			delitem 983,15;
+			delitem 976,5;
+			getitem 5354,1;
+			close;
+		Case 2:
+			close;
+		}
+	Case 2:
+		next; //ballon hat
+		mes "[Anna]";
+		mes "1000pcs  Fabric"; //1059
+		mes "1 Blue Hairband"; //5052
+		switch(select("Make","Cancel")){
+		Case 1:
+			if(countitem(1059)<1000 || countitem(5052)<1)
+			goto notenough;
+			delitem 1059,1000;
+			delitem 5052,1;
+			getitem 5379,1;
+			close;
+		Case 2:
+			close;
+		}
+	Case 3:
+		next;
+		mes "[Anna]"; //evil snake lord hat
+		mes "1 Ph.D Hat "; //5012
+		mes "3 Ba Gua"; // 7169
+		switch(select("Make","Cancel")){
+		Case 1:
+			if(countitem(5012)<1 || countitem(7169)<3)
+			goto notenough;
+			delitem 5012,1;
+			delitem 7169,3;
+			getitem 5364,1;
+			close;
+		Case 2:
+			close;
+		}
+	Case 4:
+		next;
+		mes "[Anna]"; // helm of abyss
+		mes "5pcs Blade of Darkness"; //7023
+		mes "150pcs Reins"; //1064
+		switch(select("Make","Cancel")){
+		Case 1:
+			if(countitem(7023)<5 || countitem(1064)<150)
+			goto notenough;
+			delitem 7023,5;
+			delitem 1064,150;
+			getitem 5363,1;
+			close;
+		Case 2:
+			close;
+		}
+	Case 5:
+		next;
+		mes "[Anna]"; // ship captain hat
+		mes "1 Captain's Hat"; //5184
+		mes "1 Antlers"; // 2284
+		mes "30pcs Scarlet Dyestuff"; //975
+		switch(select("Make","Cancel")){
+		Case 1:
+			if(countitem(5184)<1 || countitem(2284)<1 || countitem(975)<30)
+			goto notenough;
+			delitem 5184,1;
+			delitem 2284,1;
+			delitem 975,30;
+			getitem 5359,1;
+			close;
+		Case 2:
+			close;
+		}
+	Case 6:
+		next;
+		mes "[Anna]"; //judge cap
+		mes "1 Eye of Dullahan"; //2614
+		mes "30pcs Black Dyestuff"; //983
+		switch(select("Make","Cancel")){
+		Case 1:
+			if(countitem(2614)<1 || countitem(983)<30)
+			goto notenough;
+			delitem 2614,1;
+			delitem 983,30;
+			getitem 5371,1;
+			close;
+		Case 2:
+			close;
+		}
+	Case 7:
+		next;
+		mes "[Anna]"; //orchid headband
+		mes "1 Flower Hairpin"; //5061
+		mes "1  Smokie Leaf"; //5064
+		switch(select("Make","Cancel")){
+		Case 1:
+			if(countitem(5061)<1 || countitem(5064)<1)
+			goto notenough;
+			delitem 5061,1;
+			delitem 5064,1;
+			getitem 5370,1;
+			close;
+		Case 2:
+			close;
+		}
+	Case 8:
+		next;
+		mes "[Anna]"; //marcher hat
+		mes "1 Army Cap"; //2261
+		mes "20pcs Cobaltblue Dyestuff"; //978
+		mes "200pcs Soft Feather"; //7063 
+		switch(select("Make","Cancel")){
+		Case 1:
+			if(countitem(2261)<1 || countitem(978)<20 || countitem(7063 )<200)
+			goto notenough;
+			delitem 2261,1;
+			delitem 978,20;
+			delitem 7064,200;
+			getitem 5225,1;
+			close;
+		Case 2:
+			close;
+		}
+	Case 9:
+		next;
+		mes "[Anna]"; //Carmen Miranda's Hat
+		mes "500pcs Banana"; //513
+		mes "100pcs Grape"; //514
+		mes "1 Cap"; //2227
+		switch(select("Make","Cancel")){
+		Case 1:
+			if(countitem(513)<500 || countitem(514)<100 || countitem(2227)<1)
+			goto notenough;
+			delitem 513,500;
+			delitem 514,100;
+			delitem 2227,1;
+			getitem 5307,1;
+			close;
+		Case 2:
+			close;
+		}
+	Case 10:
+		next;
+		mes "[Anna]"; //torch cap
+		mes "500 Burning Hair"; //7122
+		mes "500 Burning Heart"; //7097
+		mes "1 Crown"; //2235
+		switch(select("Make","Cancel")){
+		Case 1:
+			if(countitem(7122)<500 || countitem(7097)<500 || countitem(2235)<1)
+			goto notenough;
+			delitem 2216,500;
+			delitem 983,500;
+			delitem 2235,1;
+			getitem 5430,1;
+			close;
+		Case 2:
+			close;
+		}
+
+	notenough:
+		next;
+		mes "[Anna]";
+		mes "You don't have the required materiels.";
+		mes "Please come back another time...";
+		close;
+
+
+	}
+
+}

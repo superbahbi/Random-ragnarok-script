@@ -1,0 +1,97 @@
+aldebaran,101,160,4	script	Eunice	960,{
+	mes "Bonjour ami :)";
+	mes "I am Eunice.";
+	mes "I am one of the quintuplets who have specialized in coloring stuffs.";
+	next;
+	mes "[Eunice]";
+	mes "I can color your Deviruchi Hat if you like";
+	mes "The fee is low and I know that you can afford it.";
+	next;
+	mes "[Eunice]";
+	mes "Now please choose what color would you like.";
+	next;
+	menu "Brown Deviruchi Hat",H_Brow,"Gray Deviruchi Hat",H_Gray,"Red Deviruchi Hat",H_Red,"Nevermind",H_Close;
+	H_Brow:
+		mes "[Eunice]";
+		mes "I need some money and dye, specifically...";
+		next;
+		mes "1 Deviruchi Hat";
+		mes "10 Black Dyestuff";
+		mes "3 Platinum Coin";
+		menu "Make",M_Brow,"Cancel",H_Close;
+		M_Brow:
+			mes "I'll try to mix your ingredients.";
+			mes "If it's enough, then it will be succesful :)";
+			next;
+			if (countitem(5038) < 1) goto H_Lack;
+			if (countitem(983) < 10) goto H_Lack;
+			if (countitem(677) < 3) goto H_Lack;
+			mes "[Eunice]";
+			mes "It seems you have brought enough.";
+			mes "Merci ami :)";
+			next;
+			delitem 5038,1;
+			delitem 983,10;
+			delitem 677,3;
+			getitem 5229,1;
+			close;
+	H_Gray:
+		mes "[Eunice]";
+		mes "I need some money and dye, specifically...";
+		next;
+		mes "1 Deviruchi Hat";
+		mes "10 White Dyestuff";
+		mes "3 Platinum Coin";
+		menu "Make",M_Gray,"Cancel",H_Close;
+		M_Gray:
+			mes "I'll try to mix your ingredients.";
+			mes "If it's enough, then it will be succesful :)";
+			next;
+			if (countitem(5038) < 1) goto H_Lack;
+			if (countitem(982) < 10) goto H_Lack;
+			if (countitem(677) < 3) goto H_Lack;
+			mes "[Eunice]";
+			mes "It seems you have brought enough.";
+			mes "Merci ami :)";
+			next;
+			delitem 5038,1;
+			delitem 982,10;
+			delitem 677,3;
+			getitem 5228,1;
+			close;
+	H_Red:
+		mes "[Eunice]";
+		mes "I need some money and dye, specifically...";
+		next;
+		mes "1 Deviruchi Hat";
+		mes "10 Scarlet Dyestuff";
+		mes "3 Platinum Coin";
+		menu "Make",M_Red,"Cancel",H_Close;
+		M_Red:
+			mes "I'll try to mix your ingredients.";
+			mes "If it's enough, then it will be succesful :)";
+			next;
+			if (countitem(5038) < 1) goto H_Lack;
+			if (countitem(975) < 10) goto H_Lack;
+			if (countitem(677) < 3) goto H_Lack;
+			mes "[Eunice]";
+			mes "It seems you have brought enough.";
+			mes "Merci ami :)";
+			next;
+			delitem 5038,1;
+			delitem 975,10;
+			delitem 677,3;
+			getitem 5227,1;
+			close;
+	H_Lack:
+		mes "[Eunice]";
+		mes "Woah! I think you don't have the right items that I asked.";
+		mes "Please check your inventory :)";
+		close;
+	H_Close:
+		mes "[Eunice]";
+		mes "Thank you.";
+		mes "Please also check the skills of my sisters.";
+		mes "They can dye other gears too.";
+		close;
+}

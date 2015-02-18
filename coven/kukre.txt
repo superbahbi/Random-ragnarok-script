@@ -1,0 +1,61 @@
+/////////////////////Edited Poring Event by hellflaem aka Nezra.///////////////////////
+/////////////////////Credit: Wild Karrd////////////////////////////////////////////////
+/////////////////////http://www.eathena.ws/board/Poring-Event-t183026.html/////////////
+-	script	KukreEvent	-1,{
+OnMinute30:
+	switch(rand(1,5)){
+		
+	case 1:
+
+announce "Kukre: Hi guys! You Are bored? Find me in Archer Village I'll give you some TCG!",0;
+initnpctimer;
+monster "pay_arche",0,0,"Kukre",1070,1,strnpcinfo(0)+"::OnMobKilled";
+monster "pay_arche",0,0,"Kukree",1070,25,strnpcinfo(0)+"::OnWrongKilled";
+monster "pay_arche",0,0,"Kukrie",1070,25,strnpcinfo(0)+"::OnWrongKilled";
+monster "pay_arche",0,0,"Kuker",1070,25,strnpcinfo(0)+"::OnWrongKilled";
+monster "pay_arche",0,0,"Kukkre",1070,25,strnpcinfo(0)+"::OnWrongKilled";
+monster "pay_arche",0,0,"Kure",1070,25,strnpcinfo(0)+"::OnWrongKilled";
+monster "pay_arche",0,0,"Kuckre",1070,10,strnpcinfo(0)+"::OnWrongKilled";
+monster "pay_arche",0,0,"Kurkre",1070,10,strnpcinfo(0)+"::OnWrongKilled";
+monster "pay_arche",0,0,"Kukrre",1070,25,strnpcinfo(0)+"::OnWrongKilled";
+monster "pay_arche",0,0,"Kurkre",1070,25,strnpcinfo(0)+"::OnWrongKilled";
+monster "pay_arche",0,0,"Kikre",1070,25,strnpcinfo(0)+"::OnWrongKilled";
+monster "pay_arche",0,0,"Kokre",1070,25,strnpcinfo(0)+"::OnWrongKilled";
+monster "pay_arche",0,0,"Kakre",1070,25,strnpcinfo(0)+"::OnWrongKilled";
+monster "pay_arche",0,0,"Kekre",1070,25,strnpcinfo(0)+"::OnWrongKilled";
+monster "pay_arche",0,0,"Kurke",1070,10,strnpcinfo(0)+"::OnWrongKilled";
+monster "pay_arche",0,0,"Kukcre",1070,10,strnpcinfo(0)+"::OnWrongKilled";
+set .kukrecatch,1;
+end;
+
+OnTimer180000:
+stopnpctimer;
+announce "Kukre: Sorry guys, no one found me. Till next time!",0;
+set .kukrecatch,0;
+killmonsterall "pay_arche";
+end;
+
+OnMobKilled:
+stopnpctimer;
+announce "Kukre: "+strcharinfo(0)+" found me. Congratulations!",0;
+dispbottom "Congrats, You found me.";
+getitem 7227,1;
+killmonsterall "pay_arche";
+set .kukrecatch,0;
+end;
+
+OnWrongKilled:
+	dispbottom "Oops wrong guy :(";
+	//percentheal -99,-99;
+	warp "prontera",155,175;
+	end;
+
+	case 2:
+		end;
+	case 3:
+		end;
+	case 4:
+		end;
+
+}
+}

@@ -1,0 +1,126 @@
+//        //=====//     /==/     /==/          /==/      
+//       //     //     /==/     /==/  /=/     /==/         
+//      //=====//              /==/  /=/             /==============/     /========/   /==//===/    /==/     /==/
+//     //=//////    /==/      /==//=/       /==/    /==/==/==/==/==/     /     /  /   /==/         /==/     /==/
+//    // ==        /==/      /==//=/       /==/    /==/  /==/  /==/     ======/  /   /==/         /==/     /==/
+//   //   ==      /==/      /==/  /=/     /==/    /==/  /==/  /==/     / /===/  /   /==/         /==/     /==/
+//  //     ==    /==/      /==/   /=/    /==/    /==/  /==/  /==/     / /===/  /   /==/         /==/=====/==/
+// //       ==  /==/      /==/    /=/   /==/    /==/  /==/  /==/     /========/   /==/         /==///////==/
+// ================ rAthena Script ==================================================
+// ============== Information =======================================================
+// = iRO Daily Quest : Church Donation
+// = Made by :
+// = Rikimaru
+//===== Current Version: =============================================== 
+//= 1.2
+//===== Compatible With: =============================================== 
+//= any rAthena SVN
+//===== Description: =================================================== 
+//= The iRO Daily Quest : Church Donation
+//= Usefull for having fun in a Server with a Mini Quest
+//= Has a counter of 24 Hours until the Players can do the Quest agian.
+//===== Additional Comments: =========================================== 
+//= 1.1 Finished adding the stats food effects. [Rikimaru]
+//= 1.2 Fixed a few Bugs in the Script [Rikimaru]
+//====================================================================== 
+//============== DO NOT REMOVE MY CREDITS AND CLAIM MY WORK AS YOURS ===
+prontera,165,191,3	script	[Quest] Church Worker	790,{
+set .@npcname$,"^0000FF[ [Quest] Church Worker ]^000000";
+if(gettimetick(2) - donatedalready < (60 * 60 * 24)) {
+mes .@npcname$;
+mes "Sorry,but you have to wait 24 Hours,before you";
+mes "can do the Quest again!";
+close;
+}
+if(BaseLevel >= 60 && BaseLevel <= 80) {
+mes .@npcname$;
+mes "Hello "+strcharinfo(0)+",do";
+mes "you want to get special";
+mes "Buffs for 40.000 Zenny?";
+next;
+switch(select("Yes,sure:No,bye:Cancel")) {
+	case 1:
+	mes .@npcname$;
+	mes "Let me check everything.";
+	if(Zeny < 40000) goto L_nozeny;
+	set Zeny,Zeny - 40000;
+	set BaseExp,+80000;
+	set JobExp,+50000;
+	sc_start SC_STRFood,180000,5;
+	sc_start SC_AGIFood,180000,5;
+	sc_start SC_VITFood,180000,5;
+	sc_start SC_INTFood,180000,5;
+	sc_start SC_DEXFood,180000,5;
+	sc_start SC_LUKFood,180000,5;
+	set donatedalready,gettimetick(2);
+	next;
+	mes .@npcname$;
+	mes "Okay,thank you and have fun!";
+	close;
+	}
+}
+if(BaseLevel >=81 && BaseLevel <=96) {
+mes .@npcname$;
+mes "Hello "+strcharinfo(0)+",do";
+mes "you want to get special";
+mes "Buffs for 80.000 Zenny?";
+next;
+switch(select("Yes,sure:No,bye:Cancel")) {
+	case 1:
+	mes .@npcname$;
+	mes "Let me check everything.";
+	if(Zeny < 80000) goto L_nozeny;
+	set Zeny,Zeny - 80000;
+	set BaseExp,+200000;
+	set JobExp,+60000;
+	sc_start SC_STRFood,180000,6;
+	sc_start SC_AGIFood,180000,6;
+	sc_start SC_VITFood,180000,6;
+	sc_start SC_INTFood,180000,6;
+	sc_start SC_DEXFood,180000,6;
+	sc_start SC_LUKFood,180000,6;
+	set donatedalready,gettimetick(2);
+	next;
+	mes .@npcname$;
+	mes "Okay,thank you and have fun!";
+	close;
+	}
+}
+if(BaseLevel >=97 && BaseLevel <=99) {
+mes .@npcname$;
+mes "Hello "+strcharinfo(0)+",do";
+mes "you want to get special";
+mes "Buffs for 200.000 Zenny?";
+next;
+switch(select("Yes,sure:No,bye:Cancel")) {
+	case 1:
+	mes .@npcname$;
+	mes "Let me check everything.";
+	if(Zeny < 200000) goto L_nozeny;
+	set Zeny,Zeny - 200000;
+	set BaseExp,+400000;
+	set JobExp,+100000;
+	sc_start SC_STRFood,180000,7;
+	sc_start SC_AGIFood,180000,7;
+	sc_start SC_VITFood,180000,7;
+	sc_start SC_INTFood,180000,7;
+	sc_start SC_DEXFood,180000,7;
+	sc_start SC_LUKFood,180000,7;
+	set donatedalready,gettimetick(2);
+	next;
+	mes .@npcname$;
+	mes "Okay,thank you and have fun!";
+	close;
+	}
+}
+mes .@npcname$;
+mes "Hello,you can use my Service,";
+mes "when you're at least Baselevel 60";
+close;
+L_nozeny:
+mes .@npcname$;
+mes "Sorry,but you need more Zeny!";
+close;
+}
+// ==================================== End of the Scripts =======================================
+// ============================= Have fun with the Scripts. Yours,Rikimaru =======================

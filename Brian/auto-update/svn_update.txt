@@ -1,0 +1,74 @@
+//===== rAthena Script =======================================
+//= Automated SVN updates
+//===== By: ==================================================
+//= Brian
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: =====================================
+//= rAthena SVN (SQL only)
+//===== Description: =========================================
+//= Automatically 'svn update', recompile, and restart server.
+//===== Additional Comments: =================================
+//= 
+//============================================================
+
+-	script	SVN_update	-1,{
+OnWhisperGlobal:
+	if (.restart)
+		dispbottom "Server restart for updates at "+.time$+".";
+	end;
+
+OnMon0345:
+OnThu0345:
+	// check if update is needed
+	query_logsql "SELECT `restart` FROM `svn_log` ORDER BY `id` DESC LIMIT 1", .restart;
+	
+	if (.restart) {
+		initnpctimer;
+		set .time$, gettime(3)+1 +":"+ gettime(2) + ( (gettime(3)<12)?" am":" pm" );
+		announce "Server restart for updates at "+.time$+" (1 hour from now).", bc_blue;
+		atcommand "@reloadmotd";
+	}
+	end;
+
+OnTimer1800000: // 30 mins later
+	announce "Server restart for updates at "+.time$+".", bc_blue;
+	announce "Please be ready to log off in 30 minutes.", bc_blue;
+	end;
+
+OnTimer2700000: // 45 mins later
+	announce "Server restart for updates at "+.time$+".", bc_blue;
+	announce "Please be ready to log off in 15 minutes.", bc_blue;
+	end;
+
+OnTimer3300000: // 55 mins later
+	announce "Server restart for updates at "+.time$+".", bc_blue;
+	announce "Please log off in the next 5 minutes.", bc_blue;
+	end;
+
+/*
+OnTimer3390000: // 56.5 mins later
+	while (getusers(1) > 100) {
+		atcommand "@kick50vend"; // kick 50 venders at a time
+		sleep 20000; // wait 20 secs, repeat
+	}
+	end;
+*/
+
+OnTimer3480000: // 58 mins later
+	announce "Please log off now! The server will be back online in 4 minutes.", bc_blue;
+	end;
+
+OnTimer3540000: // 59 mins later
+	announce "Kicking afk players and restarting server!", bc_blue;
+	do {
+		atcommand "@kickall";
+		sleep 15000;
+	} while (getusers(1));
+// This should only take 1 or 2 cycles (15 or 30 secs) to kick everyone. 
+// The OnTimer label is in case @kickall doesn't finish in 4 cycles (60 seconds).
+OnTimer3600000: // 60 mins later
+	stopnpctimer;
+	atcommand "@mapexit";
+	end;
+}

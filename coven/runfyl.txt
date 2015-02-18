@@ -1,0 +1,205 @@
+//-----------------------------------------------//
+//-----------------RFYL Event--------------------//
+//-----------------------------------------------//
+//-----------------------------------------------//
+//----------JaeRO - Home of Phoenix Pride--------//
+//-----------------------------------------------//
+
+-	script	RFYL#disable	-1,{
+
+OnInit:
+disablenpc "RFYL Warper";
+disablenpc "RFYL Warper#2";
+end;
+}
+
+poring_c02,214,223,5	script	RFYL Event	485,{
+
+	if (getgmlevel() >= 90) goto RFYL_Admin;
+	if (getgmlevel() >= 1 && getgmlevel() <= 20) goto RFYL_Staff;
+	if ($@RFYL_Ongoing == 1) {
+	mes "[RFYL Event]";
+	mes "RFYL Event is still ongoing.";
+	close;
+	}
+	mes "[RFYL Event]";
+	mes "Hello " + strcharinfo(0) + ", this NPC is for Event GMs use only.";
+	close;
+	
+RFYL_Admin:
+	mes "[RFYL Event]";
+	mes "Hello GM " + strcharinfo(0) + ", would you like me to start RFYL Event?";
+	menu "Start Event",RFYL_check,"Reset",reset_RFYL,"Warp",warp_RFYL,"No Thanks",endRFYL;
+	RFYL_check:
+		next;
+		if ($@RFYL_Ongoing == 1) goto al_started;
+		mes "[RFYL Event]";
+		mes "Ok, starting Event.";
+		set $@RFYL_Ongoing,1;
+		close2;
+		goto startRFYLevent;
+	checkprize:
+		next;
+		mes "[RFYL Event]";
+		mes "The current prize is ^008000"+ $RFYL_item_amount +" "+ getitemname($RFYL_item_id) +"^000000";
+		next;
+		goto RFYL_Admin;
+	setprize:
+		next;
+		if ($@RFYL_Ongoing == 1) goto cant_set;
+		mes "[RFYL Event]";
+		mes "What should the prize for winning be? Please input the ID";
+		input $RFYL_item_id;
+		next;
+		mes "[RFYL Event]";
+		mes "How many of this item should we give away?";
+		input $RFYL_item_amount;
+		next;
+		mes "[RFYL Event]";
+		mes "So, the prize is ^008000"+ $RFYL_item_amount +" "+ getitemname($RFYL_item_id) +"^000000? Wonderful dear.";
+		next;
+		goto RFYL_Admin;
+	warp_RFYL:
+		next;
+		mes "[RFYL Event]";
+		mes "I will now warp you to the RFYL Event map.";
+		next;
+		warp "quiz_01",230,368;
+		end;
+	endRFYL:
+		next;
+		mes "[RFYL Event]";
+		mes "Ok darling, nice seeing you.";
+		close;
+	reset_RFYL:
+		mes "[RFYL Event]";
+		mes "Resetting Now.";
+		close2;
+		set $@RFYL_Ongoing,0;
+		killmonsterall "quiz_01";
+		disablenpc "Summoner";
+		end;
+
+
+cant_set:
+	mes "[RFYL Event]";
+	mes "You can't set the Prize while the event is Running";
+	close;
+
+al_started:
+	mes "[RFYL Event]";
+	mes "The event is still running";
+	close;
+
+
+RFYL_Staff:
+	mes "[RFYL Event]";
+	mes "Hello GM " + strcharinfo(0) + ", would you like me to start RFYL Event?";
+	menu "Start Event",staff_startRFYL,"Warp",join_RFYL,"No Thanks",staff_cancel;
+	staff_startRFYL:
+		next;
+		if ($@RFYL_Ongoing == 1) goto started_staff;
+		mes "[RFYL Event]";
+		mes "Ok, starting Event.";
+		set $@RFYL_Ongoing,1;
+		close2;
+		goto startRFYLevent;
+	staff_checkprize:
+		next;
+		mes "[RFYL Event]";
+		mes "The current prize is ^008000"+ $RFYL_item_amount +" "+ getitemname($RFYL_item_id) +"^000000";
+		next;
+		goto RFYL_Staff;
+	join_RFYL:
+		mes "[RFYL Event]";
+		mes "I will now warp you to the RFYL Event map.";
+		next;
+		warp "quiz_01",230,368;
+		end;
+	staff_cancel:
+		next;
+		mes "[RFYL Event]";
+		mes "Ok, see you later.";
+		close;
+	staff_reset:
+		mes "[RFYL Event]";
+		mes "Resetting Now.";
+		close2;
+		set $@RFYL_Ongoing,0;
+		end;
+started_staff:
+	mes "[RFYL Event]";
+	mes "The event is still running";
+	close;
+
+startRFYLevent:
+announce "RFYL Warper: Get ready for Run For Your Life Event.",0;
+sleep2 10000;
+announce "RFYL Warper: Warps opening in 1 minute..",0;
+initnpctimer;
+end;
+OnTimer60000:
+announce "RFYL Warper: Closing warps in 60 Seconds",0;
+enablenpc "RFYL Warper";
+enablenpc "RFYL Warper#2";
+end;
+
+OnTimer90000:
+announce "RFYL Warper: Closing warps in 30 seconds",0;
+sleep2 5000;
+end;
+
+OnTimer110000:
+announce "RFYL Warper: Last 10 seconds.",0;
+end;
+
+OnTimer115000:
+announce "RFYL Warper: 5.",0;
+end;
+
+OnTimer116000:
+announce "RFYL Warper: 4.",0;
+end;
+
+OnTimer117000:
+announce "RFYL Warper: 3.",0;
+end;
+
+OnTimer118000:
+announce "RFYL Warper: 2.",0;
+end;
+
+OnTimer119000:
+announce "RFYL Warper: 1.",0;
+end;
+
+OnTimer120000:
+announce "RFYL Warper: Warps are now closed.",0;
+end;
+
+OnTimer121000:
+disablenpc "RFYL Warper";
+disablenpc "RFYL Warper#2";
+end;
+}
+//---------RFYL Registration---------------
+prontera,156,159,5	script	RFYL Warper	811,{
+	
+	mes "[RFYL Manager]";
+	mes "I will now warp you to the RFYL Event map.";
+	next;
+	warp "quiz_01",230,368;
+	end;
+}
+// ----Manager Setting------------
+
+// == Mapflags
+quiz_01	mapflag	nowarp
+quiz_01	mapflag	notrade
+quiz_01	mapflag	noteleport
+quiz_01	mapflag	nosave
+quiz_01	mapflag	nomemo
+quiz_01	mapflag	nobranch
+quiz_01	mapflag	noskill
+quiz_01	mapflag	pvp	off
+quiz_01	mapflag	restricted	3

@@ -1,0 +1,48 @@
+// http://www.eathena.ws/board/index.php?showtopic=239930
+
+// Title: RO Credit Card; Includes Various rates (That can be modified easily by editing variables in the script)
+// 
+// System:
+// 
+// 
+// 
+// 
+// Whatever card the player chooses, the player will receive that card. They will have the option of buying items
+// from an npc using either their own zeny or the card. When payments are due, an npc prompt will come up when the player
+// logs in, and every hour they are logged in they receive a PM from an npc (regardless of whisper block status; see note 1 
+// for pm/npc prompt format) until they pay any outstanding fees. If they don't pay the first due date, interest is compunded If they do not pay any debts over a 2 month period (1 month for platinum cards), any items purchased using the card will be repo'd, and they receive a zeny fine of 20% of their zeny.
+// 
+// EDIT1: The items purchased should be untradeable as well. The debt should go to the whole account, from the character that has the most zeny.
+// 
+// Note 1: 
+	dispbottom "Credit Collector: Attention, "+strcharinfo(0)+"! You have outstanding Credit fees due!";
+	dispbottom "Credit Collector: ------------------------------";
+	dispbottom "Credit Collector: Monthly Fees: XXXXX zeny";
+	dispbottom "Credit Collector: Credit Fees: ZZZZZ zeny";
+	dispbottom "Credit Collector: Total Credit due: XZXZX zeny";
+	dispbottom "Credit Collector: ------------------------------";
+	dispbottom "Credit Collector: Please pay any outstanding fees, or any items purchased with the card will be repo'd, along with a zeny fine!";
+// 
+// 
+// Again, thanks ahead of time for anyone who takes the inititive to make this!
+
+ball2,55,55,0	script	credit_card::test	910,{
+	mes "[Card Manager NPC]";
+	mes "What card would you like to sign up for?";
+	switch(select("Bronze:Gold:Platinum:Cancel my Card:Quit")) {
+	case 1: // Bronze (500 Zeny monthly fee, Payments due by month end, 7% Interest, 50,000 zeny cap)
+		break;
+	case 2: // Gold (1000 Zeny monthly fee, Payments due by month end, 14% Interest, 100,000 zeny cap)
+		break;
+	case 3: // Platinum (2000 Zeny Monthly fee, Payments due bi-weekly, 20% Interest, 250,000 zeny cap)
+		break;
+	case 4: // Cancel my Card (Closes the card)
+		break;
+	case 5: // Quit (Exits the npc)
+		break;
+	}
+	
+	
+	
+	close;
+}

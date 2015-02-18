@@ -1,0 +1,423 @@
+prontera,164,162,4	script	The M v P	869,{
+	mes "[Jester]";
+	mes "Hello young one :), I have new headgears for you";
+	mes "I know you would love them as all of these are cute.";
+	mes "Please bring me some items that I would ask for each headgear.";
+	mes "Here's the list of, please choose one:";
+	next;
+	menu "Drooping Ninetail",H_Nine,"Drooping Bunny",H_Bunny,"Drooping Lif",H_Lif,"Neko Mimi",H_Neko,"Kawaii Ribbon",H_Kawa,"Pinwheel Hairpin",H_Pin,"Vacation Hat",H_Vaca,"Moonlight Flower Hat",H_Moon,"Flapping Angel Wing",H_Flap,"Vanilmirth Hat",H_Vani,"Angeling Hairpin",H_Ange,"Kafra Band",H_Kafr,"Sunflower Hairpin",H_Sunf,"Soul Ring",H_Soul,"Golden Tiara",H_Gold,"Silver Tiara",H_Silv,"Bunny Top Hat",H_Bunn,"Red Glasses",H_Glas,"Nevermind",H_Close;
+	H_Nine:
+		mes "[Jester]";
+		mes "Kindly get:";
+		next;
+		mes "888 Nine Tail";
+		mes "5 Lemon Dyestuff";
+		menu "Make",M_Nine,"Cancel",H_Close;
+		M_Nine:
+			mes "Let me see what you got.";
+			next;
+			if (countitem(1022) < 888) goto H_Lack;
+			if (countitem(976) < 5) goto H_Lack;
+			mes "[Jester]";
+			mes "You got it all, now I shall reward you.";
+			next;
+			delitem 1022,888;
+			delitem 976,5;
+			getitem 5252,1;
+			close;
+	H_Bunny:
+		mes "[Jester]";
+		mes "Kindly get:";
+		next;
+		mes "888 Animal Skin";
+		mes "5 Orange Dyestuff";
+		menu "Make",M_Bunny,"Cancel",H_close;
+		M_Bunny:
+			mes "Let me see what you got.";
+			next;
+			if (countitem(919) < 888) goto H_Lack;
+			if (countitem(980) < 5) goto H_Lack;
+			mes "[Jester]";
+			mes "You got it all, now I shall reward you.";
+			next;
+			delitem 919,888;
+			delitem 980,5;
+			getitem 5198,1;
+			close;
+	H_Lif:
+		mes "[Jester]";
+		mes "Kindly get:";
+		next;
+		mes "888 Green Live";
+		mes "5 Darkgreen Dyestuff";
+		menu "Make",M_Lif,"Cancel",H_close;
+		M_Lif:
+			mes "Let me see what you got.";
+			next;
+			if (countitem(993) < 888) goto H_Lack;
+			if (countitem(979) < 5) goto H_Lack;
+			mes "[Jester]";
+			mes "You got it all, now I shall reward you.";
+			next;
+			delitem 993,888;
+			delitem 979,5;
+			getitem 5253,1;
+			close;
+	H_Cat:
+		mes "[Jester]";
+		mes "Kindly get:";
+		next;
+		mes "888 Black Cat Doll";
+		mes "5 Black Dyestuff";
+		menu "Make",M_Cat,"Cancel",H_close;
+		M_Cat:
+			mes "Let me see what you got.";
+			next;
+			if (countitem(7206) < 888) goto H_Lack;
+			if (countitem(983) < 5) goto H_Lack;
+			mes "[Jester]";
+			mes "You got it all, now I shall reward you.";
+			next;
+			delitem 7206,888;
+			delitem 983,5;
+			getitem 5058,1;
+			close;
+	H_Neko:
+		mes "[Jester]";
+		mes "Kindly get:";
+		next;
+		mes "500 Soft Feather";
+		mes "3 Lemon Dyestuff";
+		mes "10 Silver Knife of Chastity";
+		menu "Make",M_Neko,"Cancel",H_close;
+		M_Neko:
+			mes "Let me see what you got.";
+			next;
+			if (countitem(7063) < 500) goto H_Lack;
+			if (countitem(976) < 3) goto H_Lack;
+			if (countitem(638) < 10) goto H_Lack;
+			mes "[Jester]";
+			mes "You got it all, now I shall reward you.";
+			next;
+			delitem 7063,500;
+			delitem 976,3;
+			delitem 638,10;
+			getitem 5099,1;
+			close;
+	H_Kawa:
+		mes "[Jester]";
+		mes "Kindly get:";
+		next;
+		mes "1 Red Tailed Ribbon";
+		mes "10 Wrapping Lace";
+		menu "Make",M_Kawa,"Cancel",H_close;
+		M_Kawa:
+			mes "Let me see what you got.";
+			next;
+			if (countitem(5083) < 1) goto H_Lack;
+			if (countitem(7174) < 10) goto H_Lack;
+			mes "[Jester]";
+			mes "You got it all, now I shall reward you.";
+			next;
+			delitem 5083,1;
+			delitem 7174,10;
+			getitem 5140,1;
+			close;
+	H_Pin:
+		mes "[Jester]";
+		mes "Kindly get:";
+		next;
+		mes "1 Flower Hairpin";
+		mes "300 Steel";
+		mes "300 Needle of Alarm";
+		menu "Make",M_Pin,"Cancel",H_close;
+		M_Pin:
+			mes "Let me see what you got.";
+			next;
+			if (countitem(5061) < 1) goto H_Lack;
+			if (countitem(999) < 300) goto H_Lack;
+			if (countitem(1095) < 300) goto H_Lack;
+			mes "[Jester]";
+			mes "You got it all, now I shall reward you.";
+			next;
+			delitem 5061,1;
+			delitem 999,300;
+			delitem 1095,300;
+			getitem 5285,1;
+			close;
+	H_Vaca:
+		mes "[Jester]";
+		mes "Kindly get:";
+		next;
+		mes "1 Ribbon[1]";
+		mes "8 Tiger Skin";
+		mes "1 Magni's Cap";
+		mes "900 Rainbow Shell";
+		menu "Make",M_Vaca,"Cancel",H_close;
+		M_Vaca:
+			mes "Let me see what you got.";
+			next;
+			if (countitem(2209) < 1) goto H_Lack;
+			if (countitem(1029) < 8) goto H_Lack;
+			if (countitem(5122) < 1) goto H_Lack;
+			if (countitem(1013) < 900) goto H_Lack;
+			mes "[Jester]";
+			mes "You got it all, now I shall reward you.";
+			next;
+			delitem 2209,1;
+			delitem 1029,8;
+			delitem 5122,1;
+			delitem 1013,900;
+			getitem 5287,1;
+			close;
+	H_Moon:
+		mes "[Jester]";
+		mes "Kindly get:";
+		next;
+		mes "25 Silver Knife of Chastity";
+		mes "10 Lemon Dyestuff";
+		mes "598 Claw of Desert WOlf";
+		menu "Make",M_Moon,"Cancel",H_close;
+		M_Moon:
+			mes "Let me see what you got.";
+			next;
+			if (countitem(638) < 25) goto H_Lack;
+			if (countitem(976) < 3) goto H_Lack;
+			if (countitem(7030) < 598) goto H_Lack;
+			mes "[Jester]";
+			mes "You got it all, now I shall reward you.";
+			next;
+			delitem 638,25;
+			delitem 976,3;
+			delitem 7030,598;
+			getitem 5214,1;
+			close;
+	H_Flap:
+		mes "[Jester]";
+		mes "Kindly get:";
+		next;
+		mes "1 Angel Wing";
+		mes "1 Angel Wing Ears";
+		mes "894 Soft Feather";
+		menu "Make",M_Flap,"Cancel",H_close;
+		M_Flap:
+			mes "Let me see what you got.";
+			next;
+			if (countitem(2254) < 1) goto H_Lack;
+			if (countitem(5074) < 1) goto H_Lack;
+			if (countitem(7063) < 894) goto H_Lack;
+			mes "[Jester]";
+			mes "You got it all, now I shall reward you.";
+			next;
+			delitem 2254,1;
+			delitem 5074,1;
+			delitem 7063,894;
+			getitem	5210,1;
+			close;
+	H_Vani:
+		mes "[Jester]";
+		mes "Kindly get:";
+		next;
+		mes "300 Royal Jelly";
+		mes "290 Soft Silk";
+		menu "Make",M_Vani,"Cancel",H_close;
+		M_Vani:
+			mes "Let me see what you got.";
+			next;
+			if (countitem(526) < 300) goto H_Lack;
+			if (countitem(7166) < 290) goto H_Lack;
+			mes "[Jester]";
+			mes "You got it all, now I shall reward you.";
+			next;
+			delitem 526,300;
+			delitem 7166,290;
+			getitem 5289,1;
+			close;
+	H_Ange:
+		mes "[Jester]";
+		mes "Kindly get:";
+		next;
+		mes "100 Steel";
+		mes "1 Poring Card";
+		mes "499 Jellopy";
+		menu "Make",M_Ange,"Cancel",H_close;
+		M_Ange:
+			mes "Let me see what you got.";
+			next;
+			if (countitem(999) < 100) goto H_Lack;
+			if (countitem(4001) < 1) goto H_Lack;
+			if (countitem(909) < 400) goto H_Lack;
+			mes "[Jester]";
+			mes "You got it all, now I shall reward you.";
+			next;
+			delitem 999,100;
+			delitem 4001,1;
+			delitem 909,400;
+			getitem 5153,1;
+			close;
+	H_Kafr:
+		mes "[Jester]";
+		mes "Kindly get:";
+		next;
+		mes "1 Gold Coin";
+		mes "100 Alice Apron";
+		mes "3 Scarlet Dyestuff";
+		menu "Make",M_Kafr,"Cancel",H_close;
+		M_Kafr:
+			mes "Let me see what you got.";
+			next;
+			if (countitem(671) < 1) goto H_Lack;
+			if (countitem(7047) < 100) goto H_Lack;
+			if (countitem(975) < 3) goto H_Lack;
+			mes "[Jester]";
+			mes "You got it all, now I shall reward you.";
+			next;
+			delitem 671,1;
+			delitem 7047,100;
+			delitem 975,3;
+			getitem 5020,1;
+			close;
+	H_Sunf:
+		mes "[Jester]";
+		mes "Kindly get:";
+		next;
+		mes "1 Sunflower";
+		mes "1 Flower Band";
+		mes "30 Valhalla's Flower";
+		menu "Make",M_Sunf,"Cancel",H_close;
+		M_Sunf:
+			mes "Let me see what you got.";
+			next;
+			if (countitem(2253) < 1) goto H_Lack;
+			if (countitem(2215) < 1) goto H_Lack;
+			if (countitem(7510) < 30) goto H_Lack;
+			mes "[Jester]";
+			mes "You got it all, now I shall reward you.";
+			next;
+			delitem 2253,1;
+			delitem 2215,1;
+			delitem 7510,30;
+			getitem 5103,1;
+			close;
+	H_Soul:
+		mes "[Jester]";
+		mes "Kindly get:";
+		next;
+		mes "1 Halo";
+		mes "894 Soft Feather";
+		mes "1 TCG Card";
+		menu "Make",M_Soul,"Cancel",H_close;
+		M_Soul:
+			mes "Let me see what you got.";
+			next;
+			if (countitem(2282) < 1) goto H_Lack;
+			if (countitem(7063) < 894) goto H_Lack;
+			if (countitem(7227) < 1) goto H_Lack;
+			mes "[Jester]";
+			mes "You got it all, now I shall reward you.";
+			next;
+			delitem 2282,1;
+			delitem 7063,894;
+			delitem 7227,1;
+			getitem 5257,1;
+			close;
+	H_Gold:
+		mes "[Jester]";
+		mes "Kindly get:";
+		next;
+		mes "99 Steel";
+		mes "500 Gold";
+		mes "1 Tiara[1]";
+		menu "Make",M_Gold,"Cancel",H_close;
+		M_Gold:
+			mes "Let me see what you got.";
+			next;
+			if (countitem(999) < 99) goto H_Lack;
+			if (countitem(969) < 500) goto H_Lack;
+			if (countitem(5164) < 1) goto H_Lack;
+			mes "[Jester]";
+			mes "You got it all, now I shall reward you.";
+			next;
+			delitem 999,99;
+			delitem 969,500;
+			delitem 5164,1;
+			getitem 5179,1;
+			close;
+	H_Silv:
+		mes "[Jester]";
+		mes "Kindly get:";
+		next;
+		mes "99 Steel";
+		mes "1 Platinum Coin";
+		mes "1 Tiara[1]";
+		menu "Make",M_Silv,"Cancel",H_close;
+		M_Silv:
+			mes "Let me see what you got.";
+			next;
+			if (countitem(999) < 99) goto H_Lack;
+			if (countitem(677) < 1) goto H_Lack;
+			if (countitem(5164) < 1) goto H_Lack;
+			mes "[Jester]";
+			mes "You got it all, now I shall reward you.";
+			next;
+			delitem 999,99;
+			delitem 677,1;
+			delitem 5164,1;
+			getitem 5149,1;
+			close;
+	H_Bunn:
+		mes "[Jester]";
+		mes "Kindly get:";
+		next;
+		mes "1 Magician Hat";
+		mes "10 Scarlet Dyestuff";
+		mes "1 Bunny Band";
+		mes "300 Feather";
+		menu "Make",M_Bunn,"Cancel",H_close;
+		M_Bunn:
+			mes "Let me see what you got.";
+			next;
+			if (countitem(5045) < 1) goto H_Lack;
+			if (countitem(975) < 10) goto H_Lack;
+			if (countitem(2214) < 1) goto H_Lack;
+			if (countitem(949) < 300) goto H_Lack;
+			mes "[Jester]";
+			mes "You got it all, now I shall reward you.";
+			next;
+			delitem 5045,1;
+			delitem 975,10;
+			delitem 2214,1;
+			delitem 949,300;
+			getitem 5378,1;
+			close;
+	H_Glas:
+		mes "[Jester]";
+		mes "Kindly get:";
+		next;
+		mes "1 Fashionable Glasses";
+		mes "1 Sunglasses[1]";
+		mes "500 Red Frame";
+		menu "Make",M_Glas,"Cancel",H_close;
+		M_Glas:
+			mes "Let me see what you got.";
+			next;
+			if (countitem(5047) < 1) goto H_Lack;
+			if (countitem(2202) < 1) goto H_Lack;
+			if (countitem(734) < 500) goto H_Lack;
+			mes "[Jester]";
+			mes "You got it all, now I shall reward you.";
+			next;
+			delitem 5047,1;
+			delitem 2202,1;
+			delitem 734,500;
+			getitem 5288,1;
+			close;
+	H_Lack:
+		mes "[Jester]";
+		mes "Waaaaaa! I think you didn't checked my list carefully :(";
+		close;
+	H_close:
+		mes "[Jester]";
+		mes "Thank you for your time :) See you around!";
+		close;
+}

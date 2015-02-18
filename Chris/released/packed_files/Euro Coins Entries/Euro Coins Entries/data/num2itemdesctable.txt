@@ -1,0 +1,91 @@
+//============= Euro Coin/Notes ===============
+25500#
+This is a Euro Coin.
+For Info about Trading and the value,
+talk to the Euro Bank NPC.
+Weight : ^77777710^000000
+#
+25501#
+This is a Euro Coin.
+For Info about Trading and the value,
+talk to the Euro Bank NPC.C.
+Weight : ^77777710^000000
+#
+25502#
+This is a Euro Coin.
+For Info about Trading and the value,
+talk to the Euro Bank NPC.
+Weight : ^77777710^000000
+#
+25503#
+This is a Euro Coin.
+For trading and checking the value,
+talk to the Euro Bank NPC.
+Weight : ^77777710^000000
+#
+25504#
+This is a Euro Coin.
+For Info about Trading and the value,
+talk to the Euro Bank NPC.
+Weight : ^77777710^000000
+#
+25505#
+This is a Euro Coin.
+For Info about Trading and the value,
+talk to the Euro Bank NPC.
+Weight : ^77777710^000000
+#
+25506#
+This is a Euro Coin.
+For Info about Trading and the value,
+talk to the Euro Bank NPC.
+Weight : ^77777710^000000
+#
+25507#
+This is a Euro Coin.
+For Info about Trading and the value,
+talk to the Euro Bank NPC.
+Weight : ^77777710^000000
+#
+25508#
+This is a Euro Note.
+For Info about Trading and the value,
+talk to the Euro Bank NPC.
+Weight : ^77777710^000000
+#
+25509#
+This is a Euro Note.
+For Info about Trading and the value,
+talk to the Euro Bank NPC.
+Weight : ^77777710^000000
+#
+25510#
+This is a Euro Note.
+For Info about Trading and the value,
+talk to the Euro Bank NPC.
+Weight : ^77777710^000000
+#
+25511#
+This is a Euro Note.
+For Info about Trading and the value,
+talk to the Euro Bank NPC.
+Weight : ^77777710^000000
+#
+25512#
+This is a Euro Note.
+For Info about Trading and the value,
+talk to the Euro Bank NPC.
+Weight : ^77777710^000000
+#
+25513#
+This is a Euro Note.
+For Info about Trading and the value,
+talk to the Euro Bank NPC.
+Weight : ^77777710^000000
+#
+25514#
+This is a Euro Note.
+For Info about Trading and the value,
+talk to the Euro Bank NPC.
+Weight : ^77777710^000000
+//=======================

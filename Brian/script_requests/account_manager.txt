@@ -1,0 +1,75 @@
+// http://www.eathena.ws/board/index.php?showtopic=226150
+
+poring_c01,100,100,0	script	Account Manager	910,{
+	set .@use_MD5_passwords, 0;		// set to 1 for "yes"
+
+	mes "[Account Manager]";
+	mes "Hi, I'm the Account Manager for this server.";
+	mes "How can I help you?";
+	next;
+	
+	switch(select("Change Password:Change Email:Nothing")) {
+	case 1:
+		query_sql "SELECT user_pass FROM login WHERE account_id="+getcharid(3), .@user_pass$;
+		
+		mes "[Account Manager]";
+		mes "Input your current password:";
+		input .@input$;
+		if ((.@use_MD5_passwords ? md5(.@input$) : .@input$) != .@user_pass$) {
+			mes "^FF0000     Incorrect password!";
+			close;
+		}
+		
+		mes "Please input your new password:";
+		input .@new_pass1$;
+		if (getstrlen(.@new_pass1$) < 6) {
+			mes "Password must be at least 6 chars long.";
+			close;
+		}
+		mes "Enter once more for confirmation:";
+		input .@new_pass2$;
+		if (.@new_pass1$ != .@new_pass2$) {
+			mes "^FF0000     Passwords do not match!";
+			close;
+		}
+		
+		query_sql "UPDATE login SET user_pass='"+( .@use_MD5_passwords ? md5(escape_sql(.@new_pass1$)) : escape_sql(.@new_pass1$) )+"' WHERE account_id="+getcharid(3);
+		mes "Okay, Done. Password Changed.";
+		break;
+		
+	case 2:
+		query_sql "SELECT email FROM login WHERE account_id="+getcharid(3), .@email$;
+		
+		mes "[Account Manager]";
+		mes "Please input your current Email:";
+		input .@input$;
+		if (.@input$ != .@email$) {
+			mes "^FF0000     Incorrect email!";
+			close;
+		}
+		
+		mes "Please input your new Email:";
+		input .@new_email1$;
+		if (getstrlen(.@new_email1$)<5 || compare(.@new_email1$,"@")==0 || compare(.@new_email1$,".")==0) {
+			mes "^FF0000     Invalid email!";
+			close;
+		}
+		mes "Enter once more for confirmation:";
+		input .@new_email2$;
+		if (.@new_email1$ != .@new_email2$) {
+			mes "^FF0000     Emails do not match!";
+			close;
+		}
+		
+		query_sql "UPDATE login SET email='"+escape_sql(.@new_email1$)+"' WHERE account_id="+getcharid(3);
+		mes "Okay, Done. Email Changed.";
+		break;
+		
+	case 3:
+		mes "[Account Manager]";
+		mes "Hope to see you again.";
+		break;
+	}
+	mes "Bye.";
+	close;
+}

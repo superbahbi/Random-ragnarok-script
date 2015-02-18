@@ -1,0 +1,367 @@
+-	script	LMS#disablelms	-1,{
+
+OnInit:
+	disablenpc "Reward Manager";
+	disablenpc "Get Prize";
+	disablenpc "All Job Manager";
+	disablenpc "Baby Manager";
+	disablenpc "Novice Manager";
+	end;
+}
+
+-	script	LMS	-1,{
+
+OnClock1800:
+OnClock0300:
+
+goto startlmsevent;
+
+startlmsevent:
+	announce "Mr. Manager: The Last Man Standing event will be starting shortly.",0;
+	sleep2 10000;
+	announce "Mr. Manager: Those who want to play, please proceed to Louyang and register.",0;
+	sleep2 10000;
+	announce "Mr. Manager: After 1 minute, the registration will close.",0;
+	sleep2 10000;
+	announce "Mr. Manager: Please go to Louyang and register now if you want to join.",0;
+	enablenpc $Manager$;
+	initnpctimer;
+	end;
+
+OnTimer30000:
+	announce "Mr. Manager: Last 30 seconds.",0;
+	sleep2 5000;
+	end;
+
+OnTimer50000:
+	announce "Mr. Manager: Last 10 seconds.",0;
+	end;
+
+OnTimer55000:
+	announce "Mr. Manager: 5.",0;
+	end;
+
+OnTimer56000:
+	announce "Mr. Manager: 4.",0;
+	end;
+
+OnTimer57000:
+	announce "Mr. Manager: 3.",0;
+	end;
+
+OnTimer58000:
+	announce "Mr. Manager: 2.",0;
+	end;
+
+OnTimer59000:
+	announce "Mr. Manager: 1.",0;
+	end;
+
+OnTimer60000:
+	announce "Mr. Manager: Time's up.",0;
+	end;
+
+OnTimer61000:
+	disablenpc $Manager$;
+	donpcevent "Reward Manager::OnEnable";
+	stopnpctimer;
+	end;
+	}
+//---------All Job Registration---------------
+louyang,216,121,6	script	All Job Manager	872,{
+
+	mes "[Mr. Manager]";
+	mes "Hello! What can I do for you?";
+	next;
+	menu "Register",-,"What is LMS?",what,"Leave",leave;
+	mes "[Mr. Manager]";
+	mes "Thank you for registering " + strcharinfo(0) + ", have fun!";
+	warp "pvp_2v2",52,46;
+	sc_end sc_all;
+	end;
+what:
+	mes "[Mr. Manager]";
+	mes "LMS is also known as Last Man Standing Event";
+	next;
+	mes "[Mr. Manager]";
+	mes "LMS is also like PvP.";
+	mes "Defeat one another and win the event.";
+	mes "[Mr. Manager]";
+	mes "That's all.";
+	close;
+leave:
+	mes "[Mr. Manager]";
+	mes "I hope you will register next time.";
+	close;
+
+
+}
+//---- Baby Registration -------
+louyang,218,121,6	script	Baby Manager	941,{
+
+	mes "[Mr. Manager]";
+	mes "Hello this is Baby LMS Registration";
+	mes "What can I do for you?";
+	next;
+	menu "Register",-,"What is Baby LMS?",what,"Leave",leave;
+	if (class < 4023 || class > 4045) goto L_NotBaby;
+	mes "[Mr. Manager]";
+	mes "Thank you for registering " + strcharinfo(0) + ", have fun!";
+	warp "pvp_2v2",52,46;
+	sc_end sc_all;
+	end;
+L_NotBaby:
+	mes "[Mr. Manager]";
+	mes "Hmmm. Sorry but only baby classes can enter.";
+	close;
+what:
+	mes "[Mr. Manager]";
+	mes "LMS is also known as Last Man Standing Event";
+	next;
+	mes "[Mr. Manager]";
+	mes "This LMS is for baby classes only.";
+	mes "Defeat one another and win the event.";
+	next;
+	mes "[Mr. Manager]";
+	mes "That's all.";
+	close;
+leave:
+	mes "[Mr. Manager]";
+	mes "I hope you will register next time.";
+	close;
+}
+//--------Novice LMS Registration---------
+louyang,220,121,6	script	Novice Manager	962,{
+
+	mes "[Mr. Manager]";
+	mes "Hello What can I do for you?";
+	next;
+	menu "Register",-,"What is LMS?",what,"Leave",leave;
+	 if (class == 0 && baselevel == 1) {
+        mes "[Mr. Manager]";
+	mes "Thank you for registering " + strcharinfo(0) + ", have fun!";
+	warp "pvp_2v2",52,46;
+	sc_end sc_all;
+	end;
+    }
+    mes "Hmmm. Sorry but only level 1 Novices can enter.";
+    close;
+
+what:
+	mes "[Mr. Manager]";
+	mes "LMS is also known as Last Man Standing Event";
+	next;
+	mes "[Mr. Manager]";
+	mes "LMS is also like a PvP.";
+	mes "Defeat one another and win the event.";
+	next;
+	mes "[Mr. Manager]";
+	mes "That's all";
+	close;
+leave:
+	mes "[Mr. Manager]";
+	mes "I hope you will register next time";
+	close;
+}
+
+//------------------------
+
+pvp_2v2,51,58,4	script	Checker	780,{
+
+	mes "[Checker]";
+	mes "Hi " + strcharinfo(0) + ", do you want to check how many are you here?";
+	next;
+	mes "There are currently ["+getmapusers("pvp_2v2")+"] players on map.";
+	close;
+	
+OnInit:
+	waitingroom "Map Checker",0;
+	end;
+}
+
+//--------------------------
+pvp_2v2,54,58,4	script	Get Prize	828,{
+
+if(getmapusers("pvp_2v2") == 1) {
+    mes "[Mr. Manager]";
+    mes "Hi " + strcharinfo(0) + ", congratulations! You've won"; close2;
+    gvgoff "pvp_2v2";
+    warp "pvp_2v2",51,74;
+    enablenpc "Reward Manager";
+    disablenpc "Get Prize";
+    end;
+}
+
+OnInit:
+waitingroom "Get Prize",0;
+end;
+}
+//--------------------------
+pvp_2v2,54,74,4	script	Reward Manager	833,{
+	
+	mes "[Reward Manager]";
+	mes "Please tell me your name.";
+	next;
+	input .@name$;
+	if(.@name$ != strcharinfo(0)) {
+		mes "[Reward Manager]";
+		mes "Are you sure thats your character name?";
+		next;
+		mes "If you're name have spaces, use quotation marks. Example, ''J a e R O'', if none, then put JaeRO.";
+		close;
+	}
+	mes "[Reward Manager]";
+	mes "Congratulations. You've won.";
+	close2;
+	announce "Mr. Manager: We have a winner! Well done "+.@name$+" for winning the LMS event.",0;
+	getitem 7227, 1;
+	warp "prontera",155,182;
+	disablenpc "Reward Manager";
+	end;
+OnEnable:
+	mapannounce "pvp_2v2","Mr. Manager: The Last Man Standing Event will start shortly.",0;
+	sleep2 10000;
+	mapannounce "pvp_2v2","Mr. Manager: There are some rules that I would like to impose.",0;
+	sleep2 10000;
+	mapannounce "pvp_2v2","Mr. Manager: Please avoid hiding and running away from battle.",0;
+	sleep2 10000;
+	mapannounce "pvp_2v2","Mr. Manager: Only the Last Man Standing will win this event!",0;
+	sleep2 10000;
+	mapannounce "pvp_2v2","Mr. Manager: What are we waiting for? Let's get ready to rumble!",0;
+	sleep2 10000;
+	enablenpc "Get Prize";
+	goto L_Start;
+	end;
+L_Start:
+	if(getmapusers("pvp_2v2") == 1) goto L_Champ;
+	if(getmapusers("pvp_2v2") == 0) goto L_None;
+	if(getmapusers("pvp_2v2") > 1) {
+	mapannounce "pvp_2v2","Mr. Manager: Get ready! At the count of 5 we will start!",0;
+	sleep2 10000;
+	mapannounce "pvp_2v2","Mr. Manager: 5",0;
+	sleep2 5000;
+	mapannounce "pvp_2v2","Mr. Manager: 4",0;
+	sleep2 4000;
+	mapannounce "pvp_2v2","Mr. Manager: 3",0;
+	sleep2 3000;
+	mapannounce "pvp_2v2","Mr. Manager: 2",0;
+	sleep2 2000;
+	mapannounce "pvp_2v2","Mr. Manager: 1",0;
+	sleep2 1000;
+	gvgon "pvp_2v2";
+	end;
+	}
+	
+L_Champ:
+	mapannounce "pvp_2v2","Reward Manager: Please talk to Get Prize NPC.",0;
+	gvgoff "pvp_2v2";
+	enablenpc "Reward Manager";
+	end;
+	
+L_None:
+	disablenpc "Reward Manager";
+	gvgoff "pvp_2v2";
+	end;
+	}
+
+// ----Manager Setting------------
+-	script	Setting	-1,{
+	if ($Manager$=="") donpcevent "Setting::OnClock0000";
+OnInit:
+OnClock0000:
+	switch(gettime(4)) {
+	Case 0:// Sunday
+		set $Manager$, "All Job Manager";
+		break;
+	Case 1:// Monday
+		set $Manager$, "Baby Manager";
+		break;
+	Case 2:// Tuesday
+		set $Manager$, "Novice Manager";
+		break;
+	Case 3:// Wed
+		set $Manager$, "All Job Manager";
+		break;
+	Case 4:// Thursday
+		set $Manager$, "Baby Manager";
+		break;
+	Case 5://Friday
+		set $Manager$, "Novice Manager";
+		break;
+	Case 6://Saturday
+		set $Manager$, "All Job Manager";
+		break;
+	}
+	end;
+}
+
+//-----cellblock--------
+-	script	setcell	,{
+OnInit:
+	setcell "pvp_2v2",51,73,51,73,cell_walkable,0;
+	setcell "pvp_2v2",52,73,52,73,cell_walkable,0;
+	setcell "pvp_2v2",53,73,53,73,cell_walkable,0;
+	setcell "pvp_2v2",54,73,54,73,cell_walkable,0;
+
+}
+
+// == Mapflags
+pvp_2v2	mapflag	nowarp
+pvp_2v2	mapflag	nowarpto
+pvp_2v2	mapflag	noteleport
+pvp_2v2	mapflag	nosave
+pvp_2v2	mapflag	nomemo
+pvp_2v2	mapflag	nobranch
+
+//----------Auto LMS Guide---------------
+prontera,148,189,5	script	Mr. Manager	407,{
+	mes "[Mr. Manager]";
+	mes "I am the manager of our Last Man Standing event.";
+	next;
+	mes "[Mr. Manager]";
+	mes "I can guide you through on what you need to do.";
+	mes "What would you like to know about?";
+	next;
+	menu "All Job Manager",allj,"Baby Manager",baby,"Novice Manager",novi,"Cancel",H_Close;
+	allj:
+		mes "[Mr. Manager]";
+		mes "This is an LMS for everyone. Novice, Babies and all sorts of job can join.";
+		next;
+		mes "[Mr. Manager]";
+		mes "If you would like to join this event, you can locate the NPC warper at Louyang 216, 121.";
+		mes "Just click the NPC when it is open and you will be warped to the battle arena.";
+		next;
+		mes "[Mr. Manager]";
+		mes "All Jobs LMS are every Sunday, Wednesday and Saturday.";
+		mes "Time would be during 18:00 and 03:00 server time.";
+		close;
+	baby:
+		mes "[Mr. Manager]";
+		mes "This is an LMS for babies. Rebirths and non-babies cannot enter and join.";
+		next;
+		mes "[Mr. Manager]";
+		mes "If you would like to join this event, you can locate the NPC warper at Louyang 218, 121.";
+		mes "Just click the NPC when it is open and you will be warped to the battle arena.";
+		next;
+		mes "[Mr. Manager]";
+		mes "Baby's LMS are every Monday and Thursday.";
+		mes "Time would be during 18:00 and 03:00 server time.";
+		close;
+	novi:
+		mes "[Mr. Manager]";
+		mes "This is an LMS for level 1 Novices. Rebirths, non-babies, and not level one cannot enter and join.";
+		next;
+		mes "[Mr. Manager]";
+		mes "If you would like to join this event, you can locate the NPC warper at Louyang 220, 121.";
+		mes "Just click the NPC when it is open and you will be warped to the battle arena.";
+		next;
+		mes "[Mr. Manager]";
+		mes "Novice LMS are every Tuesday and Friday.";
+		mes "Time would be during 18:00 and 03:00 server time.";
+		close;
+	H_Close:
+		mes "[Mr. Manager]";
+		mes "This is an automated event and it will happen the exact time everyday.";
+		mes "Thank you for your time.";
+		close;
+}

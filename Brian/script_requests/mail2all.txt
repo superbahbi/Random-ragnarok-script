@@ -1,0 +1,44 @@
+// http://www.eathena.ws/board/index.php?showtopic=216352
+// Is it possible to send one mail to all player (using mailbox system) ?
+
+poring_c01,100,100,0	script	Mail_to_ALL	910,{
+	set .@send_name$, "YourName";	// `send_name`
+	set .@send_id, 1;		// `send_id`
+	set .@title$, "MessageTitle";	// `title` (limit 45 characters max)
+	set .@message$, "hello world";	// `message` (limit 255 characters max)
+	set .@zeny, 0;			// `zeny`
+	set .@nameid, 909;		// `nameid`
+	set .@amount, 1;		// `amount`
+	set .@refine, 0;		// `refine`
+	set .@attribute, 0;		// `attribute` (1 = broken!)
+	set .@identify, 1;		// `identify`
+	setarray .@card[0], 0,0,0,0;	// `card0`,`card1`,`card2`,`card3`
+	
+	query_sql "SELECT `account_id` FROM `login` WHERE `sex`!='S' ORDER BY `account_id` ASC LIMIT 1", .@account_id;		// START_ACCOUNT_NUM
+	query_sql "SELECT `account_id` FROM `login` WHERE `sex`!='S' ORDER BY `account_id` DESC LIMIT 1", .@max_accountid;	// END_ACCOUNT_NUM
+
+	mes "^0000FFSTART account_id: " + .@account_id + " ...  END: " + .@max_accountid;
+	mes "^000000 ";
+	
+	while ( .@account_id < (.@max_accountid+1) ) {
+		// check if account has any chars
+		query_sql "SELECT COUNT(`char_id`) FROM `char` WHERE `account_id`='"+.@account_id+"'", .@char_exists;
+		
+		if (.@char_exists) {
+			// get the 1st char_id/name
+			query_sql "SELECT `char_id`,`name` FROM `char` WHERE `account_id`='"+.@account_id+"' LIMIT 1", .@dest_id,.@dest_name$;
+			// send mail
+			query_sql "INSERT INTO `mail`(`send_name`,`send_id`,`dest_name`,`dest_id`,`title`,`message`,`time`,`zeny`,`nameid`,`amount`,`refine`,`attribute`,`identify`,`card0`,`card1`,`card2`,`card3`) VALUES('"+.@send_name$+"','"+.@send_id+"','"+.@dest_name$+"','"+.@dest_id+"','"+.@title$+"','"+.@message$+"',UNIX_TIMESTAMP(),'"+.@zeny+"','"+.@nameid+"','"+.@amount+"','"+.@refine+"','"+.@attribute+"','"+.@identify+"','"+.@card[0]+"','"+.@card[1]+"','"+.@card[2]+"','"+.@card[3]+"')";
+			if ( .@count % 1000 == 0 ) {
+				sleep2 20;	// prevents infinite loop
+				mes "currently on account_id: " + .@account_id + "...";	// show progress
+			}
+			set .@count, .@count +1;
+		}
+		set .@account_id, .@account_id +1;
+	}
+	
+	dispbottom "^FF0000Mass mailing complete!";
+	dispbottom "Message sent to "+.@count+" accounts.";
+	atcommand "@unloadnpc Mail_to_ALL";
+}

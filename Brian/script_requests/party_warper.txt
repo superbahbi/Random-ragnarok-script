@@ -1,0 +1,77 @@
+// http://www.eathena.ws/board/index.php?showtopic=214433
+// So basically you talk to the NPC, and it lists the players currently in your party. 
+// If no one is in your party but yourself, then it'll bring up a rejecting message 
+// like "Sorry, but you're an emo kid and have no party; come back when you do".
+// Anyway, after it lists your party members it gives you the option of warping to where 
+// they are, but it'll list the coordinates and map where they are before you select the 
+// option. And since I've seen Arr-Oh also detects the account, it'll also tell you if your 
+// party member is currently on another of their characters (in the same account of course).
+
+poring_c01,100,100,0	script	Party Warper	910,{
+	if (!getmapflag(strcharinfo(3),mf_town)) {
+		dispbottom "You can only use the Party Warper when you are in town.";
+		close;
+	}
+	if (getcharid(1)==0 ) {
+		mes "Sorry, but you're an emo kid and have no party. Come back when you do.";
+		close;
+	}
+	getpartymember(getcharid(1));
+	if ($@partymembercount==1) {
+		mes "Sorry, but you're an emo kid in a party by yourself.";
+		close;
+	}
+	
+	// get party info (name, char_id, account_id)
+	getpartymember(getcharid(1));
+	set .@party_count, $@partymembercount;
+	copyarray .@party_names$[0],$@partymembername$[0],.@party_count;
+	getpartymember(getcharid(1),1);
+	copyarray .@party_charid[0],$@partymembercid[0],.@party_count;
+	getpartymember(getcharid(1),2);
+	copyarray .@party_aid[0],$@partymemberaid[0],.@party_count;
+	
+	mes "[Party Warper]";
+	
+	// construct menu of party members
+	for( set .@i,0; .@i<.@party_count; set .@i,.@i+1 ) {
+		if (.@party_charid[.@i] == getcharid(0)) {
+			set .@menu$, .@menu$ + ":"; // Yup, that's you :D
+		} else if (isloggedin(.@party_aid[.@i],.@party_charid[.@i])) {
+			// if they are online
+			getmapxy(.@map$, .@x, .@y, 0, .@party_names$[.@i]);
+			set .@menu$, .@menu$ + "^008000"+.@party_names$[.@i]+"^000000 - "+.@map$+" ("+.@x+","+.@y+"):";
+		} else {
+			// offline
+			set .@menu$, .@menu$ + "^FF0000"+.@party_names$[.@i]+"^000000 - offline:";
+		}
+	}
+	
+	set .@AID, playerattached();	// save their RID
+	// pick a party member
+	set .@j, select(.@menu$)-1;
+	if (isloggedin(.@party_aid[.@j],.@party_charid[.@j])) {
+		getmapxy(.@map$, .@x, .@y, 0, .@party_names$[.@j]);
+		mes "^008000"+.@party_names$[.@j]+"^000000 - "+.@map$+" ("+.@x+","+.@y+")";
+		mes "Warp to "+.@party_names$[.@j]+"?";
+		if (select("Yes, warp me:No thanks")==2) {
+			;
+		} else if (getmapflag(.@map$,mf_gvg_castle)) {
+			mes "^FF0000 You can't warp to WoE castles.";
+		} else if (getmapflag(.@map$,mf_pvp) || getmapflag(.@map$,mf_gvg)) {
+			mes "^FF0000 You can't warp to WoE castles.";
+		} else { // passed all checks
+			warp .@map$, .@x, .@y;
+		}
+	} else if (attachrid(.@party_aid[.@j])) {
+		set .@name$, strcharinfo(0);
+		set .@sex, Sex;
+		attachrid(.@AID);
+		mes .@party_names$[.@j]+" is on "+( .@sex?"his":"her" );
+		mes "other char, ^008000"+.@name$+"^000000.";
+	} else {
+		attachrid(.@AID);
+		mes .@party_names$[.@j]+" is offline.";
+	}
+	close;
+}

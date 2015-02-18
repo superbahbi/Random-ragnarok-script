@@ -1,0 +1,164 @@
+// http://www.eathena.ws/board/index.php?showtopic=239081
+// The Lvl99 GM set how many castle will be a available, add and delete time
+// and the castle that going to be on is RANDOM, as in RANDOM (if its possible)
+// if it's one castle is on, it will pick 1 castle randomly...
+// and if its 2, it will pick 2 castle randomy... and so on...
+// 
+// http://rathena.org/board/topic/56147-edit-random-woe-using-brianl-script/
+// I want to change the castle ownership.  Say prtg_cas01 is open and GuildA 
+// takes it. Then next woe gefg_cas04 is open, the castle ownership will move 
+// to gefg_cas04 and prtg_cas01 will be unoccupied.
+
+-	script	Agit_Event	-1,{
+	end;
+
+OnClock2100:	//start time for Tues(2), Thurs(4)
+OnClock2300:	//end time for Tues(2), Thurs(4)
+OnClock1600:	//start time for Sat(6)
+OnClock1800:	//end time for Sat(6)
+
+OnAgitInit:
+	set .@num_castles_open, 5; // the number of castles open each WoE
+	set .@transfer_ownership, 1; // transfer ownership to the next (random) castle?
+	setarray .maps$[0], "aldeg_cas01","aldeg_cas02","aldeg_cas03","aldeg_cas04","aldeg_cas05",
+	                    "gefg_cas01","gefg_cas02","gefg_cas03","gefg_cas04","gefg_cas05",
+	                    "payg_cas01","payg_cas02","payg_cas03","payg_cas04","payg_cas05",
+	                    "prtg_cas01","prtg_cas02","prtg_cas03","prtg_cas04","prtg_cas05";
+	
+	// starting time checks
+	if((gettime(4)==2) && (gettime(3)>=21 && gettime(3)<23) ||
+	   (gettime(4)==4) && (gettime(3)>=21 && gettime(3)<23) ||
+	   (gettime(4)==6) && (gettime(3)>=16 && gettime(3)<18)) {
+		if (!agitcheck()) {
+			// close ALL castles
+			disablenpc "aldg01";    maprespawnguildid "aldeg_cas01",0,7;
+			disablenpc "aldg02";    maprespawnguildid "aldeg_cas02",0,7;
+			disablenpc "aldg03";    maprespawnguildid "aldeg_cas03",0,7;
+			disablenpc "aldg04";    maprespawnguildid "aldeg_cas04",0,7;
+			disablenpc "aldg05";    maprespawnguildid "aldeg_cas05",0,7;
+			disablenpc "gefg01";
+			disablenpc "gefg02";    maprespawnguildid "gefg_cas01",0,7;
+			disablenpc "gefg03";    maprespawnguildid "gefg_cas02",0,7;
+			disablenpc "gefg04";
+			disablenpc "gefg05";
+			disablenpc "gefg06";
+			disablenpc "gefg07";    maprespawnguildid "gefg_cas03",0,7;
+			disablenpc "gefg08";    maprespawnguildid "gefg_cas04",0,7;
+			disablenpc "gefg09";
+			disablenpc "gefg09-1";  maprespawnguildid "gefg_cas05",0,7;
+			disablenpc "payg01";    maprespawnguildid "payg_cas01",0,7;
+			disablenpc "payg02";    maprespawnguildid "payg_cas02",0,7;
+			disablenpc "payg03";    maprespawnguildid "payg_cas03",0,7;
+			disablenpc "payg04";    maprespawnguildid "payg_cas04",0,7;
+			disablenpc "payg05";    maprespawnguildid "payg_cas05",0,7;
+			disablenpc "prtg01";    maprespawnguildid "prtg_cas01",0,7;
+			disablenpc "prtg02-1";  maprespawnguildid "prtg_cas02",0,7;
+			disablenpc "prtg03-1";  maprespawnguildid "prtg_cas03",0,7;
+			disablenpc "prtg04-1";  maprespawnguildid "prtg_cas04",0,7;
+			disablenpc "prtg05-1";  maprespawnguildid "prtg_cas05",0,7;
+			
+			// randomize castle order
+			for( set .@i,1; .@i <= getarraysize(.maps$); set .@i,.@i+1 ) {
+				while( set(.@rand,rand(1,getarraysize(.maps$))) == getd(".@__tmp_"+.@rand) );
+				setd ".@__tmp_"+.@rand, set(.@array[.@i],.@rand);
+			}
+			// open castles
+			announce (.@num_castles_open==1 ? "There is 1 castle" : ("There are "+.@num_castles_open+" castles")) + " open for WoE today:",bc_all|bc_woe;
+			for( set .@i,1; .@i <= .@num_castles_open; set .@i,.@i+1 ) {
+				// transfer ownership? ...  only if there's a previous castle to transfer from!
+				if (.@transfer_ownership && getd("$castle_"+.@i+"$")!="")
+					callsub S_TransferOwnership, atoi(getd("$castle_"+.@i+"$")), .@array[.@i];
+				callsub S_OpenCastle, .@array[.@i];
+			}
+			AgitStart;
+			announce "The War of Emperium has begun!",bc_all|bc_woe;
+		}
+		end;
+	}
+
+	// end time checks
+	if ((gettime(4)==2) && (gettime(3)==23) ||
+	    (gettime(4)==4) && (gettime(3)==23) ||
+	    (gettime(4)==6) && (gettime(3)==18)) {
+		if (agitcheck()) {
+			AgitEnd;
+			announce "The War of Emperium is over!",bc_all|bc_woe;
+		}
+		// open ALL castles
+		enablenpc "aldg01";   // aldeg_cas01
+		enablenpc "aldg02";   // aldeg_cas02
+		enablenpc "aldg03";   // aldeg_cas03
+		enablenpc "aldg04";   // aldeg_cas04
+		enablenpc "aldg05";   // aldeg_cas05
+		enablenpc "gefg01";   // gefg_cas01
+		enablenpc "gefg02";   // gefg_cas01
+		enablenpc "gefg03";   // gefg_cas02
+		enablenpc "gefg04";   // gefg_cas03
+		enablenpc "gefg05";   // gefg_cas03
+		enablenpc "gefg06";   // gefg_cas03
+		enablenpc "gefg07";   // gefg_cas03
+		enablenpc "gefg08";   // gefg_cas04
+		enablenpc "gefg09";   // gefg_cas05
+		enablenpc "gefg09-1"; // gefg_cas05
+		enablenpc "payg01";   // payg_cas01
+		enablenpc "payg02";   // payg_cas02
+		enablenpc "payg03";   // payg_cas03
+		enablenpc "payg04";   // payg_cas04
+		enablenpc "payg05";   // payg_cas05
+		enablenpc "prtg01";   // prtg_cas01
+		enablenpc "prtg02-1"; // prtg_cas02
+		enablenpc "prtg03-1"; // prtg_cas03
+		enablenpc "prtg04-1"; // prtg_cas04
+		enablenpc "prtg05-1"; // prtg_cas05
+		end;
+	}
+	end;
+
+S_TransferOwnership:
+// getarg(0) = previous CastleID
+// getarg(1) = new CastleID (to transfer owner to)
+	if ( getcastledata(.maps$[getarg(0)],1) && getarg(0)!=getarg(1) ) {
+		for (set .@i,1; .@i<=17; set .@i,.@i+1) {
+			setcastledata .maps$[getarg(1)],.@i, getcastledata(.maps$[getarg(0)],.@i);
+			setcastledata .maps$[getarg(0)],.@i, 0;
+		}
+		setd "$castle_"+.@i+"$", getarg(1);
+	}
+	return;
+
+S_OpenCastle:
+// getarg(0) = CastleID in /db/castle_db.txt
+	switch( getarg(0) ) {
+		case 0:  enablenpc "aldg01";   break; // aldeg_cas01
+		case 1:  enablenpc "aldg02";   break; // aldeg_cas02
+		case 2:  enablenpc "aldg03";   break; // aldeg_cas03
+		case 3:  enablenpc "aldg04";   break; // aldeg_cas04
+		case 4:  enablenpc "aldg05";   break; // aldeg_cas05
+		case 5:  enablenpc "gefg01";
+		         enablenpc "gefg02";   break; // gefg_cas01
+		case 6:  enablenpc "gefg03";   break; // gefg_cas02
+		case 7:  enablenpc "gefg04";
+		         enablenpc "gefg05";
+		         enablenpc "gefg06";
+		         enablenpc "gefg07";   break; // gefg_cas03
+		case 8:  enablenpc "gefg08";   break; // gefg_cas04
+		case 9:  enablenpc "gefg09";
+		         enablenpc "gefg09-1"; break; // gefg_cas05
+		case 10: enablenpc "payg01";   break; // payg_cas01
+		case 11: enablenpc "payg02";   break; // payg_cas02
+		case 12: enablenpc "payg03";   break; // payg_cas03
+		case 13: enablenpc "payg04";   break; // payg_cas04
+		case 14: enablenpc "payg05";   break; // payg_cas05
+		case 15: enablenpc "prtg01";   break; // prtg_cas01
+		case 16: enablenpc "prtg02-1"; break; // prtg_cas02
+		case 17: enablenpc "prtg03-1"; break; // prtg_cas03
+		case 18: enablenpc "prtg04-1"; break; // prtg_cas04
+		case 19: enablenpc "prtg05-1"; break; // prtg_cas05
+	}
+	if (GetCastleData(.maps$[getarg(0)],1)) {
+		announce "The [" + GetCastleName(.maps$[getarg(0)]) + "] castle is owned by the [" + GetGuildName(GetCastleData(.maps$[getarg(0)],1)) + "] guild.",bc_all|bc_woe;
+	} else {
+		announce "The [" + GetCastleName(.maps$[getarg(0)]) + "] castle is currently unoccupied.",bc_all|bc_woe;
+	}
+	return;
+}

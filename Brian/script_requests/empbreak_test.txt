@@ -1,0 +1,77 @@
+// http://www.eathena.ws/board/index.php?showtopic=214203
+// What i wanted on this script was, An emp in the middle of a map, exactly the 
+// same emp as in the castles. HP must not be seen but damage made to the emp can. 
+// No skills may be used on the emp. A separate NPC in town to get in. Only 1 person 
+// may stay at one time. When inside, you have a time limit of 3 minutes to test 
+// everything. After 3 minutes, you get warped back out. You also get warped back 
+// out after you have broken the emp 3 times within the 3 minute limit.
+// Also, when the emp is broken, i want it to do a map announcement or area 
+// announcement of the time it took for the breaker, to break the emp. 
+// Something like "Congratulations! You have broken the emp in <> seconds!".
+
+prontera,155,188,0	script	Emp Break Test Room	910,{
+	mes "[Emp Break Test Room]";
+	mes "Would you like to test your emp breaking?";
+	if(select("Yes:No")==2) close;
+	if (getvariableofnpc(.InUse,"EmpBreak")) {
+		mes "The room is in use. Please wait a few minutes.";
+	} else {
+		doevent "EmpBreak::OnStart";
+	}
+	close;
+}
+
+poring_c01,100,100,0	script	EmpBreak	910,{
+	switch(select("Spawn Emperium:Warp back to Prontera:Cancel")) {
+	case 1:
+		if (mobcount("poring_c01", strnpcinfo(3)+"::OnMyMobDead")) {
+			mes "An emp is already spawned. Break it!";
+		} else {
+			donpcevent strnpcinfo(3)+"::OnEmpSpawn";
+		}
+		break;
+	case 2:
+		donpcevent strnpcinfo(3)+"::OnStop";
+		break;
+	}
+	close;
+
+OnStart:
+	set .InUse, 1;
+	initnpctimer;
+	warp "poring_c01",105,105;
+	end;
+
+OnEmpSpawn:
+	npctalk "Spawning emperium in 2 seconds.";
+	sleep 1000;
+	npctalk "1 second!";
+	sleep 1000;
+	monster "poring_c01",104,100,"Emperium",1288,1,strnpcinfo(3)+"::OnMyMobDead";
+	npctalk "Emperium spawned!";
+	set .start, gettimetick(2);
+	end;
+OnMyMobDead:
+	set .@breaktime, gettimetick(2) - .start;
+	mapannounce "poring_c01", "Congratulations! You have broken the emp in "+.@breaktime+" seconds!", bc_map;
+	set .breaks, .breaks+1;
+	if (.breaks>2)
+		donpcevent strnpcinfo(3)+"::OnThreeBreaks";
+	end;
+
+OnTimer180000:
+	mapannounce "poring_c01", "The 3 minute time limit is over.", bc_blue;
+	end;
+OnThreeBreaks:
+	mapannounce "poring_c01", "You have broken 3 emps.", bc_blue;
+OnTimer180500:
+	mapannounce "poring_c01", "You will be warped out shortly...", bc_blue;
+	sleep 2000;
+OnStop:
+	mapwarp "poring_c01", "prontera",155,188;
+	killmonster "poring_c01", strnpcinfo(3)+"::OnMyMobDead";
+	stopnpctimer;
+	set .InUse, 0;
+	set .breaks, 0;
+	end;
+}

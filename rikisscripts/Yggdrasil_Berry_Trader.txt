@@ -1,0 +1,64 @@
+//        //=====//     /==/     /==/          /==/      
+//       //     //     /==/     /==/  /=/     /==/         
+//      //=====//              /==/  /=/             /==============/     /========/   /==//===/    /==/     /==/
+//     //=//////    /==/      /==//=/       /==/    /==/==/==/==/==/     /     /  /   /==/         /==/     /==/
+//    // ==        /==/      /==//=/       /==/    /==/  /==/  /==/     ======/  /   /==/         /==/     /==/
+//   //   ==      /==/      /==/  /=/     /==/    /==/  /==/  /==/     / /===/  /   /==/         /==/     /==/
+//  //     ==    /==/      /==/   /=/    /==/    /==/  /==/  /==/     / /===/  /   /==/         /==/=====/==/
+// //       ==  /==/      /==/    /=/   /==/    /==/  /==/  /==/     /========/   /==/         /==///////==/
+// ================ rAthena Script ====================================================================
+//=== Made by Rikimaru
+//==================== Information ====================================================================
+//==== Yggdrasil Berry Trader NPC
+//================= Version : =========================================================================
+//=== V 1.0   Finished Scripting the Yggdrasil Berry Trader NPC [ Rikimaru ]
+//============== Credits : ============================================================================
+//=== Credits to Rikimaru for the Daily Reward Script
+//=== rAthena Profile Link : http://rathena.org/board/user/434-rikimaru/
+//=====================================================================================================
+MAPNAME,XXX,YYY,D	script	Yggdrasil Berry Trader	100,{
+set .@npcname$,"^0000FF[ Yggdrasil Berry Trader ]^000000";
+set .COSTID,607;
+setarray @ItemID[0],13517,13517,13517,13517,13517,13517,13517;
+setarray @Cost[0],100,200,300,400,500,600,700;
+setarray @item_count[0],1,2,3,4,5,6,7;
+mes .@npcname$;
+mes "Hello ^0000FF["+strcharinfo(0)+"]^000000,do";
+mes "you want to buy some items?";
+next;
+	if (select("Yes,sure","Cancel") == 2) 
+		close;
+	next;
+	mes .@npcname$;
+	mes "^0000ffItem^000000 = ^00aa00Cost^000000";
+	for( set .@i, 0; .@i < getarraysize(@ItemID); set .@i, .@i + 1 ) {
+		mes "^0000ff"+@item_count[.@i]+"x "+getitemname(@ItemID[.@i])+"^000000 = ^00aa00"+@Cost[.@i]+"^000000";
+		if( .@i < 1 )
+			set .@menu$, getitemname(@ItemID[.@i]);
+		else
+			set .@menu$, .@menu$+":"+getitemname(@ItemID[.@i]);
+	}
+
+	next;
+	select(.@menu$);
+	set @choice, @menu - 1;
+
+	mes @npcname$;
+	if(countitem(.COSTID) <@Cost[@choice]) {
+		mes "You dont have enough Yggdrasil Berries for "+@item_count[@choice]+"x '"+getitemname(@ItemID[@choice])+"'";
+		close;
+	}
+	mes "Are u realy sure to trade "+@item_count[@choice]+"x '^ff0000"+getitemname(@ItemID[@choice])+"^000000' for ^00aa00"+@Cost[@choice]+"^000000 Yggdrasil Berries?";
+	if(select("No! Cancel!:Yes, Trade me!") == 1 ) {
+		mes "Canceled the Trade";
+		close;
+	}
+
+	set .@new, .COSTID - @Cost[@choice];
+	if( .@new < 0 )
+		set .@new, 0;
+	delitem .COSTID,@Cost[@choice];
+	getitem @ItemID[@choice], @item_count[@choice];
+	mes "The Trade was acceppted. Have fun with the Item!";
+	close;
+}

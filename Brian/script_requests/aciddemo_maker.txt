@@ -1,0 +1,89 @@
+//===== eAthena Script =======================================
+//= Acid+Fire Bottle Maker
+//===== By: ==================================================
+//= Brian
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: =====================================
+//= Any eAthena Version;
+//===== Description: =========================================
+//= Takes materials and creates named Acid/Fire bottles with 100% success
+//	http://www.eathena.ws/board/index.php?showtopic=180531
+//===== Additional Comments: =================================
+//= 1.0 by Brian
+//============================================================
+
+prontera,155,188,4	script	AcidDemo Maker	740,{
+	mes "[AcidDemo Maker]";
+	mes "How can I help you?";
+	mes " ";
+	switch(select("Make Acid Bottles:Make Fire Bottles:Buy Medicine Bowls - 8z:Cancel")) {
+	case 1:
+		mes "How many^0000FF Acid Bottles^000000?";
+		mes " ";
+		input .@acid;
+		if ((.@acid < 1) || (.@acid > 2000)) close;
+		if (countitem(7134)>=.@acid && countitem(713)>=.@acid && countitem(929)>=.@acid) {
+			delitem 7134,.@acid;	// delete Medicine Bowls
+			delitem 713,.@acid;	// delete Empty Bottles
+			delitem 929,.@acid;	// delete Immortal Hearts
+			getitem2 7136,.@acid,1,0,0,254,0,getcharid(0),0;	// get Acid Bottles
+			mes "Here are your^0000FF "+.@acid+"^000000 Acid Bottles!";
+		} else {
+			mes "You do not have enough materials.";
+			next;
+			mes "[AcidDemo Maker]";
+			mes " ";
+			mes "Each Acid Bottle requires:";
+			mes "^0000FF     1 Medicine Bowl";
+			mes "     1 Empty Bottle";
+			mes "     1 Immortal Heart";
+		}
+		break;
+	case 2:
+		mes "How many^0000FF Fire Bottles^000000?";
+		mes " ";
+		input .@fire;
+		if ((.@fire < 1) || (.@fire > 2000)) close;
+		if (countitem(7134)>=.@fire && countitem(713)>=.@fire && countitem(970)>=.@fire && countitem(1059)>=.@fire) {
+			delitem 7134,.@fire;	// delete Medicine Bowls
+			delitem 713,.@fire;	// delete Empty Bottles
+			delitem 970,.@fire;	// delete Alcohols
+			delitem 1059,.@fire;	// delete Fabrics
+			getitem2 7135,.@fire,1,0,0,254,0,getcharid(0),0;	// get Fire Bottles
+			mes "Here are your^0000FF "+.@fire+"^000000 Fire Bottles!";
+		} else {
+			mes "You do not have enough materials.";
+			next;
+			mes "[AcidDemo Maker]";
+			mes " ";
+			mes "Each Fire Bottle requires:";
+			mes "^0000FF     1 Medicine Bowl";
+			mes "     1 Empty Bottle";
+			mes "     1 Alcohol";
+			mes "     1 Fabric";
+		}
+		break;
+	case 3:
+		mes "How many do you want?";
+		mes " ";
+		input .@bowls;
+		if ((.@bowls < 1) || (.@bowls > 2000)) close;
+		if (Zeny < (.@bowls*8)) {
+			mes "You don't have enough zeny.";
+			close;
+		}
+		if (checkweight(7134,.@bowls)) {
+			set Zeny,Zeny-(.@bowls*8);
+			getitem 7134,.@bowls;	// Medicine Bowl
+			mes "Here are your^0000FF "+.@bowls+"^000000 Medicine Bowls!";
+		} else {
+			mes "Hmm.... it seems that you are overweight...";
+		}
+		break;
+	case 4:
+		mes "Come back if you change your mind.";
+		break;
+	}
+	close;
+}

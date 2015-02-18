@@ -1,0 +1,6 @@
+prontera,155,188,0	script	Sex_Changer	910,{
+	mes "Do you want to change to a "+( Sex ? "Female":"Male" )+"?";
+	if(select("No:Yes")==2)
+		changesex;
+	close;
+}

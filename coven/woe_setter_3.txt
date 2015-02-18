@@ -1,0 +1,451 @@
+//===== eAthena Unofficial Script ===========================================
+//= WoE Time Setter v3
+//===== By: =================================================================
+//= [GM]Xeon
+//===== Current Version: ====================================================
+//= 3.4.3
+//===== Compatible With: ====================================================
+//= Trunk, SVN 13202+
+//===== Description: ========================================================
+//= Manages and adds WoE times for every town
+//===== Additional Comments: ================================================
+//= For revisions, see the change log!
+//= 3.0 Script created ;D [[GM]Xeon]
+//= 3.1 Added castle ownership view, manual WoE start/end [[GM]Xeon]
+//= 3.2 Added castle ownership change function [[GM]Xeon]
+//= 3.3 Added treasure spawn function [[GM]Xeon]
+//= 3.4 Implimented plug-in system, converted features to plug-ins,
+//=	added whisperglobal system [[GM]Xeon]
+//===========================================================================
+
+prontera,167,217,5	script	CovenRO WOE	429,{ //If you wish to change the name, search for all 'JaeRO WOE' and replace them with the desired name.
+//To do:
+//GM:
+//Player: Warp to treasury when WoE isn't active?
+
+	if (getgmlevel()>=$woe_mingmlv) goto L_Main;
+L_View:
+	mes "[CovenRO WOE]";
+	mes "Welcome to the CovenRO WOE NPC, the current WoE times are as follows:";
+	callsub S_Listing2;
+	set @temp$, "";
+	for (set @i, 0; @i < getarraysize($@woes3_pl_player$); set @i, @i+1) {
+		set @temp$, @temp$+":"+$@woes3_pl_playermenu$[@i];
+	}
+	menu @temp$,-,"Exit",L_Exit;
+	next;
+	if (getmapxy(@ignore$,@ignore,@ignore,1,"WoES3Pl_R"+$@woes3_pl_player$[@menu-2]) != -1) { callfunc("WoES3Pl_"+$@woes3_pl_player$[@menu-2]); } else { mes "Critical error. Please report this to a GM!"; }
+	next; goto L_View;
+L_Exit:
+	close;
+S_Listing:
+	deletearray @ar_id[0], 128; deletearray @ar_town[0], 128; deletearray @ar_castle[0], 128; deletearray @ar_sday[0], 128; deletearray @ar_shour[0], 128;
+	deletearray @ar_smin[0], 128; deletearray @ar_stick[0], 128; deletearray @ar_svar[0], 128; deletearray @ar_eday[0], 128; deletearray @ar_ehour[0], 128;
+	deletearray @ar_emin[0], 128; deletearray @ar_etick[0], 128; deletearray @ar_evar[0], 128;
+	set @results, query_sql("select * from `woe_times` order by `st` ASC",@ar_id,@ar_town,@ar_castle,@ar_sday,@ar_shour,@ar_smin,@ar_stick,@ar_svar,@ar_eday,@ar_ehour,@ar_emin,@ar_etick,@ar_evar,@ignore);
+	for (set @temp,0; @temp<@results; set @temp, @temp+1) {
+		set @temp$, "";
+		if (gettimetick(2) >= @ar_stick[@temp] && gettimetick(2) < @ar_etick[@temp]) { set @temp$, @temp$+"^339900+"; } else { set @temp$, @temp$+"^FF0000-"; }
+		if (@ar_town[@temp]==127) { set @temp$, @temp$+"^000000All"; } else {
+			set @temp_, @ar_town[@temp];
+			if (@temp_>=64) { set @temp$, @temp$+"^FFFF00Ar"; set @temp_, @temp_-64; }
+			if (@temp_>=32) { set @temp$, @temp$+"^FF0000Sc"; set @temp_, @temp_-32; }
+			if (@temp_>=16) { set @temp$, @temp$+"^9900CCNo"; set @temp_, @temp_-16; }
+			if (@temp_>=8) { set @temp$, @temp$+"^808080Pr"; set @temp_, @temp_-8; }
+			if (@temp_>=4) { set @temp$, @temp$+"^339900Pa"; set @temp_, @temp_-4; }
+			if (@temp_>=2) { set @temp$, @temp$+"^0066FFGe"; set @temp_, @temp_-2; }
+			if (@temp_==1) set @temp$, @temp$+"^FF9900Al";
+			set @temp$, @temp$+"^000000";
+		}
+		set @temp$, @temp$+" ";
+		if (@ar_castle[@temp]==31) { set @temp$, @temp$+"All"; } else {
+			set @temp_, @ar_castle[@temp];
+			set @tmp, 16;
+			for (set .@i, 5; .@i>0; set .@i,.@i-1) { if (@temp_>=@tmp) { set @temp$, @temp$+.@i; set @temp_,@temp-@tmp; } set @tmp, @tmp/2; }
+		}
+		set @temp$, @temp$+" ";
+		for (set .@i, 1; .@i<3; set .@i, .@i+1) {
+			set @temp$, @temp$+callfunc("daytostr",0,getd("@ar_"+((.@i==1)?"s":"e")+"day["+@temp+"]"));
+			if (.@i==1) { set @temp$, @temp$+((@ar_shour[@temp]<10)?"0":"")+@ar_shour[@temp]+";"+((@ar_smin[@temp]<10)?"0":"")+@ar_smin[@temp]+"-"; } else { set @temp$, @temp$+((@ar_ehour[@temp]<10)?"0":"")+@ar_ehour[@temp]+";"+((@ar_emin[@temp]<10)?"0":"")+@ar_emin[@temp]; }
+		}
+		set @results$,@results$+@temp$+":";
+	}
+	return;
+S_Listing2:
+	deletearray @ar_id[0], 128; deletearray @ar_town[0], 128; deletearray @ar_castle[0], 128; deletearray @ar_sday[0], 128; deletearray @ar_shour[0], 128;
+	deletearray @ar_smin[0], 128; deletearray @ar_stick[0], 128; deletearray @ar_svar[0], 128; deletearray @ar_eday[0], 128; deletearray @ar_ehour[0], 128;
+	deletearray @ar_emin[0], 128; deletearray @ar_etick[0], 128; deletearray @ar_evar[0], 128;
+	set @results, query_sql("select * from `woe_times` order by `st` ASC",@ar_id,@ar_town,@ar_castle,@ar_sday,@ar_shour,@ar_smin,@ar_stick,@ar_svar,@ar_eday,@ar_ehour,@ar_emin,@ar_etick,@ar_evar,@ignore);
+	if (!@results) { mes "There are no current WoE times!"; return; }
+	for (set @temp,0; @temp<@results; set @temp, @temp+1) {
+		mes "--";
+		set @temp$, "";
+		if (gettimetick(2) >= @ar_stick[@temp] && gettimetick(2) < @ar_etick[@temp]) { set @temp$, @temp$+"^339900Active: ^000000Towns-"; } else { set @temp$, @temp$+"^FF0000Unactive: ^000000Towns-"; }
+		if (@ar_town[@temp]==127) { set @temp$, @temp$+"^000000All "; } else {
+			set @temp_, @ar_town[@temp];
+			if (@temp_>=64) { set @temp$, @temp$+"^FFFF00Arunafeltz "; set @temp_, @temp_-64; }
+			if (@temp_>=32) { set @temp$, @temp$+"^FF0000Schwartzvelt "; set @temp_, @temp_-32; }
+			if (@temp_>=16) { set @temp$, @temp$+"^9900CCNovice "; set @temp_, @temp_-16; }
+			if (@temp_>=8) { set @temp$, @temp$+"^808080Prontera "; set @temp_, @temp_-8; }
+			if (@temp_>=4) { set @temp$, @temp$+"^339900Payon "; set @temp_, @temp_-4; }
+			if (@temp_>=2) { set @temp$, @temp$+"^0066FFGeffen "; set @temp_, @temp_-2; }
+			if (@temp_==1) set @temp$, @temp$+"^FF9900Aldebaran ";
+			set @temp$, @temp$+"^000000";
+		}
+		mes @temp$;
+		set @temp$, "";
+		if (@ar_castle[@temp]==31) { set @temp$, @temp$+"All Castles "; } else {
+			set @temp_, @ar_castle[@temp];
+			set @tmp, 16;
+			mes "Castles-";
+			for (set .@i, 5; .@i>0; set .@i,.@i-1) { if (@temp_>=@tmp) { set @temp$, @temp$+.@i; set @temp_,@temp-@tmp; } set @tmp, @tmp/2; }
+		}
+		mes @temp$;
+		set @temp$, "";
+		for (set .@i, 1; .@i<3; set .@i, .@i+1) {
+			set @temp$, @temp$+callfunc("daytostr",1,getd("@ar_"+((.@i==1)?"s":"e")+"day["+@temp+"]"));
+			if (.@i==1) { set @temp$, @temp$+" "+((@ar_shour[@temp]<10)?"0":"")+@ar_shour[@temp]+":"+((@ar_smin[@temp]<10)?"0":"")+@ar_smin[@temp]+"-"; } else { set @temp$, @temp$+" "+((@ar_ehour[@temp]<10)?"0":"")+@ar_ehour[@temp]+":"+((@ar_emin[@temp]<10)?"0":"")+@ar_emin[@temp]; }
+		}
+		mes @temp$;
+	}
+	return;
+L_Main:
+	mes "[WoE Time Setter]";
+	mes "Hello there, how can I help you GM?";
+	next;
+	menu "Manage WoE Times",L_ModifyListing,"Start/Stop WoE",L_ManualWoE,"Plug-ins",L_Plugins,"Settings",L_Settings,"Test Player View",L_View,"Exit",-;
+	close;
+L_Plugins:
+	set @temp$, "";
+	for (set @i, 0; @i < getarraysize($@woes3_pl_gm$); set @i, @i+1) {
+		set @temp$, @temp$+":"+$@woes3_pl_gmmenu$[@i];
+	}
+	menu @temp$,-,"Reinitialize Plugins",L_Reinit,"Back",L_Main;
+	if (getmapxy(@ignore$,@ignore,@ignore,1,"WoES3Pl_R"+$@woes3_pl_gm$[@menu-2]) != -1) { callfunc("WoES3Pl_"+$@woes3_pl_gm$[@menu-2]); } else { mes "Error loading function. Please make sure the plugin is named properly!"; }
+	next; goto L_Plugins;
+L_Reinit:
+	deletearray $@woes3_pl_playermenu$[0], 128;
+	deletearray $@woes3_pl_player$[0], 128;
+	deletearray $@woes3_pl_gmmenu$[0], 128;
+	deletearray $@woes3_pl_gm$[0], 128;
+	donpcevent "::OnLoadPlugins";
+	dispbottom "Plugins initialized";
+	sleep2 500;
+	goto L_Plugins;
+L_ModifyListing:
+	set @results$, "";
+	callsub S_Listing;
+	menu @results$,-,"Add new time",L_ModifyAdd,"Back",L_Main;
+	set @sel_modify, @menu-1;
+	set @adding, 0;
+	menu "Modify time",L_ModifyTown_Main,"Delete time",-,"Back",L_ModifyListing;
+	if (gettimetick(2)>=@ar_stick[@sel_modify]&&gettimetick(2)<@ar_etick[@sel_modify]) {
+		dispbottom "The selected WoE is currently active, if you delete it it will automatically stop! Proceed?";
+		menu "Yes",-,"No",L_ModifyAdd;
+		callfunc("WoE_Status",0,@ar_town[@sel_modify],@ar_castle[@sel_modify]);
+	}
+	query_sql("delete from `woe_times` where `id` = '"+@ar_id[@sel_modify]+"'");
+	dispbottom "WoE time deleted!";
+	set $woe_chatinfo, 0;
+	goto L_ModifyListing;
+L_ModifyAdd:
+	set @adding, 1;
+L_ModifyTown_Main: //@sel_modify is passed from the selection of what exisitng time to modify...
+	if (@adding) {
+		set @sel, 0;
+		setarray @sel_town[1], 0, 0, 0, 0, 0, 0, 0;
+		set @set_castle, 0;
+		set @set_time, 0;
+	} else {
+		set @set_castle, 1;
+		set @set_time, 1;
+		set @temp__, 7;
+		set @temp_, @ar_town[@sel_modify];
+		set @temp, 64;
+		set @sel, 0;
+		for (set .@i, 7; .@i>0; set .@i, .@i-1) { if (@temp_>=@temp) { set @sel_town[.@i], 1; set @temp_, @temp_-@temp; set @sel, @sel+1; } else { set @sel_town[.@i], 0; } set @temp, @temp/2; }
+		set @temp_, @ar_castle[@sel_modify];
+		set @temp, 16;
+		set @sel2, 0;
+		for (set .@i, 5; .@i>0; set .@i, .@i-1) { if (@temp_>=@temp) { set @sel_castle[.@i], 1; set @temp_, @temp_-@temp; set @sel2, @sel2+1; } else { set @sel_castle[.@i], 0; } set @temp, @temp/2; }
+		set @sday, @ar_sday[@sel_modify];
+		set @shour, @ar_shour[@sel_modify];
+		set @smin, @ar_smin[@sel_modify];
+		set @svar, @ar_svar[@sel_modify];
+		set @eday, @ar_eday[@sel_modify];
+		set @ehour, @ar_ehour[@sel_modify];
+		set @emin, @ar_emin[@sel_modify];
+		set @evar, @ar_evar[@sel_modify];
+	}
+	dispbottom "Select the town(s) you wish this WoE time to apply to. If the name is green it means it's enabled, red means disabled.";
+L_ModifyTown_Sub:
+	menu ((@sel_town[1])?"^339900":"^FF0000")+$woe_towns$[1]+":"+((@sel_town[2])?"^339900":"^FF0000")+$woe_towns$[2]+":"+((@sel_town[3])?"^339900":"^FF0000")+$woe_towns$[3]+":"+((@sel_town[4])?"^339900":"^FF0000")+$woe_towns$[4]+":"+((@sel_town[5])?"^339900":"^FF0000")+$woe_towns$[5]+":"+((@sel_town[6])?"^339900":"^FF0000")+$woe_towns$[6]+":"+((@sel_town[7])?"^339900":"^FF0000")+$woe_towns$[7]+":"+((@sel==7)?"^339900":"^FF0000")+$woe_towns$[8],-,"^000000Proceed",L_ModifyCastle_Main,"Back",L_ModifyListing;
+	if (@menu==8) if (@sel<7) { setarray @sel_town[1], 1, 1, 1, 1, 1, 1, 1; set @sel, 7; goto L_ModifyTown_Sub; } else { setarray @sel_town[1], 0, 0, 0, 0, 0, 0, 0; set @sel, 0; goto L_ModifyTown_Sub; }
+	if (!@sel_town[@menu]) { set @sel_town[@menu], 1; set @sel, @sel+1; goto L_ModifyTown_Sub; } else { set @sel_town[@menu], 0; set @sel, @sel-1; goto L_ModifyTown_Sub; }
+L_ModifyCastle_Main:
+	if (!@sel) { dispbottom "You must first select at least one town!"; goto L_ModifyTown_Sub; }
+	set @town_code, 0;
+	set @set_town, 0;
+	if (@sel_town[1]) { set @town_code, @town_code+1; if (@sel==1) set @set_town, 1; }
+	set @temp, 2;
+	for (set .@i, 2; .@i<8; set .@i, .@i+1) { if (@sel_town[.@i]) { set @town_code, @town_code+@temp; if (@sel==1) set @set_town, .@i; } set @temp, @temp*2; }
+	if (!@set_castle) { set @sel2, 5; setarray @sel_castle[1], 1, 1, 1, 1, 1; if (@sel==1 && @sel_town[5]) { set @sel2, 4; set @sel_castle[5], 0; } }
+	set @set_castle, 1;
+L_ModifyCastle_Sub:
+	if (@sel>1) {
+		menu ((@sel_castle[1])?"^339900":"^FF0000")+"Castle 1:"+((@sel_castle[2])?"^339900":"^FF0000")+"Castle 2:"+((@sel_castle[3])?"^339900":"^FF0000")+"Castle 3:"+((@sel_castle[4])?"^339900":"^FF0000")+"Castle 4:"+((@sel_castle[5])?"^339900":"^FF0000")+"Castle 5",-,"^000000Proceed",L_ModifyTime_Main,"Back",L_ModifyTown_Sub;
+		if (!@sel_castle[@menu]) { set @sel_castle[@menu], 1; set @sel2, @sel2+1; } else { set @sel_castle[@menu], 0; set @sel2, @sel2-1; }
+		goto L_ModifyCastle_Sub;
+	} else {
+		menu ((@sel_castle[1])?"^339900":"^FF0000")+getd("$woe_cas"+@set_town+"_1$[1]")+":"+((@sel_castle[2])?"^339900":"^FF0000")+getd("$woe_cas"+@set_town+"_1$[2]")+":"+((@sel_castle[3])?"^339900":"^FF0000")+getd("$woe_cas"+@set_town+"_1$[3]")+":"+((@sel_castle[4])?"^339900":"^FF0000")+getd("$woe_cas"+@set_town+"_1$[4]")+((@set_town!=5)?":"+((@sel_castle[5])?"^339900":"^FF0000")+getd("$woe_cas"+@set_town+"_1$[5]"):""),-,"^000000Proceed",L_ModifyTime_Main,"Back",L_ModifyTown_Sub;
+		if (!@sel_castle[@menu]) { set @sel_castle[@menu], 1; set @sel2, @sel2+1; } else { set @sel_castle[@menu], 0; set @sel2, @sel2-1; }
+
+		goto L_ModifyCastle_Sub;
+	}
+	dispbottom "Select the castle(s) within the previously selected town(s) you wish this WoE time to apply to. If the name is green it means it's enabled, red means disabled.";
+L_ModifyTime_Main:
+	if (!@sel2) { dispbottom "You must first select at least one castle!"; goto L_ModifyCastle_Sub; }
+	set @cas_code, 0;
+	if (@sel_castle[1]) set @cas_code, @cas_code+1;
+	set @temp, 2;
+	for (set .@i, 2; .@i<6; set .@i, .@i+1) { if (@sel_castle[.@i]) set @cas_code, @cas_code+@temp; set @temp, @temp*2; }
+	if (!@set_time) {
+		set @sday, 0; set @shour, 0; set @smin, 0; set @svar, 0; set @eday, 0; set @ehour, 0; set @emin, 0; set @evar, 0;
+	}
+	dispbottom "Select the starting and ending time for the WoE, note the hour is in military time, i.e. 0=12AM, 10=10AM, 22=10PM. Variance is the total amount in seconds to make the time be randomized, ex: setting start to 60 would make the start time either start up to 30 seconds earlier, or start up to 30 seconds later.";
+L_ModifyTime_Sub:
+	for (set .@i, 1; .@i<3; set .@i, .@i+1) setd("@temp"+.@i+"$", callfunc("daytostr",1,getd(((.@i==1)?"@sday":"@eday"))));
+	menu "Start Day [^0066FF"+@temp1$+"^000000]:Start Hour [^0066FF"+@shour+"^000000]:Start Minute [^0066FF"+@smin+"^000000]:End Day [^0066FF"+@temp2$+"^000000]:End Hour [^0066FF"+@ehour+"^000000]:End Minute [^0066FF"+@emin+"^000000]:Start Variance [^0066FF"+@svar+"^000000]:End Variance [^0066FF"+@evar+"^000000]",-,"Proceed",L_ModifyFinish,"Back",L_ModifyCastle_Sub;
+	switch(@menu) {
+		case 1: menu "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday",-,"Cancel",L_ModifyTime_Sub; set @sday, @menu-1; break;
+		case 2: input @shour; if (@shour>23) set @shour, 0; break;
+		case 3: input @smin; if (@smin>59) set @smin, 0; break;
+		case 4: menu "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday",-,"Cancel",L_ModifyTime_Sub; set @eday, @menu-1; break;
+		case 5: input @ehour; if (@ehour>23) set @ehour, 0; break;
+		case 6: input @emin; if (@emin>59) set @emin, 0; break;
+		case 7: input @svar; break;
+		case 8: input @evar; break;
+	}
+	goto L_ModifyTime_Sub;
+L_ModifyFinish:
+	if (@sday==@eday) if (@shour==@ehour) if (@smin==@emin) { dispbottom "Your start time cannot be your end time!"; goto L_ModifyTime_Sub; }
+	set $woe_chatinfo, 0;
+	set @temp1, callfunc("WoE_TickCounter",@sday,@shour,@smin,@svar);
+	set @temp2, callfunc("WoE_TickCounter",@eday,@ehour,@emin,@evar);
+	if (@temp1>@temp2) set @temp2,@temp2+604800;
+	if (@adding) {
+		query_sql("insert into `woe_times` (town,castle,sd,sh,sm,st,sv,ed,eh,em,et,ev,active) values ('"+@town_code+"', '"+@cas_code+"', '"+@sday+"', '"+@shour+"', '"+@smin+"', '"+@temp1+"','"+@svar+"','"+@eday+"', '"+@ehour+"', '"+@emin+"', '"+@temp2+"','"+@evar+"','0')");
+	} else {
+		query_sql("update `woe_times` set town='"+@town_code+"', castle='"+@cas_code+"', sd='"+@sday+"', sh='"+@shour+"', sm='"+@smin+"',st='"+@temp1+"',sv='"+@svar+"',ed='"+@eday+"',eh='"+@ehour+"',em='"+@emin+"',et='"+@temp2+"',ev='"+@evar+"', active='0'  where `id` = '"+@ar_id[@sel_modify]+"'");
+	}
+	dispbottom "WoE time "+((@adding)?"added!":"modified!");
+	goto L_ModifyListing;
+L_ManualWoE:
+	dispbottom "Select the castle(s) to start or stop WoE for.";
+	menu (($woe_cas1_2[1]||$woe_cas1_2[2]||$woe_cas1_2[3]||$woe_cas1_2[4]||$woe_cas1_2[5])?"^339900":"^FF0000")+$woe_towns$[1]+":"+(($woe_cas2_2[1]||$woe_cas2_2[2]||$woe_cas2_2[3]||$woe_cas2_2[4]||$woe_cas2_2[5])?"^339900":"^FF0000")+$woe_towns$[2]+":"+(($woe_cas3_2[1]||$woe_cas3_2[2]||$woe_cas3_2[3]||$woe_cas3_2[4]||$woe_cas3_2[5])?"^339900":"^FF0000")+$woe_towns$[3]+":"+(($woe_cas4_2[1]||$woe_cas4_2[2]||$woe_cas4_2[3]||$woe_cas4_2[4]||$woe_cas4_2[5])?"^339900":"^FF0000")+$woe_towns$[4]+":"+(($woe_cas5_2[1]||$woe_cas5_2[2]||$woe_cas5_2[3]||$woe_cas5_2[4]||$woe_cas5_2[5])?"^339900":"^FF0000")+$woe_towns$[5]+":"+(($woe_cas6_2[1]||$woe_cas6_2[2]||$woe_cas6_2[3]||$woe_cas6_2[4]||$woe_cas6_2[5])?"^339900":"^FF0000")+$woe_towns$[6]+":"+(($woe_cas7_2[1]||$woe_cas7_2[2]||$woe_cas7_2[3]||$woe_cas7_2[4])?"^339900":"^FF0000")+$woe_towns$[7],-,"^339900Enable all",-,"^FF0000Disable all",-,"^000000Back",L_Main;
+	if (@menu==8) { set $woe_manual, 0; callfunc("WoE_Status",1,127,31); set $woe_manual, 1; goto L_ManualWoE; }
+	if (@menu==9) { set $woe_manual, 0; callfunc("WoE_Status",0,127,31); set $woe_manual, 1; goto L_ManualWoE; }
+	set @temp, 64;
+	for (set .@i, 7; .@i>0; set .@i,.@i-1) { if (.@i==@menu) { set @town, @temp; set @town_, .@i; } set @temp, @temp/2; }
+L_ManualCastles:
+	menu ((getd("$woe_cas"+@town_+"_2[1]"))?"^339900":"^FF0000")+getd("$woe_cas"+@town_+"_1$[1]")+":"+((getd("$woe_cas"+@town_+"_2[2]"))?"^339900":"^FF0000")+getd("$woe_cas"+@town_+"_1$[2]")+":"+((getd("$woe_cas"+@town_+"_2[3]"))?"^339900":"^FF0000")+getd("$woe_cas"+@town_+"_1$[3]")+":"+((getd("$woe_cas"+@town_+"_2[4]"))?"^339900":"^FF0000")+getd("$woe_cas"+@town_+"_1$[4]")+((@set_town!=5)?":"+((getd("$woe_cas"+@town_+"_2[5]"))?"^339900":"^FF0000")+getd("$woe_cas"+@town_+"_1$[5]"):""),-,"^339900Enable all",-,"^FF0000Disable all",-,"^000000Back",L_ManualWoE;
+	if (@menu==6) { set $woe_manual, 0; callfunc("WoE_Status",1,@town,31); set $woe_manual, 1; goto L_ManualCastles; }
+	if (@menu==7) { set $woe_manual, 0; callfunc("WoE_Status",0,@town,31); set $woe_manual, 1; goto L_ManualCastles; }
+	set @temp, 16;
+	for (set .@i, 5; .@i>0; set .@i,.@i-1) { if (.@i==@menu) { set @cas, @temp; set @cas_,.@i; } set @temp, @temp/2; }
+	set $woe_manual, 0; callfunc("WoE_Status",((getd("$woe_cas"+@town_+"_2["+@cas_+"]"))?0:1),@town,@cas); set $woe_manual, 1;
+	goto L_ManualCastles;
+L_Settings:
+	menu (($woe_mobspawn)?"^339900":"^FF0000")+"Monster Spawns",-,(($woe_timerdisp)?"^339900":"^FF0000")+"Chatroom Timer Display",-,(($woe_tannounce)?"^339900":"^FF0000")+"Announce Treasure Spawns [Plug-in]",-,(($woe_announcebreaker)?"^339900":"^FF0000")+"Announce Emperium Breaker",-,"^000000Back",L_Main;
+	switch(@menu) {
+		case 1: if ($woe_mobspawn) { set $woe_mobspawn, 0; } else { set $woe_mobspawn, 1; } break;
+		case 2: if ($woe_timerdisp) { set $woe_timerdisp, 0; } else { set $woe_timerdisp, 1; set $woe_chatinfo, 0; donpcevent "CovenRO WOE::OnChatInfo"; } break;
+		case 3: if ($woe_tannounce) { set $woe_tannounce, 0; } else { set $woe_tannounce, 1; } break;
+		case 4: if ($woe_announcebreaker) { set $woe_announcebreaker, 0; } else { set $woe_announcebreaker, 1; } break;
+	}
+	goto L_Settings;
+OnInit:
+	query_sql("CREATE TABLE IF NOT EXISTS `woe_times` ( `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT, `town` TINYINT UNSIGNED NOT NULL, `castle` TINYINT UNSIGNED NOT NULL, `sd` TINYINT UNSIGNED NOT NULL, `sh` TINYINT UNSIGNED NOT NULL, `sm` TINYINT UNSIGNED NOT NULL, `st` BIGINT UNSIGNED NOT NULL, `sv` INTEGER UNSIGNED NOT NULL, `ed` TINYINT UNSIGNED NOT NULL, `eh` TINYINT UNSIGNED NOT NULL, `em` TINYINT UNSIGNED NOT NULL, `et` BIGINT UNSIGNED NOT NULL, `ev` INTEGER UNSIGNED NOT NULL, `active` TINYINT UNSIGNED NOT NULL, PRIMARY KEY (`id`) ) ENGINE = MyISAM;");
+	set $woe_manual, 1; //Variable to know whether WoE was started by atcommand/manually through NPC, or through automatic timer.
+	set $woe_mingmlv, 80; //The minimum GM level able to use the NPC
+	setarray $woe_towns$[1], "Aldebaran", "Geffen", "Payon", "Prontera", "Novice Castles", "Schwartzvalt", "Arunafeltz", "All Castles"; //These are the town names, mostly for announcements
+	setarray $woe_cas1_1$[1], getcastlename("aldeg_cas01"), getcastlename("aldeg_cas02"), getcastlename("aldeg_cas03"), getcastlename("aldeg_cas04"), getcastlename("aldeg_cas05"); //These are the  castle names
+	setarray $woe_cas1_2[1], 0, 0, 0, 0, 0; //Aldebaran's agit status
+	setarray $woe_cas1_3$[1], "aldeg_cas01", "aldeg_cas02", "aldeg_cas03", "aldeg_cas04", "aldeg_cas05";
+	setarray $woe_cas2_1$[1], getcastlename("gefg_cas01"), getcastlename("gefg_cas02"), getcastlename("gefg_cas03"), getcastlename("gefg_cas04"), getcastlename("gefg_cas05"); //These are the castle names
+	setarray $woe_cas2_2[1], 0, 0, 0, 0, 0; //Geffen's agit status
+	setarray $woe_cas2_3$[1], "gefg_cas01", "gefg_cas02", "gefg_cas03", "gefg_cas04", "gefg_cas05";
+	setarray $woe_cas3_1$[1], getcastlename("payg_cas01"), getcastlename("payg_cas02"), getcastlename("payg_cas03"), getcastlename("payg_cas04"), getcastlename("payg_cas05"); //These are the castle names
+	setarray $woe_cas3_2[1], 0, 0, 0, 0, 0; //Payon's agit status
+	setarray $woe_cas3_3$[1], "payg_cas01", "payg_cas02", "payg_cas03", "payg_cas04", "payg_cas05";
+	setarray $woe_cas4_1$[1], getcastlename("prtg_cas01"), getcastlename("prtg_cas02"), getcastlename("prtg_cas03"), getcastlename("prtg_cas04"), getcastlename("prtg_cas05"); //These are the castle names
+	setarray $woe_cas4_2[1], 0, 0, 0, 0, 0; //Prontera's agit status
+	setarray $woe_cas4_3$[1], "prtg_cas01", "prtg_cas02", "prtg_cas03", "prtg_cas04", "prtg_cas05";
+	setarray $woe_cas5_1$[1], "Aldebaran Castle", "Geffen Castle", "Payon Castle", "Prontera Castle", "-"; //These are the castle names
+	setarray $woe_cas5_2[1], 0, 0, 0, 0, 0; //Novice's agit status
+	setarray $woe_cas6_1$[1], getcastlename("schg_cas01"), getcastlename("schg_cas02"), getcastlename("schg_cas03"), getcastlename("schg_cas04"), getcastlename("schg_cas05"); //These are the castle names
+	setarray $woe_cas6_2[1], 0, 0, 0, 0, 0; //Schwartzvalt's agit status
+	setarray $woe_cas6_3$[1], "schg_cas01", "schg_cas02", "schg_cas03", "schg_cas04", "schg_cas05";
+	setarray $woe_cas7_1$[1], getcastlename("arug_cas01"), getcastlename("arug_cas02"), getcastlename("arug_cas03"), getcastlename("arug_cas04"), getcastlename("arug_cas05"); //These are the castle names
+	setarray $woe_cas7_2[1], 0, 0, 0, 0, 0; //Arunafeltz's agit status
+	setarray $woe_cas7_3$[1], "arug_cas01", "arug_cas02", "arug_cas03", "arug_cas04", "arug_cas05";
+	agitend; agitend2;
+	query_sql "update `woe_times` set `active` = '0' where `active` = '1'";
+	callfunc("WoE_Update");
+	donpcevent "CovenRO WOE::OnChatInfo";
+	deletearray $@woes3_pl_playermenu$[0], 128;
+	deletearray $@woes3_pl_player$[0], 128;
+	deletearray $@woes3_pl_gmmenu$[0], 128;
+	deletearray $@woes3_pl_gm$[0], 128;
+	donpcevent "::OnLoadPlugins";
+	while(1) callfunc("WoE_Init");
+	end;
+OnChatInfo:
+	while (1) {
+		delwaitingroom; //Memory vortex restraining bolt, please don't remove it for the sake of humanity.
+		if (!$woe_timerdisp) end;
+		if (.@woe_e-gettimetick(2) <= 0 || !$woe_chatinfo) { set .@timeset, query_sql("select st,et from `woe_times` order by `st` ASC",.@woe_s,.@woe_e); set $woe_chatinfo, 1; }
+		if (.@timeset) {
+			if (gettimetick(2)>.@woe_s) {
+				set .@sec, .@woe_e-gettimetick(2);
+				set .@day, .@sec / 86400;
+				set .@hr, .@sec % 86400 / 3600;
+				set .@min, .@sec % 3600 / 60;
+				set .@sec, .@sec % 60;
+				waitingroom "Ends: "+.@day+"d "+((.@hr<10)?"0":"")+.@hr+":"+((.@min<10)?"0":"")+.@min+((!.@hr&&!.@min&&.@sec<60)?":"+((.@sec<10)?"0":"")+.@sec:""),0;
+			} else {
+				set .@sec, .@woe_s-gettimetick(2);
+				set .@day, .@sec / 86400;
+				set .@hr, .@sec % 86400 / 3600;
+				set .@min, .@sec % 3600 / 60;
+				set .@sec, .@sec % 60;
+				waitingroom "Next: "+.@day+"d "+((.@hr<10)?"0":"")+.@hr+":"+((.@min<10)?"0":"")+.@min+((!.@hr&&!.@min&&.@sec<60)?":"+((.@sec<10)?"0":"")+.@sec:""),0;
+			}
+			if (.@hr||.@min>1) { sleep 60000-(gettime(1)*1000); } else { sleep 1000; }
+		} else { waitingroom "Next: N/A, none set!",0; sleep 60000-(gettime(1)*1000); }
+	}
+	end;
+OnAgitStart:
+	if ($woe_manual) { callfunc("WoE_Status",1,31,31); }
+	end;
+OnAgitStart2:
+	if ($woe_manual) { callfunc("WoE_Status",1,96,31); }
+	end;
+OnAgitEnd:
+	if ($woe_manual) { callfunc("WoE_Status",0,31,31); }
+	end;
+OnAgitEnd2:
+	if ($woe_manual) { callfunc("WoE_Status",0,96,31); }
+	end;
+OnWhisperGlobal:
+	if (getgmlevel() < $woe_mingmlv) end;
+	if (@whispervar0$ == "start") {
+		if (@whispervar1$ == "" && @whispervar2$ == "") dispbottom "Invalid syntax, type 'start#help' for assistance.";
+		else if (@whispervar1$ == "help") dispbottom "start#town_code#castle_code - Starts WoE for the specified town(s) and castle(s).";
+		else callfunc("WoE_Status",1,@whispervar1$,@whispervar2$);
+	} else if (@whispervar0$ == "stop") {
+		if (@whispervar1$ == "" && @whispervar2$ == "") dispbottom "Invalid syntax, type 'stop#help' for assistance.";
+		else if (@whispervar1$ == "help") dispbottom "stop#town_code#castle_code - Stops WoE for the specified town(s) and castle(s).";
+		else callfunc("WoE_Status",0,@whispervar1$,@whispervar2$);
+	} else if (@whispervar0$ == "talk") goto L_Main;
+	else if (@whispervar0$ == "help") {
+		dispbottom "Welcome to the War of Emperium Setter 3 whisper help system.";
+		dispbottom "The following are commands that you can whisper to the NPC...";
+		dispbottom "	start#town_code#castle_code - Starts WoE for the specified town(s) and castle(s).";
+		dispbottom "	stop#town_code#castle_code - Stops WoE for the specified town(s) and castle(s).";
+		dispbottom "	talk - Opens dialog with the WoE Setter 3 NPC.";
+		dispbottom "	help - Displays this help information.";
+		dispbottom "Town code: A bitmask (Add them together to use multiple towns) code to specify what towns the command affects.";
+		dispbottom "Aldebaran=1, Geffen=2, Payon=4, Prontera=8, Novice=16, Schwartvalt=32, Arunafeltz=64, All=127.";
+		dispbottom "Castle code: A bitmask code to specify what castles the command affects.";
+		dispbottom "Castle 1=1, Castle 2=2, Castle 3=4, Castle 4=8, Castle 5=16, All=31.";
+	} else dispbottom "Invalid syntax, type 'help' for assistance.";
+	end;
+}
+
+//Returns the day name from a day #
+//arg0=Mode, 0=short, 1=full
+//arg1=Day #
+function	script	daytostr	{
+	switch(getarg(1)) {
+		case 0: return ((getarg(0))?"Sunday":"Sun");
+		case 1: return ((getarg(0))?"Monday":"Mon");
+		case 2: return ((getarg(0))?"Tuesday":"Tue");
+		case 3: return ((getarg(0))?"Wednesday":"Wed");
+		case 4: return ((getarg(0))?"Thursday":"Thu");
+		case 5: return ((getarg(0))?"Friday":"Fri");
+		case 6: return ((getarg(0))?"Saturday":"Sat");
+	}
+	return;
+}
+
+//Function to acquire the time difference between now and the arguments in seconds
+//arg0=Start/end day
+//arg1=Start/end hour
+//arg2=Start/end minute
+//arg3=Random time variance
+function	script	WoE_TickCounter	{
+	if ((getarg(0)>gettime(4))||(getarg(0)==gettime(4)&&getarg(1)>gettime(3))||(getarg(0)==gettime(4)&&getarg(1)==gettime(3)&&getarg(2)>gettime(2))) { set .@day, getarg(0)-gettime(4); } else { set .@day, 7-(gettime(4)-getarg(0)); }
+	set .@hour, getarg(1)-gettime(3);
+	set .@minute, getarg(2)-gettime(2);
+	return gettimetick(2)+(.@day*86400)+(.@hour*3600)+(.@minute*60)+rand(-getarg(3)/2,getarg(3)/2)-gettime(1);
+}
+
+//Function to update the tick columns of past WoE times so that they may occur again!
+function	script	WoE_Update	{
+	deletearray .@id[0], 128; deletearray .@sd[0], 128; deletearray .@sh[0], 128; deletearray .@sm[0], 128; deletearray .@st[0], 128; deletearray .@sv[0], 128;
+	deletearray .@ed[0], 128; deletearray .@eh[0], 128; deletearray .@em[0], 128; deletearray .@et[0], 128; deletearray .@ev[0], 128;
+	set .@results, query_sql("select  id,sd,sh,sm,st,sv,ed,eh,em,et,ev from `woe_times` where `et` <= '"+gettimetick(2)+"'",.@id,.@sd,.@sh,.@sm,.@st,.@sv,.@ed,.@eh,.@em,.@et,.@ev);
+	set .@i, 0;
+	for (set .@i,0; .@i<.@results; set .@i,.@i+1) { query_sql("update `woe_times` set `st` = '"+callfunc("WoE_TickCounter",.@sd[.@i],.@sh[.@i],.@sm[.@i],.@sv[.@i])+"', `et` = '"+callfunc("WoE_TickCounter",.@ed[.@i],.@eh[.@i],.@em[.@i],.@ev[.@i])+"', `active` = '0' where `id` = '"+.@id[.@i]+"'"); }
+	return;
+}
+
+//Function to either start WoE or end it, depending on if the current time tick fits a valid time frame found in the SQL table
+function	script	WoE_Init	{
+	deletearray .@stown[0], 128; deletearray .@scastle[0], 128; deletearray .@etown[0], 128; deletearray .@ecastle[0], 128;
+	set .@ends, query_sql("select town,castle from `woe_times` where `et` <= '"+gettimetick(2)+"' and `active` = '1'",.@etown,.@ecastle);
+	if (.@ends) { set $woe_chatinfo, 0; query_sql("update `woe_times` set `active` = '0' where `et` <= '"+gettimetick(2)+"'"); callfunc("WoE_Update"); }
+	set .@starts, query_sql("select town,castle from `woe_times` where `st` <= '"+gettimetick(2)+"' and `et` > '"+gettimetick(2)+"' and `active` = '0'",.@stown,.@scastle);
+	if (.@starts) query_sql("update `woe_times` set `active` = '1' where `st` <= '"+gettimetick(2)+"' and `et` > '"+gettimetick(2)+"'");
+	set $woe_manual, 0; 
+	for (set .@i1, 0; .@i1<.@ends; set .@i1,.@i1+1 ) { //WOE END STUFF
+		callfunc("WoE_Status",0,.@etown[.@i1],.@ecastle[.@i1]);
+	}
+	for (set .@i1, 0; .@i1<.@starts; set .@i1,.@i1+1 ) { //WOE START STUFF
+		callfunc("WoE_Status",1,.@stown[.@i1],.@scastle[.@i1]);
+	}
+	set $woe_manual, 1;
+	sleep 60000-(1000*gettime(1));
+	return;
+}
+
+//The actual function that starts/stops WoE, called by other NPCs/Functions
+//arg0=Stop(0) or start(1)?
+//arg1=Town(s) bitmask, 127=All
+//arg2=Castle(s) bitmask, 31=All
+function	script	WoE_Status	{
+	set .@tcode, getarg(1); set .@tcurrent, 64;
+	for (set .@i_, 7; .@i_>0; set .@i_,.@i_-1) {
+		if (.@tcode>=.@tcurrent) {
+			if (.@i_>5) { if (!agitcheck2()&&getarg(0)) { agitstart2; } } else { if (!agitcheck()&&getarg(0)) { agitstart; } }
+			set .@temp$, ""; set .@ccode, getarg(2); set .@ccurrent, 16;
+			for (set .@i, 5; .@i>0; set .@i,.@i-1) { if (.@ccode>=.@ccurrent) { if (getarg(0)) { if (.@i_!=6&&.@i_!=7) { if(.@tcurrent!=16) donpcevent "Agit#"+getd("$woe_cas"+.@i_+"_3$["+.@i+"]")+"::OnAgitStart_"; } else if (.@i_==7) { donpcevent "Manager#aru0"+.@i+"_02::OnAgitStart2_"; } else { donpcevent "Manager#sch0"+.@i+"_02::OnAgitStart2_"; } } else { if (.@i_!=6&&.@i_!=7) { if (.@tcurrent!=16) donpcevent "Agit#"+getd("$woe_cas"+.@i_+"_3$["+.@i+"]")+"::OnAgitEnd_"; } else if (.@i_==7) {donpcevent "Manager#aru0"+.@i+"_02::OnAgitEnd2_"; } else { donpcevent "Manager#sch0"+.@i+"_02::OnAgitEnd2_"; } } setd "$woe_cas"+.@i_+"_2["+.@i+"]", getarg(0); set .@temp$, .@temp$+getd("$woe_cas"+.@i_+"_1$["+.@i+"]")+((.@ccode>.@ccurrent)?", ":" "); set .@ccode, .@ccode-.@ccurrent; } set .@ccurrent, .@ccurrent/2; }
+			if (getarg(1)!=127&&.@tcurrent!=16) announce "WoE has "+((getarg(0))?"begun":"ended")+" for "+$woe_towns$[.@i_]+" ( Castle(s): "+((getarg(2)==31)?"All":.@temp$)+" )!",bc_all|bc_yellow;
+			set .@tcode, .@tcode-.@tcurrent;
+		}
+		set .@tcurrent,.@tcurrent/2;
+	}
+	if (getarg(1)==127) {
+		set .@temp$, ""; set .@ccode, getarg(2); set .@ccurrent, 16;
+		for (set .@i, 5; .@i>0; set .@i,.@i-1) { if (.@ccode>=.@ccurrent) set .@temp$, .@temp$+.@i+((.@ccode>.@ccurrent)?", ":" "); set .@ccode, .@ccode-.@ccurrent; set .@ccurrent, .@ccurrent/2; }
+		announce "WoE has "+((getarg(0))?"begun":"ended")+" for All Towns ( Castle(s): "+((getarg(2)==31)?"All":.@temp$)+" )!",bc_all|bc_yellow;
+	}
+	if (!getarg(0)) {
+		set .@agit1, 0; set .@agit2, 0;
+		for (set .@i_, 7; .@i_>0; set .@i_,.@i_-1) { for (set .@i, 5; .@i>0; set .@i, .@i-1) { if (getd("$woe_cas"+.@i_+"_2["+.@i+"]")==1) setd(".@agit"+((.@i_>5)?"2":"1"),1); } }
+		if (!.@agit1&&agitcheck()) agitend;
+		if (!.@agit2&&agitcheck2()) agitend2;
+	}
+	return;
+}

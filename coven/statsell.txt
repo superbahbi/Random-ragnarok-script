@@ -1,0 +1,108 @@
+//===== eAthena Script =======================================
+//= PointsSeller
+//===== By: ==================================================
+//= waixiew
+//============================================================
+prontera,171,183,6	script	Stat Seller	831,{
+	mes "[Stat Seller]";
+	mes "I am a Stat Seller.";
+	mes "How can i help you?";
+	next;
+	mes "[Stat Seller]";
+	mes "I can sell u some stat points or skill points";
+	next;
+	mes "[Stat Seller]";
+	mes "100k for 10 statpoints";
+	mes "1m for 1 skillpoints";
+	next;
+	menu "Yes I want stats",L0,"Yes I want skills",L1,"No thanks",LEnd;
+
+L0:
+mes "Type in the amount PLEASE! ";
+set @stamount,"0";
+input @stamount;
+if(@stamount < 1) goto DD;
+if(zeny < (100000* @stamount)) goto NO;
+set Zeny,(zeny - (100000* @stamount));
+set StatusPoint,(StatusPoint +(10* @stamount));
+goto TY;
+
+L1:
+mes "Type in the amount PLEASE! ";
+set @skamount,"0";
+input @skamount;
+if(@skamount < 1) goto DD;
+if(zeny < (1000000* @skamount)) goto NO;
+set Zeny,(zeny - (1000000* @skamount));
+set SkillPoint,(SkillPoint +(1* @skamount));	
+goto TY;
+
+TY:
+mes "Thanks a lot";
+mes "Please come again!";
+close;
+
+DD:
+mes "Go away you idiot!";
+mes "Don't disturb me!";
+close;
+
+NO:
+mes "Please come with the zeny!";
+close;
+
+LEnd:
+mes "Come back when u change your mind!";
+close;
+
+OnInit:
+	waitingroom "Stats Seller!",0;
+	end;	
+}
+
+prontera,180,191,6	script	Points Buyer	903,{
+	mes "[Points Buyer]";
+	mes "I am a Points Buyer.";
+	mes "How can i help you?";
+	next;
+	mes "[Points Buyer]";
+	mes "I can buy stat points or skill points only";
+	mes "What kind of points would you like to sell?";
+	next;
+	menu "Status Points",L1Stats,"Skill Points",L1Skill,"Nothing..",L1End;
+
+L1Stats:
+	mes "[Points Buyer]";
+	mes "Ok, now put in the Amount of Statpoints you would like to sell";
+	input .@statamount;
+	if(StatusPoint < .@statamount) goto NoPoints;
+	set .@statprice, 100 * .@statamount;
+	set zeny, zeny +.@statprice;
+	set StatusPoint,StatusPoint -.@statamount;
+	close;
+
+L1Skill:
+	mes "[Points Buyer]";
+	mes "Ok, now put in the Amount of Skillpoints you would like to sell";
+	input .@skillamount;
+	if(SkillPoint < .@skillamount) goto L1NoPoints;
+	set .@skillprice, 1000 * .@skillamount;
+	set zeny, zeny +.@skillprice;
+	set SkillPoint,SkillPoint -.@skillamount;
+	close;
+
+L1NoPoints:
+	mes "[Points Buyer]";
+	mes "Sorry, you don't have enough Skill / Status Points!";
+	close;
+
+L1End:
+	mes "[Points Buyer]";
+	mes "Ok, bye!";
+	close;
+
+OnInit:
+	waitingroom "Points Buyer!",0;
+	end;
+}
+

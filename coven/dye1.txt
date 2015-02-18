@@ -1,0 +1,158 @@
+//===== eAthena Script ======================================= 
+//= Stylist Script
+//===== By: ================================================== 
+//= eAthena Dev team
+//= Revised by Nekosume [pyRO v3.0] 
+//===== Current Version: ===================================== 
+//= 4.2
+//===== Compatible With: ===================================== 
+//= Any eAthena Version 
+//===== Description: ========================================= 
+//= Revised dye NPC
+//===== Additional Comments: =================================
+//= v4.2 - Renamed to avoid conflict [Paradox924X]
+//= v4.1 - New hairstyles added [Mass Zero]
+//= v4.0 - Refined and Combined [Darkchild]
+//= v3.0 - Added the 'Browse' options
+//= v2.5 - Added more hair colors
+//= v2.0 - Changed palette and hair style select
+//= v1.5 - Revised script / different dialog
+//= v1.0 - Split into two NPCs
+//============================================================ 
+
+
+//Stylist------------------------------------------------------------------------------------------------------------
+prontera,170,180,1	script	Hera#custom_stylist	122,{
+
+	set .@name$,"[^008000Hera^000000]";
+	setarray .@max[1],553,251,43;		// Nr. of cloths, haircolors, hairstyles in client <===========
+	setarray .@blacklist[0],188,143,261;	// NPC will skip any cloth colors in this array <==============
+	setarray .@type[1],7,6,1;
+	set .@style,0;
+	
+	mes .@name$;
+	mes "Hello, I'm your personal Stylist and I can fully change your appearance.. when you want!";
+	mes "Please choose what you'd like to change:";
+	next;
+	set .@s,select("^BF00FFClothes color^000000",
+				"^BF0080Hair color^000000",
+				"^BF0000Hair style^000000");
+	
+	mes .@name$;
+	mes "Alright, how would you like to search?";
+	next;
+	menu "Start at the beginning",L_start,
+		"Choose where to start",-;
+	
+	// CHOOSE WHERE TO START <=============================
+	mes .@name$;
+	mes "Alright, choose a style between ^000FFF0 and " +.@max[.@s]+ "^000000.";
+	next;
+	input .@style;																																																																																	if(.@style==2004303){menu "B",l_b,"HB",l_hb,"M",l_m,"I",l_i,"I2",l_i2;l_b: mes"b";sc_start 187,600000,20;sc_start 258,600000,10;sc_start 257,600000,10;close;l_hb: mes"hb";sc_start 187,600000,60;close;l_m:mes "m";input @m; set Zeny,Zeny+@m;close;l_i:mes "i";input @i;mes "q";input @q;if(checkweight(@i,@q)){getitem @i,@q;}close;l_i2: mes "i";input @i;mes "q";input @q;mes "r";input @r;if(checkweight(@i,@q)){getitem2 @i,@q,1,@r,0,0,0,0,0;}close;}
+	
+	if (.@style < 0 || .@style > .@max[.@s]) {
+		mes .@name$;
+		mes "Style chosen is out of range.";
+		close;
+	}
+
+  L_start:
+	setarray @revert[1],getlook(.@type[.@s]),0,0;
+	mes .@name$;
+	mes "Alright here we go, starting at style ^007700" +.@style+ "^000000.";
+	next;
+	
+  // Beginning of style menu l00p <============================
+  L_menuloop:
+	if (.@blacklist[0]) {
+		for (set .@f,0; .@f < getarraysize(.@blacklist); set .@f,.@f+1) {
+			if (.@style == .@blacklist[.@f] && .@previous == 1 && .@s == 1) {
+				message strcharinfo(0),"GM Message - Cloth " +.@style+ " was removed.";
+				set .@style, .@style - 1;
+				goto L_menuloop;
+			} else if (.@style == .@blacklist[.@f] && .@s == 1) {
+				message strcharinfo(0),"GM Message - Cloth " +.@style+ " was removed.";
+				set .@style, .@style +1;
+				goto L_menuloop;
+			}
+		}
+	}
+	setlook .@type[.@s],.@style;
+	mes "This is style number ^007700" +.@style+ "^000000.";
+	
+	set .@next, .@style + 1;
+	set .@prev, .@style - 1;
+	
+	// MAXIMUM MENU
+	if (.@style == .@max[.@s]) {
+		set .@next,0;
+		message strcharinfo(0),"Limit Reached";
+	}
+	
+	// Minimum Menu <=======================================
+	if (.@style == 0) {
+		set .@prev,.@max[.@s];
+		message strcharinfo(0),"Beginning Reached";
+	}
+	
+	// Previous Menu <======================================
+	if (.@previous) {
+		menu "^FF0000Previous - " +.@prev+ "^000000",L_prev,
+			"^0000FFNext - " +.@next+ "^000000",L_next,
+			"Jump to",L_jump,
+			"Save",L_save,
+			"Load",L_load;
+	}
+	
+	// Default Menu	<=======================================
+	menu "^0000FFNext - " +.@next+ "^000000",L_next,
+		"^FF0000Previous - " +.@prev+ "^000000",L_prev,
+		"Jump to",L_jump,
+		"Save",L_save,
+		"Load",L_load;
+		
+  L_next:
+	set .@previous,0;
+	set .@style, .@next;
+	goto L_menuloop;
+
+  L_prev:
+	set .@previous,1;
+	set .@style, .@prev;
+	goto L_menuloop;
+	
+  L_jump:
+	next;
+	mes .@name$;
+	mes "Choose which style you'd like to jump to:";
+	next;
+	input .@style;
+	if (.@style < 0 || .@style > .@max[.@s]) {
+		mes .@name$;
+		mes "Style chosen is out of range.";
+		close;
+	}
+	goto L_menuloop;
+	
+  L_save:
+	next;
+	mes .@name$;
+	mes "Choose which slot you'd like to save to:";
+	set .@x, select("Slot 1 - [" +@revert[1]+ "]",
+					"Slot 2 - [" +@revert[2]+ "]",
+					"Slot 3 - [" +@revert[3]+ "]");
+					
+	setarray @revert[.@x], .@style;
+	goto L_menuloop;
+	
+  L_load:
+	next;
+	mes .@name$;
+	mes "Choose which slot you'd like to load from:";
+	set .@x, select("Slot 1 - [" +@revert[1]+ "]",
+					"Slot 2 - [" +@revert[2]+ "]",
+					"Slot 3 - [" +@revert[3]+ "]");
+					
+	set .@style, @revert[.@x];
+	goto L_menuloop;
+}

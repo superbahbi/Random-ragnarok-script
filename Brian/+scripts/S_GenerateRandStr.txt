@@ -1,0 +1,28 @@
+// http://www.eathena.ws/board/index.php?showtopic=237076
+
+poring_c01,100,100,0	script	PVP_Exit	910,{
+	set .@code$, callsub(S_GenerateRandStr,3,5); // complexity of code
+	mes "Input this code:";
+	mes "^0000FF     " + .@code$;
+	input .@input$;
+	if (.@input$ == .@code$)
+		warp "SavePoint",0,0;
+	else
+		mes "^FF0000Incorrect code!";
+	close;
+
+S_GenerateRandStr:
+// getarg(0) = type    Value is a bit field (1: lowercase, 2: numbers, 4: symbols, 8: UPPERCASE)
+// getarg(1) = length
+	if (getarg(0) & 1) setarray .@chars$[getarraysize(.@chars$)], "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z";
+	if (getarg(0) & 2) setarray .@chars$[getarraysize(.@chars$)], "1","2","3","4","5","6","7","8","9","0";
+	if (getarg(0) & 4) setarray .@chars$[getarraysize(.@chars$)], "!","@","#","$","%","^","&","*","(",")","<",">","?";
+	if (getarg(0) & 8) setarray .@chars$[getarraysize(.@chars$)], "A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z";
+	
+	set .@length, getarg(1);
+	while (.@length) {
+		set .@str$, .@str$ + .@chars$[rand(getarraysize(.@chars$))];
+		set .@length, .@length -1;
+	}
+	return .@str$;
+}

@@ -1,0 +1,35 @@
+prontera,200,246,4	script	Stranger	735,{
+	mes "[Stranger]";
+	mes "Excuse me? I guess I'm lost.";
+	mes "Can you help me?";
+	mes "I will be more than happy to trade my goods if you help me find my way.";
+	next;
+	menu "Help",help,"Leave",H_Close;
+	help:
+		mes "[Stranger]";
+		mes "I'm lucky enough to find you.";
+		mes "I came from a far away land and I'm tired.";
+		mes "I might be sent here to help you.";
+		next;
+		mes "[Stranger]";
+		mes "Look, bring me a TCG and I'll give you money.";
+		menu "Give",give,"Leave",H_Close;
+		give:
+			mes "Well this is what I'm here for, to share my wealth.";
+			next;
+			if (countitem(7227) < 1) goto H_Lack;
+			mes "[Stranger]";
+			mes "Thank you so much, I'd be on my way then.";
+			next;
+			delitem 7227,1;
+			getitem 677,2;
+			close;
+	H_Lack:
+		mes "[Stranger]";
+		mes "Looks like you're not interested. It's fine.";
+		close;
+	H_Close:
+		mes "[Stranger]";
+		mes "Thank you for your time. Come back if you want it.";
+		close;
+}

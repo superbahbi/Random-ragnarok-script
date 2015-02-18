@@ -1,0 +1,98 @@
+// = Script made by RIKIMARU on rathena.org
+// = Profile Link :
+// = http://rathena.org/board/user/434-rikimaru/
+// = ENJOY THIS SCRIPT!
+//===================================================================================
+//        //=====//     /==/     /==/          /==/      
+//       //     //     /==/     /==/  /=/     /==/         
+//      //=====//              /==/  /=/             /==============/     /========/   /==//===/    /==/     /==/
+//     //=//////    /==/      /==//=/       /==/    /==/==/==/==/==/     /     /  /   /==/         /==/     /==/
+//    // ==        /==/      /==//=/       /==/    /==/  /==/  /==/     ======/  /   /==/         /==/     /==/
+//   //   ==      /==/      /==/  /=/     /==/    /==/  /==/  /==/     / /===/  /   /==/         /==/     /==/
+//  //     ==    /==/      /==/   /=/    /==/    /==/  /==/  /==/     / /===/  /   /==/         /==/=====/==/
+// //       ==  /==/      /==/    /=/   /==/    /==/  /==/  /==/     /========/   /==/         /==///////==/
+// ================ rAthena Script ==================================================
+// ============== Information =======================================================
+// = MVP Arena + MVP Arena Warper
+// = Made by :
+// = Rikimaru
+//===== Current Version: ===================================================
+//= 1.3
+//===== Compatible With: ===================================================
+//= rAthena Revision 15908 or Higher <--------------- IMPORTANT
+//===== Description: =======================================================
+//= MVP Arena + Warper with the newest MVP's added to the Script
+//= LHZ MVP's have a higher cost than normal MVP's,remember that.
+//===== Additional Comments: ===============================================
+//= 1.0 Finished the Script [Rikimaru]
+//= 1.1 Shorted by llchrisll
+//= 1.2 Added new MVP'S like Boitata and the new LHZ MVP's [Rikimaru]
+//= 1.3 fixed a little Bug in the arrays,which was caused by me. [Rikimaru]
+//=========================================================================
+//= DO NOT REMOVE MY AND CHRIS CREDITS AND CLAIM OUR WORK AS YOURS 
+//=========================================================================
+MAPNAME,XXX,YYY,D	script	MVP Warper	NID,{
+// ================== Settings ============================================
+set .@n$,"^0000FF[ MVP Warper ]^000000";
+// ============= End of Settings ==========================================
+mes .@n$;
+mes "I can warp you to the MVP Room,do you want to go there?";
+next;
+switch(select("Yes!:No!")) {
+case 1:
+mes .@n$;
+mes "Okay I'm going to warp you.";
+warp "guild_vs1",50,50;
+close;
+case 2:
+mes .@n$;
+mes "Okay bye!";
+close;
+}
+}
+//========================= First Script End =============//
+//================== MVP Summoner ========================//
+guild_vs1,50,57,5	script	MVP Summoner	790,{
+set .@nsummon$,"^0000FF[ MVP Summoner ]^000000";
+mes .@nsummon$;
+mes "Hello,I'm able to spawn MVP's.";
+mes "Which MVP do you want me to spawn?";
+mes "1 MVP costs "+.zeny[1]+" Zeny";
+mes "LHZ MVPs and Thanatos have a";
+mes "cost of "+.zeny[2]+" Zeny.";
+next;
+set .@m,select(.smenu$) - 1;
+mes .@nsummon$;
+mes "Okay let me check if you have enough Zeny.";
+if( Zeny < .zeny[.mobze[.@m]] ) {
+	mes "You don't have enough money";
+	close;
+} else {
+	close2;
+	set Zeny, Zeny - .zeny[.mobze[.@m]];
+	atcommand "@spawn "+.mobid[.@m] + " "+.mobam[.@m];
+	npctalk "[ MVP Summoner]: "+getmonsterinfo(.mobid[.@m],0) +" Spawned!";
+	end;
+}
+OnInit:
+setarray .zeny[1],50000000,250000000; // 50m,250m Zeny
+// Mob IDs
+setarray .mobid[0],1511,1647,1785,1630,1039,1874,2068,1272,1719,1046,1389,1112,1115,1418,1871,1252,1768,1086,1885,1649,1651,1832,1492,1734,1251,1779,1688,1646,1373,1147,1059,1150,1087,1190,1038,1157,1159,1623,1650,1583,1708,1312,1751,1648,1658,2236,2238,2240,2241,2156,2235,2237,2087,2239;
+// Mob Spawn Amount
+setarray .mobam[0],1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1;
+// Price: Entry as Index from .zeny
+// 1 = .zeny[1] - 2 = .zeny[2]
+setarray .mobze[0],1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1,2,1,2,1,1,1,2,2,2,2,2,2,1,2,2,1,2;
+set .smenu$,"";
+for( set .@s,0; .@s < getarraysize(.mobid); set .@s,.@s + 1) {
+	// Skips an Monster if it does not exist in the db
+	if(getmonsterinfo(.mobid[.@s],0) == "" || getmonsterinfo(.mobid[.@s],0) == "null") continue;
+	// else adding it to the menu
+	set .smenu$,.smenu$ + "- "+getmonsterinfo(.mobid[.@s],0) + ( (.mobid[.@s+1] == 0)?"":":");
+}
+end;
+}
+guild_vs1,31,68,5	duplicate(MVP Summoner)	MVP Summoner#1	790
+guild_vs1,31,31,5	duplicate(MVP Summoner)	MVP Summoner#2	790
+guild_vs1,68,31,5	duplicate(MVP Summoner)	MVP Summoner#3	790
+guild_vs1,68,68,5	duplicate(MVP Summoner)	MVP Summoner#4	790 

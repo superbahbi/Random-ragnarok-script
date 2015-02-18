@@ -1,0 +1,75 @@
+// = Script made by RIKIMARU on rathena.org
+// = Profile Link :
+// = http://rathena.org/board/user/434-rikimaru/
+// = ENJOY THIS SCRIPT!
+//===================================================================================
+//        //=====//     /==/     /==/          /==/      
+//       //     //     /==/     /==/  /=/     /==/         
+//      //=====//              /==/  /=/             /==============/     /========/   /==//===/    /==/     /==/
+//     //=//////    /==/      /==//=/       /==/    /==/==/==/==/==/     /     /  /   /==/         /==/     /==/
+//    // ==        /==/      /==//=/       /==/    /==/  /==/  /==/     ======/  /   /==/         /==/     /==/
+//   //   ==      /==/      /==/  /=/     /==/    /==/  /==/  /==/     / /===/  /   /==/         /==/     /==/
+//  //     ==    /==/      /==/   /=/    /==/    /==/  /==/  /==/     / /===/  /   /==/         /==/=====/==/
+// //       ==  /==/      /==/    /=/   /==/    /==/  /==/  /==/     /========/   /==/         /==///////==/
+// ================ rAthena Script ==================================================
+// ============== Information =======================================================
+// = Stat and Skill Seller
+// = Made by :
+// = Rikimaru
+//===== Current Version: ===================================================
+//= 1.0
+//===== Compatible With: ===================================================
+//= with any rAthena Revision
+//===== Description: =======================================================
+//= This was a Requested Script,but it's useful for Newbie's :)
+//===== Additional Comments: ===============================================
+//= 1.0 Finished the Script [Rikimaru]
+//=========================================================================
+//= DO NOT REMOVE MY CREDITS AND CLAIM MY WORK AS YOURS 
+//=========================================================================
+MAPNAME,XXX,YYY,D	script	Stat and Skill Seller	NID,{
+// ===================== Settings ===========================
+set .@skillname$,"^0000FF[ John ]^000000";
+set .@zenyCost,100
+// ================== End of Settings =======================
+mes .@skillname$;
+mes "Hello ^FF0000["+strcharinfo(0)+"]^000000!";
+mes "What do you want to do?";
+next;
+switch(select("-Buy Stats:-Buy Skills:Cancel")) {
+case 1:
+mes .@skillname$;
+mes "Okay input the Amount";
+mes "of Points you want to buy!";
+mes "1 Point has a cost of 100 Zenny!";
+next;
+mes .@skillname$;
+input .@amount;
+if( Zeny < ( .@amount * .@zenyCost ) ) {
+     mes "You don't have enough money!";
+     close;
+} else {
+     set Zeny, Zeny - ( .@amount * .@zenyCost );
+     set StatusPoint, StatusPoint + .@amount;
+     mes "There,take them.";
+}
+case 2:
+mes .@skillname$;
+mes "Okay input the Amount";
+mes "of Points you want to buy!";
+mes "1 Point has a cost of 100 Zenny!";
+next;
+mes .@skillname$;
+input .@amount;
+if( Zeny < ( .@amount * .@zenyCost ) ) {
+     mes "You don't have enough money!";
+     close;
+} else {
+     set Zeny, Zeny - ( .@amount * .@zenyCost );
+     set SkillPoint, SkillPoint + .@amount;
+     mes "There,take them.";
+}
+case 3:
+close;
+}
+}

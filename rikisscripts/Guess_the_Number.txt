@@ -1,0 +1,92 @@
+// = Script made by RIKIMARU on rathena.org
+// = Profile Link :
+// = http://rathena.org/board/user/434-rikimaru/
+// = ENJOY THIS SCRIPT!
+//===================================================================================
+//        //=====//     /==/     /==/          /==/      
+//       //     //     /==/     /==/  /=/     /==/         
+//      //=====//              /==/  /=/             /==============/     /========/   /==//===/    /==/     /==/
+//     //=//////    /==/      /==//=/       /==/    /==/==/==/==/==/     /     /  /   /==/         /==/     /==/
+//    // ==        /==/      /==//=/       /==/    /==/  /==/  /==/     ======/  /   /==/         /==/     /==/
+//   //   ==      /==/      /==/  /=/     /==/    /==/  /==/  /==/     / /===/  /   /==/         /==/     /==/
+//  //     ==    /==/      /==/   /=/    /==/    /==/  /==/  /==/     / /===/  /   /==/         /==/=====/==/
+// //       ==  /==/      /==/    /=/   /==/    /==/  /==/  /==/     /========/   /==/         /==///////==/
+// ================ rAthena Script ==================================================
+// ============== Information =======================================================
+// = Automated Guess the Number Event
+// = Made by :
+// = Rikimaru
+//===== Current Version: =============================================== 
+//= 2.3
+//===== Compatible With: =============================================== 
+//= any rAthena SVN
+//===== Description: =================================================== 
+//= This is an automated Guess the Number Event,which I made
+//= for having fun in game,guessing a number. The number is going
+//= to be a number between 1 and 2000 , so it'll take time to find out
+//= the correct number.
+//===== Additional Comments: =========================================== 
+//= 2.0 Fixed an announcer Bug [Rikimaru]
+//= 2.1 Fixed a few Typos in the Script [Rikimaru]
+//= 2.2 Fixed the Prize,which was not working correctly. [Rikimaru]
+//= 2.3 Fixed another little Bug. [Rikimaru]
+//====================================================================== 
+//= DO NOT REMOVE MY CREDITS AND CLAIM MY WORK AS YOURS 
+//======================================================================
+-	script	guessannouncer	-1,{
+OnMinute09:
+announce "Guess the Number: Is starting in 1 Minute in Payon!",0;
+sleep 30000;
+announce "Guess the Number: Is starting in 30 Seconds in Payon!",0;
+sleep 20000;
+announce "Guess the Number: 10 Seconds! Gather up in Payon quick!",0;
+sleep 5000;
+announce "Guess the Number: 5 Seconds Left!",0;
+sleep 1000;
+announce "Guess the Number: 4 Seconds!",0;
+sleep 1000;
+announce "Guess the Number: 3 Seconds!",0;
+sleep 1000;
+announce "Guess the Number: 2 Seconds!",0;
+sleep 1000;
+announce "Guess the Number: 1 Second!",0;
+sleep 1000;
+announce "Guess the Number: The event has started!",0;
+enablenpc "guess";
+end;
+}
+// ==============================================================================
+MAPNAME,XXX,YYY,D	script	Guess the Number::guess	NID,{
+// =================== Setting the NPC Name and Prize and amount :) =============
+set .@n$,"^FF0000[Guess the Number]^000000";
+set @prize,7227;//Change the 7227 to your reward item ID
+set @amoun,10;//Change the 10 to your reward amount
+// ==================== End of settings =========================================
+if(.guessstart==1) goto Oneventevent;
+set .usednumber, rand(1,1000);
+announce "Guess the Number: Guess the Number Event Started in Payon!",0;
+set .guessstart,1;
+Oneventevent:
+mes .@n$;
+mes "Guess the number...It is a number between between 1 and 1,000!";
+input .@guessnumber;
+next;
+if(.@guessnumber > .usednumber) {
+mes .@n$;
+mes "My number is ^FF0000SMALLER^000000 than the one you guessed!";
+close;
+} else if(.@guessnumber < .usednumber) {
+mes .@n$;
+mes "My number is ^FF0000BIGGER^000000 than the one you guessed!";
+close;
+} else if(.@guessnumber == .usednumber) {
+announce ""+strcharinfo(0)+" has won the Guess the Number Event! My number was "+.usednumber+"!",0;
+mes .@n$;
+mes "You have guessed my number! Congratulations!";
+getitem @prize,@amoun;
+disablenpc "guess";
+set .guessstart,0;
+close2;
+end;
+}
+}

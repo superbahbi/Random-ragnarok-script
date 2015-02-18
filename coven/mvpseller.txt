@@ -1,0 +1,66 @@
+prontera,141,179,5	script	MVP Card Trader	415,{
+
+	if (getgmlevel()==99)
+	{
+	mes "Greetings GameMaster! Today it sold: ^FF0000" + $@buycnt + "^000000 MVP cards.";
+	}
+	mes "Hello "+strcharinfo(0)+"! I sell MVP Cards. Please take a look and buy what you need.";
+
+						// item name
+	set @nom, select("Turtle General Card",
+					"Thanatos Card",
+					"Deviling Card",
+					"Ghostring Card",
+					"Phreeoni Card",
+					"Golden Thief Bug Card",
+					"Tao Gunka Card",
+					"Orc Lord Card",
+					"Orc Hero Card",
+					"Dark Lord Card",
+					"Maya Purple Card",
+					"Maya Card",
+					"Moonlight Flower Card",
+					"Incantation Samurai Card");
+
+					// Item ID,Price
+	setarray @ID[0],4305,3,
+					4399,3,
+					4174,2,
+					4047,2,
+					4121,2,
+					4128,2,
+					4302,3,
+					4135,1,
+					4143,2,
+					4168,1,
+					4198,2,
+					4146,1,
+					4131,1,
+					4263,2;
+
+
+	set @nom, @nom - 1;
+	 
+
+	mes "This item cost:";
+	mes "^0000FFTCG: ^000000" + @ID[@nom*2+1] + ".";
+	
+	menu "Buy the card.", -, "Nevermind.", M_CANCEL;
+	
+	if(@ID[@nom*2+1] <= countitem(7227)) //1998
+	{
+		delitem 7227, @ID[@nom*2+1]; //1998
+		getitem @ID[@nom*2], 1;
+		set $@buycnt, $@buycnt+1;
+		close;
+	} else {
+		mes "Sorry, you don't have enough money.";
+		close;
+	}
+	M_CANCEL:
+	close;
+OnInit:
+	waitingroom "MVP Seller!",0;
+	end;
+	
+}

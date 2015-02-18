@@ -1,0 +1,42 @@
+/*==========================================
+ * @happyhappyjoyjoy - Cause random emote on all online players [Valaris]
+ *------------------------------------------*/
+int atcommand_happyhappyjoyjoy(const int fd, struct map_session_data* sd, const char* command, const char* message)
+{
+	struct map_session_data* pl_sd;
+	struct s_mapiterator* iter;
+	int e;
+
+	nullpo_retr(-1, sd);
+
+	iter = mapit_getallusers();
+	for( pl_sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); pl_sd = (TBL_PC*)mapit_next(iter) )
+	{
+		if (pl_sd->bl.m == sd->bl.m && !( pl_sd->vender_id || pl_sd->chatID ))
+		{
+			do {
+				e = rand() % 81;	// last emotion number, +1
+			} while (e == 34);
+			clif_emotion(&pl_sd->bl, e);
+		}
+	}
+	mapit_free(iter);
+
+	return 0;
+}
+
+
+
+
+//====================================
+// 	FIND
+//====================================
+//	{ "mute",              80,     atcommand_mute },
+//====================================
+
+
+//====================================
+//	add AFTER
+//====================================
+	{ "happyhappyjoyjoy",  40,     atcommand_happyhappyjoyjoy },
+//====================================

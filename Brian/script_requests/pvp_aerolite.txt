@@ -1,0 +1,97 @@
+// http://www.eathena.ws/board/index.php?showtopic=215918
+
+poring_c01,100,100,0	script	PVP_warper	910,{
+	if (.pvp_square$=="") donpcevent strnpcinfo(3)+"::OnClock0000";
+	
+	mes "[PvP Warper]";
+	mes "Which arena do you want to go to?";
+	switch(select("PVP Square ["+getmapusers(.pvp_square$)+"/100]:PVP Nightmare ["+getmapusers("guild_vs3")+"/100]:PVP LowLevel ["+getmapusers("guild_vs1")+"/100]:PVP NoPotion ["+getmapusers("pvp_y_8-2")+"/100]:Non Donator PVP ["+getmapusers("1@orcs")+"/100]")) {
+	case 1:	// PVP Square
+		if (getmapusers(.pvp_square$) > 99) callsub S_full;
+		warp .pvp_square$,0,0;
+		end;
+	
+	case 2:	// PVP Nightmare
+		if (getmapusers("guild_vs3") > 99) callsub S_full;
+		warp "guild_vs3",0,0;
+		break;
+	
+	case 3:	// PVP LowLevel
+		if (getmapusers("guild_vs1") > 99) callsub S_full;
+		if (BaseLevel > 150) {
+			mes "only Base Level 1 - 150 may enter.";
+			close;
+		}
+		warp "guild_vs1",0,0;
+		break;
+	
+	case 4:	// PVP NoPotion
+		if (getmapusers("pvp_y_8-2") > 99) callsub S_full;
+		for( set .@i,0; .@i<getarraysize(.NoPotion_ids); set .@i,.@i+1 ) {
+			if (countitem(.NoPotion_ids[.@i])) {
+				mes "You can not bring potions in this pvp.";
+				close;
+			}
+		}
+		warp "pvp_y_8-2",0,0;
+		break;
+	
+	case 5:	// Non Donator PVP
+		if (getmapusers("1@orcs") > 99) callsub S_full;
+		for( set .@i,0; .@i<getarraysize(.NoDonator_ids); set .@i,.@i+1 ) {
+			if (countitem(.NoDonator_ids[.@i])) {
+				mes "You can not bring God items in this pvp.";
+				close;
+			}
+		}
+		warp "1@orcs",0,0;
+		break;
+	}
+	close;
+	
+S_full:
+	mes " ";
+	mes "I'm sorry, this arena is full.  Please try again later...";
+	close;
+
+OnInit:
+OnClock0000:
+	// set the "PVP Square" map, based on day of the weeek
+	switch(gettime(4)) {
+	case 0:	// Sunday
+	case 1:	// Monday
+		set .pvp_square$, "guild_vs2";
+		break;
+	case 2:	// Tuesday
+	case 3:	// Wednesday
+		set .pvp_square$, "guild_vs5";
+		break;
+	case 4:	// Thursday
+	case 5:	// Friday
+		set .pvp_square$, "guild_vs4";
+		break;
+	case 6:	// Saturday
+		set .pvp_square$, "guild_vs1-2";
+		break;
+	}
+	
+	// items not allowed in PVP NoPotion
+	setarray .NoPotion_ids[0], 607, 608;
+	
+	// items not allowed in Non Donator PVP
+	setarray .NoDonator_ids[0], 2410, 1530;
+	end;
+}
+
+// Mapflags
+guild_vs2	mapflag	pvp
+guild_vs5	mapflag	pvp
+guild_vs4	mapflag	pvp
+guild_vs1-2	mapflag	pvp
+
+guild_vs3	mapflag	pvp
+guild_vs1	mapflag	pvp
+pvp_y_8-2	mapflag	pvp
+1@orcs	mapflag	pvp
+
+guild_vs3	mapflag	pvp_nightmaredrop	random,equip,300

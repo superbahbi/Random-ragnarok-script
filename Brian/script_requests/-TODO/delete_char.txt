@@ -1,0 +1,46 @@
+ball2,20,55,0	script	DELETE	910,{
+
+L_start:
+	query_sql ("SELECT `char_id` FROM `char` WHERE class=0 AND base_level=1 AND job_level=1 AND last_map='new_zone01' AND save_map='new_zone01' LIMIT 1", .@charid);
+	// query_sql ("SELECT `account_id` FROM `char` WHERE `char_id` = " + .@charid, .@acctid);
+
+	if (.@charid==0) close;
+	mes "char_id = " + .@charid;
+	if(select("Yes:No")==2) close;
+
+	if( father_id || mother_id ) {
+		// de-adopt
+		UPDATE `char` SET `child`='0' WHERE `char_id`='"+.@father_id+"' OR `char_id`='"+.@mother_id+"'
+		DELETE FROM `skill` WHERE `id` = '410'AND (`char_id`='"+.@father_id+"' OR `char_id`='"+.@mother_id+"')
+	}
+	
+	// query_sql ("DELETE FROM `auction` WHERE `seller_id`="+.@charid);
+	query_sql ("DELETE FROM `bk_var` WHERE `char_id`="+.@charid);
+	query_sql ("DELETE FROM `cart_inventory` WHERE `char_id`="+.@charid);
+	query_sql ("DELETE FROM `char` WHERE `char_id`="+.@charid);
+	query_sql ("DELETE FROM `friends` WHERE `char_id`="+.@charid+" OR `friend_id`="+.@charid);
+	query_sql ("DELETE FROM `global_reg_value` WHERE `char_id`="+.@charid);
+	// query_sql ("DELETE FROM `guild` WHERE `char_id`="+.@charid);
+	query_sql ("DELETE FROM `guild_member` WHERE `char_id`="+.@charid);
+	query_sql ("DELETE FROM `homunculus` WHERE `char_id`="+.@charid);
+	query_sql ("DELETE FROM `hotkey` WHERE `char_id`="+.@charid);
+	query_sql ("DELETE FROM `inventory` WHERE `char_id`="+.@charid);
+	query_sql ("DELETE FROM `mail` WHERE `send_id`="+.@charid+" OR `dest_id`="+.@charid);
+	query_sql ("DELETE FROM `memo` WHERE `char_id`="+.@charid);
+	query_sql ("DELETE FROM `mercenary` WHERE `char_id`="+.@charid);
+	query_sql ("DELETE FROM `mercenary_owner` WHERE `char_id`="+.@charid);
+	query_sql ("DELETE FROM `party` WHERE `leader_char`="+.@charid);
+	query_sql ("DELETE FROM `pet` WHERE `char_id`="+.@charid);
+	query_sql "DELETE FROM `pet` WHERE pet_id IN (SELECT card1|card2<<2 FROM `inventory` WHERE char_id = '"+.@char_id+"' AND card0 = -256 UNION SELECT card1|card2<<2 FROM `cart_inventory` WHERE char_id = '"+.@char_id+"' AND card0 = -256)"
+	// query_sql ("DELETE FROM `quest` WHERE `char_id`="+.@charid);
+	// query_sql ("DELETE FROM `quest_objective` WHERE `char_id`="+.@charid);
+	query_sql ("DELETE FROM `sc_data` WHERE `char_id`="+.@charid);
+	query_sql ("DELETE FROM `skill` WHERE `char_id`="+.@charid);
+
+	// query_sql ("DELETE FROM `global_reg_value` WHERE account_id="+.@acctid);
+	// query_sql ("DELETE FROM `login` WHERE account_id="+.@acctid);
+	// query_sql ("DELETE FROM `party` WHERE leader_id="+.@acctid);
+	// query_sql ("DELETE FROM `storage` WHERE account_id="+.@acctid);
+	
+	goto L_start;
+}

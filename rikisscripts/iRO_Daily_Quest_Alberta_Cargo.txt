@@ -1,0 +1,338 @@
+//        //=====//     /==/     /==/          /==/      
+//       //     //     /==/     /==/  /=/     /==/         
+//      //=====//              /==/  /=/             /==============/     /========/   /==//===/    /==/     /==/
+//     //=//////    /==/      /==//=/       /==/    /==/==/==/==/==/     /     /  /   /==/         /==/     /==/
+//    // ==        /==/      /==//=/       /==/    /==/  /==/  /==/     ======/  /   /==/         /==/     /==/
+//   //   ==      /==/      /==/  /=/     /==/    /==/  /==/  /==/     / /===/  /   /==/         /==/     /==/
+//  //     ==    /==/      /==/   /=/    /==/    /==/  /==/  /==/     / /===/  /   /==/         /==/=====/==/
+// //       ==  /==/      /==/    /=/   /==/    /==/  /==/  /==/     /========/   /==/         /==///////==/
+// ================ rAthena Script ==================================================
+// ============== Information =======================================================
+// = iRO Daily Quest : Alberta Cargo
+// = Made by :
+// = Rikimaru
+//===== Current Version: =============================================== 
+//= 1.1
+//===== Compatible With: =============================================== 
+//= any rAthena SVN
+//===== Description: =================================================== 
+//= The iRO Daily Quest : Alberta Cargo
+//= Usefull for having fun in a Server with a Mini Quest
+//= Has a counter of 24 Hours until the Players can do the Quest agian.
+//===== Additional Comments: =========================================== 
+//= 1.0 Finished Scripting the Quest [Rikimaru]
+//= 1.1 Fixed a little Bug [Rikimaru]
+//====================================================================== 
+//============== DO NOT REMOVE MY CREDITS AND CLAIM MY WORK AS YOURS ===
+alberta,105,52,3	script	[Quest] Port Manager	855,{
+set .@npcname$,"^0000FF[ [Quest] Port Manager ]^000000";
+if(gettimetick(2) - carfingor < (60 * 60 * 24)) {
+mes .@npcname$;
+mes "I'm sorry but you have to wait";
+mes "24 Hours until you can do the Quest again!";
+close;
+}
+if(qcargo6==1) {
+mes .@npcname$;
+mes "Congrats!";
+getitem 501,20;
+getitem 502,5;
+getitem 503,10;
+getitem 504,10;
+getitem 505,10;
+getitem 608,1;
+set BaseExp,+1046821;
+set cquest,0;
+set carfingor,gettimetick(2);
+set qcargo6,0;
+close;
+}
+if(qcargo5==1) {
+mes .@npcname$;
+mes "Congrats!";
+getitem 501,20;
+getitem 502,5;
+getitem 503,10;
+getitem 504,10;
+getitem 505,10;
+set BaseExp,+565471;
+set cquest,0;
+set carfingor,gettimetick(2);
+set qcargo5,0;
+close;
+}
+if(qcargo4==1) {
+mes .@npcname$;
+mes "Congrats!";
+getitem 501,20;
+getitem 502,5;
+getitem 503,10;
+getitem 504,10;
+set BaseExp,+178601;
+set cquest,0;
+set carfingor,gettimetick(2);
+set qcargo4,0;
+close;
+}
+if(qcargo3==1) {
+mes .@npcname$;
+mes "Congrats!";
+getitem 501,20;
+getitem 502,5;
+getitem 503,10;
+set BaseExp,+18293;
+set cquest,0;
+set carfingor,gettimetick(2);
+set qcargo3,0;
+close;
+}
+if(qcargo2==1) {
+mes .@npcname$;
+mes "Congrats!";
+getitem 501,20;
+getitem 502,5;
+set BaseExp,+1642;
+set cquest,0;
+set carfingor,gettimetick(2);
+set qcargo2,0;
+close;
+}
+if(qcargo1==1) {
+mes .@npcname$;
+mes "Congrats!";
+getitem 501,20;
+set BaseExp,+142;
+set cquest,0;
+set carfingor,gettimetick(2);
+set qcargo1,0;
+close;
+}
+if(BaseLevel >= 98) {
+mes .@npcname$;
+mes "Hello "+strcharinfo(0)+",";
+mes "do you want to accept the Job?";
+next;
+switch(select("Yes,sure:No,sorry:Cancel")) {
+	case 1:
+	mes .@npcname$;
+	mes "Awesome,find the Deadly Cargo [6]";
+	mes "and bring it to me,and you'll";
+	mes "get a reward.";
+	next;
+	mes .@npcname$;
+	mes "The Deadly Cargo [6] is somewhere";
+	set cquest,1;
+	mes "here in Alberta!";
+	close;
+	case 2:
+	mes .@npcname$;
+	mes "Okay goodbye!";
+	close;
+	case 3:
+	close;
+	}
+}
+if(BaseLevel >= 81 && BaseLevel <=97) {
+mes .@npcname$;
+mes "Hello "+strcharinfo(0)+",";
+mes "do you want to accept the Job?";
+next;
+switch(select("Yes,sure:No,sorry:Cancel")) {
+	case 1:
+	mes .@npcname$;
+	mes "Awesome,find the Deadly Cargo [5]";
+	mes "and bring it to me,and you'll";
+	mes "get a reward.";
+	next;
+	mes .@npcname$;
+	mes "The Deadly Cargo [5] is somewhere";
+	set cquest,1;
+	mes "here in Alberta!";
+	close;
+	case 2:
+	mes .@npcname$;
+	mes "Okay goodbye!";
+	close;
+	case 3:
+	close;
+	}
+}
+if(BaseLevel >= 61 && BaseLevel <=80) {
+mes .@npcname$;
+mes "Hello "+strcharinfo(0)+",";
+mes "do you want to accept the Job?";
+next;
+switch(select("Yes,sure:No,sorry:Cancel")) {
+	case 1:
+	mes .@npcname$;
+	mes "Awesome,find the Deadly Cargo [4]";
+	mes "and bring it to me,and you'll";
+	mes "get a reward.";
+	next;
+	mes .@npcname$;
+	mes "The Deadly Cargo [4] is somewhere";
+	set cquest,1;
+	mes "here in Alberta!";
+	close;
+	case 2:
+	mes .@npcname$;
+	mes "Okay goodbye!";
+	close;
+	case 3:
+	close;
+	}
+}
+if(BaseLevel >= 41 && BaseLevel <=60) {
+mes .@npcname$;
+mes "Hello "+strcharinfo(0)+",";
+mes "do you want to accept the Job?";
+next;
+switch(select("Yes,sure:No,sorry:Cancel")) {
+	case 1:
+	mes .@npcname$;
+	mes "Awesome,find the Deadly Cargo [3]";
+	mes "and bring it to me,and you'll";
+	mes "get a reward.";
+	next;
+	mes .@npcname$;
+	mes "The Deadly Cargo [3] is somewhere";
+	set cquest,1;
+	mes "here in Alberta!";
+	close;
+	case 2:
+	mes .@npcname$;
+	mes "Okay goodbye!";
+	close;
+	case 3:
+	close;
+	}
+}
+if(BaseLevel >= 21 && BaseLevel <=40) {
+mes .@npcname$;
+mes "Hello "+strcharinfo(0)+",";
+mes "do you want to accept the Job?";
+next;
+switch(select("Yes,sure:No,sorry:Cancel")) {
+	case 1:
+	mes .@npcname$;
+	mes "Awesome,find the Deadly Cargo [2]";
+	mes "and bring it to me,and you'll";
+	mes "get a reward.";
+	next;
+	mes .@npcname$;
+	mes "The Deadly Cargo [2] is somewhere";
+	set cquest,1;
+	mes "here in Alberta!";
+	close;
+	case 2:
+	mes .@npcname$;
+	mes "Okay goodbye!";
+	close;
+	case 3:
+	close;
+	}
+}
+if(BaseLevel >= 1 && BaseLevel <=20) {
+mes .@npcname$;
+mes "Hello "+strcharinfo(0)+",";
+mes "do you want to accept the Job?";
+next;
+switch(select("Yes,sure:No,sorry:Cancel")) {
+	case 1:
+	mes .@npcname$;
+	mes "Awesome,find the Deadly Cargo [1]";
+	mes "and bring it to me,and you'll";
+	mes "get a reward.";
+	next;
+	mes .@npcname$;
+	mes "The Deadly Cargo [1] is somewhere";
+	set cquest,1;
+	mes "here in Alberta!";
+	close;
+	case 2:
+	mes .@npcname$;
+	mes "Okay goodbye!";
+	close;
+	case 3:
+	close;
+	}
+}
+mes .@npcname$;
+mes "........";
+close;
+}
+// ========================= End of the first NPC =================================================
+alberta,186,174,3	script	Deadly Cargo [1]	1191,{
+set .@npcname$,"^FF0000[ Deadly Cargo [1] ]^000000";
+if(cquest==1) {
+mes .@npcname$;
+mes "Go back to the Port Manager!";
+set qcargo1,1;
+close;
+}
+mes .@npcname$;
+mes "........";
+close;
+}
+alberta,232,103,3	script	Deadly Cargo [2]	1191,{
+set .@npcname$,"^FF0000[ Deadly Cargo [2] ]^000000";
+if(cquest==1) {
+mes .@npcname$;
+mes "Go back to the Port Manager!";
+set qcargo2,1;
+close;
+}
+mes .@npcname$;
+mes "........";
+close;
+}
+alberta,247,90,3	script	Deadly Cargo [3]	1191,{
+set .@npcname$,"^FF0000[ Deadly Cargo [3] ]^000000";
+if(cquest==1) {
+mes .@npcname$;
+mes "Go back to the Port Manager!";
+set qcargo3,1;
+close;
+}
+mes .@npcname$;
+mes "........";
+close;
+}
+alberta,247,67,3	script	Deadly Cargo [4]	1191,{
+set .@npcname$,"^FF0000[ Deadly Cargo [4] ]^000000";
+if(cquest==1) {
+mes .@npcname$;
+mes "Go back to the Port Manager!";
+set qcargo4,1;
+close;
+}
+mes .@npcname$;
+mes "........";
+close;
+}
+alberta,245,43,3	script	Deadly Cargo [5]	1191,{
+set .@npcname$,"^FF0000[ Deadly Cargo [5] ]^000000";
+if(cquest==1) {
+mes .@npcname$;
+mes "Go back to the Port Manager!";
+set qcargo5,1;
+close;
+}
+mes .@npcname$;
+mes "........";
+close;
+}
+alberta,123,227,3	script	Deadly Cargo [6]	1191,{
+set .@npcname$,"^FF0000[ Deadly Cargo [6] ]^000000";
+if(cquest==1) {
+mes .@npcname$;
+mes "Go back to the Port Manager!";
+set qcargo6,1;
+close;
+}
+mes .@npcname$;
+mes "........";
+close;
+}
+// =============================== End of all the NPC's =========================================
+// ====================== Have fun with this Script. Yours ~ Rikimaru ===========================

@@ -1,0 +1,158 @@
+niflheim,317,68,4	script	Jaymel	951,{
+	mes "[Jaymel]";
+	mes "Hello pogi!";
+	mes "I am Jaymel de Castro.";
+	mes "I can create recruiter hats for friendly people just like me :D";
+	next;
+	mes "I can create recruitment hats for you too, take a look buddy!";
+	next;
+	menu "BF Recruiter Hat",H_BF,"GF Recruiter Hat",H_GF,"Friend Recruiter Hat",H_FR,"Guildsman Recruiter Hat",H_GM,"Party Recruiter Hat",H_PR,"Cancel",H_Close;
+	H_BF:
+		mes "[Jaymel]";
+		mes "Yo my friend, get me some of these and I will make you a hat that recruits a boyfriend.";
+		next;
+		mes "99 Oil Paper";
+		mes "99 Sharp Paper";
+		mes "99 Slick Paper";
+		mes "99 Squid Ink";
+		mes "3 Black Dyestuff";
+		menu "Make",M_BF,"Cancel",H_Close;
+		M_BF:
+			mes "Nice one amigo! Let's check it out.";
+			next;
+			if (countitem(7151) < 99) goto H_Lack;
+			if (countitem(7112) < 99) goto H_Lack;
+			if (countitem(7111) < 99) goto H_Lack;
+			if (countitem(1024) < 99) goto H_Lack;
+			if (countitem(983) < 3) goto H_Lack;
+			mes "[Jaymel]";
+			mes "Superb! Job well done!";
+			next;
+			delitem 7151,99;
+			delitem 7112,99;
+			delitem 7111,99;
+			delitem 1024,99;
+			delitem 983,3;
+			getitem 5338,1;
+			close;
+	H_GF:
+		mes "[Jaymel]";
+		mes "Yo my friend, get me some of these and I will make you a hat that recruits a girlfriend.";
+		next;
+		mes "99 Oil Paper";
+		mes "99 Sharp Paper";
+		mes "99 Slick Paper";
+		mes "99 Squid Ink";
+		mes "3 Black Dyestuff";
+		menu "Make",M_GF,"Cancel",H_Close;
+		M_GF:
+			mes "Nice one amigo! Let's check it out.";
+			next;
+			if (countitem(7151) < 99) goto H_Lack;
+			if (countitem(7112) < 99) goto H_Lack;
+			if (countitem(7111) < 99) goto H_Lack;
+			if (countitem(1024) < 99) goto H_Lack;
+			if (countitem(983) < 3) goto H_Lack;
+			mes "[Jaymel]";
+			mes "Superb! Job well done!";
+			next;
+			delitem 7151,99;
+			delitem 7112,99;
+			delitem 7111,99;
+			delitem 1024,99;
+			delitem 983,3;
+			getitem 5346,1;
+			close;
+	H_FR:
+		mes "[Jaymel]";
+		mes "Yo my friend, get me some of these and I will make you a hat that recruits a friend.";
+		next;
+		mes "99 Oil Paper";
+		mes "99 Sharp Paper";
+		mes "99 Slick Paper";
+		mes "99 Squid Ink";
+		mes "3 Black Dyestuff";
+		menu "Make",M_FR,"Cancel",H_Close;
+		M_FR:
+			mes "Nice one amigo! Let's check it out.";
+			next;
+			if (countitem(7151) < 99) goto H_Lack;
+			if (countitem(7112) < 99) goto H_Lack;
+			if (countitem(7111) < 99) goto H_Lack;
+			if (countitem(1024) < 99) goto H_Lack;
+			if (countitem(983) < 3) goto H_Lack;
+			mes "[Jaymel]";
+			mes "Superb! Job well done!";
+			next;
+			delitem 7151,99;
+			delitem 7112,99;
+			delitem 7111,99;
+			delitem 1024,99;
+			delitem 983,3;
+			getitem 5339,1;
+			close;
+	H_GM:
+		mes "[Jaymel]";
+		mes "Yo my friend, get me some of these and I will make you a hat that recruits a guild member.";
+		next;
+		mes "99 Oil Paper";
+		mes "99 Sharp Paper";
+		mes "99 Slick Paper";
+		mes "99 Squid Ink";
+		mes "3 Black Dyestuff";
+		menu "Make",M_GM,"Cancel",H_Close;
+		M_GM:
+			mes "Nice one amigo! Let's check it out.";
+			next;
+			if (countitem(7151) < 99) goto H_Lack;
+			if (countitem(7112) < 99) goto H_Lack;
+			if (countitem(7111) < 99) goto H_Lack;
+			if (countitem(1024) < 99) goto H_Lack;
+			if (countitem(983) < 3) goto H_Lack;
+			mes "[Jaymel]";
+			mes "Superb! Job well done!";
+			next;
+			delitem 7151,99;
+			delitem 7112,99;
+			delitem 7111,99;
+			delitem 1024,99;
+			delitem 983,3;
+			getitem 5336,1;
+			close;
+	H_PR:
+		mes "[Jaymel]";
+		mes "Yo my friend, get me some of these and I will make you a hat that recruits a partymate.";
+		next;
+		mes "99 Oil Paper";
+		mes "99 Sharp Paper";
+		mes "99 Slick Paper";
+		mes "99 Squid Ink";
+		mes "3 Black Dyestuff";
+		menu "Make",M_PR,"Cancel",H_Close;
+		M_PR:
+			mes "Nice one amigo! Let's check it out.";
+			next;
+			if (countitem(7151) < 99) goto H_Lack;
+			if (countitem(7112) < 99) goto H_Lack;
+			if (countitem(7111) < 99) goto H_Lack;
+			if (countitem(1024) < 99) goto H_Lack;
+			if (countitem(983) < 3) goto H_Lack;
+			mes "[Jaymel]";
+			mes "Superb! Job well done!";
+			next;
+			delitem 7151,99;
+			delitem 7112,99;
+			delitem 7111,99;
+			delitem 1024,99;
+			delitem 983,3;
+			getitem 5337,1;
+			close;
+	H_Lack:
+		mes "[Jaymel]";
+		mes "Oh no! You're missing something. Please double check what you hunted.";
+		close;
+	H_Close:
+		mes "[Jaymel]";
+		mes "Thanks! See you around mate.";
+		close;
+}

@@ -1,0 +1,42 @@
+//===== eAthena Script =======================================
+//= Express Novice Zone
+//===== By: ==================================================
+//= Brian
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: =====================================
+//= eAthena SVN
+//===== Description: =========================================
+//= instant Job level 10, ready to job change
+//===== Additional Comments: =================================
+//= 
+//============================================================
+
+new_1-1,58,114,4	script	Express Novice Zone	743,{
+	mes "[Express Novice Zone]";
+	if (Class==Job_Novice && BaseLevel==1 && JobLevel==1) {
+		mes "^FF0000- skip the Novice Zone";
+		mes "- NO additional items/zeny";
+		mes "^008000- Base Level 15,  Job Level 10";
+		mes "- warp to Job Changer";
+		if (select("No, thanks.:Continue, warp to Prontera")==2) {
+			close2;
+			set BaseExp, 3361; // to Base Level 15
+			set JobExp, JobExp + 1151; // to Job Level 10
+			skill "NV_BASIC",10,0;
+			set SkillPoint, 0;
+			
+			sleep2 1000;
+			specialeffect2 501; // Chase Walk Animation
+			sleep2 750;
+			specialeffect2 445; // High Jump (Jump)
+			sleep2 1000;
+			
+			savepoint "prontera",155,188;
+			warp "prontera",149,194;
+		}
+	} else {
+		mes "This service is only available to 1/1 Novices.";
+	}
+	close;
+}

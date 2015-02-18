@@ -1,0 +1,227 @@
+//==============================================================================================
+//					   D O D G E B A L L
+// ==============================================================================================
+//					[ Created by Jaerobb ]
+//					[ jaerobb@jae-ro.com ]
+// ==============================================================================================
+//                                         GM-Jae
+//	Don't get hit by exploding dodgeballs (monsters/bombs) that one-hit KO's the players
+// ----------------------------------------------------------------------------------------------
+//										   Version 2.0
+// ----------------------------------------------------------------------------------------------
+
+prontera,164,172,4	script	Dodgeball#NPC::DOD	480,{
+//-- Player ------------------------------------------------------
+	mes "[ Dodgeball ]";
+	mes "Hello. How may I help you?";
+	next;
+	if(getgmlevel() >= .GMLevel)
+		menu "Goto GM Menu",GM_Menu,"Skip GM Menu",-;
+	switch(select("Join the Event","Event Information")){
+		case 1:
+			mes "[ Dodgeball ]";
+			if (checkriding()){
+				mes "[ Dodgeball ]";
+				mes "No riding is allowed! Sorry "+strcharinfo(0)+" but you can't join this event!";
+				close;
+			}
+			if($@Dodgeball == 1){
+				mes "Warping to event map...";
+				close2;
+				warp "poring_c01",104,107;
+				end;
+			}
+			else if($@Dodgeball == 2)
+				mes "The game has already started.";
+			else
+				mes "Sorry, but the game has not started.";
+			close;
+		case 2:
+			mes "[ Dodgeball ]";
+			mes "Gameplay:";
+			mes "Exploding dodgeballs will be spawned randomly on the map. It is a one-hit KO to the players that get hit with the explosion.";
+			mes " ";
+			mes "How To Win:";
+			mes "Run away and don't get hit! Last one standing wins~";
+			mes " ";
+			mes "Prize(s):";
+			for(set .@i,1; .@i < getarraysize($@DodgeballPrizes); set .@i, .@i + 1){
+				mes $@DodgeballAmount[.@i]+"x "+getitemname($@DodgeballPrizes[.@i]);
+			}
+			close;
+	}
+//-- GM Menu ----------------------------------------------
+GM_Menu:
+	if(getgmlevel() >= .AdminLevel){
+		mes "[ Dodgeball ]";
+		mes "Hello Admin. How can I help you?";
+		next;
+		switch(select("Skip Admin CP. Goto Status","Change minimum GM level","Change wait time","Change cooldown time","Change Prizes")){
+			case 1:
+				break;
+			case 2:
+				mes "[ Dodgeball ]";
+				mes "Enter the minimum GM level that can start the event";
+				next;
+				input .GMLevel;
+				mes "[ Dodgeball ]";
+				mes "Done.";
+				next;
+				goto GM_Menu;
+			case 3:
+				mes "[ Dodgeball ]";
+				mes "Time between intiating and starting the game in seconds. Default: 300s = 5mins";
+				next;
+				input .WaitTime;
+				mes "[ Dodgeball ]";
+				mes "Done.";
+				next;
+				goto GM_Menu;
+			case 4:
+				mes "[ Dodgeball ]";
+				mes "The time in between dodgeball games in seconds. Default: 0s = no delay";
+				next;
+				input .Cooldown;
+				mes "[ Dodgeball ]";
+				mes "Done.";
+				next;
+				goto GM_Menu;
+			case 5:
+				mes "[ Dodgeball ]";
+				mes "How many different prizes?";
+				next;
+				input .@Prizes;
+				for(set .@i,1; .@i < .@Prizes; set .@i, .@i + 1){
+					mes "[ Dodgeball ]";
+					mes "Put in the an Item ID for the #"+.@i+" prize.";
+					next;
+					input .@id;
+					set $@DodgeballPrizes[.@i], .@id;
+					mes "[ Dodgeball ]";
+					mes "Put in the an the amount for the #"+.@i+" prize.";
+					next;
+					input .@amt;
+					set $@DodgeballAmount[.@i], .@amt;
+				}
+				mes "[ Dodgeball ]";
+				mes "Done.";
+				next;
+				goto GM_Menu;
+		}
+	}
+	mes "[ Dodgeball ]";
+	mes "Status:";
+	if($@Dodgeball == 1)
+		mes "Allowing players to join";
+	else if($@Dodgeball == 2)
+		mes "Game is in progress";
+	else {
+		if(.Delay > gettimetick(2))
+			mes "There is a cooldown for this minigame of "+.Cooldown+" seconds.";
+		else {
+			mes "Game can be initiated.";
+			next;
+			mes "[ Dodgeball ]";
+			mes "Do you want to start the game?";
+			next;
+			if(select("Yes","No")==2) close;
+			mes "[ Dodgeball ]";
+			mes "The game has started.";
+			close2;
+			getmapxy(.@map$,.@mapx,.@mapy,1);
+			announce "[Dodgeball] The event has been initiated! Talk to the Dodgeball NPC at "+.@map$+" ("+.@mapx+", "+.@mapy+") to join.",bc_all;
+			disablenpc "Dodgeball#Winner";
+			set $@Dodgeball, 1;
+			goto OnStart;
+			end;
+		}
+	}
+	close;
+//-- Timer -----------------------------------------------------------
+OnStart:
+	sleep (.WaitTime * 1000);
+	announce "[Dodgeball] The event is now starting. No more players are allowed to join~",bc_all;
+	set $@Dodgeball, 2;
+	donpcevent "Dodgeball#Event::OnStart";
+	end;
+//-- Config ------------------------------------------------------
+OnInit:
+	set .GMLevel, 20; //Minimum GM level that can start the event
+	set .AdminLevel, 90; //Minimum GM level to be classified as an Admin
+	set .WaitTime, 60; //Time between intiating and starting the game in seconds. Default: 300s = 5mins 
+	set .Cooldown, 0; //The time in between dodgeball games in seconds. Default: 0s = no delay
+	setarray $@DodgeballPrizes[1], 677; //Prize ID(s)
+	setarray $@DodgeballAmount[1], 1; //Amount respectively with the Prize IDs
+	disablenpc "Dodgeball#Winner"; //Do Not Edit
+	end;
+}
+
+-	script	Dodgeball#Event	-1,{
+OnStart:
+	sleep 2000;
+	mapannounce "poring_c01","[Dodgeball] Welcome to Dodgeball!",bc_map;
+	sleep 5000;
+	mapannounce "poring_c01","[Dodgeball] The event will start in 5 seconds. Good luck!",bc_map;
+	sleep 3000;
+	mapannounce "poring_c01","[Dodgeball] 5...",bc_map;
+	sleep 1300;
+	mapannounce "poring_c01","[Dodgeball] 4...",bc_map;
+	sleep 1300;
+	mapannounce "poring_c01","[Dodgeball] 3...",bc_map;
+	sleep 1300;
+	mapannounce "poring_c01","[Dodgeball] 2...",bc_map;
+	sleep 1300;
+	mapannounce "poring_c01","[Dodgeball] 1...",bc_map;
+	sleep 1300;
+	mapannounce "poring_c01","[Dodgeball] START!",bc_map;
+	donpcevent "Dodgeball#Event::OnCheckWinner";
+	sleep 1000;
+	while($@Dodgeball == 2){
+		monster "poring_c01",0,0,"Dodgeball",1904,rand(2,4);
+		sleep rand(1000,1500);
+		if($@Dodgeball == 2){
+			monster "poring_c01",0,0,"Dodgeball",1904,rand(2,4);
+			sleep rand(2500,3700);
+		}
+	}
+	end;	
+OnCheckWinner:
+	while($@Dodgeball == 2){
+		if(getmapusers("poring_c01") <= 1){
+			killmonsterall "poring_c01";
+			set $@Dodgeball, 0;
+			mapannounce "poring_c01","[Dodgeball] Congratulations! You are the last one standing in the Dodgeball event.",bc_map;
+			enablenpc "Dodgeball#Winner";
+			sleep 2000;
+			mapannounce "poring_c01","[Dodgeball] Come to the middle of the map to recieve your prize.",bc_map;
+		}
+		sleep 1000;
+	}
+	end;
+}
+poring_c01,104,106,5	script	Dodgeball#Winner	106,{
+	mes "[ Dodgeball ]";
+	mes "Congratulations! You'll be warped out and given your prize.";
+	close2;
+	for(set .@i,1; .@i < getarraysize($@DodgeballPrizes); set .@i, .@i + 1){
+		getitem $@DodgeballPrizes[.@i], $@DodgeballAmount[.@i];
+	}
+	announce "[Dodgeball] The winner is "+strcharinfo(0)+". Congratulations!",bc_all;
+	warp "SavePoint",0,0;
+	disablenpc "Dodgeball#Winner";
+	end;
+}
+payon,189,222,3	duplicate(DOD)	Dodgeball#pay	106
+
+// Mapflags
+poring_c01	mapflag	noteleport
+poring_c01	mapflag	nobranch
+poring_c01	mapflag	nosave
+poring_c01	mapflag	nomemo
+poring_c01	mapflag	nowarp
+poring_c01	mapflag	nowarpto
+poring_c01	mapflag	noreturn
+poring_c01	mapflag	noskill
+poring_c01	mapflag	pvp	off
+poring_c01	mapflag	restricted	3
+poring_c01	mapflag	nodrop

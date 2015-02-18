@@ -1,0 +1,61 @@
+//===== Scripted By: =======
+//= Jaerobb
+//===== Compatible With:==
+//= Tested
+//===== Description: =====
+//= Whisper Reward NPC
+//========================
+//===================== Start From Here =====================================================
+-	script	reward	-1,{
+
+OnWhisperGlobal:
+	if(getgmlevel()<20) goto OUT;
+	input .reciever$;
+	
+	mes "[^FF0000GM-Armscor^000000]";
+	mes "TCG Card price can only be rewarded to players who won PVP and Party Events.";
+	mes "5v5 / 8v8 / 10v10 / GVG / LMS / FFA / WOE Events";
+	mes "Please do take note to this, Let's keep JaeRO Server in balance.";
+	mes "[^FF0000Implementing Anti Spam Event^000000].";
+	mes "Thank You...! ^_^";
+	menu "TCG Card(1)",BCHIP,"Platinum Coin(1)",BLCHIP,"Poring Coin(3)",PCOIN,"Poring Coin(5)",PCOINS,"Poring Coin(10)",YCHIP,"Poring Coin(20)",BTIX,"Poring Coin (40)",BBRANCH;
+	close2;
+
+BCHIP:	
+	charcommand "#item "+.reciever$+" 7227 1 " ;
+	announce ""+strcharinfo(0)+": "+.reciever$+" received 1 TCG for winning the event.",bc_all;
+	close;
+
+BLCHIP:
+	charcommand "#item "+.reciever$+" 677 1 " ;
+	announce ""+strcharinfo(0)+": "+.reciever$+" received 1 Platinum Coin for winning the event.",bc_all;
+	close;
+
+PCOIN:
+	charcommand "#item "+.reciever$+" 7539 3 " ;
+	announce ""+strcharinfo(0)+": "+.reciever$+" received 3pcs Poring Coin for winning the event.",bc_all;
+	close;
+PCOINS:
+	charcommand "#item "+.reciever$+" 7539 5 " ;
+	announce ""+strcharinfo(0)+": "+.reciever$+" received 5pcs Poring Coin for winning the event.",bc_all;
+	close;
+
+YCHIP:
+	charcommand "#item "+.reciever$+" 7539 10 " ;
+	announce ""+strcharinfo(0)+": "+.reciever$+" received 10pcs Poring Coin for winning the event.",bc_all;
+	close;
+
+BTIX:
+	charcommand "#item "+.reciever$+" 7539 20 " ;
+	announce ""+strcharinfo(0)+": "+.reciever$+" received 20pcs Poring Coin for winning the event.",bc_all;
+	close;
+
+
+BBRANCH:
+	charcommand "#item "+.reciever$+" 7539 40 " ;
+	announce ""+strcharinfo(0)+": "+.reciever$+" received 40pcs Poring Coin for winning the event.",bc_all;
+	close;
+
+OUT:
+	end;
+}

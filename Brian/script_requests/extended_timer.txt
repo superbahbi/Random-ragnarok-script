@@ -1,0 +1,58 @@
+// http://www.eathena.ws/board/index.php?showtopic=245197
+
+prontera,155,188,0	script	really_long_timer	910,{
+	mes "How long?";
+	switch(select("30 secs:1 hour:1 month:until April 30 @ 11:59")) {
+	case 1: // examples of fixed duration
+		callsub S_SetTimer, 30;
+		break;
+	case 2:
+		callsub S_SetTimer, 60*60;
+		break;
+	case 3:
+		callsub S_SetTimer, 60*60*24*30;
+		break;
+	case 4: // example of a future DATE
+		callsub S_SetTimer, callsub(S_UNIX_TIMESTAMP,"2010-04-30 11:59:00") - gettimetick(2);
+		break;
+	}
+	mes "Timer set!";
+	close;
+	
+OnTimerEnd:
+	set TRIGGER_TIME, 0; // clear timer
+	dispbottom "The timer has ended!";
+	specialeffect2 EF_REFINEOK, SELF;
+	// do other stuff
+	end;
+
+S_SetTimer:
+// getarg(0) = ticks (seconds)
+	set .@ticks, getarg(0);
+	if (.@ticks <= 0) {
+		debugmes "S_SetTimer - tried to set a timer in the past";
+		end;
+	}
+	// set a variable, TRIGGER_TIME, as the Unixtime (gettimetick(2)) when this event should trigger
+	set TRIGGER_TIME, gettimetick(2) + .@ticks;
+	// add a timer with that tick so it will expire on the target TRIGGER_TIME.
+	addtimer .@ticks *1000, strnpcinfo(3)+"::OnTimerEnd";
+	return;
+
+S_UNIX_TIMESTAMP:
+// getarg(0) = SQL datetime (YYYY-MM-DD HH:MM:SS)
+	query_sql "SELECT UNIX_TIMESTAMP('"+getarg(0)+"')", .@return$;
+	return .@return$;
+
+// Every time the player logs in (OnPCLoginEvent), a script checks if TRIGGER_TIME has passed.
+// If it has passed --> do stuff and delete or reset the TRIGGER_TIME variable.
+OnPCLoginEvent:
+	if (TRIGGER_TIME > gettimetick(2)) {
+		// timer in future
+		addtimer (TRIGGER_TIME - gettimetick(2)) *1000, strnpcinfo(3)+"::OnTimerEnd";
+	} else if (TRIGGER_TIME) {
+		// timer already passed
+		goto OnTimerEnd;
+	}
+	end;
+}

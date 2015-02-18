@@ -1,0 +1,287 @@
+//        //=====//     /==/     /==/          /==/      
+//       //     //     /==/     /==/  /=/     /==/         
+//      //=====//              /==/  /=/             /==============/     /========/   /==//===/    /==/     /==/
+//     //=//////    /==/      /==//=/       /==/    /==/==/==/==/==/     /     /  /   /==/         /==/     /==/
+//    // ==        /==/      /==//=/       /==/    /==/  /==/  /==/     ======/  /   /==/         /==/     /==/
+//   //   ==      /==/      /==/  /=/     /==/    /==/  /==/  /==/     / /===/  /   /==/         /==/     /==/
+//  //     ==    /==/      /==/   /=/    /==/    /==/  /==/  /==/     / /===/  /   /==/         /==/=====/==/
+// //       ==  /==/      /==/    /=/   /==/    /==/  /==/  /==/     /========/   /==/         /==///////==/
+// ================ rAthena Script ==================================================
+// ============== Information =======================================================
+// = iRO Daily Quest : Army Supply
+// = Made by :
+// = Rikimaru
+//===== Current Version: =============================================== 
+//= 2.4
+//===== Compatible With: =============================================== 
+//= any rAthena SVN
+//===== Description: =================================================== 
+//= The iRO Daily Quest : Army Supply
+//= Usefull for having fun in a Server with a Mini Quest
+//= Has a counter of 20 Hours until the Players can do the Quest agian.
+//===== Additional Comments: =========================================== 
+//= 1.9 Fixed the Injured Recruit NPC [Rikimaru]
+//= 2.0 Added the NPC Display from Injured to Revived [Rikimaru]
+//= 2.1 Added the 2nd and 3rd Army Soldiers [Rikimaru]
+//= 2.2 Fixed a few Bugs in the NPC's [Rikimaru]
+//= 2.3 Added the 20 Hours Timer and fixed the Script Description [Rikimaru]
+//= 2.4 Fixed the 20 Hours Timer [Rikimaru]
+//====================================================================== 
+//============== DO NOT REMOVE MY CREDITS AND CLAIM MY WORK AS YOURS ===
+prontera,146,187,5	script	[Quest] Army Officer	105,{
+set .@npcname$,"^0000FF[ [Quest] Army Officer]^000000";
+if(armyquest==1) {
+mes .@npcname$;
+mes "There are a few";
+mes "Soldiers,waiting for";
+mes "help in Morocc!";
+next;
+mes .@npcname$;
+mes "From Baselevel 61-80 you";
+mes "have to help the";
+mes "Injured Recruit.";
+next;
+mes .@npcname$;
+mes "From Baselevel 81-97 you";
+mes "have to help the";
+mes "Injured Veteran";
+next;
+mes .@npcname$;
+mes "From Baselevel 98 or higher";
+mes "you'll have to help the Injured Elite";
+next;
+mes .@npcname$;
+mes "Bring them White Potions";
+mes "or bring them Yggdrasil";
+mes "Berries. Thank you for";
+mes "your Help!";
+close;
+}
+if(BaseLevel >= 61) {
+mes .@npcname$;
+mes "Hello "+strcharinfo(0)+",I'm";
+mes "the Army Officer!";
+next;
+mes .@npcname$;
+mes "There are a few";
+mes "Soldiers,waiting for";
+mes "help in Morocc!";
+next;
+mes .@npcname$;
+mes "From Baselevel 61-80 you";
+mes "have to help the";
+mes "Injured Recruit.";
+next;
+mes .@npcname$;
+mes "From Baselevel 81-97 you";
+mes "have to help the";
+mes "Injured Veteran";
+next;
+mes .@npcname$;
+mes "From Baselevel 98 or higher";
+mes "you'll have to help the Injured Elite";
+next;
+mes .@npcname$;
+mes "Bring them White Potions";
+mes "or bring them Yggdrasil";
+mes "Berries. Thank you for";
+mes "your Help!";
+set armyquest,1;
+close;
+}
+mes .@npcname$;
+mes "Hello "+strcharinfo(0)+",get";
+mes "a Higher Baselevel please.";
+mes "You have to be Baselevel";
+mes "61 or Higher!";
+close;
+}
+// ======================= End of 1st NPC ======================================
+// ===================== other NPC's coming now ================================
+morocc,172,68,5	script	Injured Recruit	849,{
+set .@npcname$,"^0000FF[ Injured Recruit ]^000000";
+if(gettimetick(2) - helped1 < (60 * 60 * 20)) {
+mes .@npcname$;
+mes "Sorry but you have to wait";
+mes "Until 20 Hours are over!";
+close;
+}
+if(armyquest==1 && BaseLevel <= 80 && BaseLevel >= 61) {
+mes .@npcname$;
+mes "... Uggh ...";
+mes "Help me ....";
+mes "with some....";
+mes "healing stuff. Please...";
+next;
+switch(select("-Yggdrasil Berries:-White Potion:-Cancel")) {
+	case 1:
+	if(countitem(607) <1) goto l_noitem;
+	delitem 607,1;
+	next;
+	mes .@npcname$;
+	mes "Wooooow...";
+	setnpcdisplay("Injured Recruit","Revived Recruit",813);
+	sleep2 5000;
+	next;
+	mes .@npcname$;
+	mes "Thank you for the Help.";
+	set BaseExp,+160000;
+	set JobExp,+100000;
+	set helped1,gettimetick(2);
+	setnpcdisplay("Revived Recruit","Injured Recruit",849);
+	close;
+	case 2:
+	if(countitem(504) <1) goto l_noitem;
+	delitem 504,1;
+	next;
+	mes .@npcname$;
+	mes "Wooooow...";
+	setnpcdisplay("Injured Recruit","Revived Recruit",813);
+	sleep2 5000;
+	next;
+	mes .@npcname$;
+	mes "Thank you for the Help.";
+	set BaseExp,+80000;
+	set JobExp,+50000;
+	set helped1,gettimetick(2);
+	setnpcdisplay("Revived Recruit","Injured Recruit",849);
+	close;
+	case 3:
+	close;
+	}
+	l_noitem:
+	mes .@npcname$;
+	mes "You don't have the item...Get it fast please.";
+	close;
+}
+mes .@npcname$;
+mes "... Uggh...";
+close;
+}
+// ====================== End of 2nd NPC ======================================
+// =================== Beginning of 3rd NPC ===================================
+morocc,174,68,5	script	Injured Veteran	849,{
+set .@npcname$,"^0000FF[ Injured Veteran ]^000000";
+if(gettimetick(2) - helped2 < (60 * 60 * 20)) {
+mes .@npcname$;
+mes "Sorry but you have to wait";
+mes "Until 20 Hours are over!";
+close;
+}
+if(armyquest==1 && BaseLevel <= 97 && BaseLevel >= 81) {
+mes .@npcname$;
+mes "... Uggh ...";
+mes "Help me ....";
+mes "with some....";
+mes "healing stuff. Please...";
+next;
+switch(select("-Yggdrasil Berries:-White Potion:-Cancel")) {
+	case 1:
+	if(countitem(607) <1) goto l_noitem;
+	delitem 607,1;
+	next;
+	mes .@npcname$;
+	mes "Wooooow...";
+	setnpcdisplay("Injured Veteran","Revived Veteran",813);
+	sleep2 5000;
+	next;
+	mes .@npcname$;
+	mes "Thank you for the Help.";
+	set BaseExp,+500000;
+	set JobExp,+150000;
+	set helped2,gettimetick(2);
+	setnpcdisplay("Revived Veteran","Injured Veteran",849);
+	close;
+	case 2:
+	if(countitem(504) <1) goto l_noitem;
+	delitem 504,1;
+	next;
+	mes .@npcname$;
+	mes "Wooooow...";
+	setnpcdisplay("Injured Veteran","Revived Veteran",813);
+	sleep2 5000;
+	next;
+	mes .@npcname$;
+	mes "Thank you for the Help.";
+	set BaseExp,+200000;
+	set JobExp,+80000;
+	set helped2,gettimetick(2);
+	setnpcdisplay("Revived Veteran","Injured Veteran",849);
+	close;
+	case 3:
+	close;
+	}
+	l_noitem:
+	mes .@npcname$;
+	mes "You don't have the item...Get it fast please.";
+	close;
+}
+mes .@npcname$;
+mes "... Uggh...";
+close;
+}
+// ====================== End of 3rd NPC ======================================
+// =================== Beginning of 4th NPC ===================================
+morocc,176,68,5	script	Injured Elite	849,{
+set .@npcname$,"^0000FF[ Injured Elite ]^000000";
+if(gettimetick(2) - helped3 < (60 * 60 * 20)) {
+mes .@npcname$;
+mes "Sorry but you have to wait";
+mes "Until 20 Hours are over!";
+close;
+}
+if(armyquest==1 && BaseLevel <= 98) {
+mes .@npcname$;
+mes "... Uggh ...";
+mes "Help me ....";
+mes "with some....";
+mes "healing stuff. Please...";
+next;
+switch(select("-Yggdrasil Berries:-White Potion:-Cancel")) {
+	case 1:
+	if(countitem(607) <1) goto l_noitem;
+	delitem 607,1;
+	next;
+	mes .@npcname$;
+	mes "Wooooow...";
+	setnpcdisplay("Injured Elite","Revived Elite",813);
+	sleep2 5000;
+	next;
+	mes .@npcname$;
+	mes "Thank you for the Help.";
+	set BaseExp,+1046821;
+	set JobExp,+300000;
+	set helped3,gettimetick(2);
+	setnpcdisplay("Revived Elite","Injured Elite",849);
+	close;
+	case 2:
+	if(countitem(504) <1) goto l_noitem;
+	delitem 504,1;
+	next;
+	mes .@npcname$;
+	mes "Wooooow...";
+	setnpcdisplay("Injured Elite","Revived Elite",813);
+	sleep2 5000;
+	next;
+	mes .@npcname$;
+	mes "Thank you for the Help.";
+	set BaseExp,+200000;
+	set JobExp,+80000;
+	set helped3,gettimetick(2);
+	setnpcdisplay("Revived Elite","Injured Elite",849);
+	close;
+	case 3:
+	close;
+	}
+	l_noitem:
+	mes .@npcname$;
+	mes "You don't have the item...Get it fast please.";
+	close;
+}
+mes .@npcname$;
+mes "... Uggh...";
+close;
+}
+// =========================== End of 4th NPC Script ================================
+// ====================== End of the whole Daily Quest ==============================
+// ================= Have fun with this Script. Yours Rikimaru ======================

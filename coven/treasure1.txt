@@ -1,0 +1,24 @@
+//===================================
+//===========Scripted By=============
+//===================================
+//==============JaeRO================
+//===================================
+poring_c02,223,225,4	script	treasure	954,{
+	if (getgmlevel() >= 20);
+	switch(rand(1,3)){
+	case 1:
+		announce "A rare Treasure box has been spawned somewhere in Prontera.",bc_all;
+		monster "prontera",0,0,"treasure Box",1324,1,"treasure::OnBoxKilled";
+		end;
+	case 2:
+		end;
+
+	case 3:
+		end;
+
+	}
+
+OnBoxKilled:
+	announce ""+strcharinfo(0)+" found and destroy the Treasure Box.",bc_all;
+	end;
+}

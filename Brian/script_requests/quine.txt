@@ -1,0 +1,23 @@
+// http://www.eathena.ws/board/index.php?showtopic=277212
+prontera,155,188,0	script	quine	910,{
+  set .q$, "\"";
+  setarray .l$,
+  "// http://www.eathena.ws/board/index.php?showtopic=277212",
+  "prontera,155,188,0	script	quine	910,{",
+  "  set .q$, \"\\\"\";",
+  "  setarray .l$,",
+  "  ",
+  "  for (set .@i,0; .@i<4; set .@i,.@i+1)",
+  "    dispbottom .l$[.@i];",
+  "  for (set .@i,0; .@i<getarraysize(.l$); set .@i,.@i+1)",
+  "    dispbottom .l$[4]+.q$+escape_sql(.l$[.@i])+.q$+((.@i==11)?\";\":\",\");",
+  "  for (set .@i,5; .@i<getarraysize(.l$); set .@i,.@i+1)",
+  "    dispbottom .l$[.@i];",
+  "}";
+  for (set .@i,0; .@i<4; set .@i,.@i+1)
+    dispbottom .l$[.@i];
+  for (set .@i,0; .@i<getarraysize(.l$); set .@i,.@i+1)
+    dispbottom .l$[4]+.q$+escape_sql(.l$[.@i])+.q$+((.@i==11)?";":",");
+  for (set .@i,5; .@i<getarraysize(.l$); set .@i,.@i+1)
+    dispbottom .l$[.@i];
+}

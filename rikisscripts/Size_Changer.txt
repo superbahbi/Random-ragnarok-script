@@ -1,0 +1,71 @@
+// = Script made by RIKIMARU on rathena.org
+// = Profile Link :
+// = http://rathena.org/board/user/434-rikimaru/
+// = ENJOY THIS SCRIPT!
+//===================================================================================
+//        //=====//     /==/     /==/          /==/      
+//       //     //     /==/     /==/  /=/     /==/         
+//      //=====//              /==/  /=/             /==============/     /========/   /==//===/    /==/     /==/
+//     //=//////    /==/      /==//=/       /==/    /==/==/==/==/==/     /     /  /   /==/         /==/     /==/
+//    // ==        /==/      /==//=/       /==/    /==/  /==/  /==/     ======/  /   /==/         /==/     /==/
+//   //   ==      /==/      /==/  /=/     /==/    /==/  /==/  /==/     / /===/  /   /==/         /==/     /==/
+//  //     ==    /==/      /==/   /=/    /==/    /==/  /==/  /==/     / /===/  /   /==/         /==/=====/==/
+// //       ==  /==/      /==/    /=/   /==/    /==/  /==/  /==/     /========/   /==/         /==///////==/
+// ================ rAthena Script ==================================================
+// ============== Information =======================================================
+// = Size Changer
+// = Made by :
+// = Rikimaru
+//===== Current Version: =============================================== 
+//= 1.0
+//===== Compatible With: =============================================== 
+//= any rAthena SVN
+//===== Description: =================================================== 
+//= A Size Changer Script,which was requested by one of my Friends
+//= a long time ago,but I tested it and it still works
+//===== Additional Comments: =========================================== 
+//= 1.0 Finished Scripting without bugs. [Rikimaru]
+//====================================================================== 
+//= DO NOT REMOVE MY CREDITS AND CLAIM MY WORK AS YOURS 
+//======================================================================
+MAPNAME,XXX,YYY,D	script	Size Changer	NID,{
+// ================ Settings ======================================
+set .@n$,"^0000FF[Size Changer]^000000";
+set @zenycost,1000000;
+// ============== End of Settings =================================
+mes .@n$;
+mes "Hello "+strcharinfo(0)+",I'm able";
+mes "to change a Character's Size.";
+mes "To which size do you want to change?";
+mes "It just costs 1.000.000 Zeny!";
+next;
+switch(select("Big:Medium:Small:Cancel")) {
+	case 1:
+	if(Zeny < @zenycost) goto l_nozeny;
+	mes .@n$;
+	set Zeny, Zeny - @zenycost;
+	mes "Okay here,changing your size.";
+	atcommand "@size 2";
+	close;
+	case 2:
+	if(Zeny < @zenycost) goto l_nozeny;
+	mes .@n$;
+	set Zeny, Zeny - @zenycost;
+	mes "Okay here,changing your size.";
+	atcommand "@size";
+	close;
+	case 3:
+	if(Zeny < @zenycost) goto l_nozeny;
+	mes .@n$;
+	set Zeny, Zeny - @zenycost;
+	mes "Okay here,changing your size.";
+	atcommand "@size 1";
+	close;
+	case 4:
+	close;
+	}
+	l_nozeny:
+	mes .@n$;
+	mes "Sorry you don't have 1.000.000 Zeny.Go and get it.";
+	close;
+}

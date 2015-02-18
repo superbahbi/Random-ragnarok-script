@@ -1,0 +1,37 @@
+prontera,143,174,6	script	Jae Messenger	429,{
+		mes "[Jae Messenger]";
+		mes "Hi! I'm Jaerobb's messenger.";
+		mes "I'm here to tell you something.";
+		mes "This is Jaerobb's message for everyone.";
+		next;
+		mes "[Jae Messenger]";
+		mes "Jaerobb wants to apologize to everyone who played in his server.";
+		mes "He is busy as of the moment because of his growing business.";
+		mes "Jaerobb wants to inform all of you that the ownership of this server will be transferred to [Admin]-Ric.";
+		mes "Please respect him as the new owner of this server.";
+		next;
+		mes "[Jae Messenger]";
+		mes "Jaerobb also wants to inform you that...";
+		next;
+		mes "[Jae Messenger]";
+		mes "JaeRO's end is NEAR!";
+		next;
+		mes "[Jae Messenger]";
+		mes "Don't worry though because the legacy of this server will continue.";
+		mes "The server will continue with a new name.";
+		mes "It only means a new start to look forward to. A more balanced server with more exciting features for everyone.";
+		next;
+		mes "[Jae Messenger]";
+		mes "I don't know the name of the server yet so don't go asking me.";
+		mes "Neither Jaerobb nor [Admin]-Ric has told me yet so I don't have any idea.";
+		next;
+		mes "[Jae Messenger]";
+		mes "The management would like to wish you all good luck and we will miss you all!";
+		mes "But definitely we will see each other right away so keep posted.";
+		mes "In behalf of Jaerobb, thank you very much and see you again soon.";
+		close;
+		
+OnInit:
+	waitingroom "READ THIS!",0;
+	end;
+}

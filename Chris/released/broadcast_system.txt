@@ -1,0 +1,77 @@
+//===== eAthena Script =======================================
+//= Broadcasting System
+//===== By ===================================================
+//= llchrisll
+//===== Credits ==============================================
+//= pAnZaA, GodLesZ,Jonne and other- Thanks guys for your help^^.
+//===== Version ==============================================
+//= 1.0 - Script Created
+//= 1.1 - Whisper Feature improved
+//===== Created on ======================================
+//= eAthena 12448 MySQL Stable
+//===== Description ==========================================
+//= Broadcasting via PM possible
+//  How to do it explains the NPC In-Game
+//===== Comments =============================================
+//= http://paste.pocoo.org/show/321078
+//============================================================
+
+prontera.gat,164,168,3	script	Chat System	857,{
+
+mes "[Broadcaster]";
+mes "Hello "+strcharinfo(0);
+mes "If you want to broadcast some messages,";
+mes "type ^ff0000NPC:Broadcaster^000000 in the";
+mes "Whisper Box, then type ^ff0000Global:<Text>^000000, or ^ff0000Map:<Text>^000000";
+mes "in the Text Box.";
+next;
+mes "[Broadcaster]";
+mes "Example:";
+mes "[WhisperBox:] NPC:Broadcaster";
+mes "[TextBox:] Global:Hi Guys!";
+mes "";
+mes "The message 'Hi Guys' will be";
+mes "announced to everyone on the Server.";
+mes "If I had put 'Map' instead of 'Global'";
+mes "the message would be announced to the";
+mes "current Map your on.";
+next;
+mes "[Broadcaster]";
+mes "A Global Broadcast costs "+$global_price+" Zeny.";
+mes "A Map Broadcast costs "+$map_price+" Zeny.";
+close;
+}
+
+-	script	Broadcaster	-1,{
+    end;
+
+OnInit:
+set $map_price,75000;
+set $global_price,150000;
+end;
+
+OnWhisperGlobal:
+if(@whispervar0$ == "Global") {
+	if(@whispervar1$ != "") {
+		if(Zeny < $global_price) dispbottom "You don't have enough Zeny."; end;
+		set Zeny, Zeny - $global_price;
+		announce "(From "+strcharinfo(0)+"): "+@whispervar1$+"",bc_yellow;
+		end;
+	} else {
+		announce "You didn't put a message.",bc_self|bc_red;
+		end;
+	}
+	
+} else if(@whispervar0$ == "Map") {
+	if(@whispervar1$ != "") {
+		getmapxy(@mapn$,@mapx,@mapy,0);
+		if(Zeny < $map_price) dispbottom "You don't have enough Zeny."; end;
+		set Zeny, Zeny - $map_price;
+		mapannounce @mapn$,"(From "+strcharinfo(0)+"): "+@whispervar1$+"",bc_yellow;
+		end;
+	} else {
+		announce "You didn't put a message.",bc_self|bc_red;
+		end;
+	}
+}
+}

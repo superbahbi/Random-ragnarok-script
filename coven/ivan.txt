@@ -1,0 +1,253 @@
+prontera,111,246,4	script	Ivan	962,{
+	mes "[Ivan]";
+	mes "Hi. I want everything plain and simple.";
+	mes "Hunt me some item then I will give you a headgear.";
+	next;
+	mes "[Ivan]";
+	mes "Get that?";
+	next;
+	menu "Wings of Victory",wing,"Hunter Hat",hunt,"Ship Captain Hat",ship,"Hello Mother Hat",hell,"Flapping Aneling",flap,"Little Angel Doll",litt,"Evil Snake Lord Hat",evil,"Snake Head Hat",snak,"White Snake Hat",whit,"Shining Electric Bulb Hairband",shin,"Cancel",H_Close;
+	wing:
+		mes "[Ivan]";
+		mes "Hunt me the following:";
+		next;
+		mes "5 Angel Wing";
+		mes "5 Angel Wing Ears";
+		mes "500 Feather";
+		mes "500 Feather of Birds";
+		mes "3 Platinum Coin";
+		menu "Make",M_wing,"Cancel",H_Close;
+		M_wing:
+			mes "Checking.";
+			next;
+			if (countitem(2254) < 5) goto H_Lack;
+			if (countitem(5074) < 5) goto H_Lack;
+			if (countitem(949) < 500) goto H_Lack;
+			if (countitem(916) < 500) goto H_Lack;
+			if (countitem(677) < 3) goto H_Lack;
+			mes "[Ivan]";
+			mes "Good job.";
+			next;
+			delitem 2254,5;
+			delitem 5074,5;
+			delitem 949,500;
+			delitem 916,500;
+			delitem 677,3;
+			getitem 5357,1;
+			close;
+	hunt:
+		mes "[Ivan]";
+		mes "Hunt me the following:";
+		next;
+		mes "8 Hunter Bow[1]";
+		mes "88 Darkgreen Dyestuff";
+		mes "888 Fig Leaf";
+		menu "Make",M_hunt,"Cancel",H_Close;
+		M_hunt:
+			mes "Checking.";
+			next;
+			if (countitem(1726) < 8) goto H_Lack;
+			if (countitem(979) < 88) goto H_Lack;
+			if (countitem(7298) < 888) goto H_Lack;
+			mes "[Ivan]";
+			mes "Good job.";
+			next;
+			delitem 1726,8;
+			delitem 979,88;
+			delitem 7298,888;
+			getitem 5383,1;
+			close;
+	ship:
+		mes "[Ivan]";
+		mes "Hunt me the following:";
+		next;
+		mes "1 Scarlet Dyestuff";
+		mes "10 Young Twig";
+		mes "100 Strong Branch";
+		mes "1000 Steel";
+		menu "Make",M_ship,"Cancel",H_Close;
+		M_ship:
+			mes "Checking.";
+			next;
+			if (countitem(975) < 1) goto H_Lack;
+			if (countitem(7018) < 10) goto H_Lack;
+			if (countitem(7203) < 100) goto H_Lack;
+			if (countitem(999) < 1000) goto H_Lack;
+			mes "[Ivan]";
+			mes "Good job.";
+			next;
+			delitem 975,1;
+			delitem 7018,10;
+			delitem 7203,100;
+			delitem 999,1000;
+			getitem 5359,1;
+			close;
+	hell:
+		mes "[Ivan]";
+		mes "Hunt me the following:";
+		next;
+		mes "1 Angeling Hat";
+		mes "3 Cobaltblue Dyestuff";
+		mes "300 Soft Feather";
+		menu "Make",M_hell,"Cancel",H_Close;
+		M_hell:
+			mes "Checking.";
+			next;
+			if (countitem(5132) < 1) goto H_Lack;
+			if (countitem(978) < 3) goto H_Lack;
+			if (countitem(7063) < 300) goto H_Lack;
+			mes "[Ivan]";
+			mes "Good job.";
+			next;
+			delitem 5132,1;
+			delitem 978,3;
+			delitem 7063,300;
+			getitem 5319,1;
+			close;
+	flap:
+		mes "[Ivan]";
+		mes "Hunt me the following:";
+		next;
+		mes "1 Angeling Hat";
+		mes "3 Scarlet Dyestuff";
+		mes "300 Soft Feather";
+		menu "Make",M_flap,"Cancel",H_Close;
+		M_flap:
+			mes "Checking.";
+			next;
+			if (countitem(5132) < 1) goto H_Lack;
+			if (countitem(975) < 3) goto H_Lack;
+			if (countitem(7063) < 300) goto H_Lack;
+			mes "[Ivan]";
+			mes "Good job.";
+			next;
+			delitem 5132,1;
+			delitem 975,3;
+			delitem 7063,300;
+			getitem 5334,1;
+			close;
+	litt:
+		mes "[Ivan]";
+		mes "Hunt me the following:";
+		next;
+		mes "1 Alice Doll[1]";
+		mes "3 Gold Coin";
+		menu "Make",M_litt,"Cancel",H_Close;
+		M_litt:
+			mes "Checking.";
+			next;
+			if (countitem(5137) < 1) goto H_Lack;
+			if (countitem(671) < 3) goto H_Lack;
+			mes "[Ivan]";
+			mes "Good job.";
+			next;
+			delitem 5137,1;
+			delitem 671,3;
+			getitem 5324,1;
+			close;
+	evil:
+		mes "[Ivan]";
+		mes "Hunt me the following:";
+		next;
+		mes "12 Bagua";
+		mes "120 Pellet";
+		mes "132 Fabric";
+		mes "1 Platinum Coin";
+		menu "Make",M_evil,"Cancel",H_Close;
+		M_evil:
+			mes "Checking.";
+			next;
+			if (countitem(7169) < 12) goto H_Lack;
+			if (countitem(7226) < 120) goto H_Lack;
+			if (countitem(1059) < 132) goto H_Lack;
+			if (countitem(677) < 1) goto H_Lack;
+			mes "[Ivan]";
+			mes "Good job.";
+			next;
+			delitem 7169,12;
+			delitem 7226,120;
+			delitem 1059,132;
+			delitem 677,1;
+			getitem 5364,1;
+			close;
+	snak:
+		mes "[Ivan]";
+		mes "Hunt me the following:";
+		next;
+		mes "300 Snake Scale";
+		mes "300 Scale Shell";
+		mes "300 Shining Scale";
+		mes "3 Darkgreen Dyestuff";
+		menu "Make",M_snak,"Cancel",H_Close;
+		M_snak:
+			mes "Checking.";
+			next;
+			if (countitem(926) < 300) goto H_Lack;
+			if (countitem(936) < 300) goto H_Lack;
+			if (countitem(954) < 300) goto H_Lack;
+			if (countitem(979) < 3) goto H_Lack;
+			mes "[Ivan]";
+			mes "Good job.";
+			next;
+			delitem 926,300;
+			delitem 936,300;
+			delitem 954,300;
+			delitem 979,3;
+			getitem 5388,1;
+			close;
+	whit:
+		mes "[Ivan]";
+		mes "Hunt me the following:";
+		next;
+		mes "300 Snake Scale";
+		mes "300 Scale Shell";
+		mes "300 Shining Scale";
+		mes "3 White Dyestuff";
+		menu "Make",M_whit,"Cancel",H_Close;
+		M_whit:
+			mes "Checking.";
+			next;
+			if (countitem(926) < 300) goto H_Lack;
+			if (countitem(936) < 300) goto H_Lack;
+			if (countitem(954) < 300) goto H_Lack;
+			if (countitem(982) < 3) goto H_Lack;
+			mes "[Ivan]";
+			mes "Good job.";
+			next;
+			delitem 926,300;
+			delitem 936,300;
+			delitem 954,300;
+			delitem 982,3;
+			getitem 5411,1;
+			close;
+	shin:
+		mes "[Ivan]";
+		mes "Hunt me the following:";
+		next;
+		mes "1 Bulb Band";
+		mes "333 Gold";
+		mes "1 TCG";
+		menu "Make",M_shin,"Cancel",H_Close;
+		M_shin:
+			mes "Checking.";
+			next;
+			if (countitem(5034) < 1) goto H_Lack;
+			if (countitem(969) < 333) goto H_Lack;
+			if (countitem(7227) < 1) goto H_Lack;
+			mes "[Ivan]";
+			mes "Good job.";
+			next;
+			delitem 5034,1;
+			delitem 969,333;
+			delitem 7227,1;
+			getitem 5310,1;
+			close;
+	H_Lack:
+		mes "[Ivan]";
+		mes "Please check, something is missing.";
+		close;
+	H_Close:
+		mes "[Ivan]";
+		mes "Ciao.";
+		close;
+}

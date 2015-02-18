@@ -1,0 +1,48 @@
+// http://www.eathena.ws/board/index.php?showtopic=205756
+// i wish someone can giv a Ip ban npc means i click it then type tha character name 
+// or login id the char and his ip will get ban so u wish someone can giv a Ip ban npc 
+// means i click it then type tha character name or login id the char and his ip will get ban
+
+poring_c01,100,100,0	script	BAN you	910,{
+	if (getgmlevel()<60) end;
+	
+	switch(select("Ban by char name:Ban by login ID")) {
+	case 1:
+		mes "Enter the char's name:";
+		input .@name$;
+		query_sql "SELECT `char_id`,`account_id`,`name` FROM `char` WHERE `name` = '"+escape_sql(.@name$)+"'", .@char_id,.@account_id,.@name$;
+		if (!.@account_id) {
+			mes "^FF0000     Char name does not exist.";
+			close;
+		}
+		break;
+	case 2:
+		mes "Enter the login ID:";
+		input .@userid$;
+		query_sql "SELECT `account_id`,`userid` FROM `login` WHERE `userid` = '"+escape_sql(.@userid$)+"'", .@account_id,.@userid$;
+		if (!.@account_id) {
+			mes "^FF0000     Login ID does not exist.";
+			close;
+		}
+		break;
+	}
+	
+	query_sql "SELECT `last_ip` FROM `login` WHERE `account_id`="+.@account_id, .@last_ip$;
+	mes "Enter the reason for ban:";
+	input .@reason$;
+	next;
+	
+	if (.@char_id) mes "Ban the character ^FF0000" + .@name$ + "^000000 ?";
+	else           mes "Ban the login ID ^FF0000" + .@userid$ + "^000000 ?";
+	mes "IP =^0000FF " + .@last_ip$ + "^000000";
+	mes "Reason =^0000FF " + .@reason$ + "^000000";
+	mes " ";
+	if(select("No:Yes, ban the IP")==1) close;
+	
+	if (.@char_id) atcommand "@block "+.@name$;
+	else           query_sql "UPDATE `login` SET `state`=5 WHERE `account_id`="+.@account_id;
+	query_sql "INSERT INTO `ipbanlist`(`list`,`btime`,`rtime`,`reason`) VALUES('"+.@last_ip$+"',NOW(),'2099-12-31 00:00:00','("+.@name$+.@userid$+") "+.@reason$+"')";
+	
+	mes "Ban entered successfully!";
+	close;
+}

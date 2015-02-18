@@ -1,0 +1,52 @@
+prontera,146,173,5	script	Godlike Item	412,{
+
+	if (getgmlevel()==99)
+	{
+	mes "[^0065DFBlueberry^000000]";
+	mes "Greetings GameMaster! Today it sold: ^FF0000" + $@buycnt + "^000000 God items.";
+	}
+	mes "Hello "+strcharinfo(0)+"! I sell God items. Please take a look and buy what you need.";
+
+						// item name
+	set @nom, select("Lord Kaho",
+					"Sleipnir",
+					"Megingjard",
+					"Aesprika",
+					"Brynhildr",
+					"Brisingamen");
+
+					// Item ID,Price
+	setarray @ID[0],5013,25,
+					2410,25,
+					2629,25,
+					2541,25,
+					2383,20,
+					2630,15,
+					1530,15;
+
+
+	set @nom, @nom - 1;
+	 
+
+	mes "This item cost:";
+	mes "^0000FFTCG: ^000000" + @ID[@nom*2+1] + ".";
+	
+	menu "Buy the item.", -, "Nevermind.", M_CANCEL;
+	
+	if(@ID[@nom*2+1] <= countitem(7227)) //1998
+	{
+		delitem 7227, @ID[@nom*2+1]; //1998
+		getitem @ID[@nom*2], 1;
+		set $@buycnt, $@buycnt+1;
+		close;
+	} else {
+		mes "Sorry, you don't have enough TCG Cards.";
+		close;
+	}
+	M_CANCEL:
+	close;
+OnInit:
+	waitingroom "GOD Seller!",0;
+	end;
+	
+}

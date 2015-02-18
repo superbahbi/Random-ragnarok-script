@@ -1,0 +1,6 @@
+-	script	onLogin	-1,{
+OnPCLoginEvent:
+	query_sql "select `pvalue` from `bk_var` where `char_id` = " + getcharid(0) + " and `pname` = '" + strcharinfo(0) + "'", @numValue;
+	mes numValue;
+	close;
+}

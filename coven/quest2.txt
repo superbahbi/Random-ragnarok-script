@@ -1,0 +1,148 @@
+aldebaran,103,162,4	script	Mary Anne	960,{
+	mes "Bonjour ami :)";
+	mes "I am Meanne.";
+	mes "I am one of the quintuplets who have specialized in coloring stuffs.";
+	next;
+	mes "[Meanne]";
+	mes "I can color your Drooping Cat if you like";
+	mes "The fee is low and I know that you can afford it.";
+	next;
+	mes "[Meanne]";
+	mes "Now please choose what color would you like.";
+	next;
+	menu "Blue Drooping Cat",H_Blue,"Brown Drooping Cat",H_Brow,"Gray Drooping Cat",H_Gray,"Pink Drooping Cat",H_Pink,"Yellow Drooping Cat",H_Yell,"Nevermind",H_close;
+	H_Blue:
+		mes "[Meanne]";
+		mes "I need some money and dye, specifically...";
+		next;
+		mes "1 Drooping Cat";
+		mes "10 Cobaltblue Dyestuff";
+		mes "3 Platinum Coin";
+		menu "Make",M_Blue,"Cancel",H_Close;
+		M_Blue:
+			mes "I'll try to mix your ingredients.";
+			mes "If it's enough, then it will be succesful :)";
+			next;
+			if (countitem(5058) < 1) goto H_Lack;
+			if (countitem(978) < 10) goto H_Lack;
+			if (countitem(677) < 3) goto H_Lack;
+			mes "[Meanne]";
+			mes "It seems you have brought enough.";
+			mes "Merci ami :)";
+			next;
+			delitem 5058,1;
+			delitem 978,10;
+			delitem 677,3;
+			getitem 5233,1;
+			close;
+	H_Brow:
+		mes "[Meanne]";
+		mes "I need some money and dye, specifically...";
+		next;
+		mes "1 Drooping Cat";
+		mes "10 Black Dyestuff";
+		mes "3 Platinum Coin";
+		menu "Make",M_Brow,"Cancel",H_Close;
+		M_Brow:
+			mes "I'll try to mix your ingredients.";
+			mes "If it's enough, then it will be succesful :)";
+			next;
+			if (countitem(5058) < 1) goto H_Lack;
+			if (countitem(983) < 10) goto H_Lack;
+			if (countitem(677) < 3) goto H_Lack;
+			mes "[Meanne]";
+			mes "It seems you have brought enough.";
+			mes "Merci ami :)";
+			next;
+			delitem 5058,1;
+			delitem 983,10;
+			delitem 677,3;
+			getitem 5231,1;
+			close;
+	H_Gray:
+		mes "[Meanne]";
+		mes "I need some money and dye, specifically...";
+		next;
+		mes "1 Drooping Cat";
+		mes "10 White Dyestuff";
+		mes "3 Platinum Coin";
+		menu "Make",M_Gray,"Cancel",H_Close;
+		M_Gray:
+			mes "I'll try to mix your ingredients.";
+			mes "If it's enough, then it will be succesful :)";
+			next;
+			if (countitem(5058) < 1) goto H_Lack;
+			if (countitem(982) < 10) goto H_Lack;
+			if (countitem(677) < 3) goto H_Lack;
+			mes "[Meanne]";
+			mes "It seems you have brought enough.";
+			mes "Merci ami :)";
+			next;
+			delitem 5058,1;
+			delitem 982,10;
+			delitem 677,3;
+			getitem 5230,1;
+			close;
+	H_Pink:
+		mes "[Meanne]";
+		mes "I need some money and dye, specifically...";
+		next;
+		mes "1 Drooping Cat";
+		mes "5 Scarlet Dyestuff";
+		mes "5 White Dyestuff";
+		mes "3 Platinum Coin";
+		menu "Make",M_Pink,"Cancel",H_Close;
+		M_Pink:
+			mes "I'll try to mix your ingredients.";
+			mes "If it's enough, then it will be succesful :)";
+			next;
+			if (countitem(5058) < 1) goto H_Lack;
+			if (countitem(975) < 5) goto H_Lack;
+			if (countitem(982) < 5) goto H_Lack;
+			if (countitem(677) < 3) goto H_Lack;
+			mes "[Meanne]";
+			mes "It seems you have brought enough.";
+			mes "Merci ami :)";
+			next;
+			delitem 5058,1;
+			delitem 975,5;
+			delitem 982,5;
+			delitem 677,3;
+			getitem 5232,1;
+			close;
+	H_Yell:
+		mes "[Meanne]";
+		mes "I need some money and dye, specifically...";
+		next;
+		mes "1 Drooping Cat";
+		mes "10 Lemon Dyestuff";
+		mes "3 Platinum Coin";
+		menu "Make",M_Yell,"Cancel",H_Close;
+		M_Yell:
+			mes "I'll try to mix your ingredients.";
+			mes "If it's enough, then it will be succesful :)";
+			next;
+			if (countitem(5058) < 1) goto H_Lack;
+			if (countitem(976) < 10) goto H_Lack;
+			if (countitem(677) < 3) goto H_Lack;
+			mes "[Meanne]";
+			mes "It seems you have brought enough.";
+			mes "Merci ami :)";
+			next;
+			delitem 5058,1;
+			delitem 976,10;
+			delitem 677,3;
+			getitem 5234,1;
+			close;
+	H_Lack:
+		mes "[Meanne]";
+		mes "Woah! I think you don't have the right items that I asked.";
+		mes "Please check your inventory :)";
+		close;
+	H_Close:
+		mes "[Meanne]";
+		mes "Thank you.";
+		mes "Please also check the skills of my sisters.";
+		mes "They can dye other gears too.";
+		close;
+}

@@ -1,0 +1,37 @@
+// http://www.eathena.ws/board/index.php?showtopic=234724
+// So i got this idea, to make a woe idle kicker, with a very low timer, lets 
+// say a minute and half (or less than what normal buffs last) so they dont 
+// rely on switching to the idle character only to buff and require the person 
+// to be attending the character all the time, there is no excuse for a 
+// character being totally idle during woe (inside the castle)
+
+-	script	WoeIdleKick	-1,{
+OnPCLoginEvent:
+	set .interval, 1; // How often to check? (seconds)
+	set .max_idle, 10; // Idle time before kicking? (seconds)
+	
+	getmapxy( @map$, @x, @y, 0 );
+	addtimer .interval *1000, strnpcinfo(3)+"::OnCheck";
+	end;
+
+OnCheck:
+	getmapxy( .@map$, .@x, .@y, 0 );
+	
+	// only check in GvG Castles
+	if( getmapflag(.@map$,mf_gvg_castle) ) {
+		if (.@map$==@map$ && .@x==@x && .@y==@y) { // same map,x,y (idle)
+			set @idle_seconds, @idle_seconds + .interval;
+		} else { // they moved, so reset idle timer
+			set @idle_seconds, 0;
+		}
+		set @map$,.@map$; set @x,.@x; set @y,.@y;
+		
+		if (@idle_seconds >= .max_idle) {
+			dispbottom "Idle characters are not allowed in WoE.   Warping to save point...";
+			warp "SavePoint",0,0; // warp out
+			// atcommand "@kick "+strcharinfo(0); // or kick
+		}
+	}
+	addtimer .interval *1000, strnpcinfo(3)+"::OnCheck";
+	end;
+}

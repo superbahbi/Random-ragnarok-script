@@ -1,0 +1,286 @@
+amatsu,25,170,5	script	Timo	472,{
+	mes "Hola "+strcharinfo(0)+"!";
+	mes "How are you doing my good friend?";
+	mes "I came by to create you something good!";
+	mes "I bet you would get excited with what I can make.";
+	next;
+	mes "[Timo]";
+	mes "Here have a look:";
+	next;
+	menu "Satellite Hairclip",H_Satel,"Flower Lily",H_Lily,"Flower Crown",H_Crown,"Carmen Miranda's Hat",H_Carmen,"Fisherman Hat",H_Fish,"Love Dad Bandana",H_Love,"Judge Cap",H_Judge,"Orchid Hairband",H_Orch,"Dark Randgris Helm",H_Dark,"Balloon Hat",H_Ball,"Pagdayaw",H_Pagda,"Tiraya Bonnet",H_Tir,"Never Mind",H_Close;
+	H_Satel:
+		mes "[Timo]";
+		mes "Please get some of these items and come back:";
+		next;
+		mes "1000 Fragment";
+		mes "5 Cobaltblue Dyestuff";
+		menu "Make",M_Satel,"Cancel",H_Close;
+		M_Satel:
+			mes "Looking into your inventory...";
+			next;
+			if (countitem(7094) < 1000) goto H_Lack;
+			if (countitem(978) < 5) goto H_Lack;
+			mes "[Timo]";
+			mes "Yeah!";
+			next;
+			delitem 7094,1000;
+			delitem 978,5;
+			getitem 5212,1;
+			close;
+	H_Lily:
+		mes "[Timo]";
+		mes "Please get some of these items and come back:";
+		next;
+		mes "3000 Flower";
+		mes "3 White Dyestuff";
+		mes "10 Valkyrie Flower";
+		mes "50 Illusion Flower";
+		menu "Make",M_Lily,"Cancel",H_Close;
+		M_Lily:
+			mes "Looking into your inventory...";
+			next;
+			if (countitem(712) < 3000) goto H_Lack;
+			if (countitem(982) < 3) goto H_Lack;
+			if (countitem(7510) < 10) goto H_Lack;
+			if (countitem(710) < 50) goto H_Lack;
+			mes "[Timo]";
+			mes "Yeah!";
+			next;
+			delitem 712,3000;
+			delitem 982,3;
+			delitem 7510,10;
+			delitem 710,50;
+			getitem 5302,1;
+			close;
+	H_Crown:
+		mes "[Timo]";
+		mes "Please get some of these items and come back:";
+		next;
+		mes "300 Huge Leaf";
+		mes "150 Fig Leaf";
+		mes "300 Raccoon Leaf";
+		menu "Make",M_Crown,"Cancel",H_Close;
+		M_Crown:
+			mes "Looking into your inventory...";
+			next;
+			if (countitem(7198) < 300) goto H_Lack;
+			if (countitem(7298) < 150) goto H_Lack;
+			if (countitem(945) < 300) goto H_Lack;
+			mes "[Timo]";
+			mes "Yeah!";
+			next;
+			delitem 7198,300;
+			delitem 7298,150;
+			delitem 945,300;
+			getitem 5303,1;
+			close;
+	H_Carmen:
+		mes "[Timo]";
+		mes "Please get some of these items and come back:";
+		next;
+		mes "300 Prickly Fruit";
+		mes "300 Red Thorn Fruit";
+		mes "1 Gold Coin";
+		menu "Make",M_Carmen,"Cancel",H_Close;
+		M_Carmen:
+			mes "Looking into your inventory...";
+			next;
+			if (countitem(576) < 300) goto H_Lack;
+			if (countitem(587) < 300) goto H_Lack;
+			if (countitem(671) < 1) goto H_Lack;
+			mes "[Timo]";
+			mes "Yeah!";
+			next;
+			delitem 576,300;
+			delitem 587,300;
+			delitem 671,1;
+			getitem 5307,1;
+			close;
+	H_Fish:
+		mes "[Timo]";
+		mes "Please get some of these items and come back:";
+		next;
+		mes "3 Lemon Dyestuff";
+		mes "250 Fish Tail";
+		mes "250 Rotten Fish";
+		menu "Make",M_Fish,"Cancel",H_Close;
+		M_Fish:
+			mes "Looking into your inventory...";
+			next;
+			if (countitem(976) < 3) goto H_Lack;
+			if (countitem(1023) < 250) goto H_Lack;
+			if (countitem(624) < 250) goto H_Lack;
+			mes "[Timo]";
+			mes "Yeah!";
+			next;
+			delitem 976,3;
+			delitem 1023,250;
+			delitem 624,250;
+			getitem 5317,1;
+			close;
+	H_Love:
+		mes "[Timo]";
+		mes "Please get some of these items and come back:";
+		next;
+		mes "50 Lemon Dyestuff";
+		mes "3 Platinum Coin";
+		menu "Make",M_Love,"Cancel",H_Close;
+		M_Love:
+			mes "Looking into your inventory...";
+			next;
+			if (countitem(976) < 50) goto H_Lack;
+			if (countitem(677) < 3) goto H_Lack;
+			mes "[Timo]";
+			mes "Yeah!";
+			next;
+			delitem 976,50;
+			delitem 677,3;
+			getitem 5366,1;
+			close;
+	H_Judge:
+		mes "[Timo]";
+		mes "Please get some of these items and come back:";
+		next;
+		mes "1 Magni's Cap";
+		mes "433 Brown Root";
+		mes "3 Gold Coin";
+		menu "Make",M_Judge,"Cancel",H_Close;
+		M_Judge:
+			mes "Looking into your inventory...";
+			next;
+			if (countitem(5122) < 1) goto H_Lack;
+			if (countitem(7188) < 433) goto H_Lack;
+			if (countitem(671) < 3) goto H_Lack;
+			mes "[Timo]";
+			mes "Yeah!";
+			next;
+			delitem 5122,1;
+			delitem 7188,433;
+			delitem 671,3;
+			getitem 5371,1;
+			close;
+	H_Orch:
+		mes "[Timo]";
+		mes "Please get some of these items and come back:";
+		next;
+		mes "1 Flower Hairpin";
+		mes "301 Singing Flower";
+		mes "5 Violet Dyestuff";
+		menu "Make",M_Orch,"Cancel",H_Close;
+		M_Orch:
+			mes "Looking into your inventory...";
+			next;
+			if (countitem(5061) < 1) goto H_Lack;
+			if (countitem(629) < 301) goto H_Lack;
+			if (countitem(981) < 5) goto H_Lack;
+			mes "[Timo]";
+			mes "Yeah!";
+			next;
+			delitem 5061,1;
+			delitem 629,301;
+			delitem 981,5;
+			getitem 5370,1;
+			close;
+	H_Dark:
+		mes "[Timo]";
+		mes "Please get some of these items and come back:";
+		next;
+		mes "100 Valkyrie Flower";
+		mes "10 Black Dyestuff";
+		mes "500 Steel";
+		mes "137 Piece of Black Cloth";
+		menu "Make",M_Dark,"Cancel",H_Close;
+		M_Dark:
+			mes "Looking into your inventory...";
+			next;
+			if (countitem(7510) < 100) goto H_Lack;
+			if (countitem(983) < 10) goto H_Lack;
+			if (countitem(999) < 500) goto H_Lack;
+			if (countitem(7205) < 137) goto H_Lack;
+			mes "[Timo]";
+			mes "Yeah!";
+			next;
+			delitem 7510,100;
+			delitem 983,10;
+			delitem 999,500;
+			delitem 7205,137;
+			getitem 5373,1;
+			close;
+	H_Ball:
+		mes "[Timo]";
+		mes "Please get some of these items and come back:";
+		next;
+		mes "2000 Fabric";
+		mes "10 White Dyestuff";
+		mes "1 Wild Flower";
+		menu "Make",M_Ball,"Cancel",H_Close;
+		M_Ball:
+			mes "Looking into your inventory...";
+			next;
+			if (countitem(1059) < 2000) goto H_Lack;
+			if (countitem(982) < 10) goto H_Lack;
+			if (countitem(10009) < 1) goto H_Lack;
+			mes "[Timo]";
+			mes "Yeah!";
+			next;
+			delitem 1059,2000;
+			delitem 982,10;
+			delitem 10009,1;
+			getitem 5379,1;
+			close;
+	H_Pagda:
+		mes "[Timo]";
+		mes "Please get some of these items and come back:";
+		next;
+		mes "1 Helmet of Orc Hero";
+		mes "823 Soft Feather";
+		mes "1 TCG";
+		menu "Make",M_Pagda,"Cancel",H_Close;
+		M_Pagda:
+			mes "Looking into your inventory...";
+			next;
+			if (countitem(5094) < 1) goto H_Lack;
+			if (countitem(7063) < 823) goto H_Lack;
+			if (countitem(7227) < 1) goto H_Lack;
+			mes "[Timo]";
+			mes "Yeah!";
+			next;
+			delitem 5094,1;
+			delitem 7063,823;
+			delitem 7227,1;
+			getitem 5263,1;
+			close;
+	H_Tir:
+		mes "[Timo]";
+		mes "Please get some of these items and come back:";
+		next;
+		mes "1 Striped Hairband";
+		mes "499 Darkness Rune";
+		mes "282 Will of the Darkness";
+		mes "20 Bronze Coin";
+		menu "Make",M_Tir,"Cancel",H_Close;
+		M_Tir:
+			mes "Looking into your inventory...";
+			next;
+			if (countitem(5049) < 1) goto H_Lack;
+			if (countitem(7511) < 499) goto H_Lack;
+			if (countitem(7340) < 282) goto H_Lack;
+			if (countitem(673) < 20) goto H_Lack;
+			mes "[Timo]";
+			mes "Yeah!";
+			next;
+			delitem 5049,1;
+			delitem 7511,499;
+			delitem 7340,282;
+			delitem 673,20;
+			getitem 5395,1;
+			close;
+	H_Lack:
+		mes "[Timo]";
+		mes "Are you trying to scam me?! I am no fool!";
+		close;
+	H_Close:
+		mes "[Timo]";
+		mes "Yeah! Go ahead and boast it around!";
+		close;
+}

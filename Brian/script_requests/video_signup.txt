@@ -1,0 +1,93 @@
+// http://www.eathena.ws/board/index.php?showtopic=224683
+// Hello. Me and my friend have made a server. We thought of an awesome idea 
+// for the server thats kind of an event. But to do this we need an npc that 
+// allows people to sign up for the event. Its really simple how we would like it.
+// 1. Hello, Would you like to sign up for the Recording? Answers: Yes, No
+// 2. Please type your name in the following box to Sign up. Have a box that if you 
+// type in ur name puts on a list. If they type in the wrong name go back to the start.
+// 3. If possible could you also make an npc that shows who has signed up at the time?
+
+prontera,155,188,0	script	Video SignUp	910,{
+	mes "[Video SignUp]";
+	if( getgmlevel() >= 40 ) {		// GM menu
+		if( getarraysize($video_accountid) ) {
+			// generate a list (menu) of names in the array
+			for ( set .@i,0; .@i<getarraysize($video_accountid); set .@i,.@i+1 ) {
+				set .@menu$, .@menu$ + $video_name$[.@i] + " - " + ($video_status[.@i] ? "In Progress" : "^FF0000NOT started^000000") + ":";
+			}
+			// pick one from the menu
+			mes "Pick a name:";
+			set .@num, select(.@menu$) -1;
+			
+			mes "Change status to?";
+			switch(select("^FF0000NOT started:^000000In Progress:^008000Completed (delete from list)^000000")) {
+			case 1:		// NOT started
+				set $video_status[.@num], 0;
+				mes $video_name$[.@num] + " - ^FF0000NOT started^000000";
+				break;
+			case 2:		// In Progress
+				set $video_status[.@num], 1;
+				mes $video_name$[.@num] + " - In Progress";
+				break;
+			case 3:		// Completed (delete from list)
+				mes "Delete " + $video_name$[.@num] + " from the list?";
+				if(select("No:Yes, delete")==1) close;
+				// delete their name/account_id from the array
+				for ( set .@i,.@num; .@i<getarraysize($video_accountid); set .@i,.@i+1 ) {
+					// shift the names below theirs up one
+					set $video_accountid[.@i], $video_accountid[.@i+1];
+					set $video_name$[.@i], $video_name$[.@i+1];
+					set $video_status[.@i], $video_status[.@i+1];
+				}
+				// delete the last array entry
+				set $video_accountid[.@i+1], 0;
+				set $video_name$[.@i+1], "";
+				set $video_status[.@i+1], 0;
+				break;
+			}
+		} else {
+			mes "No players have signed up yet =[";
+		}
+		
+	} else {		// normal player menu
+		mes "Hello, would you like to sign up for a recording?";
+		if(select("Yes, please:No, thanks")==1) {
+			mes "Please type your name in the following box:";
+			input .@name$;
+			if( .@name$ == strcharinfo(0) ) {
+				
+				// check if they already signed up
+				for ( set .@i,0; .@i<getarraysize($video_accountid); set .@i,.@i+1 ) {
+					if( getcharid(3) == $video_accountid[.@i] ) {
+						mes "You have already signed up.";
+						mes "Current status = " + ($video_status[.@i]==0 ? "^FF0000NOT started" : "In Progress") + "^000000";
+						close;
+					}
+				}
+				
+				// check if array is full
+				if( getarraysize($video_accountid) < 128 ) {
+					
+					// save their AccountID and name as the last array entry
+					set .@last, getarraysize($video_accountid);
+					set $video_accountid[.@last], getcharid(3);
+					set $video_name$[.@last], strcharinfo(0);
+					
+					mes "Your name has been added to the list!";
+					emotion e_thx;
+					
+				} else {
+					mes "Sorry, the sign up list is full.";
+					mes "Please check back later.";
+					emotion e_swt;
+				}
+			} else {
+				mes "Are you sure that's your name?";
+				emotion e_swt;
+			}
+		} else {
+			mes "Come back if you change your mind!";
+		}
+	}
+	close;
+}

@@ -1,0 +1,100 @@
+aldebaran,105,160,4	script	Pamela	960,{
+	mes "Bonjour ami :)";
+	mes "I am Pamela.";
+	mes "I am one of the quintuplets who have specialized in coloring stuffs.";
+	next;
+	mes "[Pamela]";
+	mes "I can color your Beanie if you like";
+	mes "The fee is low and I know that you can afford it.";
+	next;
+	mes "[Pamela]";
+	mes "Now please choose what color would you like.";
+	next;
+	menu "Blue Beanie",H_Blue,"Brown Beanie",H_Brow,"Pink Beanie",H_Pink,"Nevermind",H_Close;
+	H_Blue:
+		mes "[Pamela]";
+		mes "I need some money and dye, specifically...";
+		next;
+		mes "1 Beanie";
+		mes "10 Cobaltblue Dyestuff";
+		mes "3 Platinum Coin";
+		menu "Make",M_Blue,"Cancel",H_Close;
+		M_Blue:
+			mes "I'll try to mix your ingredients.";
+			mes "If it's enough, then it will be succesful :)";
+			next;
+			if (countitem(5076) < 1) goto H_Lack;
+			if (countitem(978) < 10) goto H_Lack;
+			if (countitem(677) < 3) goto H_Lack;
+			mes "[Pamela]";
+			mes "It seems you have brought enough.";
+			mes "Merci ami :)";
+			next;
+			delitem 5076,1;
+			delitem 978,10;
+			delitem 677,3;
+			getitem 5236,1;
+			close;
+	H_Brow:
+		mes "[Pamela]";
+		mes "I need some money and dye, specifically...";
+		next;
+		mes "1 Beanie";
+		mes "10 Black Dyestuff";
+		mes "3 Platinum Coin";
+		menu "Make",M_Brow,"Cancel",H_Close;
+		M_Brow:
+			mes "I'll try to mix your ingredients.";
+			mes "If it's enough, then it will be succesful :)";
+			next;
+			if (countitem(5076) < 1) goto H_Lack;
+			if (countitem(983) < 10) goto H_Lack;
+			if (countitem(677) < 3) goto H_Lack;
+			mes "[Pamela]";
+			mes "It seems you have brought enough.";
+			mes "Merci ami :)";
+			next;
+			delitem 5076,1;
+			delitem 983,10;
+			delitem 677,3;
+			getitem 5235,1;
+			close;
+	H_Pink:
+		mes "[Pamela]";
+		mes "I need some money and dye, specifically...";
+		next;
+		mes "1 Beanie";
+		mes "5 Scarlet Dyestuff";
+		mes "5 White Dyestuff";
+		mes "3 Platinum Coin";
+		menu "Make",M_Pink,"Cancel",H_Close;
+		M_Pink:
+			mes "I'll try to mix your ingredients.";
+			mes "If it's enough, then it will be succesful :)";
+			next;
+			if (countitem(5076) < 1) goto H_Lack;
+			if (countitem(975) < 5) goto H_Lack;
+			if (countitem(982) < 5) goto H_Lack;
+			if (countitem(677) < 3) goto H_Lack;
+			mes "[Pamela]";
+			mes "It seems you have brought enough.";
+			mes "Merci ami :)";
+			next;
+			delitem 5076,1;
+			delitem 975,5;
+			delitem 982,5;
+			delitem 677,3;
+			getitem 5237,1;
+			close;
+	H_Lack:
+		mes "[Pamela]";
+		mes "Woah! I think you don't have the right items that I asked.";
+		mes "Please check your inventory :)";
+		close;
+	H_Close:
+		mes "[Pamela]";
+		mes "Thank you.";
+		mes "Please also check the skills of my sisters.";
+		mes "They can dye other gears too.";
+		close;
+}

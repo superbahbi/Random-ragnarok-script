@@ -1,0 +1,141 @@
+/////////////////////////////////////////////
+//By Jaerobb for jaeRo///////////////////////
+////////////////////////////////////////////
+
+prontera,0,0,0	script	mvp_announce	-1,{
+end;
+OnInit:
+
+//Time to be happening annons.
+OnClock0200:
+OnClock1000:
+OnClock1800:
+OnClock2200:
+
+
+initnpctimer;
+OnTimer0:
+announce "Jaerobb: Mvp Event is now Open",0;
+enablenpc "Kenny";
+enablenpc "Kenny#2";
+enablenpc "Kenny#3";
+killmonsterall "guild_vs1-1";
+end;
+
+OnTimer60000:
+announce "Jaerobb: Mvp Event Closing in 60 seconds",0;
+end;
+
+OnTimer90000:
+announce "Jaerobb: Mvp Event Closing warps in 30 seconds.",0;
+sleep2 5000;
+end;
+
+OnTimer110000:
+announce "Jaerobb: Mvp Event: Last 10 seconds.",0;
+end;
+
+OnTimer115000:
+announce "Jaerobb: Mvp Event: 5.",0;
+end;
+
+OnTimer116000:
+announce "Jaerobb: Mvp Event: 4.",0;
+end;
+
+OnTimer117000:
+announce "Jaerobb: Mvp Event: 3.",0;
+end;
+
+OnTimer118000:
+announce "Jaerobb: Mvp Event: 2.",0;
+end;
+
+OnTimer119000:
+announce "Jaerobb: Mvp Event: 1.",0;
+end;
+
+OnTimer120000:
+announce "Jaerobb: Mvp Event Warps are now closed.",0;
+end;
+
+OnTimer121000:
+disablenpc "Kenny";
+disablenpc "Kenny#2";
+disablenpc "Kenny#3";
+stopnpctimer;
+sleep 2000;
+mapannounce "guild_vs1-1","The first invasion of monsters in 10 seconds",0,0x00ff00;
+sleep 10000;
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1511,0)+"",1511,3; //
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1751,0)+"",1751,1; //
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1039,0)+"",1039,3;//
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1046,0)+"",1046,3;//
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1658,0)+"",1658,5;//
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1418,0)+"",1418,2;//
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1112,0)+"",1112,2;//
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1190,0)+"",1190,2;//
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1115,0)+"",1115,1;//
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1492,0)+"",1492,1;//
+sleep 110000;
+mapannounce "guild_vs1-1","The second invasion of monsters in 10 seconds.",0,0x00ff00;
+sleep 10000;
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1086,0)+"",1086,5; //
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1312,0)+"",1312,3; //
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1583,0)+"",1583,5;//
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1688,0)+"",1688,2;//
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1650,0)+"",1650,5;//
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1708,0)+"",1708,2;//
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1768,0)+"",1768,1;//
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1734,0)+"",1734,2;//
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1147,0)+"",1147,2;//
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1115,0)+"",1115,1;//
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1418,0)+"",1418,1;//
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1492,0)+"",1492,1;//
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1251,0)+"",1251,1;//
+sleep 110000;
+mapannounce "guild_vs1-1","The Third Invasion of monsters in 10 seconds.",0,0x00ff00;
+sleep 10000;
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1289,0)+"",1289,5; //
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1502,0)+"",1502,3; //
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1297,0)+"",1779,5;//
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1751,0)+"",1751,3;//
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1685,0)+"",1685,5;//
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1651,0)+"",1651,5;//
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1272,0)+"",1272,3;//
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1115,0)+"",1115,1;//
+monster "guild_vs1-1",0,0,""+getmonsterinfo(1251,0)+"",1251,1;//
+sleep 110000;
+mapannounce "guild_vs1-1","Jaerobb: Thank you for participating. The event is done. Have a nice day.",0,0x00ff00;
+//disablenpc "Kenny";
+stopnpctimer; //disable the timer.
+end;
+}
+
+prontera,156,147,5	script	Kenny	403,{
+	mes "Event will begin after all participants will be registered.";
+	mes "You want to participate?";
+	next;
+	mes "Well, you are registered";
+	mes "Want to get to locations of event?";
+	next;
+	menu "Go",case1,"Noo 8)",case2;
+case1:
+	warp "guild_vs1-1",0,0;
+	close;
+case2:
+	mes "[Kenny]";
+	mes "Well, come whenever you want.";
+close;
+}
+//--------NPC CLONE-----------------
+payon,155,211,5	duplicate(Kenny)	Kenny#2	403
+morocc,159,74,5	duplicate(Kenny)	Kenny#3	403
+//-----------Mapflag------------------
+guild_vs1-1	mapflag	nowarp
+guild_vs1-1	mapflag	nowarpto
+guild_vs1-1	mapflag	noteleport
+guild_vs1-1	mapflag	nosave
+guild_vs1-1	mapflag	nomemo
+guild_vs1-1	mapflag	nobranch
+guild_vs1-1	mapflag	nopenalty

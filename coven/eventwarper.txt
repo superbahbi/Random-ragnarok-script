@@ -1,0 +1,624 @@
+prontera,164,168,4	script	Warp Manager	828,{
+
+if (getgmlevel()>=20){
+check:
+if($state==0){
+goto off;
+}
+else{
+goto on;
+}
+close;
+//--------------STATE: OFF----------------------------------------------------
+off:
+mes "[^3333FFJaeRO Warper^000000]";
+mes "Event NPC State: ^FF0000OFF^000000";
+menu "Nothing",noon,"Turn ON",yeson,"Event",eventwarp,"Warp",yeswarp;
+
+yeson:
+set $state,1;
+next;
+mes "[^3333FFJaeRO Warper^000000]";
+mes "Ok it is now turned ^009900ON^000000.";
+delwaitingroom;
+waitingroom "Event: "+$event$,0;
+next;
+goto check;
+
+noon:
+next;
+mes "[^3333FFJaeRO Warper^000000]";
+mes "Ok bye!";
+close;
+//--------------STATE: ON----------------------------------------------------
+on:
+mes "[^3333FFJaeRO Warper^000000]";
+mes "Event NPC State: ^009900ON^000000";
+menu "Nothing",nooff,"Turn OFF",yesoff,"Event",eventwarp,"Warp",yeswarp;
+
+eventwarp:
+	next;
+	mes "[^3333FFJaeRO Warper^000000]";
+	menu "Lucky Box",dice,"Disguise",disg,"Hangman",hangman;
+	
+
+rfyl:
+	next;
+	set $state,2;
+	announce "RFYL event is open.",bc_all;
+	delwaitingroom;
+	waitingroom "Event:RFYL",0;
+	close;
+mvp:
+	next;
+	set $state,3;
+	announce "MVP  event is open.",bc_all;
+	delwaitingroom;
+	waitingroom "Event:MVP",0;
+	close;
+lms:
+	next;
+	set $state,4;
+	announce "LMS event is open.",bc_all;
+	delwaitingroom;
+	waitingroom "Event:LMS",0;
+	close;
+tof:
+	next;
+	set $state,5;
+	announce "True or False event is open.",bc_all;
+	delwaitingroom;
+	waitingroom "Event:True or False",0;
+	close;
+dice:
+	next;
+	set $state,6;
+	announce "Lucky Box event is open.",bc_all;
+	delwaitingroom;
+	waitingroom "Event:Lucky Box",0;
+	close;
+disg:
+	next;
+	set $state,7;
+	announce "Disguise event is open.",bc_all;
+	delwaitingroom;
+	waitingroom "Event:Disguise",0;
+	enablenpc "Disguise Event";
+	disablenpc "Hangman";
+	disablenpc "Auto Disguise Event";
+	close;
+hangman:
+	next;
+	set $state,8;
+	announce "Hangman event is open.",bc_all;
+	delwaitingroom;
+	waitingroom "Event:Hangman",0;
+	disablenpc "Disguise Event";
+	disablenpc "Auto Disguise Event";
+	enablenpc "Hangman";
+	close;
+soccer:
+	next;
+	announce "Soccer Ball @ go 26.",bc_all;
+	monster "prt_in.gat",284,130,"Event",1792,1;
+	close;
+fabre:
+	next;
+	set $state,9;
+	announce "Fabre Event @ go 26.",bc_all;
+	delwaitingroom;
+	waitingroom "Event:Fabre Event",0;
+	close;
+
+yesoff:
+
+next;
+set $state,0;
+mes "[^3333FFJaeRO Warper^000000]";
+mes "Ok it is now turned ^FF0000OFF^000000.";
+delwaitingroom;
+waitingroom "No Event.",0;
+next;
+goto check;
+
+nooff:
+next;
+mes "[^3333FFJaeRO Warper^000000]";
+mes "Ok bye!";
+close;
+yeswarp:
+	if($state==0){
+		next;
+		mes "[^3333FFJaeRO Warper^000000]";
+		mes "There's no active";
+		close;	}
+	if($state==2){
+	warp"quiz_01",230,368;	}
+	if($state==3){
+	warp "guild_vs1",50,50;	}
+	if($state==4){
+	warp "06guild_01",50,50;	}
+	if($state==5){
+	warp "quiz_02",350,372;	}
+	if($state==6){
+	warp "quiz_02",55,84;	}
+	if($state==7){
+	warp "quiz_01",322,368;	}
+	if($state==8){
+	warp "quiz_01",322,368;	}
+	if($state==9){
+	warp "pvp_n_1-2",0,0;	}
+
+Onmobdead:
+	set $trava,getmapmobs("pvp_n_1-2");
+	set $trava, $trava - 1;
+	set @z, @z + 1; // +1 ???
+	if(@z == 21) {goto prize;
+end;
+
+prize:
+	killmonsterall "pvp_n_1-2";
+	announce "Fabre Trainer : "+strcharinfo(0)+" won. OMG. RAAAAAAAA",0;
+	getitem 674,1; // Prize ID ,How much
+
+	end;
+}
+OnWhisperGlobal:
+	if($state==0){	
+		next;
+		mes "[^3333FFJaeRO Warper^000000]";
+		mes "There's no active event.";
+		delwaitingroom;
+		waitingroom "No Event.",0;
+		close;	}
+	if($state==2){
+		initnpctimer;
+		announce "RFYL is closing in 30seconds.",bc_all;
+        	end;
+    		OnTimer24000:
+        	announce "Ok 5 seconds more.",bc_all;
+        	end;
+    		OnTimer25000:
+       		announce "4.",bc_all;
+        	end;
+    		OnTimer26000:
+        	announce "3.",bc_all;
+        	end;
+    		OnTimer27000:
+        	announce "2.",bc_all;
+        	end;
+    		OnTimer28000:
+        	announce "1.",bc_all;
+        	end;
+    		OnTimer29000:
+		stopnpctimer;
+
+		set $state,0;
+		announce "Event is closed.",bc_all;
+		delwaitingroom;
+		waitingroom "No Event.",0;
+		end;	}
+	if($state==3){
+		set $state,0;
+		announce "MVP is close.",bc_all;
+		delwaitingroom;
+		waitingroom "No Event.",0;
+		end;	}
+	if($state==4){
+		initnpctimer;
+		announce "LMS is closing in 30seconds.",bc_all;
+        	end;
+    		OnLMSTimer24000:
+        	announce "Ok 5 seconds more.",bc_all;
+        	end;
+    		OnLMSTimer25000:
+       		announce "4.",bc_all;
+        	end;
+    		OnLMSTimer26000:
+        	announce "3.",bc_all;
+        	end;
+    		OnLMSTimer27000:
+        	announce "2.",bc_all;
+        	end;
+    		OnLMSTimer28000:
+        	announce "1.",bc_all;
+        	end;
+    		OnLMSTimer29000:
+        	stopnpctimer;
+}
+	if($state==5){
+		initnpctimer;
+		announce "True or False is closing in 30seconds.",bc_all;
+        	end;
+    		OnTOFTimer24000:
+        	announce "Ok 5 seconds more.",bc_all;
+        	end;
+    		OnTOFTimer25000:
+       		announce "4.",bc_all;
+        	end;
+    		OnTOFTimer26000:
+        	announce "3.",bc_all;
+        	end;
+    		OnTOFTimer27000:
+        	announce "2.",bc_all;
+        	end;
+    		OnTOFTimer28000:
+        	announce "1.",bc_all;
+        	end;
+    		OnTOFTimer29000:
+        	stopnpctimer;
+}
+	if($state==6){
+		initnpctimer;
+		announce "Lucky Box is closing in 30seconds.",bc_all;
+        	end;
+    		OnLBTimer24000:
+        	announce "Ok 5 seconds more.",bc_all;
+        	end;
+    		OnLBTimer25000:
+       		announce "4.",bc_all;
+        	end;
+    		OnLBTimer26000:
+        	announce "3.",bc_all;
+        	end;
+    		OnLBTimer27000:
+        	announce "2.",bc_all;
+        	end;
+    		OnLBTimer28000:
+        	announce "1.",bc_all;
+        	end;
+    		OnLBTimer29000:
+        	stopnpctimer;
+}
+	if($state==7){
+		initnpctimer;
+		announce "Disguise Event is closing in 30seconds.",bc_all;
+        	end;
+    		OnDISTimer24000:
+        	announce "Ok 5 seconds more.",bc_all;
+        	end;
+    		OnDISTimer25000:
+       		announce "4.",bc_all;
+        	end;
+    		OnDISTimer26000:
+        	announce "3.",bc_all;
+        	end;
+    		OnDISTimer27000:
+        	announce "2.",bc_all;
+        	end;
+    		OnDISTimer28000:
+        	announce "1.",bc_all;
+        	end;
+    		OnDISTimer29000:
+        	stopnpctimer;
+}
+	if($state==8){
+		initnpctimer;
+		announce "Hangman is closing in 30seconds.",bc_all;
+        	end;
+    		OnHMTimer24000:
+        	announce "Ok 5 seconds more.",bc_all;
+        	end;
+    		OnHMTimer25000:
+       		announce "4.",bc_all;
+        	end;
+    		OnHMTimer26000:
+        	announce "3.",bc_all;
+        	end;
+    		OnHMTimer27000:
+        	announce "2.",bc_all;
+        	end;
+    		OnHMTimer28000:
+        	announce "1.",bc_all;
+        	end;
+    		OnHMTimer29000:
+        	stopnpctimer;
+}
+	if($state==9){
+		monster "pvp_n_1-2",0,0,"Event",1184,150,"Warp Manager::Onmobdead";
+			dispbottom "Summoned.";
+			set $state,0;
+			end;
+
+		
+}
+
+
+}
+
+
+//----------------------Normal Player---------------------------------
+else{
+if($state<=0){
+mes "[^3333FFJaeRO Warper^000000]";
+mes "Sorry. No events at this time.";
+emotion 17;
+close;
+}
+else{
+if($state==2){
+emotion 21;
+mes "[^3333FFJaeRO Warper^000000]";
+mes "There is an active event!";
+mes "Do you want to go to the event place?";
+menu "Yes, please.",warprfyl,"No, thanks.",nowarprfyl;
+
+warprfyl:
+warp "quiz_01",230,368;
+
+sc_end SC_ALL;
+end;
+nowarprfyl:
+close;
+}
+else{
+if($state==3){
+emotion 21;
+mes "[^3333FFJaeRO Warper^000000]";
+mes "There is an active event!";
+mes "Do you want to go to the event place?";
+menu "Yes, please.",warpmvp,"No, thanks.",nowarpmvp;
+
+warpmvp:
+warp "guild_vs1",50,50;
+
+sc_end SC_ALL;
+end;
+nowarpmvp:
+close;
+}
+else{
+if($state==4){
+emotion 21;
+mes "[^3333FFJaeRO Warper^000000]";
+mes "There is an active event!";
+mes "Do you want to go to the event place?";
+menu "Yes, please.",warplms,"No, thanks.",nowarplms;
+
+warplms:
+warp "06guild_01",50,50;
+
+sc_end SC_ALL;
+end;
+nowarplms:
+close;
+}
+if($state==5){
+emotion 21;
+mes "[^3333FFJaeRO Warper^000000]";
+mes "There is an active event!";
+mes "Do you want to go to the event place?";
+menu "Yes, please.",warptof,"No, thanks.",nowarptof;
+
+warptof:
+warp "quiz_02",350,372;
+
+sc_end SC_ALL;
+end;
+nowarptof:
+close;
+}
+if($state==6){
+emotion 21;
+mes "[^3333FFJaeRO Warper^000000]";
+mes "There is an active event!";
+mes "Do you want to go to the event place?";
+menu "Yes, please.",warpdice,"No, thanks.",nowarpdice;
+
+warpdice:
+warp "quiz_02",55,84;
+
+sc_end SC_ALL;
+end;
+nowarpdice:
+close;
+}
+if($state==7){
+emotion 21;
+mes "[^3333FFJaeRO Warper^000000]";
+mes "There is an active event!";
+mes "Do you want to go to the event place?";
+menu "Yes, please.",warpdis,"No, thanks.",nowarpdis;
+
+warpdis:
+switch(rand(1,2)){
+	case 1:
+		warp "quiz_01",313,368;
+
+		sc_end SC_ALL;
+		end;
+	case 2:
+		warp "quiz_01",330,368;
+
+		sc_end SC_ALL;
+		end;
+
+	}
+nowarpdis:
+close;
+}
+if($state==8){
+emotion 21;
+mes "[^3333FFJaeRO Warper^000000]";
+mes "There is an active event!";
+mes "Do you want to go to the event place?";
+menu "Yes, please.",warphang,"No, thanks.",nowarphang;
+
+warphang:
+switch(rand(1,2)){
+	case 1:
+		warp "quiz_01",313,368;
+
+		sc_end SC_ALL;
+		end;
+	case 2:
+		warp "quiz_01",330,368;
+
+		sc_end SC_ALL;
+		end;
+
+	}
+
+end;
+nowarphang:
+close;
+}
+if($state==9){
+emotion 21;
+mes "[^3333FFJaeRO Warper^000000]";
+mes "There is an active event!";
+mes "Do you want to go to the event place?";
+menu "Yes, please.",warpfabre,"No, thanks.",nowarpfabre;
+
+warpfabre:
+set @z,1;
+warp "pvp_n_1-2",0,0;
+
+sc_end SC_ALL;
+end;
+nowarpfabre:
+close;
+}}}}}}
+
+/////////////////////////////Fabre event////////////////////////////////////////////
+//pvp_n_1-2,0,0,0	script	Fabre Trainer	-1,{
+//
+//}
+//------------------------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------Lucky Box (Dice)-----------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------------
+quiz_02,55,85,4	script	Lucky Box Event Manager	402,{
+	if (getgmlevel()<2) goto OUT;
+	mes "[Lucky Box Event Manager]";
+	mes "What do you want to do?";
+	switch(select("Select Number")){
+	
+	case 1:
+		next;
+		mes "[Lucky Box Event Manager]";
+		mes "Select Number.";	
+		switch(select("1","2","3","4")){
+			case 1:
+				next;
+				mes "[Lucky Box Event Manager]";
+				mes "1?";
+				next;
+				mes "[Lucky Box Event Manager]";
+				mes "Sure?";
+				next;
+				switch(select("Yes","No")){
+				case 1:
+					areawarp "quiz_02",33,73,41,52, "prontera",155,166;	//#1
+					areawarp "quiz_02",45,73,53,52, "quiz_02",55,84;	//#2
+					areawarp "quiz_02",57,73,65,52, "quiz_02",55,84;	//#3
+					areawarp "quiz_02",69,73,77,52, "quiz_02",55,84;	//#4
+					close;
+				case 2:
+					close;
+				}
+			case 2:
+				next;
+				mes "[Lucky Box Event Manager]";
+				mes "2?";
+				next;
+				mes "[Lucky Box Event Manager]";
+				mes "Sure?";
+				next;
+				switch(select("Yes","No")){
+				case 1:
+					areawarp "quiz_02",33,73,41,52, "quiz_02",55,84;	//#1
+					areawarp "quiz_02",45,73,53,52, "prontera",155,166;	//#2
+					areawarp "quiz_02",57,73,65,52, "quiz_02",55,84;	//#3
+					areawarp "quiz_02",69,73,77,52, "quiz_02",55,84;	//#4
+					close;
+				case 2:
+					close;
+				}
+			case 3:
+				next;
+				mes "[Lucky Box Event Manager]";
+				mes "3?";
+				next;
+				mes "[Lucky Box Event Manager]";
+				mes "Sure?";
+				next;
+				switch(select("Yes","No")){
+				case 1:
+					areawarp "quiz_02",33,73,41,52, "quiz_02",55,84;	//#1
+					areawarp "quiz_02",45,73,53,52, "quiz_02",55,84;	//#2
+					areawarp "quiz_02",57,73,65,52, "prontera",155,166;	//#3
+					areawarp "quiz_02",69,73,77,52, "quiz_02",55,84;	//#4
+					close;
+				case 2:
+					close;
+				}
+			case 4:
+				next;
+				mes "[Lucky Box Event Manager]";
+				mes "1?";
+				next;
+				mes "[Lucky Box Event Manager]";
+				mes "Sure?";
+				next;
+				switch(select("Yes","No")){
+				case 1:
+					areawarp "quiz_02",33,73,41,52, "quiz_02",55,84;	//#1
+					areawarp "quiz_02",45,73,53,52, "quiz_02",55,84;	//#2
+					areawarp "quiz_02",57,73,65,52, "quiz_02",55,84;	//#3
+					areawarp "quiz_02",69,73,77,52, "prontera",155,166;	//#4
+					close;
+				case 2:
+					close;
+				}
+		}
+	}
+OUT:
+	end;
+}
+quiz_02,37,80,0	warp	warp1	0,0,quiz_02,37,73
+quiz_02,49,80,0	warp	warp2	0,0,quiz_02,49,73
+quiz_02,61,80,0	warp	warp3	0,0,quiz_02,61,73
+quiz_02,73,80,0	warp	warp4	0,0,quiz_02,73,73
+quiz_02	mapflag	noskill
+quiz_02	mapflag	nosave	SavePoint
+quiz_02	mapflag	noteleport
+quiz_02	mapflag	nowarp
+quiz_02	mapflag	nomemo
+quiz_02	mapflag	nodrop
+quiz_02	mapflag	notrade
+quiz_02	mapflag	noreturn
+quiz_01	mapflag	noskill
+quiz_01	mapflag	nosave	SavePoint
+quiz_01	mapflag	noteleport
+quiz_01	mapflag	nowarp
+quiz_01	mapflag	nomemo
+quiz_01	mapflag	nodrop
+quiz_01	mapflag	notrade
+quiz_01	mapflag	noreturn
+quiz_01	mapflag	restricted	6
+//06guild_01	mapflag	restricted	5
+06guild_01	mapflag	pvp_noparty
+06guild_01	mapflag	pvp_noguild
+06guild_01	mapflag	noskill
+06guild_01	mapflag	nosave	SavePoint
+06guild_01	mapflag	noteleport
+06guild_01	mapflag	nowarp
+06guild_01	mapflag	nomemo
+06guild_01	mapflag	noreturn
+06guild_01	mapflag	nodrop
+06guild_01	mapflag	notrade
+guild_vs1	mapflag	nosave	SavePoint
+guild_vs1	mapflag	noteleport
+guild_vs1	mapflag	nowarp
+guild_vs1	mapflag	nomemo
+guild_vs1	mapflag	noskill
+guild_vs1	mapflag	noreturn
+guild_vs5	mapflag	nowarp
+//prontera	mapflag	novending
+pvp_n_1-2	mapflag	noskill
+pvp_n_1-2	mapflag	nosave	SavePoint
+pvp_n_1-2	mapflag	noteleport
+pvp_n_1-2	mapflag	nowarp
+pvp_n_1-2	mapflag	nomemo
+pvp_n_1-2	mapflag	noreturn
+guild_vs5	mapflag	nosave	SavePoint

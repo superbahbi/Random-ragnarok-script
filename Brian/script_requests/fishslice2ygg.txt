@@ -1,0 +1,34 @@
+// http://www.eathena.ws/board/index.php?showtopic=223624
+// The player will going to decide how much "Superb Fish Slice/13550" he wants to trade for "Yggdrasilberry/607"
+// 1 SuperbFishSlice = 1 Yggdrasilberry
+
+poring_c01,100,100,0	script	FishSlice2Ygg	910,{
+	mes "I can exchange^0000FF Superb Fish Slices^000000 for^0000FF Yggdrasil Berries^000000 (1 for 1).";
+	mes " ";
+	if (countitem(14524)==0) {
+		mes "Come back when you have some Superb Fish Slices!";
+		close;
+	}
+	mes "How many would you like to exchange?";
+	switch(select("As many as possible ("+ countitem(14524) +"):Input an amount:Cancel")) {
+	case 1:
+		set .@amt, countitem(14524);
+		break;
+	case 2:
+		input .@amt;
+		if (.@amt < 1) {
+			mes "^FF0000Enter a positive amount.";
+			close;
+		} else if (.@amt > countitem(14524)) {
+			mes "^FF0000You only have "+ countitem(14524) +" Superb Fish "+ ((countitem(14524)>1) ? "Slices":"Slice") +".";
+			close;
+		}
+		break;
+	default:
+		close;
+	}
+	delitem 14524, .@amt;	// Superb Fish Slice
+	getitem 607, .@amt;		// Yggdrasil Berry
+	mes "Here are your "+ .@amt +" Ygg "+ ((.@amt>1) ? "Berries":"Berry") +"!";
+	close;
+}

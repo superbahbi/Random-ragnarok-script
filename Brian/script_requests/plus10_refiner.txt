@@ -1,0 +1,101 @@
+// http://www.eathena.ws/board/index.php?showtopic=235963
+// item#7179(proof of donation)
+// you need 5 of this and you need to trade it to the +10 refiner if its below 4 Close The NPC
+// and you need to pick what to upgrade to +10
+// Like your Armor, Muffler Etc.
+
+prontera,155,188,0	script	Plus_10_Refiner	910,{
+	setarray .@position$[1], "Head","Body","Left hand","Right hand","Robe","Shoes","Accessory 1","Accessory 2","Head 2","Head 3";
+	for( set .@i,1; .@i <= 10; set .@i,.@i+1 ) {
+		if ( getequipisequiped(.@i) )
+			set .@menu$, .@menu$ + .@position$[.@i] + "-" + "[" + getequipname(.@i) + "]";
+		set .@menu$, .@menu$ + ":";
+	}
+	set .@part,select(.@menu$);
+	
+	if (!getequipisequiped(.@part)) {
+		mes "[Refiner]";
+		mes "You're not wearing";
+		mes "anything there that";
+		mes "I can refine.";
+		emotion e_an;
+		close;
+	}
+	//Check if the item is refinable...
+	if (!getequipisenableref(.@part)) {
+		mes "[Refiner]";
+		mes "I don't think I can";
+		mes "refine this item at all...";
+		close;
+	}
+	//Check if the item is identified... (Don't know why this is in here... but kept it anyway)
+	if (!getequipisidentify(.@part)) {
+		mes "[Refiner]";
+		mes "You can't refine this";
+		mes "if you haven't appraised";
+		mes "it first. Make sure your";
+		mes "stuff is identified before";
+		mes "I can refine it.";
+		close;
+	}
+	//Check to see if the items is already +10
+	if (getequiprefinerycnt(.@part) >= 10) {
+		mes "[Refiner]";
+		mes "I can't refine this";
+		mes "any more. This is as";
+		mes "refined as it gets!";
+		close;
+	}
+	set .@refineitemid, getequipid(.@part); // save id of the item
+	set .@refinerycnt, getequiprefinerycnt(.@part); //save refinery count
+	set .@material,7179; // Proof of Donation
+	
+	mes "[Refiner]";
+	mes "To refine this to +10,";
+	mes "I need 4 ^003366"+getitemname(.@material)+"^000000s.";
+	mes "Do you really wish to continue?";
+	if (select("Yes:No") == 2) {
+		mes "[Refiner]";
+		mes "Yeah...";
+		mes "There's no need to";
+		mes "rush. Take your time.";
+		close;
+	}
+	if (countitem(.@material) < 4) {
+		mes "[Refiner]";
+		mes "You don't seem to have";
+		mes "enough "+getitemname(.@material)+"...";
+		mes "Go get some more. I'll be";
+		mes "here all day if you need me.";
+		close;
+	}
+	
+	delitem .@material,4;
+	while(getequiprefinerycnt(.@part) < 10) {
+		next;
+		if (getequipisequiped(.@part) == 0) { // hacker has removed the item (not changed, why?)
+			mes "[Refiner]";
+			mes "Look here... you don't have any Items on...";
+			close;
+		}
+		if (getequipid(.@part) != .@refineitemid) { // hacker has changed the item
+			mes "[Refiner]";
+			mes "Wait a second...";
+			mes "Do you think I'm stupid?!";
+			mes "You switched the item while I wasn't looking! Get out of here!";
+			emotion e_an;
+			close;
+		}
+		successrefitem .@part;
+		mes "Clang, clang!!!";
+		set .@refined, .@refined + 1;
+		for( set .@i, 1; .@i <= .@refined; set .@i, .@i+1 ) {
+			mes "^009500     SUCCESS !^000000";
+		}
+		emotion e_heh;
+	}
+	mes " ";
+	mes "All finished... Come again soon.";
+	emotion e_no1;
+	close;
+}

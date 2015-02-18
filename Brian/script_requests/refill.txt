@@ -1,0 +1,176 @@
+//===== eAthena Script =======================================
+//= Item Refiller
+//===== By: ==================================================
+//= Brian
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: =====================================
+//= eAthena SVN + ToastOfDoom's String Commands Package
+//= http://www.eathena.ws/board/index.php?showtopic=204976
+//===== Description: =========================================
+//= 1. setup a list of items & amounts
+//= 2. one-click to refill those items
+//===== Additional Comments: =================================
+//= http://www.eathena.ws/board/index.php?showtopic=279904
+//============================================================
+
+poring_c01,105,100,0	script	Refill NOW	910,{
+	doevent "refill::OnRefill";
+	end;
+}
+
+poring_c01,100,100,0	script	Refill Setup::refill	837,{
+	if (getarraysize(.usable) == 0) donpcevent strnpcinfo(3)+"::OnInit";
+	
+	mes "[Refill Setup]";
+	switch(select((refill_list$ == "") ? "Create a refill list" : 
+	    ":View my current refill list:Edit my refill list:^FF0000Delete^000000 my refill list")) {
+	case 2: // VIEW
+M_view:
+		explode .@items$, refill_list$, ",";
+		for (set .@i,0; .@i<getarraysize(.@items$); set .@i,.@i+1) {
+			explode .@part$, .@items$[.@i], ":";
+			mes .@part$[1] + " " + getitemname(atoi(.@part$[0]));
+			set .@total_weight, .@total_weight + getiteminfo(atoi(.@part$[0]),6)*atoi(.@part$[1]);
+		}
+		mes "Total Weight : ^" + ((.@total_weight <= MaxWeight) ? "008000" : "FF0000") + .@total_weight/10 + "^000000 / " + MaxWeight/10;
+		break;
+	case 3: // EDIT - load their refill list first
+		explode .@items$, refill_list$, ",";
+		for (set .@i,0; .@i<getarraysize(.@items$); set .@i,.@i+1) {
+			explode .@part$, .@items$[.@i], ":";
+			setd ".@"+.@part$[0], .@part$[1];
+		}
+	case 1: // CREATE
+		mes "What item(s) do you want?";
+		select("Usable Items:Other Items:^008000All done, save my refill list^000000");
+		while (@menu <= 2) {
+			switch(@menu) {
+			// Usable Items
+			case 1:
+				set .@menu$, "";
+				for (set .@i,0; .@i<getarraysize(.usable); set .@i,.@i+1)
+					set .@menu$, .@menu$ + (getd(".@"+.usable[.@i]) ? getd(".@"+.usable[.@i]) : "--") +" "+ getitemname(.usable[.@i])+":";
+				select(.@menu$ + "<< Back");
+				while (@menu <= getarraysize(.usable)) {
+					set .@item_id, .usable[@menu-1];
+					mes "How many "+getitemname(.@item_id)+"?";
+					input .@amt,0,30000;
+					setd ".@"+.@item_id, .@amt;
+					// refresh menu
+					set .@menu$, "";
+					for (set .@i,0; .@i<getarraysize(.usable); set .@i,.@i+1)
+						set .@menu$, .@menu$ + (getd(".@"+.usable[.@i]) ? getd(".@"+.usable[.@i]) : "--") +" "+ getitemname(.usable[.@i])+":";
+					select(.@menu$ + "<< Back");
+				};
+				break;
+			// Other Items
+			case 2:
+				set .@menu$, "";
+				for (set .@i,0; .@i<getarraysize(.other); set .@i,.@i+1)
+					set .@menu$, .@menu$ + (getd(".@"+.other[.@i]) ? getd(".@"+.other[.@i]) : "--") +" "+ getitemname(.other[.@i])+":";
+				select(.@menu$ + "<< Back");
+				while (@menu <= getarraysize(.other)) {
+					set .@item_id, .other[@menu-1];
+					mes "How many "+getitemname(.@item_id)+"?";
+					input .@amt,0,30000;
+					setd ".@"+.@item_id, .@amt;
+					// refresh menu
+					set .@menu$, "";
+					for (set .@i,0; .@i<getarraysize(.other); set .@i,.@i+1)
+						set .@menu$, .@menu$ + (getd(".@"+.other[.@i]) ? getd(".@"+.other[.@i]) : "--") +" "+ getitemname(.other[.@i])+":";
+					select(.@menu$ + "<< Back");
+				};
+				break;
+			}
+			select("Usable Items:Other Items:^008000All done, save my refill list^000000");
+		};
+		
+		// SAVE
+		// concatenate into string --> item:amt,item:amt,
+		for (set .@i,0; .@i<getarraysize(.usable); set .@i,.@i+1) {
+			if (getd(".@"+.usable[.@i]))
+				set .@refill_list$, .@refill_list$ + .usable[.@i]+":"+getd(".@"+.usable[.@i])+",";
+		}
+		for (set .@i,0; .@i<getarraysize(.other); set .@i,.@i+1) {
+			if (getd(".@"+.other[.@i]))
+				set .@refill_list$, .@refill_list$ + .other[.@i]+":"+getd(".@"+.other[.@i])+",";
+		}
+		if (getstrlen(.@refill_list$) > 255) {
+			mes "I'm sorry, your refill list is too long. " + 
+			    "The limit is 25~42 items."; // 6*42=252 ~ 10*25=250
+		} else if (getstrlen(.@refill_list$) > 4) {
+			set refill_list$, .@refill_list$;
+			mes "^008000Your refill list has been saved!^000000";
+			next;
+			mes "[Refill Setup]";
+			goto M_view; // show them their list
+		} else {
+			mes "You did not select any items.";
+		}
+		break;
+	case 4: // DELETE
+		set refill_list$, "";
+		mes "Your refill list has been deleted.";
+		break;
+	}
+	close;
+
+OnRefill:
+	// parse their refill list
+	explode .@items$, refill_list$, ",";
+	for (set .@i,0; .@i<getarraysize(.@items$); set .@i,.@i+1) {
+		explode .@part$, .@items$[.@i], ":";
+		setd ".@"+.@part$[0], (.@part$[1]);
+	}
+	
+	for (set .@i,0; .@i<getarraysize(.usable); set .@i,.@i+1) {
+		set .@amt, getd(".@"+.usable[.@i]);
+		if (.@amt && countitem(.usable[.@i])<.@amt) {
+			set .@get_amt, .@amt-countitem(.usable[.@i]);
+			if (checkweight(.usable[.@i],.@get_amt)) {
+				getitem .usable[.@i],.@get_amt;
+				set .@refilled$, .@refilled$ + .@get_amt+" "+getitemname(.usable[.@i])+", ";
+			} else {
+				set .@overweight,1;
+				break;
+			}
+		}
+	}
+	for (set .@i,0; .@i<getarraysize(.other); set .@i,.@i+1) {
+		set .@amt, getd(".@"+.other[.@i]);
+		if (.@amt && countitem(.other[.@i])<.@amt) {
+			set .@get_amt, .@amt-countitem(.other[.@i]);
+			if (checkweight(.other[.@i],.@get_amt)) {
+				getitem .other[.@i],.@get_amt;
+				set .@refilled$, .@refilled$ + .@get_amt+" "+getitemname(.other[.@i])+", ";
+			} else {
+				set .@overweight,1;
+				break;
+			}
+		}
+	}
+	if (.@overweight) {
+		dispbottom "You are overweight or carrying too many items.";
+		emotion e_swt,1;
+	} else if (.@refilled$ != "") {
+		dispbottom "Refilled " + substr(.@refilled$,0,getstrlen(.@refilled$)-3) + " !";
+		emotion e_thx,1;
+	} else { // already have all items in refill list
+		emotion e_no1,1;
+	}
+	end;
+
+OnInit:
+	setarray .usable[0],
+		504, // White_Potion
+		505, // Blue_Potion
+		12016, // Speed_Up_Potion
+		0; // OR just delete this line and end the previous line with a semi-colon
+	setarray .other[0],
+		7136, // Acid_Bottle
+		7135, // Fire_Bottle
+		678, // Poison_Bottle
+		0;
+	end;
+}

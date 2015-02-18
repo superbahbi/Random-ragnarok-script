@@ -1,0 +1,62 @@
+// http://www.eathena.ws/board/index.php?showtopic=231853
+// Can anyone make me a simple npc script that checks and displays all castle 
+// economies & def and that can be adjusted/edited by GM 99. Only top 8 agits 
+// displayed will do and displayed in descending order with 
+// castle name - guild GM - economy - def.
+
+poring_c01,100,100,0	script	Guild_Castle_Info	910,{
+	if (getgmlevel()<99) end;
+	
+	setarray .@maps$[0], "aldeg_cas01","aldeg_cas02","aldeg_cas03","aldeg_cas04","aldeg_cas05",
+	                     "gefg_cas01","gefg_cas02","gefg_cas03","gefg_cas04","gefg_cas05",
+	                     "payg_cas01","payg_cas02","payg_cas03","payg_cas04","payg_cas05",
+	                     "prtg_cas01","prtg_cas02","prtg_cas03","prtg_cas04","prtg_cas05",
+	                     "nguild_alde","nguild_gef","nguild_pay","nguild_prt",
+	                     "schg_cas01","schg_cas02","schg_cas03","schg_cas04","schg_cas05",
+	                     "arug_cas01","arug_cas02","arug_cas03","arug_cas04","arug_cas05";
+	
+	// castle_id, master, economy, defense
+	query_sql "SELECT guild_castle.castle_id, guild.`master`, guild_castle.economy, guild_castle.defense FROM guild_castle LEFT JOIN guild ON guild_castle.guild_id=guild.guild_id WHERE guild_castle.guild_id", .@castle_id,.@master$,.@economy,.@defense;
+	
+	// generate menu
+	for( set .@i,0; .@i<getarraysize(.@castle_id); set .@i,.@i+1 )
+		set .@menu$, .@menu$ + .@maps$[.@castle_id[.@i]]+" - "+.@master$[.@i]+" - "+.@economy[.@i]+" - "+.@defense[.@i] +":";
+	// pick a castle
+	set .@castle$, .@maps$[.@castle_id[select(.@menu$) -1]];
+	
+	switch(select("View info:Change economy:Change defense")) {
+	case 1:
+		// use 'getcastledata' for the most updated info
+		mes "Castle Name: ^0000FF"+getcastlename(.@castle$)+" ("+.@castle$+")^000000";
+		mes "Guild Name: ^0000FF"+getguildname(getcastledata(.@castle$,1))+"^000000";
+		mes "Guild Master: ^0000FF"+getguildmaster(getcastledata(.@castle$,1))+"^000000";
+		mes "Economy: ^0000FF"+getcastledata(.@castle$,2)+"^000000";
+		mes "Defense: ^0000FF"+getcastledata(.@castle$,3)+"^000000";
+		break;
+	case 2:
+		mes "[^0000FF"+getcastlename(.@castle$)+" ("+.@castle$+")^000000]";
+		mes "Economy: ^0000FF"+getcastledata(.@castle$,2)+"^000000";
+		mes "Enter new Economy:";
+		input .@eco;
+		if( .@eco<0 || .@eco>100) {
+			mes "^FF0000Economy can be between 0-100";
+			close;
+		}
+		setcastledata .@castle$,2, .@eco;
+		mes "Economy: ^0000FF"+getcastledata(.@castle$,2)+"^000000";
+		break;
+	case 3:
+		mes "[^0000FF"+getcastlename(.@castle$)+" ("+.@castle$+")^000000]";
+		mes "Defense: ^0000FF"+getcastledata(.@castle$,3)+"^000000";
+		mes "Enter new Defense:";
+		input .@def;
+		if( .@def<0 || .@def>100) {
+			mes "^FF0000Defense can be between 0-100";
+			close;
+		}
+		setcastledata .@castle$,3, .@def;
+		mes "Defense: ^0000FF"+getcastledata(.@castle$,3)+"^000000";
+		break;
+	}
+	close;
+}

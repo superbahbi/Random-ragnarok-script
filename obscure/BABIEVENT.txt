@@ -1,0 +1,312 @@
+//pm in game..
+//npc:bahbi
+//npc:reward
+//npc:lms
+//npc:ryfl
+//npc:mvp
+-	script	OnPCLoginEvent	-1,{
+OnPCLoginEvent:
+	if (getgmlevel()<2) goto OUT;
+	atcommand "@speed 0";
+	atcommand "@monsterignore";
+	end;
+OUT:
+	end;
+}
+
+-	script	init	-1,{
+OnInit:
+	disablenpc "RFYL Gate";
+	disablenpc "MVP Gate";
+	disablenpc "LMS Gate";
+
+}
+-	script	bahbi	-1,{
+OnWhisperGlobal:
+	if (getgmlevel()<2) goto OUT;
+	mes "Select Event";
+	cutin "moc_soldier",2;
+	close2;
+	switch(Select("RFYL","MVP","LMS")) {
+
+	case 1:
+		mes "RFYL?";
+		close2;
+		Switch(Select("Close","Open")) {
+		
+		case 1:
+			disablenpc "RFYL Gate";
+			cutin "",255;
+			close;
+
+		case 2:
+			mes "Sure?";
+			next;
+			enablenpc "RFYL Gate";
+			announce "RFYL is open.",bc_all;
+			warp "quiz_01",64,183;
+			close;
+		}
+
+	case 2:
+		mes "MVP?";
+		close2;
+		Switch(Select("Close","Open")) {
+
+		case 1:
+			disablenpc "MVP Gate";
+			cutin "",255;
+			close;
+
+		case 2:
+			mes "Sure?";
+			next;
+			enablenpc "MVP Gate";
+			announce "MVP is open.",bc_all;
+			warp "guild_vs1",50,50;
+			close;
+		}
+
+	case 3:
+		mes "LMS?";
+		close2;
+		Switch(Select("Close","Open")) {
+	
+		case 1:
+			disablenpc "LMS Gate";
+			cutin "",255;
+			close;
+
+		case 2:
+			mes "Sure?";
+			next;
+			enablenpc "LMS Gate";
+			announce "LMS is open.",bc_all;
+			warp "06guild_01",50,50;
+			close;
+		}
+	}
+OUT:
+	end;
+}
+//gate warper sa go 0 
+prontera,154,174,4	script	MVP Gate	814,{
+	warp "guild_vs1",50,50;
+	end;
+}
+prontera,155,174,4	script	RFYL Gate	814,{
+	warp "quiz_01",64,183;
+	end;
+}
+prontera,156,174,4	script	LMS Gate	814,{
+	warp "06guild_01",50,50;
+	end;
+}
+//inside RFYL Arena
+-	script	rfyl	402,{
+OnWhisperGlobal:
+	if (getgmlevel()<2) goto OUT;
+	mes "RFYL";
+	Switch(Select("Close","Re-Open")) {
+		
+	case 1:
+		mes "Sure?";
+		close2;
+
+		initnpctimer;
+		announce "RFYL is closing in 30seconds.",bc_all;
+        	end;
+    		OnTimer24000:
+        	announce "Ok 5 seconds more.",bc_all;
+        	end;
+    		OnTimer25000:
+       		announce "4.",bc_all;
+        	end;
+    		OnTimer26000:
+        	announce "3.",bc_all;
+        	end;
+    		OnTimer27000:
+        	announce "2.",bc_all;
+        	end;
+    		OnTimer28000:
+        	announce "1.",bc_all;
+        	end;
+    		OnTimer29000:
+        	stopnpctimer;
+
+		disablenpc "RFYL Gate";
+		announce "RFYL is close.",bc_all;
+		end;
+
+	case 2:
+		enablenpc "RFYL Gate";
+		announce "Re-Open RFYL.",bc_all;
+		close;
+	}
+
+OUT:
+	end;
+}
+//inside LMS Arena
+-	script	lms	-1,{
+OnWhisperGlobal:
+	if (getgmlevel()<2) goto OUT;
+	mes "LMS";
+	Switch(Select("Close","Re-Open")) {
+	
+	case 1:
+		mes "Sure?";
+		close2;
+
+		initnpctimer;
+		announce "LMS is closing in 30seconds.",bc_all;
+        	end;
+    		OnTimer24000:
+        	announce "Ok 5 seconds more.",bc_all;
+        	end;
+    		OnTimer25000:
+        	announce "4.",bc_all;
+        	end;
+    		announce "3.",bc_all;
+      		end;
+    		OnTimer27000:
+        	announce "2.",bc_all;
+        	end;
+    		OnTimer28000:
+        	announce "1.",bc_all;
+        	end;
+    		OnTimer29000:
+        	stopnpctimer;
+
+		disablenpc "LMS Gate";
+		announce "LMS is close.",bc_all;
+		end;
+
+	case 2:
+		enablenpc "LMS Gate";
+		announce "Re-Open LMS.",bc_all;
+		close;
+	}
+OUT:
+	end;
+}
+//inside MVP arena
+-	script	mvp	402,{
+OnWhisperGlobal:
+	if (getgmlevel()<2) goto OUT;
+	mes "MVP";
+	Switch(Select("Close","Summon1","Summon2","Summon3","Re-Open")) {
+	
+	case 1:
+		mes "Sure?";
+		close2;
+
+		initnpctimer;
+		announce "MVP is closing in 30seconds.",bc_all;
+        	end;
+    		OnTimer24000:
+        		announce "Ok 5 seconds more.",bc_all;
+        		end;
+    		OnTimer25000:
+        		announce "4.",bc_all;
+        		end;
+    		OnTimer26000:
+        		announce "3.",bc_all;
+       			end;
+    		OnTimer27000:
+        		announce "2.",bc_all;
+        		end;
+    		OnTimer28000:
+        		announce "1.",bc_all;
+        		end;
+    		OnTimer29000:
+			stopnpctimer;
+
+			disablenpc "MVP Gate";
+			announce "MVP is close.",bc_all;
+			end;
+
+
+	case 2:
+		atcommand "@skillon";
+		announce "Summoning...",bc_map;
+		close2;
+		sleep2 5000;
+		monster "guild_vs1.gat",0,0,"MVP1",1086,1;
+		monster "guild_vs1.gat",0,0,"MVP2",1147,1;
+		monster "guild_vs1.gat",0,0,"MVP3",1511,1;
+		monster "guild_vs1.gat",0,0,"MVP4",1159,1;
+		monster "guild_vs1.gat",0,0,"MVP5",1688,1;
+		end;
+
+	case 3:
+		atcommand "@skillon";
+		announce "Summoning...",bc_map;
+		close2;
+		sleep2 5000;
+		monster "guild_vs1.gat",0,0,"MVP6",1086,1;
+		monster "guild_vs1.gat",0,0,"MVP7",1147,1;
+		monster "guild_vs1.gat",0,0,"MVP8",1511,1;
+		monster "guild_vs1.gat",0,0,"MVP9",1159,1;
+		monster "guild_vs1.gat",0,0,"MVP10",1688,1;
+		end;
+	case 4:
+		set .MyMobs,5;
+		atcommand "@skillon";
+		announce "Summoning...",bc_map;
+		close2;
+		sleep2 5000;
+		monster "guild_vs1.gat",0,0,"MVP11",1312,1,"mvp::OnMVPKilled";
+		monster "guild_vs1.gat",0,0,"MVP12",1708,1,"mvp::OnMVPKilled";
+		monster "guild_vs1.gat",0,0,"MVP13",1734,1,"mvp::OnMVPKilled";
+		monster "guild_vs1.gat",0,0,"MVP14",1751,1,"mvp::OnMVPKilled";
+		monster "guild_vs1.gat",0,0,"MVP15",1751,1,"mvp::OnMVPKilled";
+		end;
+
+		OnMVPKilled:
+			set .MyMobs,.MyMobs-1;
+			if (.MyMobs < 1) {
+			announce "Ok! Done...",bc_map;
+			sleep 10000;
+			atcommand "@doommap";
+			}
+			end;
+
+	
+	case 5:
+		enablenpc "MVP Gate";
+		announce "Re-Open MVP.",bc_all;
+		close;
+	}
+OUT:
+	end;
+}
+-	script	reward	-1,{
+OnWhisperGlobal:
+	if (getgmlevel()<2) goto OUT;
+	input .reciever$;
+	charcommand "#item 7227 1 " +.reciever$;
+	announce ""+strcharinfo(0)+": Event Winner is "+.reciever$+".",bc_all;
+	end;
+
+OUT:
+	end;
+}
+quiz_01	mapflag	noskill
+quiz_01	mapflag	nosave	SavePoint
+quiz_01	mapflag	noteleport
+quiz_01	mapflag	nowarp
+quiz_01	mapflag	nomemo
+quiz_01	mapflag	noreturn
+06guild_01	mapflag	noskill
+06guild_01	mapflag	nosave	SavePoint
+06guild_01	mapflag	noteleport
+06guild_01	mapflag	nowarp
+06guild_01	mapflag	nomemo
+06guild_01	mapflag	noreturn
+guild_vs1	mapflag	nosave	SavePoint
+guild_vs1	mapflag	noteleport
+guild_vs1	mapflag	nowarp
+guild_vs1	mapflag	nomemo
+guild_vs1	mapflag	noskill
+guild_vs1	mapflag	noreturn

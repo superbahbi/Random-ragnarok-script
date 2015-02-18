@@ -1,0 +1,52 @@
+// http://www.eathena.ws/board/index.php?showtopic=216320
+// Hello, I am requesting an NPC that trades zeny to ACCOUNTS.
+
+poring_c01,100,100,0	script	ZenyTransfer	910,{
+	mes "Enter the char's name:";
+	input .@name$;
+	query_sql "SELECT `char_id`,`account_id`,`name` FROM `char` WHERE `name` = '"+escape_sql(.@name$)+"'", .@char_id,.@account_id,.@name$;
+	if (!.@account_id) {
+		mes "^FF0000     Char name does not exist.";
+		close;
+	} else if (.@char_id==getcharid(0)) {
+		mes "Why would you send zeny to yourself?";
+		close;
+	}
+	mes "^0000FF     " + .@name$ + "^000000";
+	
+	mes "Send how much zeny?";
+	input .@amt;
+	if (.@amt < 1) {
+		mes "^0000FFEnter a positive number.";
+		close;
+	} else if (.@amt > Zeny) {
+		mes "^0000FFYou do not have that much zeny. The max you can send is: "+Zeny;
+		close;
+	}
+	mes "^0000FF     " + .@amt + "^000000";
+	
+	// save their Account ID and name
+	set .@AID, playerattached();
+	set .@send_name$, strcharinfo(0);
+	
+	// subtract their zeny
+	set Zeny, Zeny - .@amt;
+	// transfer the money
+	if (attachrid(.@account_id)) {
+		if (getcharid(0)==.@char_id) {
+			// if they are logged in, on the right char
+			set Zeny, Zeny + .@amt;
+			dispbottom .@send_name$ + " sent you " + .@amt + " zeny!";
+		} else {
+			// logged in, but on wrong char
+			query_sql "UPDATE `char` SET `zeny`=`zeny`+'"+.@amt+"' WHERE `char_id`='"+.@char_id+"'";
+		}
+	} else {
+		// if they are offline, query_sql
+		query_sql "UPDATE `char` SET `zeny`=`zeny`+'"+.@amt+"' WHERE `char_id`='"+.@char_id+"'";
+	}
+	
+	attachrid(.@AID);
+	mes "Zeny transferred successfully!";
+	close;
+}

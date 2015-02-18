@@ -1,0 +1,67 @@
+// http://www.eathena.ws/board/index.php?showtopic=216586
+// I need a NPC than muting to player if his is online or offline...
+
+poring_c01,100,100,0	script	MutePlayer	910,{
+	if (getgmlevel() < 80) end;
+	
+	mes "Enter the char's name:";
+	input .@name$;
+	query_sql "SELECT `char_id`,`account_id`,`name` FROM `char` WHERE `name` = '"+escape_sql(.@name$)+"'", .@char_id,.@account_id,.@name$;
+	if (!.@account_id) {
+		mes "^FF0000     Char name does not exist.";
+		close;
+	}
+	mes "How many minutes?";
+	input .@manner;
+	mes " ";
+	mes "Mute^0000FF " + .@name$ + "^000000 for^0000FF " + .@manner + "^000000 minutes?";
+	if(select("Yes:No")==2) close;
+	
+	if ( isloggedin(.@account_id,.@char_id) ) {
+		atcommand "@mute "+.@manner+" "+.@name$;
+	} else {
+		set .@val1, getbattleflag("manner_system");
+		
+		// update char's `manner` column
+		query_sql "UPDATE `char` SET `manner` = `manner`-"+.@manner+" WHERE `char_id`="+.@char_id;
+		
+		// remove previous mutes (just in case)
+		query_sql "DELETE FROM `sc_data` WHERE `char_id`="+.@char_id+" AND `type`=106";
+		// sc_start(SC_NOCHAT) - the server handles this in 60 seconds intervals
+		query_sql "INSERT INTO `sc_data` (`account_id`,`char_id`,`type`,`tick`,`val1`) VALUES ("+.@account_id+","+.@char_id+",106,60000,"+.@val1+")";
+	}
+	mes "Player muted.";
+	close;
+
+OnWhisperGlobal:
+	if (getgmlevel() < 80) end;
+	
+	set .@manner, atoi(@whispervar0$);
+	set .@name$, @whispervar1$;
+	
+	if (.@manner<1 || .@name$=="") {
+		dispbottom "Usage: <minutes>#<char name>";
+		end;
+	}
+	query_sql "SELECT `char_id`,`account_id`,`name` FROM `char` WHERE `name` = '"+escape_sql(.@name$)+"'", .@char_id,.@account_id,.@name$;
+	if (!.@account_id) {
+		dispbottom "Char name does not exist.";
+		end;
+	}
+	
+	if ( isloggedin(.@account_id,.@char_id) ) {
+		atcommand "@mute "+.@manner+" "+.@name$;
+	} else {
+		set .@val1, getbattleflag("manner_system");
+		
+		// update char's `manner` column
+		query_sql "UPDATE `char` SET `manner` = `manner`-"+.@manner+" WHERE `char_id`="+.@char_id;
+		
+		// remove previous mutes (just in case)
+		query_sql "DELETE FROM `sc_data` WHERE `char_id`="+.@char_id+" AND `type`=106";
+		// sc_start(SC_NOCHAT) - the server handles this in 60 seconds intervals
+		query_sql "INSERT INTO `sc_data` (`account_id`,`char_id`,`type`,`tick`,`val1`) VALUES ("+.@account_id+","+.@char_id+",106,60000,"+.@val1+")";
+	}
+	dispbottom .@name$ + " muted for " + .@manner + " minutes.";
+	end;
+}

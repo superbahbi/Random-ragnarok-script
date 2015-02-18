@@ -1,0 +1,48 @@
+// http://www.eathena.ws/board/index.php?showtopic=216929
+
+poring_c01,100,100,0	script	NameChange	910,{
+	mes "Input the name you want to change to:";
+	input .@name$;
+	
+	// check name length
+	if (getstrlen(.@name$)<4) {
+		mes "Names must be at least^FF0000 4^000000 characters long.";
+		close;
+	} else if (getstrlen(.@name$)>24) {
+		mes "Names can be up to^FF0000 24^000000 characters long.";
+		close;
+	}
+	// confirm
+	mes "Change your name from";
+	mes strcharinfo(0)+" -->^0000FF "+.@name$+"^000000  ?";
+	mes "^FF0000After you confirm, you will be logged out. Please wait 10 seconds before logging back in!";
+	if(select("Yes, change my name:No, thanks")==2) close;
+	
+	if (getcharid(1)) {
+		mes "Please leave your party before requesting a name change.";
+		close;
+	} else if (getcharid(2)) {
+		mes "Please leave your guild before requesting a name change.";
+		close;
+	}
+	// check if name exists
+	query_sql "SELECT COUNT(char_id) FROM `char` WHERE `name`='"+escape_sql(.@name$)+"'", .@name_exists;
+	if (.@name_exists) {
+		mes "Sorry, that name is already taken :(";
+		close;
+	}
+	
+	// Zeny/Item cost goes here
+	// if(countitem(13962) < 5) {
+		// mes "[Namechange Service]";
+		// mes "It appears that you're lacking some Donation Credit Boxes.";
+		// close;
+	// }
+	// delitem 13962,5;
+	
+	set .@char_id, getcharid(0);	// save their Char ID
+	atcommand "@kick "+strcharinfo(0);
+	// sleep 500;	// (usually not necessary) give the server time to save their char to SQL
+	query_sql "UPDATE `char` SET `name`='"+escape_sql(.@name$)+"' WHERE char_id="+.@char_id;
+	end;
+}

@@ -1,0 +1,25 @@
+// http://www.eathena.ws/board/index.php?showtopic=235160
+
+prontera,155,188,0	script	Anti_Spam	910,{
+	// end;
+OnInit:
+	defpattern 1, "([^:]+):(.*)", "OnQuote";
+	activatepset 1;
+	end;
+	
+OnQuote:
+	if ($@p2$==@LAST_msg$) { // same message
+		set @spam, @spam + 1;
+	} else { // different message, so reset spam count
+		set @spam, 0;
+	}
+	set @LAST_msg$, $@p2$;
+	
+	if (1+@spam >= 10) { // How many times do they have to repeat spam?
+		atcommand "@jailfor 30mn "+strcharinfo(0);
+		announce strcharinfo(0)+" has been jailed for 30 minutes for spamming.", bc_blue;
+	} else if (1+@spam >= 5) {
+		announce "Stop spamming, or you will be jailed for 30 minutes!", bc_self;
+	}
+	end;
+}

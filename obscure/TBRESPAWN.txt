@@ -1,0 +1,16 @@
+prontera,175,210,4	script	Treasure Box Event	430,{
+OnTimer10000:
+	set $tbrespawn,rand(2);
+	if($tbrespawn == 0) goto Trespawn0;
+	if($tbrespawn == 1) goto Trespawn1;
+
+Trespawn0:
+	announce "Treasure box summoned in prontera.",bc_all;
+	monster "Prontera.gat",0,0,"Treasure Box",1324,1,"Treasure Box Event::OnBoxKilled";
+Trespawn1:
+	end;
+
+OnBoxKilled:
+	announce ""+strcharinfo(0)+" destroy the box.",bc_all
+
+}

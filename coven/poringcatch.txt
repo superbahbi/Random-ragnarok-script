@@ -1,0 +1,61 @@
+/////////////////////Edited Poring Event by hellflaem aka Nezra.///////////////////////
+/////////////////////Credit: Wild Karrd////////////////////////////////////////////////
+/////////////////////http://www.eathena.ws/board/Poring-Event-t183026.html/////////////
+-	script	PoringEvent	-1,{
+OnMinute15:
+	switch(rand(1,5)){
+		
+	case 1:
+
+announce "Poring: Hi guys! Want some money? Find me at Izlude!",0;
+initnpctimer;
+monster "izlude",0,0,"Poring",1002,1,strnpcinfo(0)+"::OnMobKilled";
+monster "izlude",0,0,"Pouring",1002,25,strnpcinfo(0)+"::OnWrongKilled";
+monster "izlude",0,0,"Proing",1002,25,strnpcinfo(0)+"::OnWrongKilled";
+monster "izlude",0,0,"Poirng",1002,25,strnpcinfo(0)+"::OnWrongKilled";
+monster "izlude",0,0,"Poing",1002,25,strnpcinfo(0)+"::OnWrongKilled";
+monster "izlude",0,0,"Gnirop",1002,25,strnpcinfo(0)+"::OnWrongKilled";
+monster "izlude",0,0,"Poring",1113,1,strnpcinfo(0)+"::OnWrongKilled";
+monster "izlude",0,0,"Poring",1062,1,strnpcinfo(0)+"::OnWrongKilled";
+monster "izlude",0,0,"Por|ng",1002,25,strnpcinfo(0)+"::OnWrongKilled";
+monster "izlude",0,0,"Por1ng",1002,25,strnpcinfo(0)+"::OnWrongKilled";
+monster "izlude",0,0,"Porong",1002,25,strnpcinfo(0)+"::OnWrongKilled";
+monster "izlude",0,0,"P0ring",1002,25,strnpcinfo(0)+"::OnWrongKilled";
+monster "izlude",0,0,"P@ring",1002,25,strnpcinfo(0)+"::OnWrongKilled";
+monster "izlude",0,0,"Porng",1002,25,strnpcinfo(0)+"::OnWrongKilled";
+monster "izlude",0,0,"Poring",1031,1,strnpcinfo(0)+"::OnWrongKilled";
+monster "izlude",0,0,"Poring",1857,1,strnpcinfo(0)+"::OnWrongKilled";
+set .poringcatch,1;
+end;
+
+OnTimer180000:
+stopnpctimer;
+announce "Poring: Sorry guys, no one found me. Till next time!",0;
+set .poringcatch,0;
+killmonsterall "izlude";
+end;
+
+OnMobKilled:
+stopnpctimer;
+announce "Poring: "+strcharinfo(0)+" found me. Congratulations!",0;
+dispbottom "Congrats, You found me.";
+getitem 7227,1;
+killmonsterall "izlude";
+set .poringcatch,0;
+end;
+
+OnWrongKilled:
+	dispbottom "Oops wrong guy :(";
+	//percentheal -99,-99;
+	warp "prontera",155,175;
+	end;
+
+	case 2:
+		end;
+	case 3:
+		end;
+	case 4:
+		end;
+
+}
+}

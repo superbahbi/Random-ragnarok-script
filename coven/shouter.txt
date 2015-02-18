@@ -1,0 +1,40 @@
+//===================================================
+//======== trial scripts ===============================
+//=========[Admin]-Ric =========================
+//==================================================
+turbo_room,100,123,6	script	Shouter	107,{
+	mes "[Shouter]";
+	mes "What do you want?";
+	mes "Do you want to Broadcast something?";
+	next;
+	menu "Yes!",Shout,"No!",NoEnd;
+
+Shout:
+	
+	mes "[Shouter]";
+	mes "You should pay me 500m I'll Broadcast what you want";
+	next;
+	if (Zeny >= 500000000) goto Broadcast;
+	mes "[Shouter]";
+	mes "You don't have 500m!!! Get Out Noob!!!";
+	close;
+
+Broadcast:
+
+	set Zeny, Zeny - 500000000;
+	mes "[Shouter]";
+	mes "What would you like to Broadcast?";
+	next;
+	input .@message$;
+	close2;
+	announce ""+strcharinfo(0)+" : "+.@message$+"",16;
+	end;
+
+NoEnd:
+
+	mes "[Shouter]";
+	mes "Ok Come back if you need my service.!";
+	close;
+
+	
+}

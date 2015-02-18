@@ -1,0 +1,27 @@
+prontera,140,230,5	script	B. Tix Trader	62,{
+	mes "[B. Tix Trader]";
+	mes "Im the Poring Coin Trader here in town.";
+	mes "I can allow you to exchange your Unknown B. Tix into useful Poring Coin, which you can use to make trades between players, or just save them";
+	next;
+	mes "[B. Tix Trader]";
+	mes "Poring Coin for 1 Unknown B. Tix.";
+	next;
+	mes "[B. Tix Trader]";
+	mes "What do you want to do then?";
+	Menu "Trade Unknown B. Tix to Poring Coin?",TCGT,"Nevermind",No;
+TCGT:
+	if (countitem(1999) < 1) goto L_noItems;
+		delitem 1999,1;
+		getitem 7539,1;
+		close;
+
+L_noItems:
+	mes "Hmmm You dont have Unknown B. Tix needed to continue the trading.";
+	close;
+
+No:
+	mes "[B. Tix Trader]";
+	mes "Come back at anytime.";
+	mes "Dont forget to Vote JaeRO.";
+	close;
+}

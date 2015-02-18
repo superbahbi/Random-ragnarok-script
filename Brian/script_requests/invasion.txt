@@ -1,0 +1,56 @@
+prontera,155,188,0	script	InvasionNPC	910,{
+	// GM menu options
+	if (getgmlevel()>50) {
+		if (.mobs_left) {
+			mes "An invasion is in progress..";
+			mes "map = "+.maps$[.rand_map];
+			mes "^FF0000"+.mobs_left+"^000000 Goblins left";
+			mes " ";
+			mes "Stop invasion?";
+			if(select("No:Yes")==2) {
+				donpcevent strnpcinfo(3)+"::OnTimer1805000";
+				mes "Invasion stopped";
+			}
+		} else {
+			mes "Start an invasion?";
+			if(select("Yes:No")==1) {
+				donpcevent strnpcinfo(3)+"::OnStart";
+				mes "Invasion started in "+.maps$[.rand_map]+".";
+			}
+		}
+		close;
+	}
+	
+	// normal player
+	mes .mobs_left+" have invaded "+.maps$[.rand_map]+"!";
+	close;
+
+OnStart:
+	set .mobs_left, 1;
+	setarray .maps$[0], "jawaii","prontera","xmas";		// 3 maps to pick from
+	set .rand_map, rand(3);						// pick a random map
+	initnpctimer;
+	announce "[Liberation Guard]: There's that pest again here in "+.maps$[.rand_map]+"!", bc_all;
+	end;
+OnTimer5000:	// 5 seconds later
+	announce "[Liberation Guard]: Everyone, get rid of these goblins!", bc_all;
+	monster .maps$[.rand_map],0,0,"Goblin",1607,100,strnpcinfo(3)+"::OnMyMobDead";
+	set .mobs_left, 100;
+	end;
+OnTimer1805000:	// 30 minutes later
+	killmonster .maps$[.rand_map],strnpcinfo(3)+"::OnMyMobDead";
+	set .mobs_left, 0;
+OnStop:
+	stopnpctimer;
+	end;
+
+OnMyMobDead:
+	set .mobs_left, .mobs_left-1;
+	if (.mobs_left==0) {
+		announce strcharinfo(0)+" has defeated the last of the Goblins!", bc_all;
+		donpcevent strnpcinfo(3)+"::OnStop";
+	} else {
+		dispbottom "["+.mobs_left+"/100] Goblins left.";
+	}
+	end;
+}

@@ -1,0 +1,83 @@
+// http://www.eathena.ws/board/index.php?showtopic=216662
+// no what i'm looking for is a npc non gm players can click on and it says you will be recaled by a gm shortly
+// and a GM npc (a diffrent one)
+// in my gm room
+// can be clikced on by a GM and a GM can see a lst of the players who said they need help by a GM
+// (the npc for the non gm players)
+// and a gm could clikc on the name and the person would be wapred to the gm help desk
+
+prontera,155,188,0	script	Help_me_plz	910,{
+	emotion e_hlp, 1;
+	mes "Do you need help?";
+	if(select("Yes:No")==1)
+		doevent "Players2help::OnSubmitName";
+	close;
+}
+
+// inside GM room
+poring_c01,100,100,0	script	Players2help	910,{
+	if (getgmlevel()<40) end;
+	if ( getarraysize(.account_id) == 0 ) {
+		mes "The list is empty.";
+		close;
+	}
+	
+	// generate a list (menu) of names in the array
+	for ( set .@i,0; .@i<getarraysize(.account_id); set .@i,.@i+1 ) {
+		set .@menu$, .@menu$ + .name$[.@i] + ":";
+	}
+	// pick one from the menu
+	set .@num, select(.@menu$) -1;
+	set .@AID, playerattached();	// save the GM's RID
+	
+	// check if they are online
+	if ( attachrid(.account_id[.@num]) ) {
+		// recall (warp) them to GM room
+		warp "poring_c01",105,105;
+		attachrid(.@AID);		// attach back to GM
+		dispbottom "Recalling " + .name$[.@num];
+		callsub S_DeleteName, .@num;
+	} else {
+		attachrid(.@AID);		// attach back to GM
+		mes .name$[.@num] + " is not online.";
+		mes "Remove their name from the list?";
+		if(select("No:Yes")==2)
+			callsub S_DeleteName, .@num;
+	}
+	close;
+	
+OnSubmitName:
+	// check if their name is already in array
+	for ( set .@i,0; .@i<getarraysize(.account_id); set .@i,.@i+1 ) {
+		if (.account_id[.@i]==getcharid(3)) {
+			mes "You already submitted your name.";
+			if(select("OK:Remove my name")) {
+				callsub S_DeleteName, .@i;
+			}
+			close;
+		}
+	}
+	// save their AccountID and name
+	set .@num, getarraysize(.account_id);
+	set .account_id[.@num], getcharid(3);
+	set .name$[.@num], strcharinfo(0);
+	// notify the GM
+	npctalk strcharinfo(0) + " needs help!";
+	// atcommand "@request I submitted my name to the npc";
+	
+	mes "Your name has been sent to the GMs.";
+	mes "You will be recalled shortly.";
+	close;
+	
+S_DeleteName:
+	// delete their name/account_id from the array
+	for ( set .@i,getarg(0); .@i<getarraysize(.account_id); set .@i,.@i+1 ) {
+		// shift the names below theirs up one
+		set .account_id[.@i], .account_id[.@i+1];
+		set .name$[.@i], .account_id[.@i+1];
+	}
+	// delete the last array entry
+	set .account_id[.@i+1], 0;
+	set .name$[.@i+1], "";
+	return;
+}

@@ -1,0 +1,65 @@
+// http://www.eathena.ws/board/index.php?showtopic=226379
+// I need a NPC than transfer points to another account when this person is online.
+
+poring_c01,100,100,0	script	KafraPoints Transfer	910,{
+	mes "[Kafra]";
+	mes "Hello " + strcharinfo(0) + ",";
+	mes "you have " + #KAFRAPOINTS + " Kafra Points.";
+	if (#KAFRAPOINTS==0) close;
+	mes "Would you like to send some points to another person?";
+	next;
+	if(select("Yes:No, thanks")==2) {
+		mes "[Kafra]";
+		mes " ";
+		mes "Thank you, come again!";
+		close;
+	}
+	
+	mes "[Kafra]";
+	mes "Enter the char's name:";
+	input .@name$;
+	query_sql "SELECT `account_id`,`name` FROM `char` WHERE `name` = '"+escape_sql(.@name$)+"'", .@account_id,.@name$;
+	if (!.@account_id) {
+		mes "^FF0000     Char name does not exist.";
+		close;
+	} else if (.@account_id==getcharid(3)) {
+		mes "Why would you send points to yourself?";
+		close;
+	}
+	
+	mes "Send how many Kafra Points?";
+	input .@amt;
+	if (.@amt < 1) {
+		mes "^0000FFEnter a positive number.";
+		close;
+	} else if (.@amt > #KAFRAPOINTS) {
+		mes "^0000FFYou do not have that many Kafra Points. The max you can send is: "+#KAFRAPOINTS;
+		close;
+	}
+	
+	mes "Send "+.@amt+" Kafra Points to "+.@name$+"?";
+	if(select("Yes:No")==2) close;
+	
+	// save their Account ID and name
+	set .@AID, playerattached();
+	set .@send_name$, strcharinfo(0);
+	
+	// subtract their Kafra Points
+	set #KAFRAPOINTS, #KAFRAPOINTS - .@amt;
+	// transfer the Kafra Points
+	if (attachrid(.@account_id)) {
+		// if they are logged in
+		set #KAFRAPOINTS, #KAFRAPOINTS + .@amt;
+		dispbottom .@send_name$ + " sent you " + .@amt + " Kafra Points!     Total = " + #KAFRAPOINTS;
+	} else {
+		// if they are offline, query_sql
+		if( query_sql("SELECT account_id FROM global_reg_value WHERE str='#KAFRAPOINTS' AND account_id="+.@account_id, .@account_id) )
+			query_sql "UPDATE global_reg_value SET `value`=`value`+"+.@amt+" WHERE str='#KAFRAPOINTS' AND account_id="+.@account_id;
+		else 
+			query_sql "INSERT INTO global_reg_value (str,`value`,`type`,account_id) VALUES ('#KAFRAPOINTS',"+.@amt+",2,"+.@account_id+")";
+	}
+	
+	attachrid(.@AID);
+	mes "Transfer successful!";
+	close;
+}

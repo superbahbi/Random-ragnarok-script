@@ -1,0 +1,22 @@
+//===================================
+//===========Scripted By=============
+//===================================
+//==============JaeRO================
+//===================================
+poring_c02,227,223,4	script	Soccer Alberta	912,{
+	if (getgmlevel() >= 20);
+	mes "[Soccer Boy]";
+	mes "Do you want to spawn Soccer Ball?";
+	next;
+	menu "Yes i want",soccer,"No Thanks",no;
+
+soccer:
+	next;
+	announce "Soccer Ball in Alberta.",bc_all;
+	monster "alberta",0,0,"Event",1792,1;
+	close;
+no:
+	mes "[Soccer Boy]";
+	mes "Ok come back at any time!!";
+	close;
+}

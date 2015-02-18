@@ -1,0 +1,302 @@
+alberta,108,172,4	script	Fidel	853,{
+	mes "[Fidel]";
+	mes "Aloha! I came from Hawaii and I am here to give you new headgears.";
+	mes "You see, I am generous so I will reward your hardships.";
+	next;
+	mes "[Fidel]";
+	mes "My headgears are easy to create.";
+	mes "Few requirements and whualaa!";
+	next;
+	menu "Water Lily Crown",wate,"Bird Nest",bird,"Sales Banner",sale,"Fish in Mouth",fish,"Pirate Dagger",pira,"Poring Party Hat",pori,"Bandana Merah Putih",band,"Maiden Hat",maid,"Diadem",diad,"Kerchief",kerc,"Squatting Poring",squa,"Poporing Cap",popo,"Torch Cap",torc,"Cancel",H_Close;
+	wate:
+		mes "[Fidel]";
+		mes "Ok, you have chosen this, I will be needing the following to create this headgear for you:";
+		next;
+		mes "1 Fancy Flower";
+		mes "1 Flower Band";
+		mes "1 Illusion Flower";
+		mes "1 Platinum Coin";
+		menu "Make",M_wate,"Cancel",H_Close;
+		M_wate:
+			mes "Hmm let me see what you have.";
+			next;
+			if (countitem(2207) < 1) goto H_Lack;
+			if (countitem(2215) < 1) goto H_Lack;
+			if (countitem(710) < 1) goto H_Lack;
+			if (countitem(677) < 1) goto H_Lack;
+			mes "[Fidel]";
+			mes "Hooray! 100% Complete.";
+			next;
+			delitem 2207,1;
+			delitem 2215,1;
+			delitem 710,1;
+			delitem 677,1;
+			getitem 5284,1;
+			close;
+	bird:
+		mes "[Fidel]";
+		mes "Ok, you have chosen this, I will be needing the following to create this headgear for you:";
+		next;
+		mes "100 Feather";
+		mes "100 Feather of Birds";
+		mes "100 Bill of Birds";
+		menu "Make",M_bird,"Cancel",H_Close;
+		M_bird:
+			mes "Hmm let me see what you have.";
+			next;
+			if (countitem(949) < 100) goto H_Lack;
+			if (countitem(916) < 100) goto H_Lack;
+			if (countitem(925) < 100) goto H_Lack;
+			mes "[Fidel]";
+			mes "Hooray! 100% Complete.";
+			next;
+			delitem 949,100;
+			delitem 916,100;
+			delitem 925,100;
+			getitem 5129,1;
+			close;
+	sale:
+		mes "[Fidel]";
+		mes "Ok, you have chosen this, I will be needing the following to create this headgear for you:";
+		next;
+		mes "500 Gold";
+		menu "Make",M_sale,"Cancel",H_Close;
+		M_sale:
+			mes "Hmm let me see what you have.";
+			next;
+			if (countitem(969) < 500) goto H_Lack;
+			mes "[Fidel]";
+			mes "Hooray! 100% Complete.";
+			next;
+			delitem 969,500;
+			getitem 5100,1;
+			close;
+	fish:
+		mes "[Fidel]";
+		mes "Ok, you have chosen this, I will be needing the following to create this headgear for you:";
+		next;
+		mes "1 Blue Fish";
+		mes "100 Fish Tail";
+		mes "100 Raw Fish";
+		menu "Make",M_fish,"Cancel",H_Close;
+		M_fish:
+			mes "Hmm let me see what you have.";
+			next;
+			if (countitem(5065) < 1) goto H_Lack;
+			if (countitem(1023) < 100) goto H_Lack;
+			if (countitem(544) < 100) goto H_Lack;
+			mes "[Fidel]";
+			mes "Hooray! 100% Complete.";
+			next;
+			delitem 5065,1;
+			delitem 1023,100;
+			delitem 544,100;
+			getitem 5403,1;
+			close;
+	pira:
+		mes "[Fidel]";
+		mes "Ok, you have chosen this, I will be needing the following to create this headgear for you:";
+		next;
+		mes "1 Pirate Bandana";
+		mes "1 Pirate Bandana[1]";
+		mes "10 Dagger of Counter";
+		menu "Make",M_pira,"Cancel",H_Close;
+		M_pira:
+			mes "Hmm let me see what you have.";
+			next;
+			if (countitem(2287) < 1) goto H_Lack;
+			if (countitem(5350) < 1) goto H_Lack;
+			if (countitem(1242) < 10) goto H_Lack;
+			mes "[Fidel]";
+			mes "Hooray! 100% Complete.";
+			next;
+			delitem 2287,1;
+			delitem 5350,1;
+			delitem 1242,10;
+			getitem 5532,1;
+			close;
+	pori:
+		mes "[Fidel]";
+		mes "Ok, you have chosen this, I will be needing the following to create this headgear for you:";
+		next;
+		mes "100 Poring Card";
+		mes "100 Poring Doll";
+		mes "1 Party Hat";
+		menu "Make",M_pori,"Cancel",H_Close;
+		M_pori:
+			mes "Hmm let me see what you have.";
+			next;
+			if (countitem(4001) < 100) goto H_Lack;
+			if (countitem(741) < 100) goto H_Lack;
+			if (countitem(5060) < 1) goto H_Lack;
+			mes "[Fidel]";
+			mes "Hooray! 100% Complete.";
+			next;
+			delitem 4001,100;
+			delitem 741,100;
+			delitem 5060,1;
+			getitem 5318,1;
+			close;
+	band:
+		mes "[Fidel]";
+		mes "Ok, you have chosen this, I will be needing the following to create this headgear for you:";
+		next;
+		mes "1 Hair Band";
+		mes "10 Scarlet Dyestuff";
+		mes "100 Elastic Band";
+		menu "Make",M_band,"Cancel",H_Close;
+		M_band:
+			mes "Hmm let me see what you have.";
+			next;
+			if (countitem(2210) < 1) goto H_Lack;
+			if (countitem(975) < 10) goto H_Lack;
+			if (countitem(7200) < 100) goto H_Lack;
+			mes "[Fidel]";
+			mes "Hooray! 100% Complete.";
+			next;
+			delitem 2210,1;
+			delitem 975,10;
+			delitem 7200,100;
+			getitem 5321,1;
+			close;
+	maid:
+		mes "[Fidel]";
+		mes "Ok, you have chosen this, I will be needing the following to create this headgear for you:";
+		next;
+		mes "500 Straw Basket";
+		menu "Make",M_maid,"Cancel",H_Close;
+		M_maid:
+			mes "Hmm let me see what you have.";
+			next;
+			if (countitem(7299) < 500) goto H_Lack;
+			mes "[Fidel]";
+			mes "Hooray! 100% Complete.";
+			next;
+			delitem 7299,500;
+			getitem 5211,1;
+			close;
+	diad:
+		mes "[Fidel]";
+		mes "Ok, you have chosen this, I will be needing the following to create this headgear for you:";
+		next;
+		mes "1 Platinum Coin";
+		mes "10 Gemstone";
+		mes "100 Steel";
+		menu "Make",M_diad,"Cancel",H_Close;
+		M_diad:
+			mes "Hmm let me see what you have.";
+			next;
+			if (countitem(677) < 1) goto H_Lack;
+			if (countitem(7300) < 10) goto H_Lack;
+			if (countitem(999) < 100) goto H_Lack;
+			mes "[Fidel]";
+			mes "Hooray! 100% Complete.";
+			next;
+			delitem 677,1;
+			delitem 7300,10;
+			delitem 999,100;
+			getitem 5313,1;
+			close;
+	kerc:
+		mes "[Fidel]";
+		mes "Ok, you have chosen this, I will be needing the following to create this headgear for you:";
+		next;
+		mes "10 White Dyestuff";
+		mes "100 Soft Silk";
+		mes "100 Old White Cloth";
+		menu "Make",M_kerc,"Cancel",H_Close;
+		M_kerc:
+			mes "Hmm let me see what you have.";
+			next;
+			if (countitem(982) < 10) goto H_Lack;
+			if (countitem(7166) < 100) goto H_Lack;
+			if (countitem(7751) < 100) goto H_Lack;
+			mes "[Fidel]";
+			mes "Hooray! 100% Complete.";
+			next;
+			delitem 982,10;
+			delitem 7166,100;
+			delitem 7751,100;
+			getitem 5322,1;
+			close;
+	squa:
+		mes "[Fidel]";
+		mes "Ok, you have chosen this, I will be needing the following to create this headgear for you:";
+		next;
+		mes "100 Poring Doll";
+		mes "100 Candy";
+		mes "1 TCG";
+		menu "Make",M_squa,"Cancel",H_Close;
+		M_squa:
+			mes "Hmm let me see what you have.";
+			next;
+			if (countitem(741) < 100) goto H_Lack;
+			if (countitem(529) < 100) goto H_Lack;
+			if (countitem(7227) < 1) goto H_Lack;
+			mes "[Fidel]";
+			mes "Hooray! 100% Complete.";
+			next;
+			delitem 741,100;
+			delitem 529,100;
+			delitem 7227,1;
+			getitem 5335,1;
+			close;
+	popo:
+		mes "[Fidel]";
+		mes "Ok, you have chosen this, I will be needing the following to create this headgear for you:";
+		next;
+		mes "1 Poring Hat";
+		mes "10 Darkgreen Dyestuff";
+		mes "100 Poporing Card";
+		menu "Make",M_popo,"Cancel",H_Close;
+		M_popo:
+			mes "Hmm let me see what you have.";
+			next;
+			if (countitem(5035) < 1) goto H_Lack;
+			if (countitem(979) < 10) goto H_Lack;
+			if (countitem(4033) < 100) goto H_Lack;
+			mes "[Fidel]";
+			mes "Hooray! 100% Complete.";
+			next;
+			delitem 5035,1;
+			delitem 979,10;
+			delitem 4033,100;
+			getitem 5352,1;
+			close;
+	torc:
+		mes "[Fidel]";
+		mes "Ok, you have chosen this, I will be needing the following to create this headgear for you:";
+		next;
+		mes "100 Burning Hair";
+		mes "100 Burning Heart";
+		mes "100 Burning Horseshoe";
+		mes "100 Flame Stone";
+		mes "3 Platinum Coin";
+		menu "Make",M_torc,"Cancel",H_Close;
+		M_torc:
+			mes "Hmm let me see what you have.";
+			next;
+			if (countitem(7122) < 100) goto H_Lack;
+			if (countitem(7097) < 100) goto H_Lack;
+			if (countitem(7120) < 100) goto H_Lack;
+			if (countitem(7521) < 100) goto H_Lack;
+			if (countitem(677) < 3) goto H_Lack;
+			mes "[Fidel]";
+			mes "Hooray! 100% Complete.";
+			next;
+			delitem 7122,100;
+			delitem 7097,100;
+			delitem 7120,100;
+			delitem 7521,100;
+			delitem 677,3;
+			getitem 5430,1;
+			close;
+	H_Lack:
+		mes "[Fidel]";
+		mes "Boss, you don't have enough requirements.";
+		close;
+	H_Close:
+		mes "[Fidel]";
+		mes "Thank you, aloha :)";
+		close;
+}

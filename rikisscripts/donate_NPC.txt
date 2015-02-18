@@ -1,0 +1,61 @@
+//====================== rAthena Script ===============================================================
+//=== Made by Rikimaru
+//=== for tehscriptor on rathena.org/board
+//==================== Information ====================================================================
+//==== Donation NPC Script
+//================= Version : =========================================================================
+//=== V 1.2   Fixed the countitem thing [ Rikimaru ]
+//=== V 1.1   Fixed a typo in the Script [ Rikimaru ]
+//=== V 1.0   Finished Scripting the Donation NPC Script [ Rikimaru ]
+//============== Credits : ============================================================================
+//=== Credits to Rikimaru for the Donation NPC Script
+//=== rAthena Profile Link : http://rathena.org/board/user/434-rikimaru/
+//=====================================================================================================
+//*************************************************************************
+mapname,XXX,YYY,DIRECTION	script	Donation NPC	911,{
+set .@donatename$,"^0000FF[ Donation Reward ]^000000";
+set .donateid,26770;
+setarray @ItemID[0],19438,19649,19650,19651;
+setarray @Cost[0],125,50,45,30;
+setarray @item_count[0],1,1,1,1; //Item Amount which will be given out!
+mes .@donatename$;
+mes "Hello ^0000FF["+strcharinfo(0)+"]^000000,do";
+mes "you want to buy donate";
+mes "items?";
+next;
+	if (select("Yes,sure","Cancel") == 2) 
+		close;
+	next;
+	mes "[^ff0000List^000000]";
+	mes "^0000ffItem^000000 = ^00aa00Cost^000000";
+	for( set .@i, 0; .@i < getarraysize(@ItemID); set .@i, .@i + 1 ) {
+		mes "^0000ff"+@item_count[.@i]+"x "+getitemname(@ItemID[.@i])+"^000000 = ^00aa00"+@Cost[.@i]+"^000000";
+		if( .@i < 1 )
+			set .@menu$, getitemname(@ItemID[.@i]);
+		else
+			set .@menu$, .@menu$+":"+getitemname(@ItemID[.@i]);
+	}
+
+	next;
+	select(.@menu$);
+	set @choice, @menu - 1;
+
+	mes @npcname$;
+	if(countitem(.donateid) <@Cost[@choice]) {
+		mes "^ff0000You dont have enough Donation Coins for "+@item_count[@choice]+"x '"+getitemname(@ItemID[@choice])+"' :/^000000";
+		close;
+	}
+	mes "Are u realy sure to trade "+@item_count[@choice]+"x '^ff0000"+getitemname(@ItemID[@choice])+"^000000' for ^00aa00"+@Cost[@choice]+"^000000 Donate Coins?";
+	if(select("No! Cancel!:Yes, Trade me!") == 1 ) {
+		mes "^ff0000Trade was canceled~^000000";
+		close;
+	}
+
+	set .@new, .donateid - @Cost[@choice];
+	if( .@new < 0 ) // safty first..
+		set .@new, 0;
+	delitem .donateid,@Cost[@choice];
+	getitem @ItemID[@choice], @item_count[@choice];
+	mes "^00aa00Trade was Successfull ^_^ Hope to see u again =)!^000000";
+	close;
+}

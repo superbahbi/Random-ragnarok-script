@@ -1,0 +1,58 @@
+// http://www.eathena.ws/board/index.php?showtopic=213636
+// http://www.eathena.ws/board/index.php?showtopic=248887
+
+z_agit,34,177,4	script	@item	857,{
+	if (getgmlevel() < 80) end;
+	mes "[@item]";
+	mes "Enter the char's name:";
+	input .@name$;
+	mes "Input the item ID:^0000FF";
+	input .@item_id;
+	if (getiteminfo(.@item_id,0) == -1) {
+		mes "^FF0000Item does not exist.";
+		close;
+	}
+	mes .@item_id + " (" + getitemname(.@item_id) + ")^000000";
+	mes "Amount:";
+	input .@amount;
+	if (.@amount < 1) {
+		mes "^FF0000Enter a positive amount.";
+		close;
+	}
+	mes callsub(S_GetItem, .@name$,.@item_id,.@amount);
+	close;
+	
+OnWhisperGlobal:
+	if (getgmlevel() < 80) end;
+	set .@item_id, atoi(@whispervar1$);
+	set .@amount, atoi(@whispervar2$);
+	if (!.@item_id || !.@amount) {
+		dispbottom "Usage: <name>#<item ID>#<amount>";
+	} else if (getiteminfo(.@item_id,0) == -1) {
+		dispbottom "Item does not exist.";
+	} else if (.@amount < 1) {
+		dispbottom "Enter a positive amount.";
+	} else {
+		dispbottom callsub(S_GetItem, @whispervar0$,.@item_id,.@amount);
+	}
+	end;
+
+S_GetItem:
+	setarray .@restricted, 1599,2199;		// , <item_id>, <item_id>, 
+	set .@name$, getarg(0);
+	set .@item_id, getarg(1);
+	set .@amount, getarg(2);
+	for (set .@i, 0; .@i<getarraysize(.@restricted); set .@i, .@i+1) {
+		if(.@restricted[.@i] == .@item_id)
+			return getitemname(.@item_id) + " is restricted.";
+	}
+	set .@char_id, getcharid(0, .@name$);
+	set .@account_id, getcharid(3, .@name$);
+	if (!.@account_id || !isloggedin(.@account_id,.@char_id)) {
+		return "Character " + .@name$ + " not found.";
+	}
+	// should probably do a 'checkweight' first, but that requires attaching to their RID... *waits for LUA*
+	getitem .@item_id, .@amount, .@account_id;
+	logmes strcharinfo(0) + " created " + .@amount + " " + getitemname(.@item_id);
+	return "Item created.";
+}

@@ -1,0 +1,46 @@
+ball2,60,56,0	script	Tag	1002,1,1,{
+	if (.active) {	// they clicked the npc while it was moving
+		mes "Catch me if you can!";
+		close;
+	}
+	mes "Start a game of tag?";
+	if(select("Yes:No")==2 || .active) {
+		mes "Come back soon.";
+		close;
+	}
+	set .active, 1;
+	mes "Get ready!";
+	close2;
+	
+	// randomize starting point (give the npc a headstart)
+	do {
+		set .@rand_x, rand(52,68);
+		set .@rand_y, rand(48,64);
+		getmapxy(.@map$,.@x,.@y,0);	// char's current x,y
+	} while ( distance(.@rand_x,.@rand_y,.@x,.@y) < 2 );
+	movenpc "Tag", .@rand_x,.@rand_y;
+	
+	// start moving
+	npcspeed 90;	// lower means faster
+	npctalk "Here we go!";
+	while (.active) {
+		// pick new random coordinates
+		set .@rand_x, rand(52,68);
+		set .@rand_y, rand(48,64);
+		
+		while ( !getmapxy(.@map$,.@x,.@y,1) && (.@x!=.@rand_x || .@y!=.@rand_y) ) {
+			// keep doing 'npcwalkto' until it reaches destination
+			npcwalkto .@rand_x,.@rand_y;
+			sleep 250;
+		}
+	}
+	end;
+
+OnTouch:	// tagged the npc
+	if (.active) {
+		npcstop;
+		npctalk "You win!";
+		set .active, 0;
+	}
+	end;
+}

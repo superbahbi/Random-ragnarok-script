@@ -1,0 +1,26 @@
+Index: npc/guild/agit_template.txt
+===================================================================
+--- npc/guild/agit_template.txt	(revision 14748)
++++ npc/guild/agit_template.txt	(working copy)
+@@ -1092,7 +1092,7 @@
+ 		next;
+ 		switch(select("Pull.:Do not.")) {
+ 		case 1:
+-			if ((getcharid(2) == .@GID)) {
++			if ((getcharid(2) == .@GID) || callsub(S_guild_check_alliance, .@GID,getcharid(2))) {
+ 				warp .@destination$,.@coordinates[0],.@coordinates[1];
+ 				end;
+ 			}
+@@ -1105,6 +1105,12 @@
+ 			close;
+ 		}
+ 	}
++
++S_guild_check_alliance: // checks guild_id1's list of allies to see if guild_id2 is an ally
++// getarg(0) = guild_id1
++// getarg(1) = guild_id2
++	query_sql "SELECT COUNT(guild_id) FROM guild_alliance WHERE guild_id="+getarg(0)+" AND opposition=0 AND alliance_id="+getarg(1), .@is_ally;
++	return .@is_ally;
+ }
+ 
+ // Treasure Room Protection Template

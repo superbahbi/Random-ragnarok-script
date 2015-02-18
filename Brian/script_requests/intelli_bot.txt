@@ -1,0 +1,83 @@
+prontera,155,188,0	script	Intelli_Priest	910,{
+	npctalk "How do you do?  Please state your problem.";
+	end;
+OnBuff: // buffs me ether bishop
+	sc_start SC_BLESSING,240000,10;			specialeffect2 EF_BLESSING;
+	sc_start SC_INCREASEAGI,240000,10;		specialeffect2 EF_INCAGILITY;
+	// etc
+	end;
+OnHeal: // heal me ether priest
+	percentheal 100,100;
+	end;
+OnInit:
+	defpattern 1, "([^:]+):.*\\sbuffs\\s+me\\s+ether\\s+bishop.*", "OnBuff";
+	defpattern 1, "([^:]+):.*\\sheal\\s+me\\s+ether\\s+priest.*", "OnHeal";
+	activatepset 1;
+	end;
+}
+
+prontera,157,188,0	script	Intelli_Link	910,{
+	npctalk "How do you do?  Please state your problem.";
+	end;
+OnLink: // soul link me ether linker
+	if (BaseLevel >= 60) {
+		switch( Class ) {
+		case Job_Star_Gladiator:
+		case Job_Star_Gladiator2:
+			set .@skill_id, 448; break;
+		case Job_SuperNovice:
+			set .@skill_id, 451; break;
+		case Job_Soul_Linker:
+			set .@skill_id, 461; break;
+		case Job_Novice_High:
+		case Job_Swordman_High:
+		case Job_Mage_High:
+		case Job_Archer_High:
+		case Job_Acolyte_High:
+		case Job_Merchant_High:
+		case Job_Thief_High:
+			set .@skill_id, 494; break;
+		default:
+			switch( BaseJob ) {
+				case Job_Alchemist:		set .@skill_id, 445; break;
+				case Job_Monk:			set .@skill_id, 447; break;
+				case Job_Sage:			set .@skill_id, 449; break;
+				case Job_Crusader:		set .@skill_id, 450; break;
+				case Job_Knight:		set .@skill_id, 452; break;
+				case Job_Wizard:		set .@skill_id, 453; break;
+				case Job_Priest:		set .@skill_id, 454; break;
+				case Job_Bard:
+				case Job_Dancer:		set .@skill_id, 455; break;
+				case Job_Rogue:			set .@skill_id, 456; break;
+				case Job_Assassin:		set .@skill_id, 457; break;
+				case Job_Blacksmith:	set .@skill_id, 458; break;
+				case Job_Hunter:		set .@skill_id, 460; break;
+			}
+		break;
+		}
+		if (.@skill_id) {
+			sc_start4 SC_SPIRIT,350000,5,.@skill_id,0,0;
+			specialeffect2 503; // Soul Link Word
+		}
+	}
+	end;
+OnInit:
+	defpattern 2, "([^:]+):.*\\ssoul\\s+link\\s+me\\s+ether\\s+linker.*", "OnLink";
+	activatepset 2;
+	end;
+}
+
+prontera,159,188,0	script	Intelli_BerserkPitch	910,{
+	npctalk "How do you do?  Please state your problem.";
+	end;
+OnBerserkPitch: // berserk pitch me ether genetic
+	if (BaseLevel >= 85) {
+		sc_start4 SC_ASPDPOTION2,900000,0,200,0,1;
+		specialeffect2 EF_POTION_BERSERK;
+	}
+	end;
+OnInit:
+	defpattern 3, "([^:]+):.*\\sberserk\\s+pitch\\s+me\\s+ether\\s+genetic.*", "OnBerserkPitch";
+	activatepset 3;
+	end;
+}

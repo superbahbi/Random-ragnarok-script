@@ -1,0 +1,113 @@
+prontera,168,177,6	script	Coin Exchanger	872,{
+	
+	mes "[Coin Exchanger]";
+	mes "Im the Coin Exchanger here in town.";
+	mes "I can allow you to exchange your zeny into useful and handy coins, which you can use to make trades between players, or just save them";
+	next;
+	mes "[Coin Exchanger]";
+	mes "Bronze Coin worth 50million.";
+	mes "Mithril worth 100million.";
+	mes "Gold Coin worth 300million.";
+	mes "Platinum Coin worth 500million.";
+	next;
+	mes "[Coin Exchanger]";
+	mes "What do you want to do then?";
+	switch(select("Exchange my Coin to Zeny","Exchange my Zeny to Coin","Nevermind")){
+		case 1:
+			next;
+			mes "[Coin Exchanger]";
+			mes "Choose what kind of Coins you want to be exchange.";
+			switch(select("Bronze Coin","Mithril Coin","Gold Coin","Platinum Coin")){
+			case 1:
+				next;
+				mes "[Coin Exchanger]";
+				mes "Bronze Coin";
+				if(countitem(673)<1) goto NOCOIN;
+				set Zeny,Zeny+50000000;
+				delitem 673,1;
+				close;
+			case 2:
+				next;
+				mes "[Coin Exchanger]";
+				mes "Mithril Coin";
+				if(countitem(674)<1) goto NOCOIN;
+				set Zeny,Zeny+100000000;
+				delitem 674,1;
+				close;
+			case 3:
+				next;
+				mes "[Coin Exchanger]";
+				mes "Gold Coin";
+				if(countitem(671)<1) goto NOCOIN;
+				set Zeny,Zeny+300000000;
+				delitem 671,1;
+				close;
+			case 4:
+				next;
+				mes "[Coin Exchanger]";
+				mes "Platinum Coin";
+				if(countitem(677)<1) goto NOCOIN;
+				set Zeny,Zeny+500000000;
+				delitem 677,1;
+				close;
+				
+			}
+		case 2:
+			next;
+			mes "[Coin Exchanger]";
+			mes "First than anything, what kind of coins are you going to exchange?";
+			switch(select("Bronze Coin","Mithril Coin","Gold Coin","Platinum Coin")){
+			case 1:
+				next;
+				mes "[Coin Exchanger]";
+				mes "So do you want Bronze Coin.";
+				if(Zeny<50000000) goto NOZENY;
+				set Zeny,Zeny-50000000;
+				getitem 673,1;
+				close;
+			case 2:
+				next;
+				mes "[Coin Exchanger]";
+				mes "So do you want Mithril Coin.";
+				if(Zeny<100000000) goto NOZENY;
+				set Zeny,Zeny-100000000;
+				getitem 674,1;
+				close;
+			case 3:
+				next;
+				mes "[Coin Exchanger]";
+				mes "So do you want Gold Coin.";
+				if(Zeny<300000000) goto NOZENY;
+				set Zeny,Zeny-300000000;
+				getitem 671,1;
+				close;
+			case 4:
+				next;
+				mes "[Coin Exchanger]";
+				mes "So do you want Platinum Coin.";
+				if(Zeny<500000000) goto NOZENY;
+				set Zeny,Zeny-500000000;
+				getitem 677,1;
+				close;
+			}
+		case 3:
+			next;
+			mes "[Coin Exchanger]";
+			mes "Good to see you and hope to see you again. Bye";
+			close;
+
+		NOCOIN:
+			next;
+			mes "[Coin Exchanger]";
+			mes "I'm Sorry, but you dont have a Coin.";
+			close;
+		NOZENY:
+			next;
+			mes "[Coin Exchanger]";
+			mes "I'm Sorry, but you dont have enough Zeny.";
+			close;
+	}
+OnInit:
+	waitingroom "Coins Exchanger!",0;
+	end;
+}

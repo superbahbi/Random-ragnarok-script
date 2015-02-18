@@ -1,0 +1,41 @@
+// http://www.eathena.ws/board/index.php?showtopic=235805
+// You need to pay 5 Poring coins to disguise yourself. (7539 = the Item)
+// When WoE starts your not allowed to go there...OR if it's easier..You just Get UnDisguised when WoE Starts.
+// and Maybe a Thing when your done you can ask it to Undo the Disguise.
+
+poring_c01,100,100,0	script	Disguiser	910,{
+	mes "[Disguiser]";
+	if (@disguised) {
+		mes "Do you want to remove your "+getmonsterinfo(@disguised,MOB_NAME)+" disguise?";
+		if(select("No:Yes, undisguise me")==2) {
+			undisguise;
+			set @disguised, 0;
+		}
+		close;
+	}
+	
+	mes "Enter the monster ID you want to be disguised as:";
+	input .@mob_id;
+	if (getmonsterinfo(.@mob_id,MOB_MAXHP) == -1) {
+		mes "^FF0000     Invalid mob ID";
+	} else if (agitcheck() || agitcheck2()) {
+		mes "^FF0000Disguises are not allowed during WoE.";
+	} else if (countitem(7539)<5) {
+		mes "The cost is 5 Poring Coins.";
+	} else {
+		mes "Disguise as ^0000FF"+getmonsterinfo(.@mob_id,MOB_NAME)+"^000000?";
+		if(select("Yes, disguise me!:No")==1) {
+			delitem 7539,5; // Poring_Coin
+			disguise .@mob_id;
+			set @disguised, .@mob_id;
+			mes " ";
+			mes "Enjoy your "+getmonsterinfo(.@mob_id,MOB_NAME)+" disguise!";
+		}
+	}
+	close;
+
+OnAgitStart:
+OnAgitStart2:
+	atcommand "@undisguiseall";
+	end;
+}

@@ -1,0 +1,57 @@
+// http://www.eathena.ws/board/index.php?showtopic=216179
+
+poring_c01,100,100,0	script	StatSeller	910,{
+	set .cost, 400000; // cost per stat
+	setarray .stat_name$[13], "Str","Agi","Vit","Int","Dex","Luk";
+	if (Upper == 2)
+		set .@maxstat, getbattleflag("max_baby_parameter");
+	else
+		set .@maxstat, getbattleflag("max_parameter");
+
+	mes "Which stat do you want to buy?";
+	mes " ";
+	set .@stat, select("Str:Agi:Vit:Int:Dex:Luk") + 12;
+	if (readparam(.@stat)==.@maxstat) {
+		mes "Your "+.stat_name$[.@stat]+" is already maxed!";
+		close;
+	}
+	
+	mes "How many " + .stat_name$[.@stat] + " do you want to buy?";
+	switch(select("As many as possible:One:Input an amount")) {
+	case 1:
+		set .@amt, .@maxstat-readparam(.@stat);
+		if (Zeny < (.@amt * .cost)) {
+			set .@amt, Zeny / .cost;
+		}
+		break;
+	case 2:
+		set .@amt, 1;
+		break;
+	case 3:
+		input .@amt;
+		break;
+	}
+	if (.@amt < 1) {
+		mes "Come back if you change your mind!";
+		close;
+	}
+	if ((readparam(.@stat)+.@amt) > .@maxstat) {
+		mes "Your current "+.stat_name$[.@stat]+" is "+readparam(.@stat) + " and you";
+		mes "can increase it up to +"+(.@maxstat-readparam(.@stat))+" more.";
+		close;
+	}
+	if (Zeny < (.@amt * .cost)) {
+		mes "You need "+ .@amt*.cost +" zeny to buy "+.@amt+" "+.stat_name$[.@stat]+".";
+		close;
+	}
+	
+	mes .@amt + " " + .stat_name$[.@stat] + " will cost " + (.@amt * .cost);
+	mes "Continue?";
+	if(select("Yes:No")==2) close;
+	
+	set Zeny, Zeny - (.@amt * .cost);
+	statusup2 .@stat, .@amt;
+	mes " ";
+	mes .@amt + " " + .stat_name$[.@stat] + " added!";
+	close;
+}

@@ -1,0 +1,191 @@
+veins,221,141,4	script	Sweetest Velvet	793,{
+	mes "[Velvet]";
+	mes "Hi :) I'm here to give you the cutest things.";
+	next;
+	mes "[Velvet]";
+	mes "I will really appreciate it if you would be doing it for me.";
+	mes "I promise not to forget you and I'll give you a remembrance.";
+	next;
+	mes "[Velvet]";
+	mes "Just bring me some of the things that I need and I will give you one of my dolls.";
+	mes "Or maybe get my super cute Pirate Hat :)";
+	mes "Choose what you like:";
+	next;
+	menu "Deporte Doll",depo,"Glaris Doll",glar,"Sorin Doll",sori,"Telling Doll",tell,"Bennit Doll",benn,"W Doll",wdol,"Pirate's Pride",pira,"Cancel",H_Close;
+	depo:
+		mes "[Velvet]";
+		mes "Ooooooh cute cute cute! Please bring me the following and I'll give it to you:";
+		next;
+		mes "1 Alice Doll";
+		mes "100 Alice's Apron";
+		mes "4 Cobaltblue Dyestuff";
+		menu "Make",M_depo,"Cancel",H_Close;
+		M_depo:
+			mes "Okok lemme see what you have there...";
+			next;
+			if (countitem(5137) < 1) goto H_Lack;
+			if (countitem(7047) < 100) goto H_Lack;
+			if (countitem(978) < 4) goto H_Lack;
+			mes "[Velvet]";
+			mes "Yay! So sweet of you to bring me what I need.";
+			mes "Here you go, take good care of it.";
+			next;
+			delitem 5137,1;
+			delitem 7047,100;
+			delitem 978,4;
+			getitem 5340,1;
+			close;
+	glar:
+		mes "[Velvet]";
+		mes "Ooooooh cute cute cute! Please bring me the following and I'll give it to you:";
+		next;
+		mes "1 Alice Doll";
+		mes "100 Alice's Apron";
+		mes "4 Scarlet Dyestuff";
+		menu "Make",M_glar,"Cancel",H_Close;
+		M_glar:
+			mes "Okok lemme see what you have there...";
+			next;
+			if (countitem(5137) < 1) goto H_Lack;
+			if (countitem(7047) < 100) goto H_Lack;
+			if (countitem(975) < 4) goto H_Lack;
+			mes "[Velvet]";
+			mes "Yay! So sweet of you to bring me what I need.";
+			mes "Here you go, take good care of it.";
+			next;
+			delitem 5137,1;
+			delitem 7047,100;
+			delitem 975,4;
+			getitem 5341,1;
+			close;
+	sori:
+		mes "[Velvet]";
+		mes "Ooooooh cute cute cute! Please bring me the following and I'll give it to you:";
+		next;
+		mes "1 Alice Doll";
+		mes "100 Alice's Apron";
+		mes "4 Black Dyestuff";
+		menu "Make",M_sori,"Cancel",H_Close;
+		M_sori:
+			mes "Okok lemme see what you have there...";
+			next;
+			if (countitem(5137) < 1) goto H_Lack;
+			if (countitem(7047) < 100) goto H_Lack;
+			if (countitem(983) < 4) goto H_Lack;
+			mes "[Velvet]";
+			mes "Yay! So sweet of you to bring me what I need.";
+			mes "Here you go, take good care of it.";
+			next;
+			delitem 5137,1;
+			delitem 7047,100;
+			delitem 983,4;
+			getitem 5342,1;
+			close;
+	tell:
+		mes "[Velvet]";
+		mes "Ooooooh cute cute cute! Please bring me the following and I'll give it to you:";
+		next;
+		mes "1 Alice Doll";
+		mes "100 Alice's Apron";
+		mes "2 Black Dyestuff";
+		mes "2 White Dyestuff";
+		menu "Make",M_tell,"Cancel",H_Close;
+		M_tell:
+			mes "Okok lemme see what you have there...";
+			next;
+			if (countitem(5137) < 1) goto H_Lack;
+			if (countitem(7047) < 100) goto H_Lack;
+			if (countitem(983) < 2) goto H_Lack;
+			if (countitem(982) < 2) goto H_Lack;
+			mes "[Velvet]";
+			mes "Yay! So sweet of you to bring me what I need.";
+			mes "Here you go, take good care of it.";
+			next;
+			delitem 5137,1;
+			delitem 7047,100;
+			delitem 983,2;
+			delitem 982,2;
+			getitem 5343,1;
+			close;
+	benn:
+		mes "[Velvet]";
+		mes "Ooooooh cute cute cute! Please bring me the following and I'll give it to you:";
+		next;
+		mes "1 Alice Doll";
+		mes "100 Alice's Apron";
+		mes "4 Orange Dyestuff";
+		menu "Make",M_benn,"Cancel",H_Close;
+		M_benn:
+			mes "Okok lemme see what you have there...";
+			next;
+			if (countitem(5137) < 1) goto H_Lack;
+			if (countitem(7047) < 100) goto H_Lack;
+			if (countitem(980) < 4) goto H_Lack;
+			mes "[Velvet]";
+			mes "Yay! So sweet of you to bring me what I need.";
+			mes "Here you go, take good care of it.";
+			next;
+			delitem 5137,1;
+			delitem 7047,100;
+			delitem 980,4;
+			getitem 5344,1;
+			close;
+	wdol:
+		mes "[Velvet]";
+		mes "Ooooooh cute cute cute! Please bring me the following and I'll give it to you:";
+		mes "1 Alice Doll";
+		mes "100 Alice's Apron";
+		mes "4 Lemon Dyestuff";
+		menu "Make",M_wdol,"Cancel",H_Close;
+		M_wdol:
+			mes "Okok lemme see what you have there...";
+			next;
+			if (countitem(5137) < 1) goto H_Lack;
+			if (countitem(7047) < 100) goto H_Lack;
+			if (countitem(976) < 4) goto H_Lack;
+			mes "[Velvet]";
+			mes "Yay! So sweet of you to bring me what I need.";
+			mes "Here you go, take good care of it.";
+			next;
+			delitem 5137,1;
+			delitem 7047,100;
+			delitem 976,4;
+			getitem 5345,1;
+			close;
+	pira:
+		mes "[Velvet]";
+		mes "Ooooooh cute cute cute! Please bring me the following and I'll give it to you:";
+		next;
+		mes "500 Burning Heart";
+		mes "500 Steel";
+		mes "1000 Dragon Skin";
+		menu "Make",M_pira,"Cancel",H_Close;
+		M_pira:
+			mes "Okok lemme see what you have there...";
+			next;
+			if (countitem(7097) < 500) goto H_Lack;
+			if (countitem(999) < 500) goto H_Lack;
+			if (countitem(7123) < 1000) goto H_Lack;
+			mes "[Velvet]";
+			mes "Yay! So sweet of you to bring me what I need.";
+			mes "Here you go, take good care of it.";
+			next;
+			delitem 7097,500;
+			delitem 999,500;
+			delitem 7123,1000;
+			getitem 5501,1;
+			close;
+	H_Lack:
+		mes "[Velvet]";
+		mes "As much as I want you to have it, you didn't brought me what I need :(";
+		mes "I'm sorry. If you really want it, please get what I ask for.";
+		close;
+	H_Close:
+		mes "[Velvet]";
+		mes "Oh thank you so much for your time.";
+		mes "I hope to see you around.";
+		next;
+		mes "[Velvet]";
+		mes "Please remember to always vote JaeRO every 24 hours. Have funnn :p";
+		close;
+}

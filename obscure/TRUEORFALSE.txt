@@ -1,0 +1,120 @@
+prontera,145,172,4	script	Manager	430,{
+	if (getgmlevel()<2) goto OUT;
+	mes "Select Event";
+	cutin "moc_soldier",2;
+	close2;
+	switch(Select("True or False")) {
+
+	case 1:
+		mes "True or False Event?";
+		close2;
+		Switch(Select("Close","Open")) {
+		
+		case 1:
+			disablenpc "True or False Event Gate";
+			cutin "",255;
+			close;
+
+		case 2:
+			mes "Sure?";
+			next;
+			enablenpc "True or False Event Gate";
+			announce "RFYL is open.",bc_all;
+			warp "quiz_01",42,285;
+			close;
+		}
+	}
+OUT:
+	end;
+}
+//---------------------------------------Inside Event-----------------------------------------------
+quiz_02,350,378,4	script	True or False Manager	402,{
+	if (getgmlevel()<2) goto OUT;
+	mes "[True or False Manager]";
+	mes "What do you want to do?";
+	switch(select("Close","Re-Open","Select Answer")){
+	
+	case 1:
+		mes "Sure?";
+		close2;
+
+		initnpctimer;
+		announce "True or False Event is closing in 30seconds.",bc_all;
+        	end;
+    		OnTimer24000:
+        	announce "Ok 5 seconds more.",bc_all;
+        	end;
+    		OnTimer25000:
+        	announce "4.",bc_all;
+        	end;
+		OnTimer26000:
+    	announce "3.",bc_all;
+ 	end;   	
+		OnTimer27000:
+        	announce "2.",bc_all;
+        	end;
+    		OnTimer28000:
+        	announce "1.",bc_all;
+        	end;
+    		OnTimer29000:
+        	stopnpctimer;
+
+		disablenpc "True or False Event Gate";
+		announce "True or False Event is close.",bc_all;
+		end;
+
+	case 2:
+		enablenpc "True or False Event Gate";
+		announce "Re-Open True or False Event.",bc_all;
+		close;
+	
+	case 3:
+		next;
+		mes "[True or False Manager]";
+		mes "Select Answer.";	
+		switch(select("True","False")){
+			case 1:
+				next;
+				mes "[True or False Manager]";
+				mes "True?";
+				next;
+				mes "[True or False Manager]";
+				mes "Sure?";
+				next;
+				switch(select("Yes","No")){
+				case 1:
+					areawarp "quiz_02",324,357,347,334, "quiz_02",350,372;
+					areawarp "quiz_02",352,357,375,334,"prontera",155,166;
+					close;
+				case 2:
+					close;
+				}
+			case 2:
+				next;
+				mes "[True or False Manager]";
+				mes "False?";
+				next;
+				mes "[True or False Manager]";
+				mes "Sure?";
+				next;
+				switch(select("Yes","No")){
+				case 1:
+					areawarp "quiz_02",324,357,347,334,"prontera",155,166;
+					areawarp "quiz_02",352,357,375,334, "quiz_02",350,372;
+					close;
+				case 2:
+					close;
+				}
+		}
+	}
+OUT:
+	end;
+}
+//---------------------------------------------Warper-----------------------------------------------------------
+prontera,156,174,4	script	True or False Event Gate	814,{
+	warp "quiz_02",350,372;
+	end;
+}
+
+quiz_02,337,364,0	warp	true	0,0,quiz_02,337,345
+quiz_02,362,364,0	warp	false	0,0,quiz_02,363,345

@@ -1,0 +1,603 @@
+// http://rathena.org/board/topic/70252-anti-cheat-stats/
+
+prontera,155,180,0	script	Total_Stat_Points	910,{
+	function pc_need_status_point; // src/map/pc.c
+	function pc_maxparameter;
+	function read_statpoint_table; // db/re/statpoint.txt OR db/pre-re/statpoint.txt
+	
+	mes readparam(bStr)+" Str = ^0000FF" + pc_need_status_point(bStr, 1-readparam(bStr)) + "^000000          " +readparam(bInt)+" Int = ^0000FF" + pc_need_status_point(bInt, 1-readparam(bInt))+"^000000";
+	mes readparam(bAgi)+" Agi = ^0000FF" + pc_need_status_point(bAgi, 1-readparam(bAgi)) + "^000000         "  +readparam(bDex)+" Dex = ^0000FF" + pc_need_status_point(bDex, 1-readparam(bDex))+"^000000";
+	mes readparam(bVit)+" Vit = ^0000FF" + pc_need_status_point(bVit, 1-readparam(bVit)) + "^000000          " +readparam(bLuk)+" Luk = ^0000FF" + pc_need_status_point(bLuk, 1-readparam(bLuk))+"^000000"; sleep2 1;
+	mes "unused StatusPoint = ^0000FF" + StatusPoint + "^000000";
+	
+	set .@should_have, read_statpoint_table(BaseLevel) + ( Class&EAJ_UPPERMASK ? 52 : 0 );
+	
+	//==== statpointcount() ====================================================
+	set .@actual_statpoint, 
+		pc_need_status_point(bStr, 1-readparam(bStr)) + 
+		pc_need_status_point(bAgi, 1-readparam(bAgi)) + 
+		pc_need_status_point(bVit, 1-readparam(bVit)) + 
+		pc_need_status_point(bInt, 1-readparam(bInt)) + 
+		pc_need_status_point(bDex, 1-readparam(bDex)) + 
+		pc_need_status_point(bLuk, 1-readparam(bLuk)) + 
+		StatusPoint;
+	//==========================================================================
+	mes " ";
+	mes "Should Have = " + .@should_have + " stat pts";
+	mes "Actual Stat     = ^0000FF" + .@actual_statpoint + " stat pts^000000";
+	
+	if (.@actual_statpoint == .@should_have) {
+		mes "^008000 Correct.^000000";
+	} else if (.@actual_statpoint > .@should_have) {
+		mes "^FF0000 You have "+(.@actual_statpoint - .@should_have)+" extra stat points!^000000";
+		// do other stuff like: 
+		// - @kick, ban, or @block
+		// - notify GMs with @request
+		// - notify the server with announce
+	} else if (.@actual_statpoint < .@should_have) {
+		mes "^0000FF You are missing "+(.@should_have - .@actual_statpoint)+" stat points T_T^000000";
+	}
+	close;
+
+function pc_need_status_point {
+	set .@type, getarg(0);
+	set .@val, getarg(1);
+	
+	if (.@val == 0)
+		return 0;
+	
+	set .@low, readparam(.@type);
+	
+	if (.@low >= pc_maxparameter() && .@val > 0)
+		return 0; // Official servers show '0' when max is reached
+	
+	set .@high, .@low + .@val;
+	
+	if (.@val < 0) {
+		// swap(low, high);
+		set .@TEMP, .@low;
+		set .@low, .@high;
+		set .@high, .@TEMP;
+	}
+	
+	for ( ; .@low < .@high; set .@low, .@low +1) {
+		if (checkre(0)) { // renewal status point cost formula
+			set .@sp, .@sp + ((.@low < 100) ? (2 + (.@low - 1) / 10) : (16 + 4 * ((.@low - 100) / 5)));
+		} else {
+			set .@sp, .@sp + (( 1 + (.@low + 9) / 10 ));
+		}
+	}
+	return .@sp;
+}
+function pc_maxparameter {
+	return (
+		( ((Class&EAJ_UPPERMASK) == EAJL_2_1|0x0A) || Class&EAJL_THIRD ? 
+		(Class&EAJL_BABY ? getbattleflag("max_baby_third_parameter") : getbattleflag("max_third_parameter"))
+		: (Class&EAJL_BABY ? getbattleflag("max_baby_parameter") : getbattleflag("max_parameter"))
+		)
+	);
+}
+function read_statpoint_table {
+	if (checkre(0)) {
+		// db/re/statpoint.txt
+		switch (getarg(0)) {
+			case   1:  return 48;
+			case   2:  return 51;
+			case   3:  return 54;
+			case   4:  return 57;
+			case   5:  return 60;
+			case   6:  return 64;
+			case   7:  return 68;
+			case   8:  return 72;
+			case   9:  return 76;
+			case  10:  return 80;
+			case  11:  return 85;
+			case  12:  return 90;
+			case  13:  return 95;
+			case  14:  return 100;
+			case  15:  return 105;
+			case  16:  return 111;
+			case  17:  return 117;
+			case  18:  return 123;
+			case  19:  return 129;
+			case  20:  return 135;
+			case  21:  return 142;
+			case  22:  return 149;
+			case  23:  return 156;
+			case  24:  return 163;
+			case  25:  return 170;
+			case  26:  return 178;
+			case  27:  return 186;
+			case  28:  return 194;
+			case  29:  return 202;
+			case  30:  return 210;
+			case  31:  return 219;
+			case  32:  return 228;
+			case  33:  return 237;
+			case  34:  return 246;
+			case  35:  return 255;
+			case  36:  return 265;
+			case  37:  return 275;
+			case  38:  return 285;
+			case  39:  return 295;
+			case  40:  return 305;
+			case  41:  return 316;
+			case  42:  return 327;
+			case  43:  return 338;
+			case  44:  return 349;
+			case  45:  return 360;
+			case  46:  return 372;
+			case  47:  return 384;
+			case  48:  return 396;
+			case  49:  return 408;
+			case  50:  return 420;
+			case  51:  return 433;
+			case  52:  return 446;
+			case  53:  return 459;
+			case  54:  return 472;
+			case  55:  return 485;
+			case  56:  return 499;
+			case  57:  return 513;
+			case  58:  return 527;
+			case  59:  return 541;
+			case  60:  return 555;
+			case  61:  return 570;
+			case  62:  return 585;
+			case  63:  return 600;
+			case  64:  return 615;
+			case  65:  return 630;
+			case  66:  return 646;
+			case  67:  return 662;
+			case  68:  return 678;
+			case  69:  return 694;
+			case  70:  return 710;
+			case  71:  return 727;
+			case  72:  return 744;
+			case  73:  return 761;
+			case  74:  return 778;
+			case  75:  return 795;
+			case  76:  return 813;
+			case  77:  return 831;
+			case  78:  return 849;
+			case  79:  return 867;
+			case  80:  return 885;
+			case  81:  return 904;
+			case  82:  return 923;
+			case  83:  return 942;
+			case  84:  return 961;
+			case  85:  return 980;
+			case  86:  return 1000;
+			case  87:  return 1020;
+			case  88:  return 1040;
+			case  89:  return 1060;
+			case  90:  return 1080;
+			case  91:  return 1101;
+			case  92:  return 1122;
+			case  93:  return 1143;
+			case  94:  return 1164;
+			case  95:  return 1185;
+			case  96:  return 1207;
+			case  97:  return 1229;
+			case  98:  return 1251;
+			case  99:  return 1273;
+			case 100:  return 1295;
+			case 101:  return 1318;
+			case 102:  return 1341;
+			case 103:  return 1364;
+			case 104:  return 1387;
+			case 105:  return 1410;
+			case 106:  return 1433;
+			case 107:  return 1456;
+			case 108:  return 1479;
+			case 109:  return 1502;
+			case 110:  return 1525;
+			case 111:  return 1549;
+			case 112:  return 1573;
+			case 113:  return 1597;
+			case 114:  return 1621;
+			case 115:  return 1645;
+			case 116:  return 1669;
+			case 117:  return 1693;
+			case 118:  return 1717;
+			case 119:  return 1741;
+			case 120:  return 1765;
+			case 121:  return 1790;
+			case 122:  return 1815;
+			case 123:  return 1840;
+			case 124:  return 1865;
+			case 125:  return 1890;
+			case 126:  return 1915;
+			case 127:  return 1940;
+			case 128:  return 1965;
+			case 129:  return 1990;
+			case 130:  return 2015;
+			case 131:  return 2041;
+			case 132:  return 2067;
+			case 133:  return 2093;
+			case 134:  return 2119;
+			case 135:  return 2145;
+			case 136:  return 2171;
+			case 137:  return 2197;
+			case 138:  return 2223;
+			case 139:  return 2249;
+			case 140:  return 2275;
+			case 141:  return 2302;
+			case 142:  return 2329;
+			case 143:  return 2356;
+			case 144:  return 2383;
+			case 145:  return 2410;
+			case 146:  return 2437;
+			case 147:  return 2464;
+			case 148:  return 2491;
+			case 149:  return 2518;
+			case 150:  return 2545;
+			case 151:  return 2574; // 2573.3;
+			case 152:  return 2602; // 2601.6;
+			case 153:  return 2630; // 2629.9;
+			case 154:  return 2659; // 2658.2;
+			case 155:  return 2687; // 2686.5;
+			case 156:  return 2715; // 2714.8;
+			case 157:  return 2744; // 2743.1;
+			case 158:  return 2772; // 2771.4;
+			case 159:  return 2800; // 2799.7;
+			case 160:  return 2828;
+			case 161:  return 2854;
+			case 162:  return 2883;
+			case 163:  return 2912;
+			case 164:  return 2941;
+			case 165:  return 2970;
+			case 166:  return 2999;
+			case 167:  return 3028;
+			case 168:  return 3057;
+			case 169:  return 3086;
+			case 170:  return 3115;
+			case 171:  return 3145;
+			case 172:  return 3175;
+			case 173:  return 3205;
+			case 174:  return 3235;
+			case 175:  return 3265;
+			case 176:  return 3295;
+			case 177:  return 3325;
+			case 178:  return 3355;
+			case 179:  return 3385;
+			case 180:  return 3415;
+			case 181:  return 3446;
+			case 182:  return 3477;
+			case 183:  return 3508;
+			case 184:  return 3539;
+			case 185:  return 3570;
+			case 186:  return 3601;
+			case 187:  return 3632;
+			case 188:  return 3663;
+			case 189:  return 3694;
+			case 190:  return 3725;
+			case 191:  return 3757;
+			case 192:  return 3789;
+			case 193:  return 3821;
+			case 194:  return 3853;
+			case 195:  return 3885;
+			case 196:  return 3917;
+			case 197:  return 3949;
+			case 198:  return 3981;
+			case 199:  return 4013;
+			case 200:  return 4045;
+			case 201:  return 4078;
+			case 202:  return 4111;
+			case 203:  return 4114;
+			case 204:  return 4177;
+			case 205:  return 4210;
+			case 206:  return 4243;
+			case 207:  return 4276;
+			case 208:  return 4309;
+			case 209:  return 4342;
+			case 210:  return 4375;
+			case 211:  return 4409;
+			case 212:  return 4443;
+			case 213:  return 4477;
+			case 214:  return 4511;
+			case 215:  return 4545;
+			case 216:  return 4579;
+			case 217:  return 4613;
+			case 218:  return 4647;
+			case 219:  return 4681;
+			case 220:  return 4715;
+			case 221:  return 4750;
+			case 222:  return 4785;
+			case 223:  return 4820;
+			case 224:  return 4855;
+			case 225:  return 4890;
+			case 226:  return 4925;
+			case 227:  return 4960;
+			case 228:  return 5030;
+			case 229:  return 5065;
+			case 230:  return 5100;
+			case 231:  return 5136;
+			case 232:  return 5172;
+			case 233:  return 5208;
+			case 234:  return 5244;
+			case 235:  return 5280;
+			case 236:  return 5316;
+			case 237:  return 5352;
+			case 238:  return 5388;
+			case 239:  return 5424;
+			case 240:  return 5460;
+			case 241:  return 5497;
+			case 242:  return 5537;
+			case 243:  return 5571;
+			case 244:  return 5608;
+			case 245:  return 5645;
+			case 246:  return 5682;
+			case 247:  return 5719;
+			case 248:  return 5793;
+			case 249:  return 5830;
+			case 250:  return 5868;
+			case 251:  return 5906;
+			case 252:  return 5944;
+			case 253:  return 5982;
+			case 254:  return 6020;
+			case 255:  return 6058;
+		}
+	} else {
+		// db/pre-re/statpoint.txt
+		switch (getarg(0)) {
+			case   1:  return 48;
+			case   2:  return 51;
+			case   3:  return 54;
+			case   4:  return 57;
+			case   5:  return 60;
+			case   6:  return 64;
+			case   7:  return 68;
+			case   8:  return 72;
+			case   9:  return 76;
+			case  10:  return 80;
+			case  11:  return 85;
+			case  12:  return 90;
+			case  13:  return 95;
+			case  14:  return 100;
+			case  15:  return 105;
+			case  16:  return 111;
+			case  17:  return 117;
+			case  18:  return 123;
+			case  19:  return 129;
+			case  20:  return 135;
+			case  21:  return 142;
+			case  22:  return 149;
+			case  23:  return 156;
+			case  24:  return 163;
+			case  25:  return 170;
+			case  26:  return 178;
+			case  27:  return 186;
+			case  28:  return 194;
+			case  29:  return 202;
+			case  30:  return 210;
+			case  31:  return 219;
+			case  32:  return 228;
+			case  33:  return 237;
+			case  34:  return 246;
+			case  35:  return 255;
+			case  36:  return 265;
+			case  37:  return 275;
+			case  38:  return 285;
+			case  39:  return 295;
+			case  40:  return 305;
+			case  41:  return 316;
+			case  42:  return 327;
+			case  43:  return 338;
+			case  44:  return 349;
+			case  45:  return 360;
+			case  46:  return 372;
+			case  47:  return 384;
+			case  48:  return 396;
+			case  49:  return 408;
+			case  50:  return 420;
+			case  51:  return 433;
+			case  52:  return 446;
+			case  53:  return 459;
+			case  54:  return 472;
+			case  55:  return 485;
+			case  56:  return 499;
+			case  57:  return 513;
+			case  58:  return 527;
+			case  59:  return 541;
+			case  60:  return 555;
+			case  61:  return 570;
+			case  62:  return 585;
+			case  63:  return 600;
+			case  64:  return 615;
+			case  65:  return 630;
+			case  66:  return 646;
+			case  67:  return 662;
+			case  68:  return 678;
+			case  69:  return 694;
+			case  70:  return 710;
+			case  71:  return 727;
+			case  72:  return 744;
+			case  73:  return 761;
+			case  74:  return 778;
+			case  75:  return 795;
+			case  76:  return 813;
+			case  77:  return 831;
+			case  78:  return 849;
+			case  79:  return 867;
+			case  80:  return 885;
+			case  81:  return 904;
+			case  82:  return 923;
+			case  83:  return 942;
+			case  84:  return 961;
+			case  85:  return 980;
+			case  86:  return 1000;
+			case  87:  return 1020;
+			case  88:  return 1040;
+			case  89:  return 1060;
+			case  90:  return 1080;
+			case  91:  return 1101;
+			case  92:  return 1122;
+			case  93:  return 1143;
+			case  94:  return 1164;
+			case  95:  return 1185;
+			case  96:  return 1207;
+			case  97:  return 1229;
+			case  98:  return 1251;
+			case  99:  return 1273;
+			case 100:  return 1295;
+			case 101:  return 1318;
+			case 102:  return 1341;
+			case 103:  return 1364;
+			case 104:  return 1387;
+			case 105:  return 1410;
+			case 106:  return 1434;
+			case 107:  return 1458;
+			case 108:  return 1482;
+			case 109:  return 1506;
+			case 110:  return 1530;
+			case 111:  return 1555;
+			case 112:  return 1580;
+			case 113:  return 1605;
+			case 114:  return 1630;
+			case 115:  return 1655;
+			case 116:  return 1681;
+			case 117:  return 1707;
+			case 118:  return 1733;
+			case 119:  return 1759;
+			case 120:  return 1785;
+			case 121:  return 1812;
+			case 122:  return 1839;
+			case 123:  return 1866;
+			case 124:  return 1893;
+			case 125:  return 1920;
+			case 126:  return 1948;
+			case 127:  return 1976;
+			case 128:  return 2004;
+			case 129:  return 2032;
+			case 130:  return 2060;
+			case 131:  return 2089;
+			case 132:  return 2118;
+			case 133:  return 2147;
+			case 134:  return 2176;
+			case 135:  return 2205;
+			case 136:  return 2235;
+			case 137:  return 2265;
+			case 138:  return 2295;
+			case 139:  return 2325;
+			case 140:  return 2355;
+			case 141:  return 2386;
+			case 142:  return 2417;
+			case 143:  return 2448;
+			case 144:  return 2479;
+			case 145:  return 2510;
+			case 146:  return 2542;
+			case 147:  return 2574;
+			case 148:  return 2606;
+			case 149:  return 2638;
+			case 150:  return 2670;
+			case 151:  return 2703;
+			case 152:  return 2736;
+			case 153:  return 2769;
+			case 154:  return 2802;
+			case 155:  return 2835;
+			case 156:  return 2869;
+			case 157:  return 2903;
+			case 158:  return 2937;
+			case 159:  return 2971;
+			case 160:  return 3005;
+			case 161:  return 3040;
+			case 162:  return 3075;
+			case 163:  return 3110;
+			case 164:  return 3145;
+			case 165:  return 3180;
+			case 166:  return 3216;
+			case 167:  return 3252;
+			case 168:  return 3288;
+			case 169:  return 3324;
+			case 170:  return 3360;
+			case 171:  return 3397;
+			case 172:  return 3434;
+			case 173:  return 3471;
+			case 174:  return 3508;
+			case 175:  return 3545;
+			case 176:  return 3583;
+			case 177:  return 3621;
+			case 178:  return 3659;
+			case 179:  return 3697;
+			case 180:  return 3735;
+			case 181:  return 3774;
+			case 182:  return 3813;
+			case 183:  return 3852;
+			case 184:  return 3891;
+			case 185:  return 3930;
+			case 186:  return 3970;
+			case 187:  return 4010;
+			case 188:  return 4050;
+			case 189:  return 4090;
+			case 190:  return 4130;
+			case 191:  return 4171;
+			case 192:  return 4212;
+			case 193:  return 4253;
+			case 194:  return 4294;
+			case 195:  return 4335;
+			case 196:  return 4377;
+			case 197:  return 4419;
+			case 198:  return 4461;
+			case 199:  return 4503;
+			case 200:  return 4545;
+			case 201:  return 4588;
+			case 202:  return 4631;
+			case 203:  return 4674;
+			case 204:  return 4717;
+			case 205:  return 4760;
+			case 206:  return 4804;
+			case 207:  return 4848;
+			case 208:  return 4892;
+			case 209:  return 4936;
+			case 210:  return 4980;
+			case 211:  return 5025;
+			case 212:  return 5070;
+			case 213:  return 5115;
+			case 214:  return 5160;
+			case 215:  return 5205;
+			case 216:  return 5251;
+			case 217:  return 5297;
+			case 218:  return 5343;
+			case 219:  return 5389;
+			case 220:  return 5435;
+			case 221:  return 5482;
+			case 222:  return 5529;
+			case 223:  return 5576;
+			case 224:  return 5623;
+			case 225:  return 5670;
+			case 226:  return 5718;
+			case 227:  return 5766;
+			case 228:  return 5814;
+			case 229:  return 5862;
+			case 230:  return 5910;
+			case 231:  return 5959;
+			case 232:  return 6008;
+			case 233:  return 6057;
+			case 234:  return 6106;
+			case 235:  return 6155;
+			case 236:  return 6205;
+			case 237:  return 6255;
+			case 238:  return 6305;
+			case 239:  return 6355;
+			case 240:  return 6405;
+			case 241:  return 6456;
+			case 242:  return 6507;
+			case 243:  return 6558;
+			case 244:  return 6609;
+			case 245:  return 6660;
+			case 246:  return 6712;
+			case 247:  return 6764;
+			case 248:  return 6816;
+			case 249:  return 6868;
+			case 250:  return 6920;
+			case 251:  return 6973;
+			case 252:  return 7026;
+			case 253:  return 7079;
+			case 254:  return 7132;
+			case 255:  return 7185;
+		}
+	}
+	return 0; // BaseLevel out of range
+}
+
+}

@@ -1,0 +1,40 @@
+//===== eAthena Script =======================================
+//= Heal Npc
+//===== By: ==================================================
+//= Lotsa People (1.x)
+//===== Current Version: =====================================
+//= 3.1
+//===== Compatible With: =====================================
+//= eAthena 0.1+;
+//===== Description: =========================================
+//= Healer NPC Which Heals For Free
+//===== Additional Comments: =================================
+//= 2.0 Duplicates And Changed A Bit you can replace this script file by 
+//= heal_payment.txt if you want that players have to pay their healings. [Darkchild]
+//= 3.0 Changed and edited the script added other warp points of maps. [massdriller]
+//= 3.1 Optimized for the greater good. [Kisuka]
+//============================================================
+
+morocc,159,96,5	script	Healer	1502,{
+
+	percentheal 100,100;
+	close;
+}
+
+// --------- NPC Clones ---------
+ayothaya,155,111,5	duplicate(Healer)	Healer#h1-2	1502
+geffen,121,61,5	duplicate(Healer)	Healer#h1-3	1502
+umbala,94,162,5	duplicate(Healer)	Healer#h1-4	1502
+pay_arche,61,122,5	duplicate(Diego)	Diego#h1-5	1502
+alberta,185,144,5	duplicate(Healer)	Healer#h1-6	1502
+aldebaran,134,123,5	duplicate(Healer)	Healer#h1-7	1502
+izlude,125,118,5	duplicate(Healer)	Healer#h1-8	1502
+xmas,149,136,5	duplicate(Healer)	Healer#h1-9	1502
+comodo,188,162,5	duplicate(Healer)	Healer#h1-10	1502
+amatsu,200,80,5	duplicate(Healer)	Healer#h1-11	1502
+gonryun,164,130,5	duplicate(Healer)	Healer#h1-12	1502
+yuno,152,186,5	duplicate(Healer)	Healer#h1-13	1502
+niflheim,188,180,5	duplicate(Healer)	Healer#h1-14	1502
+louyang,225,103,5	duplicate(Healer)	Healer#h1-15	1502
+
+

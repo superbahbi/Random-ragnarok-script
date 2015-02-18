@@ -1,0 +1,298 @@
+//===== rAthena Script =======================================
+//= Quest System - SQL
+//===== By ===================================================
+//= llchrisll
+//===== Version ==============================================
+//= 1.0 - Initial Release
+//===== Compatible With ======================================
+//= Every Athena SQL SVN 
+//===== Tested With ==========================================
+//= ...
+//===== Description ==========================================
+//= ...      
+//===== Comments =============================================
+//= None yet... 
+//===== ToDo List ============================================
+//= ....
+//===========================================================
+//===== SQL Tables ==========================================
+/*
+CREATE TABLE IF NOT EXISTS `quest_list` ( 
+ `npc_id` int(5) unsigned NOT NULL default '1',
+ `quest_id` int(10) unsigned default '1',
+ `quest_type` tinyint(5) unsigned default '1',
+ `mob_id` int(5) unsigned default '0',
+ `mob_am` int(12) unsigned default '0',
+ `item_id` int(10) unsigned default '0',
+ `item_am` int(10) unsigned default '0',
+ `reward_id` int(10) unsigned default '0',
+ `reward_am` int(10) unsigned default '0',
+ `check` tinyint(3) unsigned default '0',
+ `limit` tinyint(3) unsigned default '0',
+ `level` tinyint(5) unsigned default '0'
+ ) ENGINE=MyISAM;
+ 
+CREATE TABLE IF NOT EXISTS `quest_npc` (
+ `npc_id` int(5) unsigned NOT NULL default '1',
+ `npc_name` varchar(255) unsigned default 'NewNPC',
+ `npc_map` varchar(25) unsigned default 'prontera',
+ `npc_x` tinyint(5) unsigned default '0',
+ `npc_y` tinyint(5) unsigned default '0' 
+) ENGINE=MyISAM;
+*/
+map,x,y,0	script Quest Manager	-1,{
+mes .n$;
+if(getgmlevel() < .gm) {
+	mes "I'm sorry, but only an GM of Level "+.gm+" and higher can use my service.";
+	close;
+}
+mes "Hello, "+strcharinfo(0);
+if(query_sql("SHOW TABLES LIKE 'quest_list'",.@q_list$) == "") {
+	mes "It seems like the database tables weren't created yet.";
+	mes "I would recommend you to do that first.";
+	next;
+	mes .n$;
+}
+mes "How can I help you?";
+next;
+switch(select("- Overview:- Quest Management:- "+( (.@q_list$ == "")?"Create":"Delete")+" SQL Tables:- Nothing")) {
+	case 1:
+	mes .n$;
+	mes "Quests: "+query_sql("SELECT count(`quest_id`) FROM `quest_list` WHERE `quest_id` != 0",.@q_ids);
+	mes "NPCs: "+query_sql("SELECT `npc_id` FROM `quest_npc` WHERE `npc_id` != 0",.@n_ids);
+	for( set .@l,0; .@l < getarraysize(.@n_ids); set .@l,.@l + 1)
+		mes "- "+query_sql("SELECT `npc_name` FROM `quest_npc` WHERE `npc_id` = '"+.@n_ids[.@.l]+"'",.@n_name$)+": "+query_sql("SELECT count(`quest_id`) FROM `quest_list` WHERE `npc_id` != "+.@n_ids[.@l]+"",.@q_count);
+		
+	break;
+	
+	case 2:
+	mes .n$;
+	mes "===[Quest Management]===";
+	mes "What do you like to do?";
+	next;
+	switch(select("- Add Quests:- Remove Quests:- Nothing")) {
+		case 1:
+		/*
+		Erst die Map auswählen bzw. wieviele auf welcher Map sind.
+		query_sql "SELECT `npc_map` FROM `quest_npc`",.@n_map$;
+		*/
+		mes .n$;
+		mes "Please choose to which NPC you want to add an quest.";
+		query_sql "SELECT `npc_id` , `npc_name` FROM `quest_npc` WHERE `npc_map` = '"+.@n_map[.@map]+"'",.@n_id,.@n_list$;
+		for ( set .@m,0; .@m < getarraysize(.@n_list$); set .@m,.@m + 1)
+			set .@npc_menu$,.@npc_menu$ + "- "+.@n_list$[.@m]+" (ID: "+.@n_id[.@m]+")"+( (.@n_list$[.@m+1] == "")?"":":");
+		
+		next;
+		set .@npc_c,select(.@npc_menu$) - 1;
+		mes .n$;
+		if(query_sql("SELECT `quest_id` FROM `quest_list` WHERE `npc_id` = '"+.@n_id[.@npc_c]+"'",.@q_list) >= 128) {
+			mes "I'm sorry, but you can't add anymore quests to this NPC, please try another one.";
+			close;
+		}
+		set .@que_id,.@q_list[getarraysize(.@q_list) - 1] + 1;
+		mes "Please choose what type of quest it will be:";
+		next;
+		set .@type,select("- Monster Hunting:- Item Collecting");
+		set .@count,0;
+		mes .n$;
+
+		// Monster Hunting
+		if(.@type) == 1) {
+			mes "How many mobs should be hunted?";
+			mes "^FF0000Note: Maximum "+.mob_ct+"^000000";
+			if(input(.@ct,1,.mob_ct) != 0) {
+				next;
+				mes .n$;
+				mes "Invalid Amount, please try again.";
+				close;
+			}
+			next;
+			mes .n$;
+			mes "Now please choose the level requirement:";
+			mes "^FF0000Note: You can't go over the maximum level of the server!^000000";
+			if(input(.@lvl,1,.m_level) != 0) {
+				next;
+				mes .n$;
+				mes "Invalid Level, please try again.";
+				close;
+			}
+			set .@count,1;
+			while(.@count != .@ct) {
+				next;
+				mes .n$;
+				mes "Please type the Mob ID for #"+.@count+",which should be hunted:";
+				next;
+				input .@mobid;
+				mes .n$;
+				if(strmobinfo(1,.@mobid) == "null" || strmobinfo(1,.@mobid) == "") {
+					mes "Mob not found, please be sure that you have typed the ID correctly and try again.";
+					continue;
+				}
+				mes "Now type the amount to hunt:";
+				mes "Minimum: "+.mob_min+", Maximum: "+.mob_max;
+				next;
+				if(input(.@mobam,.mob_min,.mob_max) != 0) {
+					mes .n$;
+					mes "Invalid Amount, please try again.";
+					continue;
+				}
+				query_sql "INSERT INTO `quest_list` ( `npc_id` , `quest_id` , `mob_id` , `mob_am` ) VALUES ( '"+.@n_id[.@npc_c]+"', '"+.@que_id+" , '"+.@mobid+"' , '"+.@mobam+"' )";
+				set .@count,.@count + 1;
+			}
+			query_sql "UPDATE `quest_list` SET `level` = '"+.@lvl+"' WHERE `npc_id` = '"+.@n_id[.@npc_c]+"' AND `quest_id` = '"+.@que_id;
+			// Item Collecting
+		} else if(.@type == 2) {
+			mes "How many items do you want to add?";
+			mes "^FF0000Note: Maximum "+.item_ct+"^000000";
+			if(input(.@ct,1,.item_ct) != 0) {
+				next;
+				mes .n$;
+				mes "Invalid Amount, please try again.";
+				close;
+			}
+			set .@count,1;
+			while(.@count != .@ct) {
+				next;
+				mes .n$;
+				mes "Type the Item ID for #"+.@count+":";
+				next;
+				input .@itemid;
+				mes .n$;
+				if(getitemname(.@itemid) == "null" || getitemname(.@itemid) == "") {
+					mes "The ID "+.@itemid+" doesn't exist. Please try again.";
+					continue;
+				}
+				mes "Type the amount to collect next:";
+				mes "^FF0000Note: Minimum: "+.item_min+", Maximum: "+.item_max+"^000000";
+				next;
+				if(input(.@itemam,.item_min,.item_max) != 0) {
+					mes .n$;
+					mes "Invalid Amount, please try again.";
+					continue;
+				}
+				mes .n$;
+				mes "Item: "+getitemname(.@itemid)+" ("+.@itemid+")";
+				mes "Amount: "+.@itemam;
+				mes " ";
+				mes "Correct?";
+				if(select("- Yes:- No") - 1) continue;
+				query_sql "INSERT INTO `quest_list` ( `npc_id` , `quest_id` , `item_id` , `item_am` ) VALUES ( '"+.@n_id[.@npc_c]+"', '"+.@que_id+" , '"+.@itemid+"' , '"+.@itemam+"' )";
+				set .@count,.@count + 1;
+			}
+		}
+		next;
+		mes .n$;
+		mes "Next is the Quest Limit, type the value it should be:";
+		mes "0 won't be accepted and 1000 is Unlimited";
+		if(input(.@limit,0,1000) != 0) {
+			mes .n$;
+			mes "You have put an Invalid Limit, please try again.";
+			mes "0 won't be accepted and 1000 is Unlimited";
+			next;
+			if(input(.@limit,0,1000) != 0) {
+				mes .n$;
+				mes "You have put an Invalid Limit again, aborting quest creation.";
+				close;
+			}
+		mes "The Quest ID#"+.@que_id+" has been added successfully.";
+		query_sql "UPDATE `quest_list` SET `quest_type` = '"+.@type+"' , `limit` = '"+.@limit+"' WHERE `npc_id` = '"+.@n_id[.@npc_c]+"' AND `quest_id` = '"+.@que_id;
+		
+	} else {
+		mes .n$;
+		mes "Please choose from which Job Row the Fame Quests should be deleted:";
+		set @t,select("- Swordman:- Mage:- Archer:- Acolyte:- Merchant:- Thief");
+		next;
+		mes .n$;
+		mes "Now choose which quest you want to delete:";
+		next;
+		set .@del,select(FAME_FUNC(0,@t,0)) - 1;
+		mes .n$;
+		mes "You have chosen Quest ID #"+getd("$f_quest_id_"+@t+"["+.@del+"]");
+		mes "Is that correct?";
+		next;
+		if(select("- Yes:- No") - 1) close;
+		mes .n$;
+		mes "The Quest ID#"+getd("$f_quest_id_"+@t+"["+.@del+"]")+" has been deleted successfully.";
+		if(getd("$f_quest_"+getd("$f_quest_id_"+@t+"["+.@del+"]")+"_"+@t+"_type") == 1) {
+			deletearray getd("$f_quest_"+getd("$f_quest_id_"+@t+"["+.@del+"]")+"_"+@t+"_mid["+getarraysize(getd("$f_quest_"+getd("$f_quest_id_"+@t+"["+.@del+"]")+"_"+@t+"_mid"))+"]"),1;
+			deletearray getd("$f_quest_"+getd("$f_quest_id_"+@t+"["+.@del+"]")+"_"+@t+"_mam["+getarraysize(getd("$f_quest_"+getd("$f_quest_id_"+@t+"["+.@del+"]")+"_"+@t+"_mam"))+"]"),1;
+		} else {
+			deletearray getd("$f_quest_"+getd("$f_quest_id_"+@t+"["+.@del+"]")+"_"+@t+"_iid["+getarraysize(getd("$f_quest_"+getd("$f_quest_id_"+@t+"["+.@del+"]")+"_"+@t+"_iid"))+"]"),1;
+			deletearray getd("$f_quest_"+getd("$f_quest_id_"+@t+"["+.@del+"]")+"_"+@t+"_iam["+getarraysize(getd("$f_quest_"+getd("$f_quest_id_"+@t+"["+.@del+"]")+"_"+@t+"_iam"))+"]"),1;
+		}
+		deletearray getd("$f_quest_id_"+@t+"["+.@del+"]"),1;
+		setd("$f_quest_"+getd("$f_quest_id_"+@t+"["+.@del+"]")+"_"+@t+"_type"),0;
+	}
+	break;
+		break;
+		
+		case 2:
+		
+		case 3:
+		break;
+	}
+	close;
+	
+	case 3:
+	mes .n$;
+	if(.@q_list$ == "") {
+		query_sql "CREATE TABLE IF NOT EXISTS `quest_list` ( `npc_id` int(5) unsigned NOT NULL default '1', `quest_id` int(10) unsigned default '1', `quest_type` tinyint(5) unsigned default '1', `mob_id` int(5) unsigned default '0', `mob_am` int(12) unsigned default '0', `item_id` int(10) unsigned default '0', `item_am` int(10) unsigned default '0', `reward_id` int(10) unsigned default '0', `reward_am` int(10) unsigned default '0', `check` tinyint(3) unsigned default '0', `limit` tinyint(3) unsigned default '0', `level` tinyint(5) unsigned default '0' ) ";
+		query_sql "CREATE TABLE IF NOT EXISTS `quest_npc` ( `npc_id` int(5) unsigned NOT NULL default '1', `npc_name` varchar(255) unsigned default 'NewNPC', `npc_map` varchar(25) unsigned default 'unknown.gat', `npc_x` tinyint(5) unsigned default '0', `npc_y` tinyint(5) unsigned default '0'  )"
+		mes "The tables have been created.";
+	} else {
+		query_sql "DROP TABLE IF EXISTS `quest_list`";
+		query_sql "DROP TABLE IF EXISTS `quest_npc`";
+		mes "The tables have been deleted.";
+	}
+	break;
+	
+	case 4:
+	break;
+}
+close;
+
+OnInit:
+set .@n$,"["+strnpcinfo(1)+"]";
+set .gm,60; // GM Access Level
+// ===== Quest Settings =====
+// Minimum and Maximum Mob Amount
+set .mob_min,1;
+set .mob_max,10;
+// Maximum Mobs you can hunt at the same time
+set .mob_ct,3;
+// Level Restriction
+set .m_level,99; // Max Base Level of the Server
+// Minimum and Maximum Item Amount
+set .item_min,1;
+set .item_max,200;
+// Maximum Items you can collect at the same time
+set .item_ct,5;
+end;
+}
+
+Quest NPC's:
+map,x,y,0	script	QuestNPC#1	-1,{
+	callfunc("QUEST_MAIN",strnpcinfo(2),strnpcinfo(4));
+
+OnInit:
+set .@n$,query_sql("SELECT `npc_name` FROM `quest_npc` WHERE `npc_id` = '"+strnpcinfo(2)+"' AND `npc_map` = '"+strnpcinfo(4)+"'");
+setnpcdisplay(strnpcinfo(2),.@n$);
+set $@qnpc_count,$@qnpc_count + 1;
+end;
+}
+
+function	script	QUEST_MAIN	{
+// getarg(0): NPC ID
+// getarg(1): NPC Map
+query_sql "SELECT `quest_id` , `quest_type` , `level` , `check` , `limit` FROM `quest_list` WHERE `npc_id` = '"+getarg(0)+"' AND `npc_map` = '"+getarg(1)+"'",.@q_id,.@q_type,.@q_lvl,.@che,.@limit;
+for ( set .@q,0; .@q < getarraysize(.@q_id); set .@q,.@q + 1) 
+	set .@q_list$,.@q_list$ + "- ID: "+.@q_id[.@q]+" ("+ ( (.@q_type[.@q] == 1)?"Monster Hunting":"Item Collecting")+")"+( (.@q_lvl[.@q] != 0)?" (Level: "+.@q_lvl[.@q]+")":"") + ( (.@q_id[.@q+1] != 0)?":":"");
+	
+set .@n$,query_sql("SELECT `npc_name` FROM `quest_npc` WHERE `npc_id` = '"+getarg(0)+"' AND `npc_map` = '"+getarg(1)+"'");
+mes .@n$;
+mes "Please choose the quest from below you want to accept or see your progress.";
+next;
+set .@q_c,select(.@q_list$) - 1;
+mes .@n$;
+mes "
+}

@@ -1,0 +1,377 @@
+geffen,147,132,4	script	Jeku	706,{
+	mes "What's up?";
+	mes "It's been a long time since we had new gears coming.";
+	mes "I came to show you some new stuffs!";
+	next;
+	mes "[Jeku]";
+	mes "I thought of making something that would excite you guys :)";
+	next;
+	mes "[Jeku]";
+	mes "Here take a look on some of the gears that I can make:";
+	next;
+	menu "Executioner Hood",H_Exec,"Yellow Bandana",H_Yell,"Tiger Mask",H_Tige,"Captain's Hat",H_Capt,"Flying Evil Wings",H_Flye,"Holy Marcher Hat",H_Holy,"Beer Hat",H_Beer,"Ayothaya's King Hat",H_Ayot,"Helm of Abyss",H_Helm,"Shark Hat",H_Shar,"Observer",H_Obse,"Robo Eye",H_Robo,"Scuba Gear",H_Scub,"Magnolia Hat",H_Magn,"Jasper Crest",H_Jasp,"Loki Mask",H_Loki,"Nevermind",H_Close;
+	H_Exec:
+		mes "[Jeku]";
+		mes "Go get some:";
+		next;
+		mes "377 Executioner's Mitten";
+		mes "1 Hood[1]";
+		mes "18 Violet Dyestuff";
+		menu "Make",M_Exec,"Cancel",H_Close;
+		M_Exec:
+			mes "Uhhh?";
+			next;
+			if (countitem(7017) < 377) goto H_Lack;
+			if (countitem(2502) < 1) goto H_Lack;
+			if (countitem(981) < 18) goto H_Lack;
+			mes "[Jeku]";
+			mes "Nice one dude, you've hunted enough.";
+			next;
+			delitem 7017,377;
+			delitem 2502,1;
+			delitem 981,18;
+			getitem 5304,1;
+			close;
+	H_Yell:
+		mes "[Jeku]";
+		mes "Go get some:";
+		next;
+		mes "1 Pirate Bandana[1]";
+		mes "345 Gold";
+		mes "8 Lemon Dyestuff";
+		menu "Make",M_Yell,"Cancel",H_Close;
+		M_Yell:
+			mes "Uhhh?";
+			next;
+			if (countitem(5350) < 1) goto H_Lack;
+			if (countitem(969) < 345) goto H_Lack;
+			if (countitem(976) < 8) goto H_Lack;
+			mes "[Jeku]";
+			mes "Nice one dude, you've hunted enough.";
+			next;
+			delitem 5350,1;
+			delitem 969,345;
+			delitem 976,8;
+			getitem 5277,1;
+			close;
+	H_Tige:
+		mes "[Jeku]";
+		mes "Go get some:";
+		next;
+		mes "12 Tiger's Footskin";
+		mes "24 Tiger Skin";
+		mes "36 Tiger Panty";
+		mes "1 Platinum Coin";
+		menu "Make",M_Tige,"Cancel",H_Close;
+		M_Tige:
+			mes "Uhhh?";
+			next;
+			if (countitem(1030) < 12) goto H_Lack;
+			if (countitem(1029) < 24) goto H_Lack;
+			if (countitem(7267) < 36) goto H_Lack;
+			if (countitem(677) < 1) goto H_Lack;
+			mes "[Jeku]";
+			mes "Nice one dude, you've hunted enough.";
+			next;
+			delitem 1030,12;
+			delitem 1029,24;
+			delitem 7267,36;
+			delitem 677,1;
+			getitem 5098,1;
+			close;
+	H_Capt:
+		mes "[Jeku]";
+		mes "Go get some:";
+		next;
+		mes "1 Beret";
+		mes "12 Black Dyestuff";
+		mes "123 Black Bear Skin";
+		mes "1234 Fragment";
+		menu "Make",M_Capt,"Cancel",H_Close;
+		M_Capt:
+			mes "Uhhh?";
+			next;
+			if (countitem(5172) < 1) goto H_Lack;
+			if (countitem(983) < 12) goto H_Lack;
+			if (countitem(7161) < 123) goto H_Lack;
+			if (countitem(7094) < 1234) goto H_Lack;
+			mes "[Jeku]";
+			mes "Nice one dude, you've hunted enough.";
+			next;
+			delitem 5172,1;
+			delitem 983,12;
+			delitem 7161,123;
+			delitem 7094,1234;
+			getitem 5184,1;
+			close;
+	H_Flye:
+		mes "[Jeku]";
+		mes "Go get some:";
+		next;
+		mes "1 Evil Wing";
+		mes "1 Evil Wing Ears";
+		mes "894 Little Evil Wing";
+		menu "Make",M_Flye,"Cancel",H_Close;
+		M_Flye:
+			mes "Uhhh?";
+			next;
+			if (countitem(2255) < 1) goto H_Lack;
+			if (countitem(5068) < 1) goto H_Lack;
+			if (countitem(1039) < 894) goto H_Lack;
+			mes "[Jeku]";
+			mes "Nice one dude, you've hunted enough.";
+			next;
+			delitem 2255,1;
+			delitem 5068,1;
+			delitem 1039,894;
+			getitem 5376,1;
+			close;
+	H_Holy:
+		mes "[Jeku]";
+		mes "Go get some:";
+		next;
+		mes "1 Army Cap";
+		mes "10 Cobaltblue Dyestuff";
+		mes "1 Blue Hairband";
+		menu "Make",M_Holy,"Cancel",H_Close;
+		M_Holy:
+			mes "Uhhh?";
+			next;
+			if (countitem(2261) < 1) goto H_Lack;
+			if (countitem(978) < 10) goto H_Lack;
+			if (countitem(5052) < 1) goto H_Lack;
+			mes "[Jeku]";
+			mes "Nice one dude, you've hunted enough.";
+			next;
+			delitem 2261,1;
+			delitem 978,10;
+			delitem 5052,1;
+			getitem 5225,1;
+			close;
+	H_Beer:
+		mes "[Jeku]";
+		mes "Go get some:";
+		next;
+		mes "750 Alcohol";
+		mes "1500 Empty Bottle";
+		mes "3 Platinum Coin";
+		menu "Make",M_Beer,"Cancel",H_Close;
+		M_Beer:
+			mes "Uhhh?";
+			next;
+			if (countitem(970) < 750) goto H_Lack;
+			if (countitem(713) < 1500) goto H_Lack;
+			if (countitem(677) < 3) goto H_Lack;
+			mes "[Jeku]";
+			mes "Nice one dude, you've hunted enough.";
+			next;
+			delitem 970,750;
+			delitem 713,1500;
+			delitem 677,3;
+			getitem 5416,1;
+			close;
+	H_Ayot:
+		mes "[Jeku]";
+		mes "Go get some:";
+		next;
+		mes "1 Crown[1]";
+		mes "1 Jewel Crown";
+		mes "234 Used Iron Plate";
+		menu "Make",M_Ayot,"Cancel",H_Close;
+		M_Ayot:
+			mes "Uhhh?";
+			next;
+			if (countitem(5165) < 1) goto H_Lack;
+			if (countitem(5002) < 1) goto H_Lack;
+			if (countitem(7319) < 234) goto H_Lack;
+			mes "[Jeku]";
+			mes "Nice one dude, you've hunted enough.";
+			next;
+			delitem 5165,1;
+			delitem 5002,1;
+			delitem 7319,234;
+			getitem 5312,1;
+			close;
+	H_Helm:
+		mes "[Jeku]";
+		mes "Go get some:";
+		next;
+		mes "150 Reins";
+		mes "150 Blade Lost in Darkness";
+		mes "1 Abysmal Knight Card";
+		menu "Make",M_Helm,"Cancel",H_Close;
+		M_Helm:
+			mes "Uhhh?";
+			next;
+			if (countitem(1064) < 150) goto H_Lack;
+			if (countitem(7023) < 150) goto H_Lack;
+			if (countitem(4140) < 1) goto H_Lack;
+			mes "[Jeku]";
+			mes "Nice one dude, you've hunted enough.";
+			next;
+			delitem 1064,150;
+			delitem 7023,150;
+			delitem 4140,1;
+			getitem 5363,1;
+			close;
+	H_Shar:
+		mes "[Jeku]";
+		mes "Go get some:";
+		next;
+		mes "1 Blue Fish";
+		mes "99 Ancient Tooth";
+		mes "3 Gold Coin";
+		menu "Make",M_Shar,"Cancel",H_Close;
+		M_Shar:
+			mes "Uhhh?";
+			next;
+			if (countitem(5065) < 1) goto H_Lack;
+			if (countitem(1053) < 99) goto H_Lack;
+			if (countitem(671) < 3) goto H_Lack;
+			mes "[Jeku]";
+			mes "Nice one dude, you've hunted enough.";
+			next;
+			delitem 5065,1;
+			delitem 1053,99;
+			delitem 671,3;
+			getitem 5508,1;
+			close;
+	H_Obse:
+		mes "[Jeku]";
+		mes "Go get some:";
+		next;
+		mes "1 Eye of Dullahan";
+		mes "123 Steel";
+		mes "2 Platinum Coin";
+		menu "Make",M_Obse,"Cancel",H_Close;
+		M_Obse:
+			mes "Uhhh?";
+			next;
+			if (countitem(2614) < 1) goto H_Lack;
+			if (countitem(999) < 123) goto H_Lack;
+			if (countitem(677) < 2) goto H_Lack;
+			mes "[Jeku]";
+			mes "Nice one dude, you've hunted enough.";
+			next;
+			delitem 2614,1;
+			delitem 999,123;
+			delitem 677,2;
+			getitem 5315,1;
+			close;
+	H_Robo:
+		mes "[Jeku]";
+		mes "Go get some:";
+		next;
+		mes "789 Metal Fragment";
+		mes "50 Shining Spear Blade";
+		menu "Make",M_Robo,"Cancel",H_Close;
+		M_Robo:
+			mes "Uhhh?";
+			next;
+			if (countitem(7095) < 789) goto H_Lack;
+			if (countitem(7109) < 50) goto H_Lack;
+			mes "[Jeku]";
+			mes "Nice one dude, you've hunted enough.";
+			next;
+			delitem 7095,789;
+			delitem 7109,50;
+			getitem 5325,1;
+			close;
+	H_Scub:
+		mes "[Jeku]";
+		mes "Go get some:";
+		next;
+		mes "123 Green Bijou";
+		mes "3 Saphien's Armor of Ocean";
+		menu "Make",M_Scub,"Cancel",H_Close;
+		M_Scub:
+			mes "Uhhh?";
+			next;
+			if (countitem(7445) < 123) goto H_Lack;
+			if (countitem(2346) < 3) goto H_Lack;
+			mes "[Jeku]";
+			mes "Nice one dude, you've hunted enough.";
+			next;
+			delitem 7445,123;
+			delitem 2346,3;
+			getitem 5397,1;
+			close;
+	H_Magn:
+		mes "[Jeku]";
+		mes "Go get some:";
+		next;
+		mes "123 Egg";
+		mes "456 Old Frying Pan";
+		mes "789 Cooking Oil";
+		menu "Make",M_Magn,"Cancel",H_Close;
+		M_Magn:
+			mes "Uhhh?";
+			next;
+			if (countitem(574) < 123) goto H_Lack;
+			if (countitem(7031) < 456) goto H_Lack;
+			if (countitem(7457) < 789) goto H_Lack;
+			mes "[Jeku]";
+			mes "Nice one dude, you've hunted enough.";
+			next;
+			delitem 574,123;
+			delitem 7031,456;
+			delitem 7457,789;
+			getitem 5365,1;
+			close;
+	H_Jasp:
+		mes "[Jeku]";
+		mes "Go get some:";
+		next;
+		mes "1 Platinum Coin";
+		mes "1 Scarlet Dyestuff";
+		mes "99 Porcupine Quill";
+		menu "Make",M_Jasp,"Cancel",H_Close;
+		M_Jasp:
+			mes "Uhhh?";
+			next;
+			if (countitem(677) < 1) goto H_Lack;
+			if (countitem(975) < 1) goto H_Lack;
+			if (countitem(1027) < 99) goto H_Lack;
+			mes "[Jeku]";
+			mes "Nice one dude, you've hunted enough.";
+			next;
+			delitem 677,1;
+			delitem 975,1;
+			delitem 1027,99;
+			getitem 5396,1;
+			close;
+	H_Loki:
+		mes "[Jeku]";
+		mes "Go get some:";
+		next;
+		mes "999 Loki's Whisper";
+		mes "8 Cobaltblue Dyestuff";
+		mes "8 Scarlet Dyestuff";
+		mes "1 TCG";
+		menu "Make",M_Loki,"Cancel",H_Close;
+		M_Loki:
+			mes "Uhhh?";
+			next;
+			if (countitem(7019) < 999) goto H_Lack;
+			if (countitem(978) < 8) goto H_Lack;
+			if (countitem(975) < 8) goto H_Lack;
+			if (countitem(7227) < 1) goto H_Lack;
+			mes "[Jeku]";
+			mes "Nice one dude, you've hunted enough.";
+			next;
+			delitem 7019,999;
+			delitem 978,8;
+			delitem 975,8;
+			delitem 7227,1;
+			getitem 5332,1;
+			close;
+	H_Lack:
+		mes "[Jeku]";
+		mes "Oh come on, I know you can do better than that.";
+		mes "Go hunt some more, you lack of something.";
+		close;
+	H_Close:
+		mes "[Jeku]";
+		mes "Thanks for your time. Vote Every 12 hours at www.jae-ro.com :)";
+		close;
+}

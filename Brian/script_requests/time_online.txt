@@ -1,0 +1,32 @@
+poring_c01,100,100,0	script	TotalTimeOnline	910,{
+	mes "For your account, you have been online a total of:";
+	mes callsub(S_SecToTime, @login_time ? (#secs_online + (gettimetick(2)-@login_time)) : #secs_online);
+	close;
+
+S_SecToTime:
+	set .@seconds, getarg(0);
+	
+	set .@seconds, .@seconds - set(.@weeks, .@seconds / 604800)*604800;
+	set .@str$, .@str$ + .@weeks+((.@weeks==1) ? " week":" weeks")+", ";
+	
+	set .@seconds, .@seconds - set(.@days, .@seconds / 86400)*86400;
+	set .@str$, .@str$ +  .@days+((.@days==1) ? " day":" days")+", ";
+	
+	set .@seconds, .@seconds - set(.@hours, .@seconds / 3600)*3600;
+	set .@str$, .@str$ +  .@hours+((.@hours==1) ? " hour":" hours")+", ";
+	
+	set .@seconds, .@seconds - set(.@mins, .@seconds / 60)*60;
+	set .@str$, .@str$ +  .@mins+((.@mins==1) ? " min":" mins")+", and ";
+	
+	set .@str$, .@str$ +  .@seconds+((.@seconds==1) ? " second":" seconds");
+	
+	return .@str$;
+
+OnPCLoginEvent:
+	set @login_time, gettimetick(2);
+	end;
+OnPCLogoutEvent:
+	if (@login_time)
+		set #secs_online, #secs_online + (gettimetick(2)-@login_time);
+	end;
+}

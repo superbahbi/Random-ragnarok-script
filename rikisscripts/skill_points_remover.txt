@@ -1,0 +1,64 @@
+// = Script made by RIKIMARU on rathena.org
+// = Profile Link :
+// = http://rathena.org/board/user/434-rikimaru/
+// = ENJOY THIS SCRIPT!
+//===================================================================================
+//        //=====//     /==/     /==/          /==/      
+//       //     //     /==/     /==/  /=/     /==/         
+//      //=====//              /==/  /=/             /==============/     /========/   /==//===/    /==/     /==/
+//     //=//////    /==/      /==//=/       /==/    /==/==/==/==/==/     /     /  /   /==/         /==/     /==/
+//    // ==        /==/      /==//=/       /==/    /==/  /==/  /==/     ======/  /   /==/         /==/     /==/
+//   //   ==      /==/      /==/  /=/     /==/    /==/  /==/  /==/     / /===/  /   /==/         /==/     /==/
+//  //     ==    /==/      /==/   /=/    /==/    /==/  /==/  /==/     / /===/  /   /==/         /==/=====/==/
+// //       ==  /==/      /==/    /=/   /==/    /==/  /==/  /==/     /========/   /==/         /==///////==/
+// ================ rAthena Script ==================================================
+// ============== Information =======================================================
+// = Size Changer
+// = Made by :
+// = Rikimaru
+//===== Current Version: =============================================== 
+//= 1.0
+//===== Compatible With: =============================================== 
+//= any rAthena SVN
+//===== Description: =================================================== 
+//= This is a requested Skill Points Remover,which removes unused
+//= Skill Points from a Characters Skill Tree
+//===== Additional Comments: =========================================== 
+//= 1.0 Finished Scripting without bugs. [Rikimaru]
+//====================================================================== 
+//= DO NOT REMOVE MY CREDITS AND CLAIM MY WORK AS YOURS 
+//======================================================================
+MAPNAME,XXX,YYY,D	script	Skill Points Remover	NID,{
+// ================ Settings ======================================
+// =================== Settings ===========================
+set .@n$,"^0000FF[ Skill Points Remover ]^000000";
+set @zenycosts,10000;
+// ================ End of Settings =======================
+mes .@n$;
+mes "Hello "+strcharinfo(0)+",I'm";
+mes "able to remove your unused";
+mes "Skill Points,do you want me";
+mes "to remove them?";
+next;
+mes .@n$;
+mes "It just costs 10.000 Zeny.";
+next;
+switch(select("Yes:Cancel")) {
+	case 1:
+	if( Zeny < @zenycosts ) goto l_nozeny;
+	mes .@n$;
+	set Zeny, Zeny - @zenycosts;
+	mes "Okay removing your unused Skill Points!";
+	set SkillPoint, SkillPoint * 0;
+	next;
+	mes .@n$;
+	mes "Finished! Goodbye!";
+	close;
+	case 2:
+	close;
+	}
+	l_nozeny:
+	mes .@n$;
+	mes "Sorry but you need 10.000 Zeny,go and get them!";
+	close;
+}

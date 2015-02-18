@@ -1,0 +1,184 @@
+ra_temin,45,125,0	script	Henry#ra_temin	932,{
+	mes "[Henry]";
+	mes "Good day, young traveller. What brings you to the Pope’s humble abode?";
+	next;
+	if(select("Actually, I was looking for you.:I was just having a look around the place.")==2) {
+		mes "[Henry]";
+		mes "Ah, have a good day then.";
+		close;
+	}
+	mes "[Henry]";
+	mes "Looking for me? What can an old man like me do for you?";
+	next;
+	if(select("I guess you’re right. Maybe you’re too old to remember. I’ll be on my way.:Could you please tell me where I can find Alphonse?")==1) {
+		mes "[Henry]";
+		mes "What a weird child...";
+		close;
+	}
+	mes "[Henry]";
+	mes "...";
+	next;
+	next;
+	mes "[Henry]";
+	mes "I’m sorry, I cannot help you.";
+	next;
+	// *walk away*
+	mes "["+strcharinfo(0)+"]";
+	mes "Wait... What’s that document you are holding?";
+	input .@doc$;
+	if (.@doc$=="Record of Ancient Language" || .@doc$=="Ancient Document") {
+		mes "If you help me get the items to translate it, I’ll tell you what happened to Alphonse...";
+		if(select("Sure! Tell me what you need.:No thank you. I’ll find him myself.")==1) {
+			// set quest variable
+			// mes "do this next";
+		}
+	}
+	close;
+
+OnClock0000:
+OnClock0300:
+OnClock0600:
+OnClock0900:
+OnClock1200:
+OnClock1500:
+OnClock1800:
+OnClock2100:
+	// move to random location
+	switch( rand(4) ) {
+	case 0:
+		disablenpc "Henry#ra_temin";
+		enablenpc "Henry#ra_temsky";
+		movenpc "ra_temsky",158,138;
+		break;
+	case 1:
+		disablenpc "Henry#ra_temsky";
+		enablenpc "Henry#ra_temin";
+		movenpc "ra_temin",45,125;
+		break;
+	case 2:
+		disablenpc "Henry#ra_temsky";
+		enablenpc "Henry#ra_temin";
+		movenpc "ra_temin",82,111;
+		break;
+	case 3:
+		disablenpc "Henry#ra_temsky";
+		enablenpc "Henry#ra_temin";
+		movenpc "ra_temin",308,109;
+		break;
+	}
+	end;
+}
+ra_temsky,158,138,0	duplicate(Henry#ra_temin)	Henry#ra_temsky	932
+
+// ra_temin,45,125,0	script	Henry#ra_temin	932,{
+	mes "[Henry]";
+	mes "I need the following in translating the document...";
+	next;
+	mes "[Henry]";
+	mes "Requirements:";
+	mes "500 Worn-out Magic Scroll";
+	mes "500 Worn Out Scroll";
+	mes "50 Torn Scroll";
+	mes "10 Witch’s Spell Scroll (7304) OBB item";
+	mes "100 Magnifier";
+	next;
+	mes "[Henry]";
+	mes "Do you have them?";
+	next;
+	if(select("Not yet.:Yes, they’re right here.")==1) {
+		mes "[Henry]";
+		mes "Okay. Come back when you have all the items I asked you...";
+		close;
+	} else if () {
+		mes "[Henry]";
+		mes "You're missing some of the items...";
+		mes "I need the following to translate the document...";
+		next;
+		mes "[Henry]";
+		mes "Requirements:";
+		mes "500 Worn-out Magic Scroll";
+		mes "500 Worn Out Scroll";
+		mes "50 Torn Scroll";
+		mes "10 Witch’s Spell Scroll (7304) OBB item";
+		mes "100 Magnifier";
+		close;
+	}
+	delitem 
+	delitem 
+	delitem 
+	delitem 
+	delitem 
+	// set quest var
+	mes "[Henry]";
+	mes "Excellent! Now I can translate the document. Thank you so much!";
+	next; // *enter* *enter*
+	next;
+	mes "[Henry]";
+	mes "Oh, Sorry. It’s just that I missed doing this...  Now about Alphonse... He was a very good friend of mine, when we ventured off 3 years ago in search of different archaeological sites. On one of our journeys, just after we had a vacation in Jawaii, he came across an old mysterious man, giving him a note. The man said that if he was able to figure out the riddle, then he’ll be able to find what he was looking for... Then, I never knew that it would be the last night that I would ever see him...";
+	next;
+	if(select("Do you still remember what the note said?:I think I have to go... *shiver*")==2) {
+		mes "[Henry]";
+		mes "Ah, is it that late already? Have a good day then...";
+		close;
+	}
+Henry (932): No, at least not the exact riddle. I remember it saying something about an unnamed island. Hmm... if I remember correctly, it also said something about where nuns and priests used to live...  That’s everything I could tell you, I’m afraid... I never heard from him since...
+	*You’ve been a great help. Thank you very much...
+	*I see... I guess there’s nothing more I can do... (I’m really sorry...)
+Henry (932): No... Thank you. Be safe on your quest, young traveller. Come and visit the temple when you’re not busy. I’d be honoured if you do.
+
+@warp abbey03 120 111
+Dark Lord (737): ...Who dares to enter my realm?! DIE, YOU FILTHY HUMAN!
+	Summon and Defeat 2 Dark Illusions
+
+Dark Lord (737): Wh-what have I d-done..? I-I’m s-s-sorry...
+	*Alphonse?
+	*Holy Light! (GYAAAAAAAAAAAAAAAAAAAAAAAAAAAH!!! *Hide NPC*)
+Dark Lord Alphonse (737): P-P-Please h-help me-e... I-I’ve b-een l-like this since a-a l-long t-t-time ago... Pl-lease re-lease m-me fr-om this c-curse... Please... Vivi... Please l-let me g-go back t-to her... 
+	*You attack me then ask me for a favour? There’s NO WAY I’m helping you! (summon 10 Dark Illusions and hide NPC)
+	*Viviene’s been longing for you ever since you went away. Please tell me what happened and how to break this curse.
+Dark Lord Alphonse (737): I w-was exploring t-the Monast-tery th-that day... w-when I c-came a-across a d-dark l-lord... Ever since then, I-I’ve been l-like this... doomed to be possessed f-forever... Please... Free me... Th-the ritual, requires m-me to ha-ve the f-following:
+	10 Flower of Alfheim (6079) – OPB Item
+	10 Flower of Life (6110) – OPB Item
+	5 Acolyte’s Medal of Honour (2722) – OPB Item 
+20 Yellow Charm Stone (7427) - OBB Item
+	15 Yellow Cat’s Eye (7810) -  OBB Item
+	1 Staff of Recovery
+Dark Lord Alphonse (737): Do you have them...?
+	*Not all of them... (... P-Please hurry... I-I can’t hold on f-for much longer...)
+	*Yes, Everything is prepared.
+Dark Lord Alphonse (737): &#924;&#941;&#963;&#945; &#963;&#964;&#945; &#972;&#961;&#953;&#945; &#964;&#959;&#965; &#963;&#954;&#959;&#964;&#945;&#948;&#953;&#959;&#973;, &#946;&#961;&#943;&#963;&#954;&#969; &#964;&#959; &#966;&#969;&#962;. &#913;&#957;&#945;&#954;&#964;&#942;&#963;&#964;&#949; &#945;&#960;&#972; &#964;&#959;&#965;&#962; &#963;&#965;&#956;&#960;&#955;&#941;&#954;&#964;&#949;&#962; &#964;&#951;&#962; &#956;&#959;&#943;&#961;&#945;&#962;, &#964;&#959; &#963;&#954;&#959;&#964;&#940;&#948;&#953; &#954;&#945;&#964;&#945;&#961;&#947;&#949;&#943;&#964;&#945;&#953; &#945;&#960;&#972; &#964;&#951;&#957; &#954;&#945;&#961;&#948;&#953;&#940; &#956;&#959;&#965;. &#924;&#959;&#965; &#966;&#941;&#961;&#964;&#949; &#949;&#956;&#960;&#961;&#972;&#962; &#963;&#949; &#964;&#951; &#950;&#949;&#963;&#964;&#945;&#963;&#953;&#940; &#964;&#959;&#965; &#966;&#969;&#964;&#972;&#962; &#954;&#945;&#953; &#952;&#940;&#957;&#945;&#964;&#959;&#962; &#952;&#945; &#945;&#957;&#964;&#953;&#956;&#949;&#964;&#969;&#960;&#943;&#963;&#969; &#947;&#953;&#945; &#957;&#945; &#945;&#960;&#949;&#955;&#949;&#965;&#952;&#949;&#961;&#969;&#952;&#974;. &#913;&#960;&#949;&#955;&#949;&#965;&#952;&#941;&#961;&#969;&#963;&#951;! (Hide NPC)
+	*enter* *enter*
+	...Thank you so much for freeing me... I can now watch over my young Viviene... But before you go, could you do one last favour for me? 
+	*Of course. What is it?
+	*I’m too tired... (I see... Farewell then...)
+
+
+Alphonse: Please hand over this letter to Vivi... And please tell her I’m sorry...
+	*Okay... Oh, Viviene gave me this. I’m sure you would want to keep it...
+	* Zzzzzzzzzzzzz... (...)
+Alphonse: Thank you... Thank you so much... 
+	Acquire Quest Item: Mother’s Letter (7148)
+	#go 22 player
+@warp hugel 93 231	
+Viviene (72): It’s my Daddy’s Angel!! Were you able to find my daddy? 
+Player: ... Yes, I did... He asked me to give you this...
+Viviene (72): It’s a letter from Daddy!! 
+	*enter* *enter*
+	... So Daddy isn’t coming back...?
+Player: ... I’m sorry...
+Viviene (72): ... Daddy said that I would always see him when I look at the sky at night... He knew that I always look at the stars every night... Daddy said he became one of the stars, so that he could always watch over me... At least, I know daddy would be okay forever, right? /sob
+Player: He would be, don’t worry. He’ll always be there when you need him...
+Viviene (72): Thank you so much... Wait, I’ll give you something. This used to be Daddy’s greatest possession... I’m sure Daddy wouldn’t mind if I give this to an angel like you... 
+	Acquire Quest Item: Glorious Staff of Recovery (1641)
+Viviene (72): Thank you so much for bringing my Daddy home! I promise I’ll be a good girl from now on! Please visit me whenever you have the time, okay? Bye~ !!
+@warp xmas_in 23 177
+Apollo (412): I see that you’re back, young one... 
+	*enter* *enter*
+ 	T-This is-! The Glorious Staff of Recovery... However did you get this staff? 
+Player: It was given to me by Viviene...
+Apollo (412): Ah... So you were able to put Alphonse’ soul to rest, I presume? Truly remarkable. You are no less than what I expected of you High Priest Player name. You have proven your worth as an heir to the Powers of the Ancient Divine. However, before you acquire this power, I have to ask you one thing. Would you, as a believer in your Faith, use this immense spiritual power for the greater good of Midgard’s Community?
+	*Hell, no! I’m gonna use it however I like! (... You disappoint me. Good night.)
+	*Yes I will, for the betterment of everyone.
+Apollo (412): I’m glad to hear so. By the power the ancients vested unto me, I hereby bestow upon you the Divine Powers of the Faithful.  You shall now not only be called a High Priest. For ascending to an even higher rank from where you were before, I congratulate you whole heartedly, Archbishop Player name. May you do your duties and responsibilities according to the will of the gods.
+ Quest End
+

@@ -1,0 +1,19 @@
+-	script	freebies	-1,{
+
+OnWhisperGlobal:
+	if(getgmlevel()<70) goto DEATH;
+	input .reciever$;
+	
+	mes "[^FF0000[Admin]-Ric^000000]";
+	mes "Starter box for newbies containing Ghostring Card(1), Deviling Card(1), Valkyria's Armor(1), Valkyria's Manteau(1), Platinum Coins(2) and Poring Coins(10) ";
+	menu "Starter Box(1)",BCHIP;
+	close2;
+
+BCHIP:	
+	charcommand "#item "+.reciever$+" 20026 1 " ;
+	announce ""+strcharinfo(0)+": "+.reciever$+" received the Starter Box! Welcome to JaeRO enjoy your stay.",bc_all;
+	close;
+
+DEATH:
+	end;
+}

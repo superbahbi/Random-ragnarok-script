@@ -1,0 +1,145 @@
+Index: conf/battle/drops.conf
+===================================================================
+--- conf/battle/drops.conf	(revision 15915)
++++ conf/battle/drops.conf	(working copy)
+@@ -40,30 +40,35 @@
+ // The rate the common items are dropped (Items that are in the ETC tab, besides card)
+ item_rate_common: 100
+ item_rate_common_boss: 100
++item_rate_common_mvp: 100
+ item_drop_common_min: 1
+ item_drop_common_max: 10000
+ 
+ // The rate healing items are dropped (items that restore HP or SP)
+ item_rate_heal: 100
+ item_rate_heal_boss: 100
++item_rate_heal_mvp: 100
+ item_drop_heal_min: 1
+ item_drop_heal_max: 10000
+ 
+ // The rate at which usable items (in the item tab) other then healing items are dropped.
+ item_rate_use: 100
+ item_rate_use_boss: 100
++item_rate_use_mvp: 100
+ item_drop_use_min: 1
+ item_drop_use_max: 10000
+ 
+ // The rate at which equipment is dropped.
+ item_rate_equip: 100
+ item_rate_equip_boss: 100
++item_rate_equip_mvp: 100
+ item_drop_equip_min: 1
+ item_drop_equip_max: 10000
+ 
+ // The rate at which cards are dropped
+ item_rate_card: 100
+ item_rate_card_boss: 100
++item_rate_card_mvp: 100
+ item_drop_card_min: 1
+ item_drop_card_max: 10000
+ 
+Index: src/map/atcommand.c
+===================================================================
+--- src/map/atcommand.c	(revision 15916)
++++ src/map/atcommand.c	(working copy)
+@@ -3882,14 +3882,19 @@
+ 	if( prev_config.item_rate_mvp          != battle_config.item_rate_mvp
+ 	||  prev_config.item_rate_common       != battle_config.item_rate_common
+ 	||  prev_config.item_rate_common_boss  != battle_config.item_rate_common_boss
++	||  prev_config.item_rate_common_mvp   != battle_config.item_rate_common_mvp
+ 	||  prev_config.item_rate_card         != battle_config.item_rate_card
+ 	||  prev_config.item_rate_card_boss    != battle_config.item_rate_card_boss
++	||  prev_config.item_rate_card_mvp     != battle_config.item_rate_card_mvp
+ 	||  prev_config.item_rate_equip        != battle_config.item_rate_equip
+ 	||  prev_config.item_rate_equip_boss   != battle_config.item_rate_equip_boss
++	||  prev_config.item_rate_equip_mvp    != battle_config.item_rate_equip_mvp
+ 	||  prev_config.item_rate_heal         != battle_config.item_rate_heal
+ 	||  prev_config.item_rate_heal_boss    != battle_config.item_rate_heal_boss
++	||  prev_config.item_rate_heal_mvp     != battle_config.item_rate_heal_mvp
+ 	||  prev_config.item_rate_use          != battle_config.item_rate_use
+ 	||  prev_config.item_rate_use_boss     != battle_config.item_rate_use_boss
++	||  prev_config.item_rate_use_mvp      != battle_config.item_rate_use_mvp
+ 	||  prev_config.item_rate_treasure     != battle_config.item_rate_treasure
+ 	||  prev_config.item_rate_adddrop      != battle_config.item_rate_adddrop
+ 	||  prev_config.logarithmic_drops      != battle_config.logarithmic_drops
+Index: src/map/battle.c
+===================================================================
+--- src/map/battle.c	(revision 15915)
++++ src/map/battle.c	(working copy)
+@@ -5060,14 +5060,19 @@
+ 	{ "item_rate_mvp",                      &battle_config.item_rate_mvp,                   100,    0,      1000000,        },
+ 	{ "item_rate_common",                   &battle_config.item_rate_common,                100,    0,      1000000,        },
+ 	{ "item_rate_common_boss",              &battle_config.item_rate_common_boss,           100,    0,      1000000,        },
++	{ "item_rate_common_mvp",               &battle_config.item_rate_common_mvp,            100,    0,      1000000,        },
+ 	{ "item_rate_equip",                    &battle_config.item_rate_equip,                 100,    0,      1000000,        },
+ 	{ "item_rate_equip_boss",               &battle_config.item_rate_equip_boss,            100,    0,      1000000,        },
++	{ "item_rate_equip_mvp",                &battle_config.item_rate_equip_mvp,             100,    0,      1000000,        },
+ 	{ "item_rate_card",                     &battle_config.item_rate_card,                  100,    0,      1000000,        },
+ 	{ "item_rate_card_boss",                &battle_config.item_rate_card_boss,             100,    0,      1000000,        },
++	{ "item_rate_card_mvp",                 &battle_config.item_rate_card_mvp,              100,    0,      1000000,        },
+ 	{ "item_rate_heal",                     &battle_config.item_rate_heal,                  100,    0,      1000000,        },
+ 	{ "item_rate_heal_boss",                &battle_config.item_rate_heal_boss,             100,    0,      1000000,        },
++	{ "item_rate_heal_mvp",                 &battle_config.item_rate_heal_mvp,              100,    0,      1000000,        },
+ 	{ "item_rate_use",                      &battle_config.item_rate_use,                   100,    0,      1000000,        },
+ 	{ "item_rate_use_boss",                 &battle_config.item_rate_use_boss,              100,    0,      1000000,        },
++	{ "item_rate_use_mvp",                  &battle_config.item_rate_use_mvp,               100,    0,      1000000,        },
+ 	{ "item_rate_adddrop",                  &battle_config.item_rate_adddrop,               100,    0,      1000000,        },
+ 	{ "item_rate_treasure",                 &battle_config.item_rate_treasure,              100,    0,      1000000,        },
+ 	{ "prevent_logout",                     &battle_config.prevent_logout,                  10000,  0,      60000,          },
+Index: src/map/battle.h
+===================================================================
+--- src/map/battle.h	(revision 15915)
++++ src/map/battle.h	(working copy)
+@@ -283,9 +283,9 @@
+ 	int party_show_share_picker;
+ 	int show_picker_item_type;
+ 	int attack_attr_none;
+-	int item_rate_mvp, item_rate_common, item_rate_common_boss, item_rate_card, item_rate_card_boss,
+-		item_rate_equip, item_rate_equip_boss, item_rate_heal, item_rate_heal_boss, item_rate_use,
+-		item_rate_use_boss, item_rate_treasure, item_rate_adddrop;
++	int item_rate_mvp, item_rate_common, item_rate_common_boss, item_rate_common_mvp, item_rate_card, item_rate_card_boss, item_rate_card_mvp,
++		item_rate_equip, item_rate_equip_boss, item_rate_equip_mvp, item_rate_heal, item_rate_heal_boss, item_rate_heal_mvp, item_rate_use,
++		item_rate_use_boss, item_rate_use_mvp, item_rate_treasure, item_rate_adddrop;
+ 
+ 	int logarithmic_drops;
+ 	int item_drop_common_min,item_drop_common_max;	// Added by TyrNemesis^
+Index: src/map/mob.c
+===================================================================
+--- src/map/mob.c	(revision 15915)
++++ src/map/mob.c	(working copy)
+@@ -3739,30 +3739,30 @@
+ 		else switch (type)
+ 		{ // Added suport to restrict normal drops of MVP's [Reddozen]
+ 		case IT_HEALING:
+-			rate_adjust = (status->mode&MD_BOSS) ? battle_config.item_rate_heal_boss : battle_config.item_rate_heal;
++			rate_adjust = (db->mexp) ? battle_config.item_rate_heal_mvp : ((status->mode&MD_BOSS) ? battle_config.item_rate_heal_boss : battle_config.item_rate_heal);
+ 			ratemin = battle_config.item_drop_heal_min;
+ 			ratemax = battle_config.item_drop_heal_max;
+ 			break;
+ 		case IT_USABLE:
+ 		case IT_CASH:
+-			rate_adjust = (status->mode&MD_BOSS) ? battle_config.item_rate_use_boss : battle_config.item_rate_use;
++			rate_adjust = (db->mexp) ? battle_config.item_rate_use_mvp : ((status->mode&MD_BOSS) ? battle_config.item_rate_use_boss : battle_config.item_rate_use);
+ 			ratemin = battle_config.item_drop_use_min;
+ 			ratemax = battle_config.item_drop_use_max;
+ 			break;
+ 		case IT_WEAPON:
+ 		case IT_ARMOR:
+ 		case IT_PETARMOR:
+-			rate_adjust = (status->mode&MD_BOSS) ? battle_config.item_rate_equip_boss : battle_config.item_rate_equip;
++			rate_adjust = (db->mexp) ? battle_config.item_rate_equip_mvp : ((status->mode&MD_BOSS) ? battle_config.item_rate_equip_boss : battle_config.item_rate_equip);
+ 			ratemin = battle_config.item_drop_equip_min;
+ 			ratemax = battle_config.item_drop_equip_max;
+ 			break;
+ 		case IT_CARD:
+-			rate_adjust = (status->mode&MD_BOSS) ? battle_config.item_rate_card_boss : battle_config.item_rate_card;
++			rate_adjust = (db->mexp) ? battle_config.item_rate_card_mvp : ((status->mode&MD_BOSS) ? battle_config.item_rate_card_boss : battle_config.item_rate_card);
+ 			ratemin = battle_config.item_drop_card_min;
+ 			ratemax = battle_config.item_drop_card_max;
+ 			break;
+ 		default:
+-			rate_adjust = (status->mode&MD_BOSS) ? battle_config.item_rate_common_boss : battle_config.item_rate_common;
++			rate_adjust = (db->mexp) ? battle_config.item_rate_common_mvp : ((status->mode&MD_BOSS) ? battle_config.item_rate_common_boss : battle_config.item_rate_common);
+ 			ratemin = battle_config.item_drop_common_min;
+ 			ratemax = battle_config.item_drop_common_max;
+ 			break;

@@ -1,0 +1,40 @@
+// http://www.eathena.ws/board/index.php?showtopic=216541
+// I need a npc than give kafra point when the user is online or offline.
+
+poring_c01,100,100,0	script	test	910,{
+	if (getgmlevel() < 99) end;
+	
+	mes "Hello GM";
+	mes "Enter the char's name:";
+	input .@name$;
+	query_sql "SELECT `account_id`,`name` FROM `char` WHERE `name` = '"+escape_sql(.@name$)+"'", .@account_id,.@name$;
+	if (!.@account_id) {
+		mes "^FF0000     This player doesn't exist!";
+		close;
+	}
+	mes "How many kafra point would you like give to^0000FF " + .@name$ + "^000000?";
+	input .@amt;
+	if (.@amt < 1) {
+		mes "^FF0000     Amount must be positive.";
+		close;
+	}
+	
+	mes " ";
+	mes "Give "+.@amt+" Kafra Points to "+.@name$+"?";
+	if(select("Yes:No")==2) close;
+	
+	set .@AID, playerattached();	// save their RID
+	if (attachrid(.@account_id)) {
+		set #KAFRAPOINTS, #KAFRAPOINTS + .@amt;
+		dispbottom "Gained "+.@amt+" kafra points. Total "+#KAFRAPOINTS+" points";
+	} else {
+		query_sql "SELECT COUNT(`account_id`) FROM `global_reg_value` WHERE `str`='#KAFRAPOINTS' AND `account_id`='"+.@account_id+"'", .@update;
+		if (.@update)
+			query_sql "UPDATE `global_reg_value` SET `value` = (CAST(`value` AS UNSIGNED)+'"+.@amt+"') WHERE `str`='#KAFRAPOINTS' AND `account_id`='"+.@account_id+"'";
+		else
+			query_sql "INSERT INTO `global_reg_value` (`str`,`value`,`type`,`account_id`) VALUES ('#KAFRAPOINTS',"+.@amt+",2,"+.@account_id+")";
+	}
+	attachrid(.@AID);
+	mes "Gave "+.@amt+" kafra points to "+.@name$+".";
+	close;
+}

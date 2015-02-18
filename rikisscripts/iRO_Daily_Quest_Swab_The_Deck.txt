@@ -1,0 +1,150 @@
+//        //=====//     /==/     /==/          /==/      
+//       //     //     /==/     /==/  /=/     /==/         
+//      //=====//              /==/  /=/             /==============/     /========/   /==//===/    /==/     /==/
+//     //=//////    /==/      /==//=/       /==/    /==/==/==/==/==/     /     /  /   /==/         /==/     /==/
+//    // ==        /==/      /==//=/       /==/    /==/  /==/  /==/     ======/  /   /==/         /==/     /==/
+//   //   ==      /==/      /==/  /=/     /==/    /==/  /==/  /==/     / /===/  /   /==/         /==/     /==/
+//  //     ==    /==/      /==/   /=/    /==/    /==/  /==/  /==/     / /===/  /   /==/         /==/=====/==/
+// //       ==  /==/      /==/    /=/   /==/    /==/  /==/  /==/     /========/   /==/         /==///////==/
+// ================ rAthena Script ==================================================
+// ============== Information =======================================================
+// = iRO Daily Quest : Swab the Deck
+// = Made by :
+// = Rikimaru
+//===== Current Version: =============================================== 
+//= 1.4
+//===== Compatible With: =============================================== 
+//= any rAthena SVN
+//===== Description: =================================================== 
+//= The iRO Daily Quest : Swab the Deck
+//= Usefull for having fun in a Server with a Mini Quest
+//= Has a counter of 20 Hours until the Players can do the Quest agian.
+//===== Additional Comments: =========================================== 
+//= 1.3 Finished Scripting all NPC's [Rikimaru]
+//= 1.4 Fixed a saved Variable Typo [Rikimaru]
+//====================================================================== 
+//============== DO NOT REMOVE MY CREDITS AND CLAIM MY WORK AS YOURS ===
+alberta,104,60,5	script	[Quest] First Mate	748,{
+//============================= Settings ==========================
+set .@npcname$,"[ [Quest] First Mate ]";
+set .BeadID,6222;
+//======================= End =====================================
+if(countitem(6221) > 0 && gettimetick(2) - exchangedalready > (60 * 60 * 20)) {
+mes .@npcname$;
+mes "Hey,how many Mystic Leaf Cat Balls";
+mes "do you want to exchange to Shiny Beads?";
+next;
+mes .@npcname$;
+mes "Input the Amount of the Mystic Leaf Cat Balls,which you want to exchange.";
+mes "If you input 0 , you're going to cancel the deal.";
+next;
+input @beadamount;
+if (@beadamount == 0) {
+close;
+}
+mes .@npcname$;
+mes "Do you really want to exchange";
+mes ":"+ @beadamount +" Mystic Leaf Cat Balls";
+mes "for "+ @beadamount +" Shiny Beads?";
+next;
+switch(select("Yes!:No!")) {
+	case 1:
+	mes .@npcname$;
+	mes "Okay converting... ... ...";
+	if(countitem(6221) < @beadamount) goto l_noitem;
+	delitem 6221,@beadamount;
+	getitem .BeadID,@beadamount;
+	set BaseExp,+50000000;// CHANGE THE EXP AMOUNT!!
+	set JobExp,+40000000;// CHANGE THE EXP AMOUNT!!
+	set exchangedalready,gettimetick(2);
+	next;
+	mes .@npcname$;
+	mes "Okay you can exchange the Shiny Beads at the Second Mate.";
+	close;
+	case 2:
+	mes .@npcname$;
+	mes "Okay goodbye!";
+	close;
+	}
+l_noitem:
+mes .@npcname$;
+mes "I'm sorry,but you're missing some items!";
+close;
+}
+mes .@npcname$;
+mes "Hey , do you want to do the Daily Quest?";
+next;
+switch(select("Yes,sure!:No,bye!:Cancel")) {
+	case 1:
+	mes .@npcname$;
+	mes "Okay you have to go to the alberta Ship";
+	mes "and enter one of the Portals and Catch A rat!";
+	next;
+	mes .@npcname$;
+	mes "If you catch it,you'll get a Mystic Cat Ball,";
+	mes "if you got it,come back to me,if you failed,";
+	mes "come back to me and get a new Cat Ball,to";
+	mes "catch the rats!";
+	next;
+	mes .@npcname$;
+	mes "So,here take this,";
+	mes "and come back when you finished.";
+	getitem 12408,1;
+	close;
+	case 2:
+	mes .@npcname$;
+	mes "Okay,goodbye!";
+	close;
+	case 3:
+	close;
+	}
+}
+// ============================ End of the First Mate Script ===================================
+alberta,107,59,5	script	[Quest] Second Mate	100,{
+set .@npcname$,"^0000FF[ [Quest] Second Mate ]^000000";
+set .BeadID,6222;
+setarray @ItemID[0],5170,5773,5691,505,5578,5692;
+setarray @Cost[0],50,50,50,1,30,50;
+setarray @itemcount[0],1,1,1,2,1,1;
+mes .@npcname$;
+mes "Hello ["+strcharinfo(0)+"],do";
+mes "you want to buy some items?";
+mes "You'll have to give me Shiny";
+mes "Beads for the Items!";
+next;
+	if (select("Yes,sure","No,nevermind!") == 2) 
+		close;
+	next;
+	mes .@npcname$;
+	mes "Item = Cost";
+	for( set .@i, 0; .@i < getarraysize(@ItemID); set .@i, .@i + 1 ) {
+		mes "^0000ff"+@itemcount[.@i]+"x "+getitemname(@ItemID[.@i])+"^000000 = ^00aa00"+@Cost[.@i]+"^000000";
+		if( .@i < 1 )
+			set .@menu$, getitemname(@ItemID[.@i]);
+		else
+			set .@menu$, .@menu$+":"+getitemname(@ItemID[.@i]);
+	}
+
+	next;
+	select(.@menu$);
+	set @choice, @menu - 1;
+
+	mes @npcname$;
+	if(countitem(.BeadID) <@Cost[@choice]) {
+		mes "You need more Shiny Beads for "+@itemcount[@choice]+"x '"+getitemname(@ItemID[@choice])+"'";
+		close;
+	}
+	mes "Are u realy sure to trade "+@itemcount[@choice]+"x '^ff0000"+getitemname(@ItemID[@choice])+"^000000' for ^00aa00"+@Cost[@choice]+"^000000 Shiny Beads?";
+	if(select("No! Cancel!:Yes, Trade me!") == 1 ) {
+		mes "Canceled the Trade";
+		close;
+	}
+
+	set .@new, .BeadID - @Cost[@choice];
+	if( .@new < 0 )
+		set .@new, 0;
+	delitem .BeadID,@Cost[@choice];
+	getitem @ItemID[@choice], @itemcount[@choice];
+	mes "The Trade was succesfull. Have fun with the Item!";
+	close;
+}

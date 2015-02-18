@@ -1,0 +1,14 @@
+prontera,155,188,0	script	test	837,{
+	// the rest of your NPC goes here
+	
+	close;
+	
+OnInit:
+	set .message$, "Hello World!     ";
+	while (1) {
+		set .message$, delchar(.message$+charat(.message$,0),0);
+		delwaitingroom;
+		waitingroom .message$, 0;
+		sleep 200;
+	}
+}

@@ -1,0 +1,367 @@
+gonryun,46,255,3	script	Krisleene Dee	757,{
+	mes "Good day! XD";
+	mes "I am here to make some cute ribbons";
+	mes "I bet that it will look good at you and I hope you would like it.";
+	next;
+	menu "Black Ribbon",H_Black,"Green Ribbon",H_Green,"Orange Ribbon",H_Orange,"Pink Ribbon",H_Pink,"Red Ribbon",H_Red,"White Ribbon",H_White,"Yellow Ribbon",H_Yellow,"Nevermind",H_Close;
+	H_Black:
+		mes "[Krisleene]";
+		mes "You like this black one?";
+		mes "Well kindly bring me:";
+		next;
+		mes "[Krisleene]";
+		mes "1 Ribbon[1]";
+		mes "5 Black Dyestuff";
+		mes "1 Platinum Coin";
+		menu "Make",M_Black,"Cancel",H_Close;
+		M_Black:
+			mes "Yipee! I have waited for your return. Let me make it for you!";
+			next;
+			if (countitem(2209) < 1) goto H_Lack;
+			if (countitem(983) < 5) goto H_Lack;
+			if (countitem(677) < 1) goto H_Lack;
+			mes "[Krisleene]";
+			mes "Here you go :D";
+			next;
+			delitem 2209,1;
+			delitem 983,5;
+			delitem 677,1;
+			getitem 5191,1;
+			close;
+	H_Green:
+		mes "[Krisleene]";
+		mes "You like this green one?";
+		mes "Well kindly bring me:";
+		next;
+		mes "[Krisleene]";
+		mes "1 Ribbon[1]";
+		mes "50 Darkgreen Dyestuff";
+		mes "1 Platinum Coin";
+		menu "Make",M_Green,"Cancel",H_Close;
+		M_Green:
+			mes "Yipee! I have waited for your return. Let me make it for you!";
+			next;
+			if (countitem(2209) < 1) goto H_Lack;
+			if (countitem(979) < 50) goto H_Lack;
+			if (countitem(677) < 1) goto H_Lack;
+			mes "[Krisleene]";
+			mes "Here you go :D";
+			next;
+			delitem 2209,1;
+			delitem 979,50;
+			delitem 677,1;
+			getitem 5193,1;
+			close;
+	H_Orange:
+		mes "[Krisleene]";
+		mes "You like this orange one?";
+		mes "Well kindly bring me:";
+		next;
+		mes "[Krisleene]";
+		mes "1 Ribbon[1]";
+		mes "5 Orange Dyestuff";
+		mes "1 Platinum Coin";
+		menu "Make",M_Orange,"Cancel",H_Close;
+		M_Orange:
+			mes "Yipee! I have waited for your return. Let me make it for you!";
+			next;
+			if (countitem(2209) < 1) goto H_Lack;
+			if (countitem(980) < 5) goto H_Lack;
+			if (countitem(677) < 1) goto H_Lack;
+			mes "[Krisleene]";
+			mes "Here you go :D";
+			next;
+			delitem 2209,1;
+			delitem 980,5;
+			delitem 677,1;
+			getitem 5196,1;
+			close;
+	H_Pink:
+		mes "[Krisleene]";
+		mes "You like this pink one?";
+		mes "Well kindly bring me:";
+		next;
+		mes "[Krisleene]";
+		mes "1 Ribbon[1]";
+		mes "5 Scarlet Dyestuff";
+		mes "1 White Dyestuff";
+		mes "1 Platinum Coin";
+		menu "Make",M_Pink,"Cancel",H_Close;
+		M_Pink:
+			mes "Yipee! I have waited for your return. Let me make it for you!";
+			next;
+			if (countitem(2209) < 1) goto H_Lack;
+			if (countitem(975) < 5) goto H_Lack;
+			if (countitem(982) < 1) goto H_Lack;
+			if (countitem(677) < 1) goto H_Lack;
+			mes "[Krisleene]";
+			mes "Here you go :D";
+			next;
+			delitem 2209,1;
+			delitem 975,5;
+			delitem 982,1;
+			delitem 677,1;
+			getitem 5194,1;
+			close;
+	H_Red:
+		mes "[Krisleene]";
+		mes "You like this red one?";
+		mes "Well kindly bring me:";
+		next;
+		mes "[Krisleene]";
+		mes "1 Ribbon[1]";
+		mes "5 Scarlet Dyestuff";
+		mes "1 Platinum Coin";
+		menu "Make",M_Red,"Cancel",H_Close;
+		M_Red:
+			mes "Yipee! I have waited for your return. Let me make it for you!";
+			next;
+			if (countitem(2209) < 1) goto H_Lack;
+			if (countitem(975) < 5) goto H_Lack;
+			if (countitem(677) < 1) goto H_Lack;
+			mes "[Krisleene]";
+			mes "Here you go :D";
+			next;
+			delitem 2209,1;
+			delitem 975,5;
+			delitem 677,1;
+			getitem 5195,1;
+			close;
+	H_White:
+		mes "[Krisleene]";
+		mes "You like this white one?";
+		mes "Well kindly bring me:";
+		next;
+		mes "[Krisleene]";
+		mes "1 Ribbon[1]";
+		mes "5 White Dyestuff";
+		mes "1 Platinum Coin";
+		menu "Make",M_White,"Cancel",H_Close;
+		M_White:
+			mes "Yipee! I have waited for your return. Let me make it for you!";
+			next;
+			if (countitem(2209) < 1) goto H_Lack;
+			if (countitem(982) < 5) goto H_Lack;
+			if (countitem(677) < 1) goto H_Lack;
+			mes "[Krisleene]";
+			mes "Here you go :D";
+			next;
+			delitem 2209,1;
+			delitem 982,5;
+			delitem 677,1;
+			getitem 5197,1;
+			close;
+	H_Yellow:
+		mes "[Krisleene]";
+		mes "You like this yellow one?";
+		mes "Well kindly bring me:";
+		next;
+		mes "[Krisleene]";
+		mes "1 Ribbon[1]";
+		mes "5 Lemon Dyestuff";
+		mes "1 Platinum Coin";
+		menu "Make",M_Yellow,"Cancel",H_Close;
+		M_Yellow:
+			mes "Yipee! I have waited for your return. Let me make it for you!";
+			next;
+			if (countitem(2209) < 1) goto H_Lack;
+			if (countitem(976) < 5) goto H_Lack;
+			if (countitem(677) < 1) goto H_Lack;
+			mes "[Krisleene]";
+			mes "Here you go :D";
+			next;
+			delitem 2209,1;
+			delitem 976,5;
+			delitem 677,1;
+			getitem 5192,1;
+			close;
+	H_Lack:
+		mes "[Krisleene]";
+		mes "Please check if you have the right things on hand.";
+		close;
+	H_Close:
+		mes "[Krisleene]";
+		mes "See you next time and please remember to vote JaeRO twice a day!";
+		close;
+}
+
+//NPC 8
+
+gonryun,48,255,4	script	Wengskie	758,{
+	mes "Hi, I am Krisleene's sister and I can also create some cute ribbons for you";
+	mes "But I can only make four :)";
+	next;
+	mes "[Wengy]";
+	mes "I can make:";
+	mes "Cute Blue Ribbon";
+	mes "Cute Green Ribbon";
+	mes "Cute Orange Ribbon";
+	mes "Cute Red Ribbon";
+	mes "What would you like?";
+	next;
+	menu "Cute Blue Ribbon",H_Cblue,"Cute Green Ribbon",H_Cgreen,"Cute White",H_Cwhite,"Cute Red Ribbon",H_Cred,"Nevermind",H_Close;
+	H_Cblue:
+		mes "[Wengy]";
+		mes "Oh I see, you like this one?";
+		mes "Then please get";
+		mes "1 Cute Ribbon";
+		mes "1 Ribbon[1]";
+		mes "5 Cobaltblue Dyestuff";
+		mes "2 Gold Coin";
+		menu "Make",M_Cblue,"Cancel",H_Close;
+		M_Cblue:
+			mes "Hmm lemme check what you got in there.";
+			next;
+			if (countitem(2250) < 1) goto H_Lack;
+			if (countitem(2209) < 1) goto H_Lack;
+			if (countitem(978) < 5) goto H_Lack;
+			if (countitem(671) < 2) goto H_Lack;
+			mes "[Wengy]";
+			mes "You got it!";
+			next;
+			delitem 2250,1;
+			delitem 2209,1;
+			delitem 978,5;
+			delitem 671,2;
+			getitem 5440,1;
+			close;
+	H_Cgreen:
+		mes "[Wengy]";
+		mes "Oh I see, you like this one?";
+		mes "Then please get";
+		mes "1 Cute Ribbon";
+		mes "1 Ribbon[1]";
+		mes "50 Darkgreen Dyestuff";
+		mes "2 Gold Coin";
+		menu "Make",M_Cgreen,"Cancel",H_Close;
+		M_Cgreen:
+			mes "Hmm lemme check what you got in there.";
+			next;
+			if (countitem(2250) < 1) goto H_Lack;
+			if (countitem(2209) < 1) goto H_Lack;
+			if (countitem(979) < 50) goto H_Lack;
+			if (countitem(671) < 2) goto H_Lack;
+			mes "[Wengy]";
+			mes "You got it!";
+			next;
+			delitem 2250,1;
+			delitem 2209,1;
+			delitem 979,50;
+			delitem 671,2;
+			getitem 5438,1;
+			close;
+	H_Cwhite:
+		mes "[Wengy]";
+		mes "Oh I see, you like this one?";
+		mes "Then please get";
+		mes "1 Cute Ribbon";
+		mes "1 Ribbon[1]";
+		mes "5 White Dyestuff";
+		mes "2 Gold Coin";
+		menu "Make",M_Cwhite,"Cancel",H_Close;
+		M_Cwhite:
+			mes "Hmm lemme check what you got in there.";
+			next;
+			if (countitem(2250) < 1) goto H_Lack;
+			if (countitem(2209) < 1) goto H_Lack;
+			if (countitem(982) < 5) goto H_Lack;
+			if (countitem(671) < 2) goto H_Lack;
+			mes "[Wengy]";
+			mes "You got it!";
+			next;
+			delitem 2250,1;
+			delitem 2209,1;
+			delitem 982,5;
+			delitem 671,2;
+			getitem 5441,1;
+			close;
+	H_Cred:
+		mes "[Wengy]";
+		mes "Oh I see, you like this one?";
+		mes "Then please get";
+		mes "1 Cute Ribbon";
+		mes "1 Ribbon[1]";
+		mes "5 Scarlet Dyestuff";
+		mes "2 Gold Coin";
+		menu "Make",M_Cred,"Cancel",H_Close;
+		M_Cred:
+			mes "Hmm lemme check what you got in there.";
+			next;
+			if (countitem(2250) < 1) goto H_Lack;
+			if (countitem(2209) < 1) goto H_Lack;
+			if (countitem(975) < 5) goto H_Lack;
+			if (countitem(671) < 2) goto H_Lack;
+			mes "[Wengy]";
+			mes "You got it!";
+			next;
+			delitem 2250,1;
+			delitem 2209,1;
+			delitem 975,5;
+			delitem 671,2;
+			getitem 5439,1;
+			close;
+	H_Lack:
+		mes "[Wengy]";
+		mes ":( There is something missing";
+		close;
+	H_Close:
+		mes "[Wengy]";
+		mes "Thank you, I am thankful for your time.";
+		close;
+}
+
+//NPC 9
+
+amatsu,278,254,4	script	Angel	465,{
+	mes "Welcome to JaeRO :D";
+	mes "I understand that my Baby Jam wouldn't make a Nekomimi Kafraband for you";
+	mes "She loves that hat so much just like me";
+	mes "Would you like to listen more of my story?";
+	next;
+	menu "Yes, I would like to hear",H_Story,"Nah, just make me the headgear",H_Nekomi,"I'll just walk away",H_Close;
+	H_Story:
+		mes "[Angel]";
+		mes "Oh great! Here's my story. Our server stands as a tribute to all our friends and foes as well. JaeRO is the symbol of a proud Phoenix soaring the sky just like us as we continue to venture new things in our lives. I am ever greatful that we have increased from the moment that the server started";
+		mes "We cannot avoid making mistakes but we are trying our best to produce the best server that everyone can have. The effort we do is nothing compared to the happiness that we see from you, players and friends.";
+		mes "Phoenix will continue to rise as long as the band between brotherhood and friendship lingers and stays with our hearts forever, TRUE PHOENIX we must call those who continue the journey with us. So fly high as we write 'JAERO' in the sky!";
+		close;
+	H_Nekomi:
+		mes "[Angel]";
+		mes "I am sorry that my daughter won't give you a Nekomimi Kafraband.";
+		mes "I will give you one in exchange of some items that I need and in addition, I will give you a bonus if you get me some";
+		next;
+		mes "[Angel]";
+		mes "1000 Alice Apron";
+		mes "1 Black Cat Ears";
+		mes "143 Soft Feather";
+		mes "143 Soft Silk";
+		mes "143 Fabric";
+		menu "Make",M_Nekomi,"Cancel",H_Close;
+		M_Nekomi:
+			mes "It was so nice of you :)";
+			next;
+			if (countitem(7047) < 1000) goto H_Lack;
+			if (countitem(5057) < 1) goto H_Lack;
+			if (countitem(7063) < 143) goto H_Lack;
+			if (countitem(7166) < 143) goto H_Lack;
+			if (countitem(1059) < 143) goto H_Lack;
+			mes "[Angela]";
+			mes "I'm so proud of you, I can see the aura of a true Phoenix in you!";
+			next;
+			delitem 7047,1000;
+			delitem 5057,1;
+			delitem 7063,143;
+			delitem 7166,143;
+			delitem 1059,143;
+			getitem 5387,1;
+			//getitem 1999,50;
+			close;
+	H_Lack:
+		mes "[Angel]";
+		mes "I am sorry but I cannot give you this very cute hat if you don't bring me everything I need :(";
+		close;
+	H_Close:
+		mes "[Angel]";
+		mes "Thank you for your time and let the Phoenix burn more!";
+		close;
+}

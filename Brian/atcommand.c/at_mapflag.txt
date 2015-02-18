@@ -1,0 +1,172 @@
+//====================================
+// 	FIND
+//====================================
+// * @mapflag [flag name] [1|0|on|off] [map name] by Lupus
+//====================================
+// 	REPLACE with:
+//====================================
+
+/*==========================================
+ * @mapflag [flag name] [1|0|on|off] [map name] by HiddenDragon.
+ *------------------------------------------*/
+int atcommand_mapflag(const int fd, struct map_session_data* sd, const char* command, const char* message)
+{
+	char map_flag[100];
+	char map_name[MAP_NAME_LENGTH_EXT];
+	int map_id = 0;
+	int state;
+
+	nullpo_retr(-1, sd);
+
+	memset(map_name, '\0', sizeof(map_name));
+	memset(map_flag, '\0', sizeof(map_flag));
+	
+	if (!message || !*message ||
+		(sscanf(message, "%99s %d %15s[^\n]", map_flag, &state, map_name) < 3 &&
+		 sscanf(message, "%99s %d", map_flag, &state) < 2)) {
+			clif_displaymessage(fd, "Usage: @mapflag <mapflag name> <state:1|0> <map name>");
+			return -1;
+	}
+
+	if ((map_id = map_mapname2mapid(map_name)) < 0) {
+		clif_displaymessage(fd, msg_txt(1)); // Map not found.
+		return -1;
+	}
+
+	if (!strcmpi(map_flag,"nomemo"))
+		map[map_id].flag.nomemo=state;
+	else if (!strcmpi(map_flag,"noteleport"))
+		map[map_id].flag.noteleport=state;
+	else if (!strcmpi(map_flag,"nowarp"))
+		map[map_id].flag.nowarp=state;
+	else if (!strcmpi(map_flag,"nowarpto"))
+		map[map_id].flag.nowarpto=state;
+	else if (!strcmpi(map_flag,"noreturn"))
+		map[map_id].flag.noreturn=state;
+	else if (!strcmpi(map_flag,"monster_noteleport"))
+		map[map_id].flag.monster_noteleport=state;
+	else if (!strcmpi(map_flag,"nobranch"))
+		map[map_id].flag.nobranch=state;
+	else if (!strcmpi(map_flag,"nopenalty")) {
+		map[map_id].flag.noexppenalty=state;
+		map[map_id].flag.nozenypenalty=state;
+	}
+	else if (!strcmpi(map_flag,"pvp")) {
+		map[map_id].flag.pvp=state;
+		if (state) {
+			if (map[map_id].flag.gvg || map[map_id].flag.gvg_dungeon || map[map_id].flag.gvg_castle)
+				clif_displaymessage(fd, "You can't set PvP and GvG flags for the same map! Removing GvG flags.");
+			map[map_id].flag.gvg=0;
+			map[map_id].flag.gvg_dungeon=0;
+			map[map_id].flag.gvg_castle=0;
+		}
+	}
+	else if (!strcmpi(map_flag,"pvp_noparty"))
+		map[map_id].flag.pvp_noparty=state;
+	else if (!strcmpi(map_flag,"pvp_noguild"))
+		map[map_id].flag.pvp_noguild=state;
+	else if (!strcmpi(map_flag, "pvp_nightmaredrop"))
+		map[map_id].flag.pvp_nightmaredrop=state;
+	else if (!strcmpi(map_flag,"pvp_nocalcrank"))
+		map[map_id].flag.pvp_nocalcrank=state;
+	else if (!strcmpi(map_flag,"gvg")) {
+		map[map_id].flag.gvg=state;
+		if (map[map_id].flag.pvp)
+		{
+			clif_displaymessage(fd, "You can't set PvP and GvG flags for the same map! Removing PvP flags.");
+			map[map_id].flag.pvp=0;
+		}
+	}
+	else if (!strcmpi(map_flag,"gvg_noparty"))
+		map[map_id].flag.gvg_noparty=state;
+	else if (!strcmpi(map_flag,"gvg_dungeon")) {
+		map[map_id].flag.gvg_dungeon=state;
+		if (map[map_id].flag.pvp)
+		{
+			clif_displaymessage(fd, "You can't set PvP and GvG flags for the same map! Removing PvP flags.");
+			map[map_id].flag.pvp=0;
+		}
+	}
+	else if (!strcmpi(map_flag,"gvg_castle")) {
+		map[map_id].flag.gvg_castle=state;
+		if (map[map_id].flag.pvp)
+		{
+			clif_displaymessage(fd, "You can't set PvP and GvG flags for the same map! Removing PvP flags.");
+			map[map_id].flag.pvp=0;
+		}
+	}
+	else if (!strcmpi(map_flag,"noexppenalty"))
+		map[map_id].flag.noexppenalty=state;
+	else if (!strcmpi(map_flag,"nozenypenalty"))
+		map[map_id].flag.nozenypenalty=state;
+	else if (!strcmpi(map_flag,"notrade"))
+		map[map_id].flag.notrade=state;
+	else if (!strcmpi(map_flag,"novending"))
+		map[map_id].flag.novending=state;
+	else if (!strcmpi(map_flag,"nodrop"))
+		map[map_id].flag.nodrop=state;
+	else if (!strcmpi(map_flag,"noskill"))
+		map[map_id].flag.noskill=state;
+	else if (!strcmpi(map_flag,"noicewall"))
+		map[map_id].flag.noicewall=state;
+	else if (!strcmpi(map_flag,"snow"))
+		map[map_id].flag.snow=state;
+	else if (!strcmpi(map_flag,"clouds"))
+		map[map_id].flag.clouds=state;
+	else if (!strcmpi(map_flag,"clouds2"))
+		map[map_id].flag.clouds2=state;
+	else if (!strcmpi(map_flag,"fog"))
+		map[map_id].flag.fog=state;
+	else if (!strcmpi(map_flag,"fireworks"))
+		map[map_id].flag.fireworks=state;
+	else if (!strcmpi(map_flag,"sakura"))
+		map[map_id].flag.sakura=state;
+	else if (!strcmpi(map_flag,"leaves"))
+		map[map_id].flag.leaves=state;
+	else if (!strcmpi(map_flag,"rain"))
+		map[map_id].flag.rain=state;
+	else if (!strcmpi(map_flag,"indoors"))
+		map[map_id].flag.indoors=state;
+	else if (!strcmpi(map_flag,"nightenabled"))
+		map[map_id].flag.nightenabled=state;
+	else if (!strcmpi(map_flag,"nogo"))
+		map[map_id].flag.nogo=state;
+	else if (!strcmpi(map_flag,"noexp")) {
+		map[map_id].flag.nobaseexp=state;
+		map[map_id].flag.nojobexp=state;
+	}
+	else if (!strcmpi(map_flag,"nobaseexp"))
+		map[map_id].flag.nobaseexp=state;
+	else if (!strcmpi(map_flag,"nojobexp"))
+		map[map_id].flag.nojobexp=state;
+	else if (!strcmpi(map_flag,"noloot")) {
+		map[map_id].flag.nomobloot=state;
+		map[map_id].flag.nomvploot=state;
+	}
+	else if (!strcmpi(map_flag,"nomobloot"))
+		map[map_id].flag.nomobloot=state;
+	else if (!strcmpi(map_flag,"nomvploot"))
+		map[map_id].flag.nomvploot=state;
+	else if (!strcmpi(map_flag,"restricted"))
+		map[map_id].flag.restricted=state;
+	else if (!strcmpi(map_flag,"loadevent"))
+		map[map_id].flag.loadevent=state;
+	else if (!strcmpi(map_flag,"nochat"))
+		map[map_id].flag.nochat=state;
+	else if (!strcmpi(map_flag,"partylock"))
+		map[map_id].flag.partylock=state;
+	else if (!strcmpi(map_flag,"guildlock"))
+		map[map_id].flag.guildlock=state;
+	else
+	{
+		clif_displaymessage(fd, "Mapflag not found or not supported by this command");
+		return -1;
+	}
+
+	if (state)
+		sprintf(atcmd_output, "Mapflag [%s] turned ON on map [%s].", map_flag, map_name);
+	else
+		sprintf(atcmd_output, "Mapflag [%s] turned OFF on map [%s].", map_flag, map_name);
+	clif_displaymessage(fd, atcmd_output);
+	return 0;
+}

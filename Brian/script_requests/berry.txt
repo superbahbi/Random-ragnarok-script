@@ -1,0 +1,26 @@
+// http://www.eathena.ws/board/index.php?showtopic=218791
+// can someone make me a script for this ?? an NPC that you can exchange 
+// a ticket to 200 pcs berrys and 200 pcs berrys to a ticket
+// i want to use id.7059 as a ticket .. thanks
+
+prontera,155,188,0	script	Ticket2Berry	910,{
+	switch(select("1 Ticket --> 200 Ygg Berries:200 Ygg Berries --> 1 Ticket")) {
+	case 1:
+		while (countitem(7059) >= 1) {
+			if (checkweight(607,200)==0) {
+				mes "You're close to overweight, please put some stuff in storage.";
+				close;
+			}
+			delitem 7059,1;	// ticket
+			getitem 607,200;	// Yggdrasil Berry
+		}
+		break;
+	case 2:
+		while (countitem(607) >= 200) {
+			delitem 607,200;	// Yggdrasil Berry
+			getitem 7059,1;	// ticket
+		}
+		break;
+	}
+	close;
+}

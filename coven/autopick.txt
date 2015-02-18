@@ -1,0 +1,22 @@
+-	script	autopick	-1,{
+OnMinute00:
+set .DelayMin,rand(60);
+sleep ( .DelayMin * 60000 );
+
+while(1){
+  	query_sql "select account_id from `char` where online = 1 order by rand() limit 1", .@aid;
+  	attachrid .@aid;
+
+  	if( CheckVending() ){
+   		DetachRID();
+   		continue;
+   	}
+	if(getgmlevel() == 0)
+	{
+  		announce strcharinfo(0) +" won in Lucky Pick Event.", 0;
+  		getitem 7227,1;
+	}
+  break;
+}
+end;
+}

@@ -1,0 +1,428 @@
+//===== eAthena Script =======================================
+//= storage2
+//===== By: ==================================================
+//= Brian
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: =====================================
+//= eAthena SVN Trunk, SQL only
+//===== Description: =========================================
+//= SQL storage, accessed via a username+password.
+//===== Additional Comments: =================================
+//= http://www.eathena.ws/board/index.php?showtopic=243259
+//= http://www.eathena.ws/board/index.php?showtopic=244678 - AnnieRuru's getitemname2 function
+//============================================================
+
+/*//==========================================================
+CREATE TABLE IF NOT EXISTS `storage2_login` (
+  `storage_id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `userid` VARCHAR(23) NOT NULL DEFAULT '',
+  `user_pass` VARCHAR(32) NOT NULL DEFAULT '',
+  `create_char_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `create_date` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY  (`storage_id`),
+  KEY `userid` (`userid`)
+) ENGINE=MYISAM;
+
+CREATE TABLE IF NOT EXISTS `storage2` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `storage_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `nameid` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `amount` SMALLINT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `equip` MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+  `identify` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
+  `refine` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
+  `attribute` TINYINT(4) UNSIGNED NOT NULL DEFAULT '0',
+  `card0` SMALLINT(11) NOT NULL DEFAULT '0',
+  `card1` SMALLINT(11) NOT NULL DEFAULT '0',
+  `card2` SMALLINT(11) NOT NULL DEFAULT '0',
+  `card3` SMALLINT(11) NOT NULL DEFAULT '0',
+  `expire_time` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  PRIMARY KEY  (`id`),
+  KEY `storage_id` (`storage_id`)
+) ENGINE=INNODB;
+//==========================================================*/
+// id,storage_id,nameid,amount,equip,identify,refine,attribute,card0,card1,card2,card3,expire_time
+
+poring_c01,100,100,0	script	storage2::test	115,{
+	donpcevent strnpcinfo(3)+"::OnInit"; // DEBUG: initialize variables
+M_main:
+	switch(select("More Info:Create a storage2:Access storage2"+( (.PersistentLogin && @storage_id) ? ":Logout of storage2":"") )) {
+// More Info
+	case 1:
+		npctalk "work in progress";
+		break;
+// Create a storage2
+	case 2:
+		mes "Pick a username:";
+		input .@userid$;
+		mes "Enter a password:";
+		input .@user_pass$;
+		mes "Enter once more for confirmation:";
+		input .@user_pass2$;
+		if (getstrlen(.@user_pass$) < 6) {
+			mes "^FF0000 Password must be at least 6 chars long.";
+			close;
+		}
+		if (.@user_pass$ != .@user_pass2$) {
+			mes "^FF0000 Passwords do not match!";
+			close;
+		}
+		if (getstrlen(.@userid$)<4 || getstrlen(.@userid$)>23) {
+			mes "^FF0000 Username must be between 4 and 23 characters long.";
+			close;
+		}
+		for( set .@i,0; .@i<getstrlen(.@userid$); set .@i,.@i+1 ) {
+			if (!charisalpha(.@userid$,.@i)) {
+				mes "^FF0000 Username may only contain letters a-z A-Z";
+				close;
+			}
+		}
+		// Do you want a limit on how many "storage2" you can create per char or per account? or no limit?
+		query_sql "SELECT COUNT(storage_id) FROM storage2_login WHERE userid='"+escape_sql(.@userid$)+"'", .@exists;
+		if (.@exists) {
+			mes "^FF0000 Sorry, that username is already taken.";
+			close;
+		}
+		
+		// passed all checks, create the account
+		query_sql "INSERT INTO storage2_login (userid,user_pass,create_char_id,create_date) VALUES ('"+escape_sql(.@userid$)+"',"+( .UseMD5 ? "MD5":"" )+"('"+escape_sql(.@user_pass$)+"'),"+getcharid(0)+",NOW())";
+		query_sql "SELECT storage_id FROM storage2_login WHERE userid='"+escape_sql(.@userid$)+"'", @storage_id;
+		if (@storage_id) {
+			mes "^0000FF Storage account created!";
+		} else {
+			mes "^FF0000 There was an error creating your account T_T";
+			// maybe SQL table does not exist
+		}
+		break;
+// Access storage2
+	case 3:
+		// validate user
+		if (!.PersistentLogin || !@storage_id) {
+			mes "Enter your username:";
+			input .@userid$;
+			mes "Enter your password:";
+			input .@user_pass$;
+			set @storage_id, callsub(S_login, .@userid$,.@user_pass$);
+			if (@storage_id == 0) {
+				mes "^FF0000 Invalid username or password.";
+				close;
+			}
+		}
+		mes "^0000FF You are now logged in!";
+		// TODO: tell them whose storage2 they are logged into? (and save variable)
+		next;
+		
+M_storage:
+		switch(select("Withdraw:Deposit:Change Password"+( .PersistentLogin ? ":Logout of storage2":"" ))) {
+		case 1: // Withdraw
+			set @start, gettimetick(0); // DEBUG
+			callsub S_getstorage2list;
+			if (@storage2list_count == 0) {
+				mes "^FF0000 You don't have any items in this storage";
+				close;
+			}
+			mes "Select an item to withdraw:";
+			next;
+			set .@num, callsub(S_pickitem, "@storage2list");
+			if (@menu == 255) break; // if they clicked Cancel, loop back to M_storage
+			// TODO: display detailed info?
+			
+			if (@storage2list_amount[.@num] == 1) {
+				set .@amount, 1;
+			} else {
+				mes "How many do you want to withdraw?";
+				input .@amount;
+			}
+			if (.@amount < 1) {
+				mes "^FF0000 Enter a positive amount.";
+				close;
+			} else if (.@amount > @storage2list_amount[.@num]) {
+				mes "^FF0000 You do not have that many...";
+				close;
+			}
+			// WITHDRAW the item(s)
+			callsub S_withdraw, .@num,.@amount;
+			break;
+		case 2: // Deposit
+			set @start, gettimetick(0); // DEBUG
+			getinventorylist;
+			if (@inventorylist_count == 0) {
+				mes "^FF0000 You don't have any items!";
+				close;
+			}
+			mes "Select an item to deposit:";
+			next;
+			set .@num, callsub(S_pickitem, "@inventorylist");
+			if (@menu == 255) break; // if they clicked Cancel, loop back to M_storage
+			// TODO: display detailed info?
+			
+			if (@inventorylist_expire[.@num]) {
+				mes "^FF0000 You can not deposit rental items... yet.";
+				close;
+			}
+			if (@inventorylist_amount[.@num] == 1) {
+				set .@amount, 1;
+			} else {
+				mes "How many do you want to deposit?";
+				input .@amount;
+			}
+			if (.@amount < 1) {
+				mes "^FF0000 Enter a positive amount.";
+				close;
+			} else if (.@amount > @inventorylist_amount[.@num]) {
+				mes "^FF0000 You do not have that many...";
+				close;
+			}
+			// DEPOSIT the item(s)
+			callsub S_deposit, .@num,.@amount;
+			break;
+		case 3: // Change Password
+			npctalk "work in progress";
+			// TODO
+			break;
+		case 4: // Logout of storage2
+			set @storage_id, 0;
+			mes "^0000FF You are now logged out.";
+			close;
+		}
+		goto M_storage;
+// Logout of storage2
+	case 4:
+		set @storage_id, 0;
+		mes "^0000FF You are now logged out.";
+		break;
+	}
+	close;
+
+//===== sub-functions: =======================================
+
+S_login:
+// getarg(0) = userid
+// getarg(1) = user_pass
+	query_sql "SELECT storage_id FROM storage2_login WHERE "+( .NoCase ? "userid":"CAST(userid AS BINARY)" )+"='"+escape_sql(getarg(0))+"' AND user_pass="+( .UseMD5 ? "MD5":"" )+"('"+escape_sql(getarg(1))+"')", .@storage_id;
+	return .@storage_id;
+
+S_getstorage2list:
+	set @storage2list_count, query_sql("SELECT nameid,amount,identify,refine,attribute,card0,card1,card2,card3,expire_time FROM storage2 WHERE storage_id="+@storage_id+" LIMIT 128", 
+	  @storage2list_id,@storage2list_amount,@storage2list_identify,@storage2list_refine,@storage2list_attribute,@storage2list_card1,@storage2list_card2,@storage2list_card3,@storage2list_card4,@storage2list_expire);
+	return;
+
+S_pickitem:
+// getarg(0) = variable prefix for arrays
+	// ~ 4374 length limit of menu string (or client crashes)
+	// divide by 128 (max storage items) = max 34 chars per item
+	while (.@i < getd(getarg(0)+"_count")) {
+		set .@menu$, .@menu$+ callsub(S_getitemname2, getelementofarray(getd(getarg(0)+"_id"),.@i), getelementofarray(getd(getarg(0)+"_amount"),.@i), getelementofarray(getd(getarg(0)+"_identify"),.@i), getelementofarray(getd(getarg(0)+"_refine"),.@i), getelementofarray(getd(getarg(0)+"_attribute"),.@i), 
+		  getelementofarray(getd(getarg(0)+"_card1"),.@i), getelementofarray(getd(getarg(0)+"_card2"),.@i), getelementofarray(getd(getarg(0)+"_card3"),.@i), getelementofarray(getd(getarg(0)+"_card4"),.@i)) +":";
+		set .@i, .@i +1;
+	}
+	dispbottom .@i + " menu items parsed in " + (gettimetick(0) - @start) + " milliseconds"; // DEBUG
+	return prompt(.@menu$) -1;
+
+S_withdraw:
+// getarg(0) = index of item in @storage2list_ arrays
+// getarg(1) = amount
+	set .@i, getarg(0);
+	set .@amount, getarg(1);
+	if (!checkweight(@storage2list_id[.@i],.@amount)) {
+		mes "^FF0000 You are overweight or have too many items in your inventory.";
+		close;
+	}
+	// check if item still exists in storage2
+	query_sql "SELECT amount FROM storage2 WHERE storage_id="+@storage_id+" AND nameid="+@storage2list_id[.@i]+
+	  " AND identify="+@storage2list_identify[.@i]+" AND refine="+@storage2list_refine[.@i]+" AND attribute="+@storage2list_attribute[.@i]+
+	  " AND card0="+@storage2list_card1[.@i]+" AND card1="+@storage2list_card2[.@i]+" AND card2="+@storage2list_card3[.@i]+" AND card3="+@storage2list_card4[.@i]+" LIMIT 1", .@exists;
+	if (.@exists < .@amount) {
+		mes "^FF0000 You do not have that many of that item.";
+		close;
+	}
+	getitem2 @storage2list_id[.@i],.@amount,@storage2list_identify[.@i],@storage2list_refine[.@i],@storage2list_attribute[.@i],@storage2list_card1[.@i],@storage2list_card2[.@i],@storage2list_card3[.@i],@storage2list_card4[.@i];
+	// delete from `storage2`
+	if (@storage2list_amount[.@i] == .@amount) {
+		query_sql "DELETE FROM storage2 WHERE storage_id="+@storage_id+" AND nameid="+@storage2list_id[.@i]+" AND amount="+@storage2list_amount[.@i]+
+		  " AND identify="+@storage2list_identify[.@i]+" AND refine="+@storage2list_refine[.@i]+" AND attribute="+@storage2list_attribute[.@i]+
+		  " AND card0="+@storage2list_card1[.@i]+" AND card1="+@storage2list_card2[.@i]+" AND card2="+@storage2list_card3[.@i]+" AND card3="+@storage2list_card4[.@i]+" LIMIT 1";
+	} else {
+		query_sql "UPDATE storage2 SET amount=amount-"+.@amount+" WHERE storage_id="+@storage_id+" AND nameid="+@storage2list_id[.@i]+
+		  " AND card0="+@storage2list_card1[.@i]+" AND card1="+@storage2list_card2[.@i]+" AND card2="+@storage2list_card3[.@i]+" AND card3="+@storage2list_card4[.@i]+" LIMIT 1";
+	}
+	mes "^0000FF"+.@amount+" "+( @storage2list_identify[.@i] ? getitemname(@storage2list_id[.@i]):"UNIDENTIFIED item" )+"(s) ^000000withdrawn!";
+	return;
+
+S_deposit:
+// getarg(0) = index of item in @inventorylist_ arrays
+// getarg(1) = amount
+	set .@i, getarg(0);
+	set .@amount, getarg(1);
+	// TODO: check db/item_trade.txt restrictions
+	query_sql "SELECT COUNT(id) FROM storage2 WHERE storage_id="+@storage_id, .@count;
+	if (.@count >= 128) {
+		mes "^FF0000 Sorry, your storage is full.";
+		close;
+	}
+	if (countitem2(@inventorylist_id[.@i],@inventorylist_identify[.@i],@inventorylist_refine[.@i],@inventorylist_attribute[.@i],@inventorylist_card1[.@i],@inventorylist_card2[.@i],@inventorylist_card3[.@i],@inventorylist_card4[.@i]) < .@amount) {
+		mes "^FF0000 You do not have that many of that item.";
+		close;
+	}
+	delitem2 @inventorylist_id[.@i],.@amount,@inventorylist_identify[.@i],@inventorylist_refine[.@i],@inventorylist_attribute[.@i],@inventorylist_card1[.@i],@inventorylist_card2[.@i],@inventorylist_card3[.@i],@inventorylist_card4[.@i];
+	// combine 3 queries into INSERT ... ON DUPLICATE KEY UPDATE ?
+	// maybe split this next if(), so query_sql is only run if S_isstackable. http://www.eathena.ws/board/index.php?autocom=bugtracker&showbug=4082
+	if (callsub(S_isstackable,@inventorylist_id[.@i]) && query_sql("SELECT id FROM storage2 WHERE storage_id="+@storage_id+" AND nameid="+@inventorylist_id[.@i]+
+	  " AND card0="+@inventorylist_card1[.@i]+" AND card1="+@inventorylist_card2[.@i]+" AND card2="+@inventorylist_card3[.@i]+" AND card3="+@inventorylist_card4[.@i], .@dummy)) {
+		query_sql "UPDATE storage2 SET amount=amount+"+.@amount+" WHERE storage_id="+@storage_id+" AND nameid="+@inventorylist_id[.@i]+
+		  " AND card0="+@inventorylist_card1[.@i]+" AND card1="+@inventorylist_card2[.@i]+" AND card2="+@inventorylist_card3[.@i]+" AND card3="+@inventorylist_card4[.@i]+" LIMIT 1";
+	} else {
+		query_sql "INSERT INTO storage2(storage_id,nameid,amount,identify,refine,attribute,card0,card1,card2,card3,expire_time) VALUES ("+
+		  @storage_id+","+@inventorylist_id[.@i]+","+.@amount+","+@inventorylist_identify[.@i]+","+@inventorylist_refine[.@i]+","+@inventorylist_attribute[.@i]+","+
+		  @inventorylist_card1[.@i]+","+@inventorylist_card2[.@i]+","+@inventorylist_card3[.@i]+","+@inventorylist_card4[.@i]+","+@inventorylist_expire[.@i]+")";
+	}
+	mes "^0000FF"+.@amount+" "+( @inventorylist_identify[.@i] ? getitemname(@inventorylist_id[.@i]):"UNIDENTIFIED item" )+"(s) ^000000deposited!";
+	return;
+
+S_isstackable:
+// getarg(0) = item_id
+	switch( getiteminfo(getarg(0),2) ) {
+	case 4: // IT_WEAPON
+	case 5: // IT_ARMOR
+	case 7: // IT_PETEGG
+	case 8: // IT_PETARMOR
+		return 0;
+	default:
+		return 1;
+	}
+
+S_getitemname2:
+// callsub(S_getitemname2, ItemID, Amount, Identify, Refine, Broken, Card1, Card2, Card3, Card4)
+	set .@id, getarg(0);
+	set .@type, getiteminfo( .@id, 2 );
+	set .@refine, getarg(3);
+	setarray .@card[0], getarg(5),getarg(6),getarg(7),getarg(8);
+	set .@ref$, ( .@refine )? "+"+ .@refine +" " : "" ; // I think no need refinement check for type 4 or 5, the source automatically convert refined etc items into no refinement
+	set .@slot, getitemslots(.@id);
+	set .@slots$, ( .@slot )? " ["+ .@slot +"]" : "" ;
+	set .@color$, "^000000";
+	
+	// amount
+	if (callsub(S_isstackable, .@id))
+		set .@str$, .@str$+ getarg(1) + " ";
+	// check if item is identified
+	if ( getarg(2) == 0 ) { // unidentified
+		if ( .@type == 5 ) {
+			set .@color$, "^999999";
+			set .@loc, getiteminfo( .@id, 5 );
+			if ( .@loc & 769 ) return "Headgear"; // I knew the name varies on some items ... but it will take a lot gotocount if list out all of them
+			else if ( .@loc & 16 ) return "Armor";
+			else if ( .@loc & 32 ) return "Shield";
+			else if ( .@loc & 4 ) return "Garment";
+			else if ( .@loc & 64 ) return "Shoes";
+			else if ( .@loc & 136 ) return "Accessory";
+		} else if ( .@type == 4 ) {
+			set .@color$, "^999999";
+			set .@view, getiteminfo( .@id, 11 );
+			if ( .@view == 1 ) return "Dagger";
+			else if ( .@view == 2 ) return "Sword";
+			else if ( .@view == 3 ) return "Two-handed Sword";
+			else if ( .@view == 4 ) return "Spear";
+			else if ( .@view == 5 ) return "Spear";
+			else if ( .@view == 6 ) return "Axe";
+			else if ( .@view == 7 ) return "Axe";
+			else if ( .@view == 8 ) return "Mace";
+			else if ( .@view == 10 ) return "Rod";
+			else if ( .@view == 11 ) return "Bow";
+			else if ( .@view == 12 ) return "Claw";
+			else if ( .@view == 13 ) return "Musical Instrument";
+			else if ( .@view == 14 ) return "Whip";
+			else if ( .@view == 15 ) return "Book";
+			else if ( .@view == 16 ) return "Katar";
+			else if ( .@view == 17 ) return "Revolver";
+			else if ( .@view == 18 ) return "Rifle";
+			else if ( .@view == 19 ) return "Gatling gun";
+			else if ( .@view == 20 ) return "Shotgun";
+			else if ( .@view == 21 ) return "Grenade launchers";
+			else if ( .@view == 22 ) return "Fuuma Shurikens";
+		}
+	} else {
+		if ( ( .@type == 4 || .@type == 5 ) && .@card[0] == 0 && .@card[1] == 0 && .@card[2] == 0 && .@card[3] == 0 ) // equipment with no card, for reduce gotocount
+			set .@str$, .@str$+ .@ref$ + getitemname(.@id) + .@slots$;
+		else if ( ( .@type == 4 || .@type == 5 ) && ( .@card[0] > 500 || .@card[1] > 500 || .@card[2] > 500 || .@card[3] > 500 ) && .@card[0] != 254 && .@card[0] != 255 ) { // equipment that has cards, but not a signed item
+			set .@i, 0;
+			while ( .@i < 4 ) {
+				set .@j, .@i;
+				while ( .@j < 4 ) {
+					if ( .@card[.@i] == .@card[.@j] ) {
+						set .@k, 1;
+						while ( .@k <= .@i ) {
+							if ( .@card[.@i] == .@card[.@i - .@k] ) {
+								break;
+							}
+							set .@k, .@k +1 ;
+						}
+						if ( .@k <= .@i ) break;
+						set .@cnt[.@i], .@cnt[.@i] +1 ;
+					}
+					set .@j, .@j +1 ;
+				}
+				if ( callfunc("F_GetItemPrefix", .@card[.@i]) != "" && .@cnt[.@i] ) {
+					if ( .@cnt[.@i] == 1 ) ;
+					else if ( .@cnt[.@i] == 2 ) set .@cnt$[.@i], "Double";
+					else if ( .@cnt[.@i] == 3 ) set .@cnt$[.@i], "Triple";
+					else if ( .@cnt[.@i] == 4 ) set .@cnt$[.@i], "Quadruple";
+					if ( compare( callfunc("F_GetItemPrefix", .@card[.@i]), "of " ) == 0 )
+						set .@prefix$, .@prefix$ + .@cnt$[.@i] +( ( .@cnt$[.@i] == "" )?"":" " )+ callfunc("F_GetItemPrefix", .@card[.@i]) +" ";
+					else
+						set .@prefix$[1], .@prefix$[1] +" "+ callfunc("F_GetItemPrefix", .@card[.@i]) +( ( .@cnt$[.@i] == "" )?"":" " )+ .@cnt$[.@i];
+				}
+				if ( .@card[.@i] && .@i >= .@slot )
+					set .@enchant, .@enchant +1;
+				set .@i, .@i +1 ;
+			}
+			set .@str$, .@str$+ .@ref$ + .@prefix$ + getitemname(.@id) + .@prefix$[1] + .@slots$;
+			if ( .@enchant == 0 ) ;
+			else if ( .@enchant == 1 ) set .@color$, "^66CC00";
+			else if ( .@enchant == 2 ) set .@color$, "^0066CC";
+			else if ( .@enchant == 3 ) set .@color$, "^CC6600";
+			else if ( .@enchant == 4 ) set .@color$, "^BB44BB";
+		}
+		else if ( .@card[0] == 254 || .@card[0] == 255 ) { // signed items
+			set .@char_id, .@card[3] * pow(2,16) + .@card[2];
+			set .@name$, callsub(S_charid2name, .@char_id);
+			if ( .@card[1] / 10 == 0 ) ; 
+			else if ( .@card[1] / 10 == 128 ) {
+				set .@sc$, "Very Strong ";
+			} else if ( .@card[1] / 10 == 256 ) {
+				set .@sc$, "Very Very Strong ";
+			} else if ( .@card[1] / 10 == 384 ) {
+				set .@sc$, "Very Very Very Strong ";
+			} 
+			if ( .@card[1] % 10 == 0 ) ;
+			else if ( .@card[1] % 10 == 1 ) {
+				set .@ele$, "Ice ";
+			} else if ( .@card[1] % 10 == 2 ) {
+				set .@ele$, "Earth ";
+			} else if ( .@card[1] % 10 == 3 ) {
+				set .@ele$, "Fire ";
+			} else if ( .@card[1] % 10 == 4 ) {
+				set .@ele$, "Wind ";
+			}
+			set .@str$, .@str$+ .@ref$ + .@sc$ + .@name$ +"'s "+ .@ele$ + getitemname(.@id);
+		}
+	}
+	if ( getarg(4) ) // broken equipment
+		set .@color$, "^FF0000";
+	return .@color$ + .@str$ + "^000000";
+
+S_charid2name:
+// getarg(0) = char_id
+	if (query_sql("SELECT `name` FROM `char` WHERE char_id="+getarg(0), .@name$))
+		return .@name$;
+	else
+		return "Unknown"; // unknown_char_name (../conf/char_athena.conf)
+
+OnInit:
+	set .UseMD5, 0; // store user_pass as MD5?
+	set .NoCase, 1; // no case-sensitivity? (1 = Case-INsensitive) *Only applies when logging in.
+	                // When creating accounts, for security reasons case-insensitive userid are NOT allowed (ex: test and TEST).
+	set .PersistentLogin, 1; // allow users to stay "logged in" to their storage2? (until they logout of game)
+	end;
+}

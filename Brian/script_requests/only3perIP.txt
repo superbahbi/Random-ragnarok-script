@@ -1,0 +1,13 @@
+// http://www.eathena.ws/board/index.php?showtopic=227940
+// i would like to know if there were codes that only 3 accounts can be used to log in per IP Address?
+
+-	script	Only3perIP	-1,{
+OnPCLoginEvent:
+	set .@name$, strcharinfo(0);
+	if (query_sql("SELECT login.account_id FROM login LEFT JOIN `char` ON login.account_id=`char`.account_id WHERE login.last_ip=(SELECT last_ip FROM login WHERE account_id="+getcharid(3)+") AND `char`.online=1", .@account_id) > 3) {
+		announce "Sorry, only 3 accounts per IP can be logged in at a time.", bc_self;
+		sleep 1000;
+		atcommand "@kick " + .@name$;
+	}
+	end;
+}

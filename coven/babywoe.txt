@@ -1,0 +1,51 @@
+//***-- Script by :		***\( ^ ~ ^ )/***
+//***-- Emistry
+//***
+//*********************************************************************************************************************************************************************************
+//***-- Contact Info :	***\( ^ ~ ^ )/***
+//***-- My Email : Equinox1991@Gmail.com
+//***
+//*********************************************************************************************************************************************************************************
+//***-- Messages :		***\( ^ ~ ^ )/***
+//***-- Drop me a private message or email if you are looking for my helps ^^.
+//***-- Beside that, I am looking for a Server to work with ^^ .  
+//***-- I will do my best to help you ^^.
+//***-- More Details ? PM Me ^^.
+//***
+//*********************************************************************************************************************************************************************************
+//***Although these scripts might not suit or follow with what you have requested completely. But i still wish you can give it a try before reject the works.
+//***
+//*********************************************************************************************************************************************************************************
+
+
+
+-	script	JobRestriction	-1,{
+OnPCLoadMapEvent:
+if(strcharinfo(3)!="aldeg_cas03") end;
+if ( Class > 4022 && Class < 4046 || Class > 4095 && Class < 4113 ){
+dispbottom "( From Emistry ) : Welcome to Baby Class WOE Castle. ";
+end;
+}
+cutin "lhz_macu03",2;
+mes "[ ^0000FF Castle Guardian's^000000  ]";
+mes "Hello "+strcharinfo(0)+", ";
+mes "You are now allow to enter this Castle Region.";
+mes "This Castle only available for ";
+mes "^0000FFBABY CLASS^000000";
+next;
+cutin "lhz_macu04",2;
+mes "[ ^0000FF Castle Guardian's^000000  ]";
+mes "-----^FF0000 Castle Guardian's^000000-----";
+mes "Other Job Class Are Not Allow To Take Part In This WOE";
+next;
+cutin "lhz_macu06",2;
+announce strcharinfo(0)+" ,  GET OUT !!! You cant enter this map because you are not Baby Job Class !!!",bc_self;
+dispbottom "( From Emistry ) : To enter this Castle , you must be a Baby Job Class since this castle is only open for Baby Class.";
+close2;
+warp "prontera",155,155;
+cutin "",255;
+end;
+}
+
+
+aldeg_cas03	mapflag	loadevent
