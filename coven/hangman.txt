@@ -219,8 +219,11 @@ quiz_01,322,376,3	script	Hangman	735,{
 							if ( compare( "_|~key~|_" + @string$ + "_|~key~|_" , "_|~key~|_" + .wordsearch$ + "_|~key~|_" ) )
 							{
 
-								announce strcharinfo( 0 ) + " just find the word : " + .wordsearch$ + " !", bc_blue | bc_map ;
-								getitem 7539,1;
+								announce strcharinfo( 0 ) + " just find the word : " + .wordsearch$ + "! +2 points.", bc_blue | bc_map ;
+								set .@playerid, getcharid(3,strcharinfo(0));
+								set .@amount, 2;
+								query_sql("UPDATE `char` SET points=(points+"+.@amount+") WHERE account_id='"+.@playerid+"'");
+								//getitem 7539,1;
 								donpcevent strnpcinfo( 0 ) + "::OnInit" ;    //On Reset.
 
 								mes .@npc$ ;

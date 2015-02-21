@@ -2,18 +2,53 @@
 
 OnWhisperGlobal:
 	if(getgmlevel()<70) goto DEATH;
-	input .reciever$;
-	
 	mes "[^FF0000[Admin]-Ric^000000]";
-	mes "Starter box for newbies containing Ghostring Card(1), Deviling Card(1), Valkyria's Armor(1), Valkyria's Manteau(1), Platinum Coins(2) and Poring Coins(10) ";
-	menu "Starter Box(1)",BCHIP;
+	mes "Starter box for newbies containing";
+	mes "MIRACLES!";
+	next;
+	mes "[^FF0000[Admin]-Ric^000000]";
+	mes "Enter name";
+	
+	input .@reciever$;
+	set .@playerid,getcharid(3,.@reciever$);
+	if(!isloggedin(.@playerid))
+	{
+		next;
+		mes "[^FF0000[Admin]-Ric^000000]";
+		mes .@reciever$+" is offline.";
+		mes "Please, try again.";
+		close;
+	}
+	next;
+	mes "[^FF0000[Admin]-Ric^000000]";
+	mes "Let me check if "+ .@reciever$ + " haven't received any frebies yet.";
+	
+	set .@account_id, getcharid(3,.@reciever$);
+	query_sql("SELECT `account_id` FROM `cp_freebies` WHERE account_id="+.@account_id+" LIMIT 1",.@id);
+	if(getarraysize(.@id)!=0)
+	{
+		next;
+		mes "[^FF0000[Admin]-Ric^000000]";
+		mes .@reciever$+ "'s account has already claimed his/her freebies.";
+		close;
+	}
+	next;
+	mes "[^FF0000[Admin]-Ric^000000]";
+	mes "ohmagawd";
+		
+	menu "Starter Box(1)",BCHIP,"Cancel",cancel;
+
 	close2;
 
 BCHIP:	
-	charcommand "#item "+.reciever$+" 20026 1 " ;
-	announce ""+strcharinfo(0)+": "+.reciever$+" received the Starter Box! Welcome to JaeRO enjoy your stay.",bc_all;
+	set .@itemid, 20026;
+	set .@amount, 1;
+	charcommand "#item \""+.@reciever$+"\" "+.@itemid+" "+.@amount;
+	query_sql "INSERT INTO `cp_freebies` (`account_id`,`char_name`) VALUES ("+.@account_id+",'"+.@reciever$+"')";
+	announce ""+strcharinfo(0)+": "+.@reciever$+" received the Starter Box! Welcome to CovenRO enjoy your stay.",bc_all;
 	close;
-
+cancel:
+	close;
 DEATH:
 	end;
 }

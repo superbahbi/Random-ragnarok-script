@@ -1,0 +1,148 @@
+prontera,156,232,6	script	Expanded Job Swapper	729,{
+if ( class == 23 || class == 24 || class == 25  || class == 4046 || class == 4047 || class == 4049 ){
+set .@npc$, "[Expanded Job Swapper]";
+mes .@npc$;
+mes "Lalala~";
+mes "I can magically change your job for 1 TCG!";
+switch(select("Super Novice:Gunslinger:Ninja:Taekwon:Star Gladiator:Soul Linker")){
+
+	case 1:
+	if(Class == 23){
+	next;
+	mes @name$;
+	mes "That's already your current job.";
+	close;
+	} else {
+	next;
+	mes @name$;
+	mes "Let's see if you're telling the truth!";
+	if(countitem(7227)<1){next; mes @name$; mes "Please bring 1 TCG to avail of my services!."; close;}
+	if(countitem(7227)>=1);
+	next;
+	mes @name$;
+	mes "Job Swapping Successful";
+	delitem 7227,1;
+	jobchange 23;
+	set JobLevel, 120;
+	close;
+	}
+	break;
+	
+	case 2:
+	if(Class == 24){
+	next;
+	mes @name$;
+	mes "That's already your current job.";
+	close;
+	} else {
+	next;
+	mes @name$;
+	mes "Let's see if you're telling the truth!";
+	if(countitem(7227)<1){next; mes @name$; mes "Please bring 1 TCG to avail of my services!."; close;}
+	if(countitem(7227)>=1);
+	next;
+	mes @name$;
+	mes "Job Swapping Successful";
+	delitem 7227,1;
+	jobchange 24;
+	set JobLevel, 120;
+	close;
+	}
+	break;
+	
+	case 3:
+	if(Class == 25){
+	next;
+	mes @name$;
+	mes "That's already your current job.";
+	close;
+	} else {
+	next;
+	mes @name$;
+	mes "Let's see if you're telling the truth!";
+	if(countitem(7227)<1){next; mes @name$; mes "Please bring 1 TCG to avail of my services!."; close;}
+	if(countitem(7227)>=1);
+	next;
+	mes @name$;
+	mes "Job Swapping Successful";
+	delitem 7227,1;
+	jobchange 25;
+	set JobLevel, 120;
+	close;
+	}
+	break;
+	
+	case 4:
+	if(Class == 4046){
+	next;
+	mes @name$;
+	mes "That's already your current job.";
+	close;
+	} else {
+	next;
+	mes @name$;
+	mes "Let's see if you're telling the truth!";
+	if(countitem(7227)<1){next; mes @name$; mes "Please bring 1 TCG to avail of my services!."; close;}
+	if(countitem(7227)>=1);
+	next;
+	mes @name$;
+	mes "Job Swapping Successful";
+	delitem 7227,1;
+	jobchange 4046;
+	set JobLevel, 120;
+	close;
+	}
+	break;
+	
+	case 5:
+	if(Class == 4047){
+	next;
+	mes @name$;
+	mes "That's already your current job.";
+	close;
+	} else {
+	next;
+	mes @name$;
+	mes "Let's see if you're telling the truth!";
+	if(countitem(7227)<1){next; mes @name$; mes "Please bring 1 TCG to avail of my services!."; close;}
+	if(countitem(7227)>=1);
+	next;
+	mes @name$;
+	mes "Job Swapping Successful";
+	delitem 7227,1;
+	jobchange 4047;
+	set JobLevel, 120;
+	close;
+	}
+	break;
+	
+	case 6:
+	if(Class == 4049){
+	next;
+	mes @name$;
+	mes "That's already your current job.";
+	close;
+	} else {
+	next;
+	mes @name$;
+	mes "Let's see if you're telling the truth!";
+	if(countitem(7227)<1){next; mes @name$; mes "Please bring 1 TCG to avail of my services!."; close;}
+	if(countitem(7227)>=1);
+	next;
+	mes @name$;
+	mes "Job Swapping Successful";
+	delitem 7227,1;
+	jobchange 4049;
+	set JobLevel, 120;
+	close;
+	}
+	break;
+}
+}
+else {
+	mes @name$;
+mes "Sorry I only work for Expanded job classes.";
+mes "Just come back when you are at your right level and class";
+close;
+}
+}

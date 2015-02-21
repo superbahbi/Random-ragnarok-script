@@ -28,6 +28,10 @@ poring_c02,214,223,5	script	RFYL Event	485,{
 	
 RFYL_Admin:
 	mes "[RFYL Event]";
+	if (agitcheck() || agitcheck2()){
+		mes "A war is currently in progress";
+		close;
+	}
 	mes "Hello GM " + strcharinfo(0) + ", would you like me to start RFYL Event?";
 	menu "Start Event",RFYL_check,"Reset",reset_RFYL,"Warp",warp_RFYL,"No Thanks",endRFYL;
 	RFYL_check:
@@ -60,10 +64,10 @@ RFYL_Admin:
 		next;
 		goto RFYL_Admin;
 	warp_RFYL:
-		next;
-		mes "[RFYL Event]";
-		mes "I will now warp you to the RFYL Event map.";
-		next;
+		//next;
+		//mes "[RFYL Event]";
+		//mes "I will now warp you to the RFYL Event map.";
+		//next;
 		warp "quiz_01",230,368;
 		end;
 	endRFYL:
@@ -140,8 +144,7 @@ initnpctimer;
 end;
 OnTimer60000:
 announce "RFYL Warper: Closing warps in 60 Seconds",0;
-enablenpc "RFYL Warper";
-enablenpc "RFYL Warper#2";
+
 end;
 
 OnTimer90000:

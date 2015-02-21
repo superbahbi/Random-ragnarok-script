@@ -1,0 +1,79 @@
+//===== fabre event =================
+
+-	script	fabreinit	-1,{
+OnInit:
+set $fabreon,0;
+}
+
+prontera,164,170,4	script	Fabre Trainer	447,{
+	if (getgmlevel()<20) goto F_GAME;
+	if ($fabreon==1) goto G_ON;
+	announce "Fabre Punch Event.",0;
+	initnpctimer;
+OnTimer20000:
+	set $fabreon,1;
+	killmonsterall "pvp_n_1-2";
+	announce "Fabre Punch Event will begin in 1 minute",0;
+	end;
+
+OnTimer60000:
+	stopnpctimer; 
+	monster "pvp_n_1-2",0,0,"Event",1184,200,"Fabre Trainer::Onmobdead";
+	end;
+
+F_GAME:
+	if ($fabreon==1) goto F1_GAME;
+	mes "[Fabre Event]";
+	mes "No event at this moment.";
+	close;
+G_ON:
+	mes "Event still ongoing.";
+	close;
+
+F1_GAME:
+	mes "Event will begin after all participants will be register";
+	mes "You want to register?";
+	next;
+	menu "Go",case1,"Info",case2,"Noo 8)",case3;
+case1:
+	set @z,1;
+	warp "pvp_n_1-2",0,0;
+	close;
+case2:
+	mes "[Fabre Event]";
+	mes "The first player can kill 30 fabre will get the prize.";
+	mes "Good Luck.";
+close;
+case3:
+end;
+
+Onmobdead:
+	set $trava,getmapmobs("pvp_n_1-2");
+	set $trava, $trava - 1;
+	set @z, @z + 1; // +1 ???
+	if(@z == 21) {goto prize;
+	if($trava < 10) {goto resp;
+
+end;
+
+resp:
+	monster "pvp_n_1-2",0,0,"Event",1184,200,"Fabre Trainer::Onmobdead";
+end;
+
+prize:
+	killmonsterall "pvp_n_1-2";
+	announce "Fabre Trainer : "+strcharinfo(0)+" Won the Fabre Event",0;
+	getitem 671,1; // Prize ID ,How much
+	warp "SavePoint",0,0;
+	set $fabreon,0;
+	end;
+}
+}
+}
+pvp_n_1-2	mapflag	noskill
+pvp_n_1-2	mapflag	nosave	SavePoint
+pvp_n_1-2	mapflag	noteleport
+pvp_n_1-2	mapflag	nowarp
+pvp_n_1-2	mapflag	nomemo
+pvp_n_1-2	mapflag	noreturn
+

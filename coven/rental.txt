@@ -1,0 +1,139 @@
+prontera,164,169,4	script	Rental Items Seller	878,{
+
+	
+	set .@npcname$, "[Rental Items Seller]";
+		delwaitingroom;
+		waitingroom "Rental Items",0;
+		mes .@npcname$;
+		mes "Hi hi hi hi!";
+		next;
+		mes .@npcname$;
+		mes "Well hello there!";
+		next;
+		menu "Rental Item List",-,"Exit",exit;
+		next;
+		switch(select("Foot Ring","Large Baphomet Horns","Odin's Mask","Spiked Scarf","Mjolnir","Ice Pick","Exit")){
+		
+		//Values: itemid,1stfee,2ndfee,3rdfee,4thfee,5thfee,1strenttimeduration,2ndrenttimeduration,3rdrenttimeduration,4threnttimeduration,5threnttimeduration
+		
+		case 1:
+		callsub rent,20027,10,259200; end;
+				
+		case 2:
+		callsub rent,20030,10,259200; end;
+		
+		case 3:
+		callsub rent2,20028,8,259200; end;
+		
+		case 4:
+		callsub rent2,20029,8,259200; end;
+		
+		case 5:
+		callsub rent3,20031,25,259200; end;
+		
+		case 6:
+		callsub rent3,20032,25,259200; end;
+		
+		case 7:
+		close;
+		}
+		
+		rent:
+		set .@npcname$, "[Rental Items Seller]";
+		mes .@npcname$;
+		mes "You can rent this item for 3 days at the price of 10 TCG cards.";
+		mes "Do you want to rent this item?";
+		next;
+		switch(select("Yes:No")){
+		
+		//4 hours = 14400 secs	Rent fee: 1tcg
+		//8 hours = 28800 secs	Rent fee: 5 tcg
+		//12 hours = 43200 secs	Rent fee: 10 tcg
+		//1 day = 86400secs		Rent fee: 15 tcg
+		//3 days = 259200 secs	Rent fee: 50 tcg
+		
+		case 1:
+		if(countitem(7227) >= getarg(1)){
+			callsub giveitem,getarg(0),getarg(1),getarg(2);
+			}
+			else {
+				callsub insufficient_funds;
+				end;
+			}
+			
+		case 2:
+		
+			close;
+		}
+		
+		rent2:
+		set .@npcname$, "[Rental Items Seller]";
+		mes .@npcname$;
+		mes "You can rent this item for 3 days at the price of 8 TCG cards.";
+		mes "Do you want to rent this item?";
+		next;
+		switch(select("Yes:No")){
+		
+		//4 hours = 14400 secs	Rent fee: 1tcg
+		//8 hours = 28800 secs	Rent fee: 5 tcg
+		//12 hours = 43200 secs	Rent fee: 10 tcg
+		//1 day = 86400secs		Rent fee: 15 tcg
+		//3 days = 259200 secs	Rent fee: 50 tcg
+		
+		case 1:
+			if(countitem(7227)>=getarg(1)){
+			callsub giveitem,getarg(0),getarg(1),getarg(2);
+			}
+			else {
+				callsub insufficient_funds;
+				end;
+			}
+			
+		case 2:
+		
+			close;
+		}
+		
+		rent3:
+		set .@npcname$, "[Rental Items Seller]";
+		mes .@npcname$;
+		mes "You can rent this item for 3 days at the price of 25 TCG cards.";
+		mes "Do you want to rent this item?";
+		next;
+		switch(select("Yes:No")){
+		next;
+		
+		//4 hours = 14400 secs	Rent fee: 1tcg
+		//8 hours = 28800 secs	Rent fee: 5 tcg
+		//12 hours = 43200 secs	Rent fee: 10 tcg
+		//1 day = 86400secs		Rent fee: 15 tcg
+		//3 days = 259200 secs	Rent fee: 50 tcg
+		
+		case 1:
+		if(countitem(7227)>=getarg(1)){
+			callsub giveitem,getarg(0),getarg(1),getarg(2);
+			}
+			else {
+				callsub insufficient_funds;
+				end;
+			}
+			
+		case 2:
+			close;
+				
+		}
+		giveitem:
+			rentitem getarg(0),getarg(2);
+			delitem 7227,getarg(1);
+			close;
+		insufficient_funds:
+			set .@npcname$, "[Rental Items Seller]";
+			mes .@npcname$;
+			mes "Insufficient funds.";
+			close;
+		exit:
+			close;
+	}
+
+	
+	

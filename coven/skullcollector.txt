@@ -1,0 +1,33 @@
+poring_c02,15,225,4	script	Skull Collector	404,{
+	set @skullnpcname$, "[Skull Collector]";
+	if (getgmlevel() > 40 ) {
+		mes @skullnpcname$;
+		mes "Enter player name.";
+		input @skullplayername$;
+		set .@skullplayerid,getcharid(0,@skullplayername$);
+		if(.@skullplayerid < 150000) {
+			mes "Not a valid player.";
+			close;
+		}
+		next;
+		mes @skullnpcname$;
+		mes @skullplayername$;
+		mes .@skullplayerid;
+		close;
+	} else {
+		mes @skullnpcname$;
+		mes "I'll give you a poring coin if you give me " + @skullplayername$ + "'s skull !";
+		next;
+
+			if ( countitem2( 7420, 1, 0, 0, 254, 0, .@skullplayerid & 0x00FFFF, .@skullplayerid >> 16 ) ) {
+					mes "Yeah you have the skull ! I give you an apple";
+					//delitem2 7420, 1, 0, 0, 254, 0, .@skullplayerid & 0x00FFFF, .@skullplayerid >> 16;
+					getitem 512, 1;
+			}
+			else {
+					mes "Damn, you don't have it...";
+			}
+			close;
+		
+	}
+}

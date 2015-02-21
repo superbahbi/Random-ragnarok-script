@@ -1,16 +1,70 @@
 //===================================
 //===========Scripted By=============
 //===================================
-//==============JaeRO================
+//==============CovenRO================
 //===================================
 -	script	treasure	-1,{
 OnMinute00:
-		killmonsterall "prontera";
-		announce "A rare Treasure Box has been spawned somewhere in Prontera.",bc_all;
-		monster "prontera",0,0,"Treasure Box",1798,1,"treasure::OnBoxKilled";
+if (agitcheck() || agitcheck2()) end;
+//31 maps
+	setarray .map$[0],
+	"prontera",
+	"morocc",
+	"geffen",
+	"payon",
+	"alberta",
+	"izlude",
+	"aldebaran",
+	"xmas",
+	"comodo",
+	"yuno",
+	"amatsu",
+	"gonryun",
+	"umbala",
+	"niflheim",
+	"louyang",
+	"new_1-1",
+	"jawaii",
+	"ayothaya",
+	"einbroch",
+	"lighthalzen",
+	"einbech",
+	"hugel",
+	"rachel",
+	"veins",
+	"moscovia",
+	"malangdo",
+	"malaya",
+	"mora",
+	"brasilis",
+	"dewata",
+	"dicastes01";
+	
+	set .s, rand(getarraysize(.map$));
+	killmonster .map$[.s],"treasure::OnBoxKilled";
+	if(.map$[.s]== "new_1-1"){
+		announce "A rare Treasure Box has been spawned somewhere in the Novice Grounds!",0;
+		monster .map$[.s],0,0,"Treasure Box",2302,1,"treasure::OnBoxKilled";
 		end;
+	}
+	if(.map$[.s]== "dicastes01"){
+		announce "A rare Treasure Box has been spawned somewhere in El Dicastes!",0;
+		monster .map$[.s],0,0,"Treasure Box",2302,1,"treasure::OnBoxKilled";
+		end;
+	}
+	if(.map$[.s]== "xmas"){
+		announce "A rare Treasure Box has been spawned somewhere in Lutie!",0;
+		monster .map$[.s],0,0,"Treasure Box",2302,1,"treasure::OnBoxKilled";
+		end;
+	}
+	announce "A rare Treasure Box has been spawned somewhere in "+.map$[.s]+" !",0;
+	monster .map$[.s],0,0,"Treasure Box",2302,1,"treasure::OnBoxKilled";
+	end;
 
 OnBoxKilled:
 	announce ""+strcharinfo(0)+" found and destroyed the Treasure Box.",bc_all;
+    	set .@amount, 50;
+		atcommand "@getcpoints "+.@amount;
+		dispbottom "You got "+.@amount+ " points";
 	end;
 }

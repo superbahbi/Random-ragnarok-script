@@ -1,0 +1,154 @@
+prontera,150,173,4	script	Stop the Clock	802,{
+
+if(.game == 1 && stopped != 1)	{
+	set stopped, 1;
+	set @stopped, .i;
+	message strcharinfo(0), "You stopped the clock at "+@stopped+".";
+	if(.lowest > @stopped)	{
+		set .lowest, @stopped;
+		set .winner$, strcharinfo(0);
+		}
+	end;
+}
+else if(.game == 1)	{
+	message strcharinfo(0), "You already stopped the clock.";
+	end;
+	}
+
+set .name$, "[^ff0000Aline^000000]";
+set .menu$, "Times:Information:Prize:Leave";
+
+
+if(strcharinfo(0) == .winner$)	{
+	set stopped, 0;
+	mes .name$;
+	mes "Here's your prize.";
+	mes "The prize is: ^ff00003 Points^000000.";//Default Prize: 3 points
+	set .@amount, 3;
+	set .@playerid, getcharid(3,strcharinfo(0));
+	query_sql("UPDATE `login` SET points=(points+"+.@amount+") WHERE account_id='"+.@playerid+"'");
+	dispbottom "You got "+.@amount+ " points";
+	set .winner$, "";
+	close;
+	}
+
+if(stopped == 1)	{
+	set stopped, 0;
+	mes .name$;
+	mes "You have activated your char for the next round.";
+	close;
+	}
+
+if(getgmlevel() > 70){
+	mes .name$;
+	mes "Greetings, your majesty.";
+	next;
+	switch(select("Start Game:Set Prize:Player Panel"))
+	{
+	case 1:
+	sleep2 100;
+	close2;
+	goto l_start;
+	end;
+
+	case 2:
+	next;
+	mes .name$;
+	mes "Enter the Item ID of the prize:";
+	input $prize_id;
+	if($prize_id == 0) close;
+	next;
+	mes .name$;
+	mes "Enter the amount of items the winner will receive:";
+	input $prize_amount;
+	next;
+	mes .name$;
+	mes "The prize is: ^ff00003 Points^000000.";
+	close;
+	
+	case 3:
+		goto L_playerpanel;
+		end;
+	}
+}
+else {
+		
+L_playerpanel:
+mes .name$;
+mes "Welcome to the ^ff0000Stop the Clock^000000 mini-game.";
+switch(select(.menu$))	{
+	case 1:
+	next;
+	mes .name$;
+	mes "^ff0000Stop the Clock^000000 occurs at 6:00 pm daily.";
+	close;
+
+	case 2:
+	next;
+	mes .name$;
+	mes "^ff0000Stop the Clock^000000 is a game where you need to click me";
+	mes "exactly when the counter reached 0.";
+	next;
+	mes .name$;
+	mes "The counter will start at 5:59 10 seconds before it gets to 6:00.";
+	mes "It counts down from 1000 to 0.";
+	next;
+	mes .name$;
+	mes "To win, you need to have the closest value to 0 but at least below 50.";
+	next;
+	mes .name$;
+	mes "The winners will receive a prize.";
+	close;
+
+	case 3:
+	next;
+	mes .name$;
+	mes "The prize is: ^ff00003 Points^000000.";
+	close;
+
+	case 4:
+	close;
+	}
+}	
+
+OnClock1759:
+
+l_start:
+
+set .winner$, "";
+set .game, 1;
+set .lowest, 1000;
+
+for(set .i, 1000; .i > 300;set .i, .i - 100)	{
+		announce ":: "+.i+" ::",bc_blue|bc_area;
+		misceffect 377;
+		sleep2 1000;
+		}
+
+for(set .i, 300; .i > 50;set .i, .i - 10)	{
+		announce ":: "+.i+" ::",bc_blue|bc_area;
+		misceffect 377;
+		sleep2 100;
+		}
+
+for(set .i, 50; .i > 0;set .i, .i - 1)	{
+		announce ":: "+.i+" ::",bc_blue|bc_area;
+		misceffect 377;
+		sleep2 10;
+		}
+
+set .game, 0;
+
+if(.winner$ == "")	{
+	announce "Nobody hit the clock at the right moment. There is no winner.",bc_blue;
+	end;
+	}
+
+announce "[Stop the Clock]: " +.winner$+" won Stop the Clock. He/She stopped it at "+.lowest+".",bc_blue;
+sleep2 2500;
+announce "[Stop the Clock]: Please talk to me to get your prize.",bc_blue;
+sleep2 2500;
+announce "[Stop the Clock]: To activate your char for the next round, talk to me again.",bc_blue;
+end;
+
+}

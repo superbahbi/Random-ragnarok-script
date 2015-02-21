@@ -1,0 +1,73 @@
+prontera,140,196,5	script	Emperium Ladder	467,{
+	mes "[^FF0000Top5 Emperium Ladder^000000]";
+	mes "Top 1: ^0000FF" +$top1emp$ +"^000000 With: ^FF0000" +$top1emp +"^000000 Emperium Breaks.";
+	mes "Top 2: ^0000FF" +$top2emp$ +"^000000 With: ^FF0000" +$top2emp +"^000000 Emperium Breaks.";
+	mes "Top 3: ^0000FF" +$top3emp$ +"^000000 With: ^FF0000" +$top3emp +"^000000 Emperium Breaks.";
+	mes "Top 4: ^0000FF" +$top4emp$ +"^000000 With: ^FF0000" +$top4emp +"^000000 Emperium Breaks.";
+	mes "Top 5: ^0000FF" +$top5emp$ +"^000000 With: ^FF0000" +$top5emp +"^000000 Emperium Breaks.";
+close;
+} // End Script
+
+function	script	EmpeLadder	{
+set @emptotal, getarg(0);
+set @nomb$, getarg(1);
+
+if (@emptotal > $top1emp) {
+	if ($top1emp$ == strcharinfo(0)) {
+		set $top1emp, @emptotal;
+		set $top1emp$, @nomb$;
+	} else {
+		set @aux, $top1emp;
+		set @aux$, $top1emp$;
+		set $top1emp, @emptotal;
+		set $top1emp$, @nomb$;
+		set $top2emp, @aux;
+		set $top2emp$, @aux$;
+	} // End if
+} else if (@emptotal > $top2emp) {
+	if ($top2emp$ == strcharinfo(0)) {
+		set $top2emp, @emptotal;
+		set $nomb2, @nomb$;
+	} else {
+		set @aux, $top2emp;
+		set @aux$, $top2emp$;
+		set $top2emp, @emptotal;
+		set $top2emp$, @nomb$;
+		set $top3emp, @aux;
+		set $top3emp$, @aux$;
+	} // End if
+} else if (@emptotal > $top3emp) {
+	if ($top3emp$ == strcharinfo(0)) {
+		set $top3emp, @emptotal;
+		set $top3emp$, @nomb$;
+	} else {
+		set @aux, $top3emp;
+		set @aux$, $top3emp$;
+		set $top3emp, @emptotal;
+		set $top3emp$, @nomb$;
+		set $top4emp, @aux;
+		set $top4emp$, @aux$;
+	} // End if
+} else if (@emptotal > $top4emp) {
+	if ($top4emp$ == strcharinfo(0)) {
+		set $top4emp, @emptotal;
+		set $top4emp$, @nomb$;
+	} else {
+		set @aux, $top4emp;
+		set @aux$, $top4emp$;
+		set $top4emp, @emptotal;
+		set $top4emp$, @nomb$;
+		set $top5emp, @aux;
+		set $top5emp$, @aux$;
+	} // End if
+} else if (@emptotal > $top5emp) {
+	if ($top5emp$ == strcharinfo(0)) {
+		set $top5emp, @emptotal;
+		set $nomb5, @nomb$;
+	} else {
+		set $top5emp, @emptotal;
+		set $top5emp$, @nomb$;
+	} // End if
+} // End if
+return;
+} // End function

@@ -18,7 +18,7 @@
 //=2.6 Fixed 2nd advanced classes not being able to get their advanced skills. [Ancyker]
 //=2.7 Rewrote to give all correct skills to all proper classes. [Paradox924X]
 //===========================================================================================
-prontera,128,200,6	script	Platinum Skill NPC	94,{
+prontera,129,200,6	script	Platinum Skill NPC	94,{
 	mes "[Platinum Skill NPC]";
 	mes "I can give you the special skills available to your job.";
 	mes "Would you like these skills now?";
@@ -73,7 +73,7 @@ prontera,128,200,6	script	Platinum Skill NPC	94,{
 	} else if (Class == Job_Blacksmith || Class == Job_Whitesmith) {
 		skill 1012,1,0; // Unfair Trick
 		skill 1013,1,0; // Greed
-	} else if (Class == Job_Alchemist || Class == Job_Creator) {
+	} else if (Class == Job_Alchemist || Class == Job_Creator || Class == Job_Baby_Alchemist) {
 		skill 238,1,0; // Bioethics
 	} else if (Class == Job_Assassin || Class == Job_Assassin_Cross) {
 		skill 1003,1,0; // Sonic Acceleration

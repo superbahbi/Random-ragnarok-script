@@ -25,16 +25,23 @@ morocc,159,96,5	script	Healer	1502,{
 ayothaya,155,111,5	duplicate(Healer)	Healer#h1-2	1502
 geffen,121,61,5	duplicate(Healer)	Healer#h1-3	1502
 umbala,94,162,5	duplicate(Healer)	Healer#h1-4	1502
-pay_arche,61,122,5	duplicate(Diego)	Diego#h1-5	1502
+pay_arche,61,122,5	duplicate(Healer)	Diego#h1-5	1502
 alberta,185,144,5	duplicate(Healer)	Healer#h1-6	1502
-aldebaran,134,123,5	duplicate(Healer)	Healer#h1-7	1502
-izlude,125,118,5	duplicate(Healer)	Healer#h1-8	1502
-xmas,149,136,5	duplicate(Healer)	Healer#h1-9	1502
-comodo,188,162,5	duplicate(Healer)	Healer#h1-10	1502
-amatsu,200,80,5	duplicate(Healer)	Healer#h1-11	1502
-gonryun,164,130,5	duplicate(Healer)	Healer#h1-12	1502
-yuno,152,186,5	duplicate(Healer)	Healer#h1-13	1502
-niflheim,188,180,5	duplicate(Healer)	Healer#h1-14	1502
-louyang,225,103,5	duplicate(Healer)	Healer#h1-15	1502
-
+alberta,39,240,5	duplicate(Healer)	Healer#h1-7	1502
+aldebaran,134,123,5	duplicate(Healer)	Healer#h1-8	1502
+izlude,125,118,5	duplicate(Healer)	Healer#h1-9	1502
+xmas,149,136,5	duplicate(Healer)	Healer#h1-10	1502
+comodo,188,162,5	duplicate(Healer)	Healer#h1-11	1502
+amatsu,200,80,5	duplicate(Healer)	Healer#h1-12	1502
+amatsu,100,152,5	duplicate(Healer)	Healer#h1-13	1502
+gonryun,164,130,5	duplicate(Healer)	Healer#h1-14	1502
+yuno,152,186,5	duplicate(Healer)	Healer#h1-15	1502
+niflheim,188,180,5	duplicate(Healer)	Healer#h1-16	1502
+louyang,225,103,5	duplicate(Healer)	Healer#h1-17	1502
+lighthalzen,166,101,5	duplicate(Healer)	Healer#h1-18	1502
+lighthalzen,192,319,5	duplicate(Healer)	Healer#h1-19	1502
+einbroch,68,203,5	duplicate(Healer)	Healer#h1-20	1502
+einbech,181,123,5	duplicate(Healer)	Healer#h1-21	1502
+hugel,92,157,5	duplicate(Healer)	Healer#h1-22	1502
+veins,212,135,5	duplicate(Healer)	Healer#h1-23	1502
 

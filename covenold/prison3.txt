@@ -1,0 +1,24 @@
+//===== Scripted By: =======
+//= Jaerobb
+//===== Compatible With:==
+//= Tested
+//===== Description: =====
+//= Donation NPC
+//========================
+//===================== Start From Here =====================================================
+sec_pri,74,63,5	script	Warden	429,{
+
+	mes "[^FF0000JaeRO Police^000000]";
+	mes "Welcome Prisoners.";
+	mes "You are here because you did something bad or you disobey the law.";
+	mes "[Admin-Jae] declare that the Minimum Jail Time is 1 Month.";
+	mes "So if you want to get out of this jail look for the Jail Warden.";
+	mes "and Vail 10 TCG's so you can get our of here.";
+	mes "You must follow the JaeRO Rules.";	
+	close;
+	end;
+}
+//sec_pri,48,63,5	duplicate(Warden)	Warden#h1-2	429
+//sec_pri,74,63,5	duplicate(Warden)	Warden#h1-3	948
+//mapflag
+sec_pri	mapflag	notrade

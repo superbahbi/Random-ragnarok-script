@@ -1,20 +1,6 @@
-//-----------------------------------------------//
-//-----------------RFYL Event--------------------//
-//-----------------------------------------------//
-//-----------------------------------------------//
-//----------JaeRO - Home of Phoenix Pride--------//
-//-----------------------------------------------//
 
--	script	RFYL#disable	-1,{
-
-OnInit:
-disablenpc "RFYL Warper";
-disablenpc "RFYL Warper#2";
-disablenpc "RFYL Warper#3";
-end;
-}
-
-poring_c02,214,223,5	script	RFYL Event	423,{
+poring_c02,214,223,5	script	RFYL Event#Rfyl::Rfyl	423,{
+//-	script	RFYL Event#Rfyl::Rfyl	-1,{
 
 	if (getgmlevel() >= 20) goto RFYL_Admin;
 	if ($@LMS_Ongoing == 1) {
@@ -76,6 +62,7 @@ RFYL_Admin:
 		mes "Resetting Now.";
 		close2;
 		set $@RFYL_Ongoing,0;
+		set $state, 0;
 		killmonsterall "quiz_01";
 		//disablenpc "Summoner";
 		end;
@@ -136,13 +123,11 @@ startRFYLevent:
 announce "RFYL Warper: Get ready for Run For Your Life Event.",0;
 sleep2 10000;
 announce "RFYL Warper: Warps opening in 1 minute..",0;
-initnpctimer;
+initnpctimer "Rfyl";
 end;
 OnTimer60000:
 announce "RFYL Warper: Closing warps in 60 Seconds",0;
-enablenpc "RFYL Warper";
-enablenpc "RFYL Warper#2";
-enablenpc "RFYL Warper#3";
+set $state, 1;
 end;
 
 OnTimer90000:
@@ -179,23 +164,10 @@ announce "RFYL Warper: Warps are now closed.",0;
 end;
 
 OnTimer121000:
-disablenpc "RFYL Warper";
-disablenpc "RFYL Warper#2";
-disablenpc "RFYL Warper#3";
+set $state, 0;
 end;
 }
-//---------RFYL Registration---------------
-prontera,155,165,5	script	RFYL Warper	811,{
-	
-	mes "[RFYL Manager]";
-	mes "I will now warp you to the RFYL Event map.";
-	next;
-	warp "quiz_01",230,368;
-	end;
-}
-// ----Manager Setting------------
-morocc,159,83,5	duplicate(RFYL Warper)	RFYL Warper#2	811
-payon,155,220,5	duplicate(RFYL Warper)	RFYL Warper#3	811
+
 // == Mapflags
 quiz_01	mapflag	nowarp
 quiz_01	mapflag	nowarpto

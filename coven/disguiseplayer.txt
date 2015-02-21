@@ -1,0 +1,58 @@
+prontera,129,214,5	script	Disguiser	544,{
+	mes "[Disguiser]";
+	if (agitcheck() || agitcheck2()){
+		mes "A war is currently in progress";
+		close;
+	}
+	if (@disguised) {
+		mes "Do you want to remove your "+getmonsterinfo(@disguised,MOB_NAME)+" disguise?";
+		if(select("No:Yes, undisguise me")==2) {
+			undisguise;
+			set @disguised, 0;
+		}
+		close;
+	}
+
+	mes "Enter the monster ID you want to be disguised as:";
+	input .@mob_id;
+	if (getmonsterinfo(.@mob_id,MOB_MAXHP) == -1) {
+		mes "^FF0000     Invalid mob ID";
+	} else if (agitcheck() || agitcheck2()) {
+		mes "^FF0000Disguises are not allowed during WoE.";
+	} else {
+		mes "Disguise as ^0000FF"+getmonsterinfo(.@mob_id,MOB_NAME)+"^000000?";
+		if(select("Yes, disguise me!:No")==1) {
+			mes "Pay :";
+			switch(select("50 million zeny.:2 coven points.")) {
+			case 1:
+				if ( zeny < 50000000) {
+					mes "The cost is 50,000,000 zeny.";
+					close;
+				}
+				set Zeny, Zeny - 50000000;
+				break;
+			case 2:
+				set .@account_id, getcharid(3,strcharinfo(0));
+				query_sql("SELECT points FROM login WHERE account_id = "+getcharid(3,strcharinfo(0))+"", .@points);
+				if ( .@points < 2 ) {
+					mes "You need 2 coven points.";
+					close;
+				}
+				set .@amount, -2;
+				atcommand "@getcpoints "+.@amount;
+				break;
+		}
+			disguise .@mob_id;
+			set @disguised, .@mob_id;
+			mes " ";
+			mes "Enjoy your "+getmonsterinfo(.@mob_id,MOB_NAME)+" disguise!";
+		}
+	}
+	close;
+L_Close:
+	close;
+OnAgitStart:
+OnAgitStart2:
+	atcommand "@undisguiseall";
+	end;
+}

@@ -1,0 +1,42 @@
+//===== Scripted By: =======
+//= Jaerobb
+//===== Compatible With:==
+//= Tested
+//===== Description: =====
+//= Donation NPC
+//========================
+//===================== Start From Here =====================================================
+prontera,164,175,4	script	Donation Staff	790,{
+
+	mes "[^FF0000Secretary^000000]";
+	mes "This is a free to play Ragnarok Online Private Server.";
+	mes "So donation is for helping the server specially for the bill fee I pay monthly.";
+	mes "I pay for server hosting.";
+	mes "I pay for hosting renews for the hosting website.";
+	mes "And since we are using the best plan from our hosting site to give you a less lag server,";
+	mes "We need your help to keep the server run forever as well as to give you a better gaming experience.";
+	mes "[^FF0000Here are the list of donations^000000].";
+	mes "[^FF0000Thank You...! ^_^^000000]";
+	next;
+	mes "25 TCG Cards = $10.";
+	mes "Large Baphomet Horns = $15";
+	mes "Odins Mask = $15.";
+	mes "Spiked Scarf = $15.";
+	mes "Foot Ring = $20. ";
+	mes "Honor Badge = $20.";
+	mes "Kiel D-01 Card = $20.";
+	mes "Lord Knight Card = $20.";
+	mes "High Wizard Card = $20.";
+	mes "Rock Star Badge = $25.";
+	mes "Fallen Bishop Hibram Card = $85.";
+	mes "Reinforcement Armor Set = $100.";
+	mes "Ice Pick = $100.";
+	mes "Mjolnir = $100.";
+	mes "^FF0000Combo Package:^000000 Lord Knight Card+Ice Pick = $115.";
+	mes "^FF0000Combo Package:^000000 +10 Valkyrie Armor, +10 Valkyrie Mantue and 2 pcs +10 Valkyrie Shield = $100.";
+	mes "^FF0000Combo Package:^000000 Fallen Bishop card And High Wizzard Card = $100.";
+	close;
+OnInit:
+	waitingroom "Donation Info!",0;
+	end;
+}

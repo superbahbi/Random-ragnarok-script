@@ -1,0 +1,54 @@
+-	script	hourlypointssytem	-1,{
+
+OnPCLoginEvent:
+attachnpctimer ""+strcharinfo(0)+"";
+initnpctimer;
+end;
+    
+OnTimer30000:
+//Check if Vending (normal or @at)
+if(checkvending() >= 1 || checkchatting() == 1) {
+    dispbottom "The hourly points event stopped because you were vending / chatting. Please relog if you wish to start again.";
+    stopnpctimer;
+    end;
+}
+//Check if Idle
+getmapxy( .@map$, .@x, .@y, 0 );
+if(@map$ == .@map$ && @x == .@x && @y == .@y) {
+    set @afk, @afk + 1;
+}
+//If move timer resets
+else {
+    set @afk, 0;
+}
+    set @map$, .@map$; set @x, .@x; set @y, .@y;
+//Idle Check for 15 Minutes
+if(@afk == 15) {
+    dispbottom "The hourly points event stopped because you were idle for 15 minutes. Please relog if you wish to start again.";
+    stopnpctimer;
+    end;
+}
+end;
+
+OnTimer60000:
+set @minute, @minute + 1;
+//Check for 1 Minute
+if(@minute == 60){
+    set @minute,0;
+    set #consecutive_hour, #consecutive_hour + 1;
+	set .@amount, 5;
+	atcommand "@getcpoints "+.@amount;
+	dispbottom "You got "+.@amount+" coven points.";
+    }
+//Check for 24 hours consecutive
+    if(#consecutive_hour == 24) {
+    set #consecutive_hour,0;
+	set .@amount, 50;
+	atcommand "@getcpoints "+.@amount;
+	dispbottom "You got "+.@amount+" coven points by staying ingame for consecutive of 24 hour.";
+    }
+stopnpctimer;
+initnpctimer;
+end;
+
+}

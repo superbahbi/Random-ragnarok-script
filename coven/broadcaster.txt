@@ -1,0 +1,60 @@
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//	Broadcaster NPC:
+//	version: 1.0
+//	Custom Server NPC:
+//	scripted: BrainWind
+//	
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+turbo_room,100,123,6 	script	Broadcaster	107,{
+	//what's the npc name to show in messages?
+		set @npcname$, "Broadcaster";
+	//NPC Headers Name:
+		set @header$,"[^0000ff" + @npcname$ + "^000000]";
+	//NPC COST PER Broadcast:
+		set @broadcastfee, 500000000;
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		mes @header$;
+		mes "Hi, I'm the Broadcaster";
+		mes "I can Broadcast a message for you";
+		mes "But be carefull what you Broadcast";
+		mes "Dont Broadcast anything against in all Game Master's";
+		mes "And it will cost you Blocking of your Account";
+		next;
+		mes @header$;
+		mes "It costs ^ff0000"+ @broadcastfee +"^000000 zeny ";
+	next;
+	mes @header$;
+	mes "Would you like to Broadcast?";
+	switch (select("-yes","-No")){
+		case 1:
+				if(@Broadcast> gettimetick(2)) {
+				next;
+				mes @header$;
+				mes "Sorry you have to wait for 3 minutes.";
+				close;
+				}
+			next;
+			mes @header$;
+			if(Zeny<500000000) goto $nozenybc;
+			set Zeny,zeny - @broadcastfee;
+			mes "Please input your message.";
+			next;
+			input @broadcast$;
+			announce " "+strcharinfo(0)+": "+@broadcast$+"",16,0x0066FF;
+			close2;
+			set @Broadcast, gettimetick(2)+180;
+			dispbottom "Broadcaster: Please wait for 3 minutes until next broadcast to avoid flooding.";
+			end;
+		case 2:
+			mes "Suit yourself";
+			close;
+	}
+$nozenybc:
+	mes "I have to check that you have";
+	mes "enough money";
+	next;
+	mes @header$;
+	mes "Im sorry but you dont have ^ff0000"+@broadcastfee+"^000000 zeny";
+	mes "Go get it if you want to Broadcast";
+	close;
+}

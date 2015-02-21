@@ -1,484 +1,387 @@
-prontera,164,168,4	script	Warp Manager	828,{
+prontera,155,172,4	script	WarpManager	828,{
+set $@eventmnpc$, "[^3333FFCovenRO Warper^000000]";
 
-if (getgmlevel()>=20){
-check:
-if($state==0){
-goto off;
-}
-else{
-goto on;
-}
-close;
-//--------------STATE: OFF----------------------------------------------------
-off:
-mes "[^3333FFJaeRO Warper^000000]";
-mes "Event NPC State: ^FF0000OFF^000000";
-menu "Nothing",noon,"Turn ON",yeson,"Event",eventwarp,"Warp",yeswarp;
-
-yeson:
-set $state,1;
-next;
-mes "[^3333FFJaeRO Warper^000000]";
-mes "Ok it is now turned ^009900ON^000000.";
-delwaitingroom;
-waitingroom "Event: "+$event$,0;
-next;
-goto check;
-
-noon:
-next;
-mes "[^3333FFJaeRO Warper^000000]";
-mes "Ok bye!";
-close;
-//--------------STATE: ON----------------------------------------------------
-on:
-mes "[^3333FFJaeRO Warper^000000]";
-mes "Event NPC State: ^009900ON^000000";
-menu "Nothing",nooff,"Turn OFF",yesoff,"Event",eventwarp,"Warp",yeswarp;
-
-eventwarp:
-	next;
-	mes "[^3333FFJaeRO Warper^000000]";
-	menu "Lucky Box",dice,"Disguise",disg,"Hangman",hangman;
+//------------------GAME MASTER--------------------------------------------------------------
+if (getgmlevel() >= 20)
+{
+Le_menu:
+	mes $@eventmnpc$;
+	mes "Current state: ^FF0000 "+$state+"^000000.";
+	switch(select("Set gvgoff/pvpoff/skilloff:Event:Warp:Cancel event"))
+	{
+		case 1:
+			next;
+			if($state >= 1) {
+			mes $@eventmnpc$;
+			mes "An event is still running!";
+			close;}
+			else {
+			callfunc "gvgpvpskilloff";
+			mes $@eventmnpc$;
+			mes "^ff0000@gvgoff, @pvpoff, @skilloff has been implemented on all event maps.^000000";
+			close;
+			}
+		case 2:
+			callsub openevent;
+			break;
+		case 3:
+			callsub gm_warp;
+			break;
+		case 4:
+			next;
+			if($state != 0)
+			{
+				set $state,0;
+				mes $@eventmnpc$;
+				mes "Ok it is now turned ^FF0000OFF^000000.";
+				//announce "The event is canceled.",bc_all;
+				delwaitingroom;
+				waitingroom "Event Warper.",0;
+				close;
+			}
+			else
+			{
+				mes $@eventmnpc$;
+				mes "Ok it is now turned ^FF0000OFF^000000.";
+				delwaitingroom;
+				waitingroom "Event Warper.",0;
+				close;
+			}
+	}
+	close;
 	
+gm_warp:
+	switch($state)
+	{
+		case 0:
+			next;
+			mes $@eventmnpc$;
+			mes "There's no active event.";
+			break;	
+		case 1:
+			warp "quiz_01",230,368;
+			break;
+		case 2:
+			warp "guild_vs2",45,49;
+			break;
+		case 3:
+			warp "poring_c01",104,107;
+			break;
+		case 4:
+			warp "quiz_02",350,368;
+			break;
+		case 5:
+			warp "guild_vs1-1",0,0;
+			break;
+		case 6:
+			warp "quiz_02",55,84;	 //dice
+			break;
+		case 7:
+			warp "quiz_01",322,368;	 //disguise
+			break;
+		case 8:
+			warp "quiz_01",41,378;
+			break;
+	}
+	return;
 
-rfyl:
-	next;
-	set $state,2;
-	announce "RFYL event is open.",bc_all;
-	delwaitingroom;
-	waitingroom "Event:RFYL",0;
-	close;
-mvp:
-	next;
-	set $state,3;
-	announce "MVP  event is open.",bc_all;
-	delwaitingroom;
-	waitingroom "Event:MVP",0;
-	close;
-lms:
-	next;
-	set $state,4;
-	announce "LMS event is open.",bc_all;
-	delwaitingroom;
-	waitingroom "Event:LMS",0;
-	close;
-tof:
-	next;
-	set $state,5;
-	announce "True or False event is open.",bc_all;
-	delwaitingroom;
-	waitingroom "Event:True or False",0;
-	close;
-dice:
-	next;
-	set $state,6;
-	announce "Lucky Box event is open.",bc_all;
-	delwaitingroom;
-	waitingroom "Event:Lucky Box",0;
-	close;
-disg:
-	next;
-	set $state,7;
-	announce "Disguise event is open.",bc_all;
-	delwaitingroom;
-	waitingroom "Event:Disguise",0;
-	enablenpc "Disguise Event";
-	disablenpc "Hangman";
-	disablenpc "Auto Disguise Event";
-	close;
-hangman:
-	next;
-	set $state,8;
-	announce "Hangman event is open.",bc_all;
-	delwaitingroom;
-	waitingroom "Event:Hangman",0;
-	disablenpc "Disguise Event";
-	disablenpc "Auto Disguise Event";
-	enablenpc "Hangman";
-	close;
-soccer:
-	next;
-	announce "Soccer Ball @ go 26.",bc_all;
-	monster "prt_in.gat",284,130,"Event",1792,1;
-	close;
-fabre:
-	next;
-	set $state,9;
-	announce "Fabre Event @ go 26.",bc_all;
-	delwaitingroom;
-	waitingroom "Event:Fabre Event",0;
-	close;
-
-yesoff:
-
-next;
-set $state,0;
-mes "[^3333FFJaeRO Warper^000000]";
-mes "Ok it is now turned ^FF0000OFF^000000.";
-delwaitingroom;
-waitingroom "No Event.",0;
-next;
-goto check;
-
-nooff:
-next;
-mes "[^3333FFJaeRO Warper^000000]";
-mes "Ok bye!";
-close;
-yeswarp:
-	if($state==0){
-		next;
-		mes "[^3333FFJaeRO Warper^000000]";
-		mes "There's no active";
-		close;	}
-	if($state==2){
-	warp"quiz_01",230,368;	}
-	if($state==3){
-	warp "guild_vs1",50,50;	}
-	if($state==4){
-	warp "06guild_01",50,50;	}
-	if($state==5){
-	warp "quiz_02",350,372;	}
-	if($state==6){
-	warp "quiz_02",55,84;	}
-	if($state==7){
-	warp "quiz_01",322,368;	}
-	if($state==8){
-	warp "quiz_01",322,368;	}
-	if($state==9){
-	warp "pvp_n_1-2",0,0;	}
-
-Onmobdead:
-	set $trava,getmapmobs("pvp_n_1-2");
-	set $trava, $trava - 1;
-	set @z, @z + 1; // +1 ???
-	if(@z == 21) {goto prize;
-end;
-
-prize:
-	killmonsterall "pvp_n_1-2";
-	announce "Fabre Trainer : "+strcharinfo(0)+" won. OMG. RAAAAAAAA",0;
-	getitem 674,1; // Prize ID ,How much
-
-	end;
-}
-OnWhisperGlobal:
-	if($state==0){	
-		next;
-		mes "[^3333FFJaeRO Warper^000000]";
-		mes "There's no active event.";
-		delwaitingroom;
-		waitingroom "No Event.",0;
-		close;	}
-	if($state==2){
-		initnpctimer;
-		announce "RFYL is closing in 30seconds.",bc_all;
-        	end;
-    		OnTimer24000:
-        	announce "Ok 5 seconds more.",bc_all;
-        	end;
-    		OnTimer25000:
-       		announce "4.",bc_all;
-        	end;
-    		OnTimer26000:
-        	announce "3.",bc_all;
-        	end;
-    		OnTimer27000:
-        	announce "2.",bc_all;
-        	end;
-    		OnTimer28000:
-        	announce "1.",bc_all;
-        	end;
-    		OnTimer29000:
-		stopnpctimer;
-
-		set $state,0;
-		announce "Event is closed.",bc_all;
-		delwaitingroom;
-		waitingroom "No Event.",0;
-		end;	}
-	if($state==3){
-		set $state,0;
-		announce "MVP is close.",bc_all;
-		delwaitingroom;
-		waitingroom "No Event.",0;
-		end;	}
-	if($state==4){
-		initnpctimer;
-		announce "LMS is closing in 30seconds.",bc_all;
-        	end;
-    		OnLMSTimer24000:
-        	announce "Ok 5 seconds more.",bc_all;
-        	end;
-    		OnLMSTimer25000:
-       		announce "4.",bc_all;
-        	end;
-    		OnLMSTimer26000:
-        	announce "3.",bc_all;
-        	end;
-    		OnLMSTimer27000:
-        	announce "2.",bc_all;
-        	end;
-    		OnLMSTimer28000:
-        	announce "1.",bc_all;
-        	end;
-    		OnLMSTimer29000:
-        	stopnpctimer;
-}
-	if($state==5){
-		initnpctimer;
-		announce "True or False is closing in 30seconds.",bc_all;
-        	end;
-    		OnTOFTimer24000:
-        	announce "Ok 5 seconds more.",bc_all;
-        	end;
-    		OnTOFTimer25000:
-       		announce "4.",bc_all;
-        	end;
-    		OnTOFTimer26000:
-        	announce "3.",bc_all;
-        	end;
-    		OnTOFTimer27000:
-        	announce "2.",bc_all;
-        	end;
-    		OnTOFTimer28000:
-        	announce "1.",bc_all;
-        	end;
-    		OnTOFTimer29000:
-        	stopnpctimer;
-}
-	if($state==6){
-		initnpctimer;
-		announce "Lucky Box is closing in 30seconds.",bc_all;
-        	end;
-    		OnLBTimer24000:
-        	announce "Ok 5 seconds more.",bc_all;
-        	end;
-    		OnLBTimer25000:
-       		announce "4.",bc_all;
-        	end;
-    		OnLBTimer26000:
-        	announce "3.",bc_all;
-        	end;
-    		OnLBTimer27000:
-        	announce "2.",bc_all;
-        	end;
-    		OnLBTimer28000:
-        	announce "1.",bc_all;
-        	end;
-    		OnLBTimer29000:
-        	stopnpctimer;
-}
-	if($state==7){
-		initnpctimer;
-		announce "Disguise Event is closing in 30seconds.",bc_all;
-        	end;
-    		OnDISTimer24000:
-        	announce "Ok 5 seconds more.",bc_all;
-        	end;
-    		OnDISTimer25000:
-       		announce "4.",bc_all;
-        	end;
-    		OnDISTimer26000:
-        	announce "3.",bc_all;
-        	end;
-    		OnDISTimer27000:
-        	announce "2.",bc_all;
-        	end;
-    		OnDISTimer28000:
-        	announce "1.",bc_all;
-        	end;
-    		OnDISTimer29000:
-        	stopnpctimer;
-}
-	if($state==8){
-		initnpctimer;
-		announce "Hangman is closing in 30seconds.",bc_all;
-        	end;
-    		OnHMTimer24000:
-        	announce "Ok 5 seconds more.",bc_all;
-        	end;
-    		OnHMTimer25000:
-       		announce "4.",bc_all;
-        	end;
-    		OnHMTimer26000:
-        	announce "3.",bc_all;
-        	end;
-    		OnHMTimer27000:
-        	announce "2.",bc_all;
-        	end;
-    		OnHMTimer28000:
-        	announce "1.",bc_all;
-        	end;
-    		OnHMTimer29000:
-        	stopnpctimer;
-}
-	if($state==9){
-		monster "pvp_n_1-2",0,0,"Event",1184,150,"Warp Manager::Onmobdead";
-			dispbottom "Summoned.";
-			set $state,0;
+openevent:
+			next;
+			mes $@eventmnpc$;
+			mes "Choose an event.";
+			
+			switch(select("Lucky Box:Disguise"))
+			{
+				case 1:
+					next;
+					set $state,6;
+					announce "Lucky Box event is open.",bc_all;
+					break;
+				case 2:
+					set $state,7;
+					set $gm_event_num, $gm_event_num + 1;
+					announce "Disguise event is open.",bc_all;
+					enablenpc "Disguise Event";
+					disablenpc "Auto Disguise Event";
+					break;
+			}
+			mes $@eventmnpc$;
+			mes "Do you want to warp now?";
+			switch(select("Main menu:Warp"))
+			{
+				case 1:
+					next;
+					goto Le_menu;
+					break;
+				case 2:
+					goto gm_warp;
+					break;
+			}
 			end;
+OnWhisperGlobal:
 
-		
-}
+	switch($state)
+	{
+		case 0:
+			mes $@eventmnpc$;
+			mes "There's no active event.";
+			delwaitingroom;
+			waitingroom "Event warper.",0;
+			close;	
+		case 6:
+			initnpctimer;
+			announce "Lucky Box is closing in 30seconds.",bc_all;
+			end;
+			OnLBTimer24000:
+			announce "Ok 5 seconds more.",bc_all;
+			end;
+			OnLBTimer25000:
+			announce "4.",bc_all;
+			end;
+			OnLBTimer26000:
+			announce "3.",bc_all;
+			end;
+			OnLBTimer27000:
+			announce "2.",bc_all;
+			end;
+			OnLBTimer28000:
+			announce "1.",bc_all;
+			end;
+			OnLBTimer29000:
+			stopnpctimer;
+			callsub reset_state;
+			break;
+		case 7:
+			initnpctimer;
+			announce "Disguise Event is closing in 30seconds.",bc_all;
+			end;
+			OnDISTimer24000:
+			announce "Ok 5 seconds more.",bc_all;
+			end;
+			OnDISTimer25000:
+			announce "4.",bc_all;
+			end;
+			OnDISTimer26000:
+			announce "3.",bc_all;
+			end;
+			OnDISTimer27000:
+			announce "2.",bc_all;
+			end;
+			OnDISTimer28000:
+			announce "1.",bc_all;
+			end;
+			OnDISTimer29000:
+			stopnpctimer;
+			callsub reset_state;
+			break;
+	}
+	end;
 
-
+reset_state:
+	delwaitingroom;
+	waitingroom "Event warper.",0;
+	set $state,0;
 }
 
 
 //----------------------Normal Player---------------------------------
-else{
-if($state<=0){
-mes "[^3333FFJaeRO Warper^000000]";
-mes "Sorry. No events at this time.";
-emotion 17;
-close;
-}
-else{
-if($state==2){
-emotion 21;
-mes "[^3333FFJaeRO Warper^000000]";
-mes "There is an active event!";
-mes "Do you want to go to the event place?";
-menu "Yes, please.",warprfyl,"No, thanks.",nowarprfyl;
+else
+{
+	switch($state)
+	{
+		case 0:
+			
+			mes $@eventmnpc$;
+			mes "Sorry. No events at this time.";
+			emotion 17;
+			close;
+		case 1: //rfyl
+			//Added mount check similar to dodgeball. Prevents players mounting pecopecos to enter.
+			emotion 21;
+			if (checkriding())
+			{
+				mes $@eventmnpc$;
+				mes "No riding is allowed! Sorry "+strcharinfo(0)+" but you can't join this event!";
+				close;
+			}
+			else {
+			mes $@eventmnpc$;
+			mes "RFYL is active!";
+			mes "Do you want to go to the event place?";
+			switch(select("Yes, please.:No, thanks."))
+			{
+				case 1:
+					sc_end SC_ALL;
+					percentheal 100,100;
+					warp "quiz_01",230,368;
+					break;
+				case 2:
+					close;
+			}
+			break;
+			}
+		case 2:
+			emotion 21;
+			mes $@eventmnpc$;
+			mes "LMS is active!";
+			mes "Do you want to go to the event place?";
+			switch(select("Yes, please.:No, thanks."))
+			{
+				case 1:
+					sc_end SC_ALL;
+					percentheal 100,100;
+					warp "guild_vs2",45,49;
+					break;
+				case 2:
+					close;
+			}
+			break;
+		case 3:
+			callsub dodge_warp;
+			break;
+		case 4:
+			emotion 21;
+			mes $@eventmnpc$;
+			mes "TOF is active!";
+			mes "Do you want to go to the event place?";
+			switch(select("Yes, please.:No, thanks."))
+			{
+				case 1:
+					sc_end SC_ALL;
+					warp "quiz_02",350,368;
+					break;
+				case 2:
+					close;
+			}
+			break;
+		case 5:
+			emotion 21;
+			mes $@eventmnpc$;
+			mes "MVP Event is active!";
+			mes "Do you want to go to the event place?";
+			switch(select("Yes, please.:No, thanks."))
+			{
+				case 1:
+					sc_end SC_ALL;
+					percentheal 100,100;
+					warp "guild_vs1-1",0,0;
+					break;
+				case 2:
+					close;
+			}
+			break;
+		case 6:
+			emotion 21;
+			mes $@eventmnpc$;
+			mes "Lucky Box is active!";
+			mes "Do you want to go to the event place?";
+			switch(select("Yes, please.:No, thanks."))
+			{
+				case 1:
+					sc_end SC_ALL;
+					warp "quiz_02",55,84;
+					break;
+				case 2:
+					close;
+			}
+			break;
+		case 7:
+			emotion 21;
+			mes $@eventmnpc$;
+			mes "Disguise is active!";
+			mes "Do you want to go to the event place?";
+			switch(select("Yes, please.:No, thanks."))
+			{
+				case 1:
+					switch(rand(1,2))
+					{
+					case 1:
+						sc_end SC_ALL;
+						warp "quiz_01",313,368;
+						break;
+					case 2:
+						sc_end SC_ALL;
+						warp "quiz_01",330,368;
+						break;
 
-warprfyl:
-warp "quiz_01",230,368;
-
-sc_end SC_ALL;
-end;
-nowarprfyl:
-close;
-}
-else{
-if($state==3){
-emotion 21;
-mes "[^3333FFJaeRO Warper^000000]";
-mes "There is an active event!";
-mes "Do you want to go to the event place?";
-menu "Yes, please.",warpmvp,"No, thanks.",nowarpmvp;
-
-warpmvp:
-warp "guild_vs1",50,50;
-
-sc_end SC_ALL;
-end;
-nowarpmvp:
-close;
-}
-else{
-if($state==4){
-emotion 21;
-mes "[^3333FFJaeRO Warper^000000]";
-mes "There is an active event!";
-mes "Do you want to go to the event place?";
-menu "Yes, please.",warplms,"No, thanks.",nowarplms;
-
-warplms:
-warp "06guild_01",50,50;
-
-sc_end SC_ALL;
-end;
-nowarplms:
-close;
-}
-if($state==5){
-emotion 21;
-mes "[^3333FFJaeRO Warper^000000]";
-mes "There is an active event!";
-mes "Do you want to go to the event place?";
-menu "Yes, please.",warptof,"No, thanks.",nowarptof;
-
-warptof:
-warp "quiz_02",350,372;
-
-sc_end SC_ALL;
-end;
-nowarptof:
-close;
-}
-if($state==6){
-emotion 21;
-mes "[^3333FFJaeRO Warper^000000]";
-mes "There is an active event!";
-mes "Do you want to go to the event place?";
-menu "Yes, please.",warpdice,"No, thanks.",nowarpdice;
-
-warpdice:
-warp "quiz_02",55,84;
-
-sc_end SC_ALL;
-end;
-nowarpdice:
-close;
-}
-if($state==7){
-emotion 21;
-mes "[^3333FFJaeRO Warper^000000]";
-mes "There is an active event!";
-mes "Do you want to go to the event place?";
-menu "Yes, please.",warpdis,"No, thanks.",nowarpdis;
-
-warpdis:
-switch(rand(1,2)){
-	case 1:
-		warp "quiz_01",313,368;
-
-		sc_end SC_ALL;
-		end;
-	case 2:
-		warp "quiz_01",330,368;
-
-		sc_end SC_ALL;
-		end;
-
+					}
+				case 2:
+					close;
+			}
+			break;
+		case 8:
+			emotion 21;
+			mes $@eventmnpc$;
+			mes "Zombie vs Novice is active!";
+			mes "Do you want to go to the event place?";
+			switch(select("Yes, please.:No, thanks."))
+			{
+				case 1:
+					
+					if(readparam(bVit) > 9) goto L_ClassLevel;
+					if(readparam(bDex) > 9) goto L_ClassLevel;
+					if(readparam(bAgi) > 9) goto L_ClassLevel;
+					if(readparam(bStr) > 9) goto L_ClassLevel;
+					if(readparam(bInt) > 9) goto L_ClassLevel;
+					if(readparam(bLuk) > 9) goto L_ClassLevel;
+					if (BaseLevel > 1) goto L_ClassLevel;
+					if (class > 0) goto L_ClassLevel;
+					if (class == 0) goto L_Event;
+ 				L_Event:
+					set $@zvn_playercount, $@zvn_playercount+1;
+					sc_end SC_ALL;
+					percentheal 100,100;
+					warp "quiz_01",42,369;
+					end;
+				 L_ClassLevel:
+					next;
+					mes $@eventmnpc$;
+					mes "Please double check if you are Novice with base level 1 and less than 9 stats.";
+					close;
+				case 2:
+					close;
+			}
+			break;
+		default:
+			break;
 	}
-nowarpdis:
-close;
+	
 }
-if($state==8){
-emotion 21;
-mes "[^3333FFJaeRO Warper^000000]";
-mes "There is an active event!";
-mes "Do you want to go to the event place?";
-menu "Yes, please.",warphang,"No, thanks.",nowarphang;
-
-warphang:
-switch(rand(1,2)){
-	case 1:
-		warp "quiz_01",313,368;
-
-		sc_end SC_ALL;
-		end;
-	case 2:
-		warp "quiz_01",330,368;
-
-		sc_end SC_ALL;
-		end;
-
+dodge_warp:
+	mes $@eventmnpc$;
+	mes "Hello. How may I help you?";
+	next;
+	switch(select("Join Dodgeball","Event Information")){
+		case 1:
+			if (checkriding())
+			{
+				mes $@eventmnpc$;
+				mes "No mounts allowed! Sorry "+strcharinfo(0)+" but you can't join this event!";
+				close;
+			}
+			else {
+			sc_end sc_all;
+			percentheal 100,100;
+			warp "poring_c01",104,107;
+			end;
+			}
+			
+		case 2:
+			mes $@eventmnpc$;
+			mes "Gameplay:";
+			mes "Exploding dodgeballs will be spawned randomly on the map. It is a one-hit KO to the players that get hit with the explosion.";
+			mes " ";
+			mes "How To Win:";
+			mes "Run away and don't get hit! Last one standing wins~";
+			close;
 	}
+OnInit:
+			delwaitingroom;
+			waitingroom "Event Warper.",0;
+			set $state,0;
+			end;
 
-end;
-nowarphang:
-close;
 }
-if($state==9){
-emotion 21;
-mes "[^3333FFJaeRO Warper^000000]";
-mes "There is an active event!";
-mes "Do you want to go to the event place?";
-menu "Yes, please.",warpfabre,"No, thanks.",nowarpfabre;
-
-warpfabre:
-set @z,1;
-warp "pvp_n_1-2",0,0;
-
-sc_end SC_ALL;
-end;
-nowarpfabre:
-close;
-}}}}}}
 
 /////////////////////////////Fabre event////////////////////////////////////////////
 //pvp_n_1-2,0,0,0	script	Fabre Trainer	-1,{
@@ -555,7 +458,7 @@ quiz_02,55,85,4	script	Lucky Box Event Manager	402,{
 			case 4:
 				next;
 				mes "[Lucky Box Event Manager]";
-				mes "1?";
+				mes "4?";
 				next;
 				mes "[Lucky Box Event Manager]";
 				mes "Sure?";
@@ -575,6 +478,29 @@ quiz_02,55,85,4	script	Lucky Box Event Manager	402,{
 OUT:
 	end;
 }
+
+
+function	script	gvgpvpskilloff	{
+	pvpoff "guild_vs1-1";
+	pvpoff "guild_vs2";
+	pvpoff "quiz_01";
+	pvpoff "quiz_02";
+	pvpoff "06guild_01";
+	pvpoff "pvp_n_1-2";
+	gvgoff "guild_vs1-1";
+	gvgoff "guild_vs2";
+	gvgoff "quiz_01";
+	gvgoff "quiz_02";
+	gvgoff "06guild_01";
+	gvgoff "pvp_n_1-2";
+	setmapflag "guild_vs2",mf_noskill;
+	setmapflag "quiz_01",mf_noskill;
+	setmapflag "quiz_02",mf_noskill;
+	setmapflag "06guild_01",mf_noskill;
+	setmapflag "pvp_n_1-2",mf_noskill;
+	return;
+}
+
 quiz_02,37,80,0	warp	warp1	0,0,quiz_02,37,73
 quiz_02,49,80,0	warp	warp2	0,0,quiz_02,49,73
 quiz_02,61,80,0	warp	warp3	0,0,quiz_02,61,73

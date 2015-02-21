@@ -29,6 +29,7 @@ cluckcluck:
 	close;
 
 OnMinute30:
+if (agitcheck() || agitcheck2()) end;
 	switch(rand(1,4)) {
 	case 1:
 		goto L_cluckannounce;
@@ -54,11 +55,18 @@ cluckadmin:
 		mes "Cluck cluck... CLUCK! ^FF0000~Just tell me what to do!~^000000";
 		switch(select("Start Event:Not today Cluckers")) {
 case 1:
+		if (agitcheck() || agitcheck2()){
+			next;
+			mes "[Cluckers]";
+			mes "A war is currently in progress";
+			close;
+		}
 		next;
 		mes "[Cluckers]";
 		mes "CLUCK! ^FF0000~Sure thing!~^000000";
 		emotion 33;
 		close2;
+		set $gm_event_num, $gm_event_num + 1;
 		goto L_cluckannounce;
 case 2:
 		next;
@@ -91,13 +99,13 @@ L_playcluck:
 case 0:
 		npctalk "CLUUUUUUCK!!!";
 		emotion 23;
-		atcommand "@nuke "+strcharinfo(0);
+		heal -MaxHp,0;
 		break;
 case 1:
 		npctalk "Cluuuuuck!~";
 		break;
 case 2:
-		atcommand "@nuke "+strcharinfo(0);
+		heal -MaxHp,0;
 		break;
 case 3:
 		sc_start SC_Freeze,10000,0;
@@ -105,7 +113,7 @@ case 3:
 case 4:
 		npctalk "CLUUUUUUUUUCK!!!";
 		emotion 23;
-		atcommand "@nuke "+strcharinfo(0);
+		heal -MaxHp,0;
 		break;
 case 5:
 		sc_start SC_Sleep,10000,0;
@@ -117,12 +125,12 @@ case 6:
 case 7:
 		npctalk "CLUUUUUUCK!!!";
 		emotion 23;
-		atcommand "@nuke "+strcharinfo(0);
+		heal -MaxHp,0;
 		break;
 case 8:
 		npctalk "Cluck! CLUUUCK!!";
 		emotion 23;
-		atcommand "@nuke "+strcharinfo(0);
+		heal -MaxHp,0;
 		break;
 case 9:
 		sc_start SC_Stun,10000,0;
@@ -138,18 +146,20 @@ case 12:
 		sc_start SC_Stun,10000,0;
 		break;
 case 13:
-		atcommand "@nuke "+strcharinfo(0);
+		heal -MaxHp,0;
 		break;
 default:
 		if( rand(50) < 3 ) {
 			npctalk "WOOF!...........";
 			specialeffect2 72;
-			announce "[Cluck! Cluck! Boom!] " + strcharinfo(0) + " Squeezed out the prize! Well done!",0;
-			getitem 7227,1;
+			announce "[Cluck! Cluck! Boom!] " + strcharinfo(0) + " Squeezed out the prize! Well done! +25 points.",0;
+			set .@amount, 25;
+			atcommand "@getcpoints "+.@amount;
+			dispbottom "You got "+.@amount+" coven points.";
 			set $@startcluck,0;
 		} else {
 			npctalk "Cluck! CLUUUCK!!";
-			atcommand "@nuke "+strcharinfo(0);
+			heal -MaxHp,0;
 			}
 		break;
 	}

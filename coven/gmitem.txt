@@ -1,0 +1,76 @@
+//===== Scripted By: =======
+//= Jaerobb
+//===== Compatible With:==
+//= Tested
+//===== Description: =====
+//= Whisper Reward NPC
+//========================
+//===================== Start From Here =====================================================
+poring_c02,227,222,4	script	GM item	952,{
+set .@npc$, "[^FF0000Game Master^000000]";
+
+	if(getgmlevel()<20) goto OUT;
+	
+	mes .@npc$;
+	mes "Stop using npc:reward .";
+	mes "Thank You...! ^_^";
+	
+	next;
+	mes .@npc$;
+	mes "Input amount of reward";
+	input .@amount;
+	if(.@amount < 1 || .@amount > 1000)
+	{
+		mes "Enter an amount between 1 - 1000";
+		close;
+	}
+	mes .@npc$;
+	mes "Select reward.";
+	switch(select("TCG:Platinum Coin:Poring coin:Points"))
+	{
+		case 1:
+			callsub give_reward, 7227, .@amount;
+			break;
+		case 2:
+			callsub give_reward, 677, .@amount;
+			break;
+		case 3:
+			callsub give_reward, 7539, .@amount;
+			break;
+		case 4:
+			callsub give_point, .@amount, .@playerid;
+			break;
+		default:
+			break;
+	}
+give_reward:
+	set .@itemid, getarg(0);
+	set .@amount, getarg(1);
+
+	mes "Waiiit.";
+
+	switch(select("Yes:No") )
+	{
+		case 1:
+			getitem .@itemid, .@amount;
+			close;
+		case 2:
+			close;
+	}
+give_point:
+	set .@amount, getarg(0);
+	set .@playerid, getcharid(3,strcharinfo(0));
+	
+	mes "Are you sure you want to give";
+	mes .@reciever$+" "+.@amount+" points";
+	switch(select("Yes:No") )
+	{
+		case 1:
+			query_sql("UPDATE `char` SET points=(points+"+.@amount+") WHERE account_id='"+.@playerid+"'");
+			close;
+		case 2:
+			close;
+	}	
+}
+
+

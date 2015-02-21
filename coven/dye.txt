@@ -22,9 +22,9 @@
 
 
 //Stylist------------------------------------------------------------------------------------------------------------
-prontera,181,216,4	script	Coifure#custom_stylist	845,{
+prontera,181,216,4	script	Stylist#custom_stylist	845,{
 
-	set .@name$,"[^008000Belle^000000]";
+	set .@name$,"[^008000Stylist^000000]";
 	setarray .@max[1],553,251,80;		// Nr. of cloths, haircolors, hairstyles in client <===========
 	setarray .@blacklist[0],188,143,261;	// NPC will skip any cloth colors in this array <==============
 	setarray .@type[1],7,6,1;
@@ -54,9 +54,6 @@ prontera,181,216,4	script	Coifure#custom_stylist	845,{
 		mes .@name$;
 		mes "Style chosen is out of range.";
 		close;
-OnInit:
-	waitingroom "Hair Stylist!",0;
-	end;
 	}
 
   L_start:

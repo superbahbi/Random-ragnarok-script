@@ -17,11 +17,11 @@
 
 //NPC map location/cordinates
 //It's recommended you change it.
-prontera,188,208,1	script	Dra. Vicky Belo	940,{
+prontera,184,212,4	script	Sex Changer	940,{
 
 //////////////////////////////////////////
 //Customize the npc!!			//
-set @CDname$,"[Dra. Vicky Belo]";		//Set NPCs name
+set @CDname$,"[Sex Changer]";		//Set NPCs name
 // Remember to set script header name as well!!//
 set @CDzeny,10000000;			//Set amount of zeny it costs
 set @CDsymbol$,"@";			//Set the atcommand(gm command) symbol you use
@@ -53,13 +53,18 @@ CD_sexchange:
 	menu "GO!",CD_go,"NO!",CD_no;
 
 CD_go:
+
 	mes @CDname$;
 	mes "Operating...";
 	mes "No pain at all e?";
 	next;
 	if (Zeny < @CDzeny) goto CD_zeny;
 	set Zeny, Zeny - @CDzeny;
+	unequip 6;
+	next;
 	atcommand  @CDsymbol$ + "changesex ";
+
+
 	mes @CDname$;
 	mes "Please wait for the server to disconect you and then log back in.";
 	end;
@@ -77,9 +82,4 @@ CD_no:
 	mes "When you change your mind, come back here.";
 	mes "I'll be waiting here for you.";
 	close;
-
-OnInit:
-	waitingroom "Sex Change!",0;
-	end;
-
 }

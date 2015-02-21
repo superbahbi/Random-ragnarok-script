@@ -1,14 +1,14 @@
-prontera,168,177,6	script	Coin Exchanger	872,{
+prontera,188,208,6	script	Coin Exchanger	872,{
 	
 	mes "[Coin Exchanger]";
 	mes "Im the Coin Exchanger here in town.";
-	mes "I can allow you to exchange your zeny into useful and handy coins, which you can use to make trades between players, or just save them";
+	mes "I can allow you to exchange your zeny into useful and handy coins, which you can use to make trades between players, or just save them.";
 	next;
 	mes "[Coin Exchanger]";
-	mes "Bronze Coin worth 50million.";
-	mes "Mithril worth 100million.";
-	mes "Gold Coin worth 300million.";
-	mes "Platinum Coin worth 500million.";
+	mes "Bronze Coin worth 50 million.";
+	mes "Mithril worth 100 million.";
+	mes "Gold Coin worth 300 million.";
+	mes "Platinum Coin worth 500 million.";
 	next;
 	mes "[Coin Exchanger]";
 	mes "What do you want to do then?";
@@ -107,7 +107,4 @@ prontera,168,177,6	script	Coin Exchanger	872,{
 			mes "I'm Sorry, but you dont have enough Zeny.";
 			close;
 	}
-OnInit:
-	waitingroom "Coins Exchanger!",0;
-	end;
 }

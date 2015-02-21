@@ -1,0 +1,244 @@
+-	script	ZVN#Reset	-1,{
+OnInit:
+	disablenpc "Reward NPC";
+	end;
+}
+
+poring_c02,227,222,4	script	Zombie Minion	1015,{
+set .@npc$, "[Minion]";
+
+if (getgmlevel() >= 40) goto NVZ_Admin;
+
+
+NVZ_Admin:
+	mes .@npc$;
+	mes "Hello " + strcharinfo(0) + ", would you like to start the event?";
+	switch(select("Start Event:Spectate:No thanks")){
+	case 1:
+		next;
+		if( $@zvn_eventstate == 0){
+		mes .@npc$;;
+		mes "The summoner will appear in Prontera in a few seconds.";
+		close2;
+		disablenpc "Reward NPC";
+		set $@zvn_eventstate,2;
+		set $@zvn_playercount, 0;
+		set .@mapcount,0;
+		goto StartEvent;
+		}
+		else {
+			mes .@npc$;
+			mes "The event is already running master!";
+			close;
+		}
+	case 2:
+		warp "quiz_01",41,378;
+		end;
+	case 3:
+		next;
+		mes .@npc$;
+		mes "Annyong!~";
+		close;
+		}
+
+StartEvent:
+	announce "Novice RFYL event will begin in 3 minutes! Summoner will appear in  Prontera.",0;
+	killmonsterall "quiz_01";
+	sleep 55000;
+	announce "Calling all Level 1 Novices with 9 stats or less!",0;
+	sleep 5000;
+	announce "Talk to Warp Manager to join the event!",0;
+	set $state, 8;
+	sleep 60000;
+	announce "Novice RFYL event will begin in 1 minute!",0;
+	sleep 30000;
+	announce "Novice RFYL will start in 30 seconds! Hurry up if you want to join.",0;
+	sleep 27000;
+	mapannounce "quiz_01","Novice RFYL event will begin in 3.",0;
+	sleep 1000;
+	mapannounce "quiz_01","Novice RFYL event will begin in 2.",0;
+	sleep 1000;
+	mapannounce "quiz_01","Novice RFYL event will begin in 1.",0;
+	sleep 1000;
+	announce "Novice RFYL event has now begun!",0;
+	set $state, 0;
+
+	//Round 1
+	set $@zvn_eventstate, 1;
+	initnpctimer;
+	set .@mapcount, getareausers("quiz_01",23,377,61,361);
+	
+	while ( $@zvn_eventstate == 1){
+		
+	if ( .@mapcount== 0) {
+	stopnpctimer;
+	set $@zvn_eventstate, 0;
+	npctalk "Ah jinja...nobody joined the event TToTT";
+	end;	
+	}
+	mapannounce "quiz_01","Round 1!",0;
+	donpcevent "Zombie Minion::OnMapCheck";
+	monster "quiz_01",42,369,"Minion",1015,3; end;
+	//Round 2
+	OnTimer5000:
+ 	mapannounce "quiz_01","Round 2!",0; end;
+	OnTimer10000:
+	monster "quiz_01",42,369,"Minion",1041,3; end;
+	OnTimer15000:
+	monster "quiz_01",42,369,"Minion",1036,3; end;
+	OnTimer20000:
+	monster "quiz_01",42,369,"Minion",1297,3; end;
+	OnTimer25000:
+	monster "quiz_01",42,369,"Minion",1196,3; end;
+	OnTimer30000:
+	monster "quiz_01",42,369,"Minion",1197,3; end;
+	//Round 3
+	OnTimer40000:
+	mapannounce "quiz_01","Round 3!",0; end;
+	OnTimer45000:
+	monster "quiz_01",42,369,"Minion",1298,2; end;
+	OnTimer50000:
+	monster "quiz_01",42,369,"Minion",1290,2; end;
+	//Round 4
+	OnTimer60000:
+	mapannounce "quiz_01","Round 4!",0; end;
+	OnTimer65000:
+	monster "quiz_01",42,369,"Minion",1302,1; end;
+	OnTimer70000:
+	monster "quiz_01",42,369,"Minion",1302,1; end;
+	//Round 5
+	OnTimer80000:
+	mapannounce "quiz_01","Round 5!",0; end;
+	OnTimer85000:
+	monster "quiz_01",42,369,"Minion",1870,1; end;
+	OnTimer90000:
+	monster "quiz_01",42,369,"Minion",1870,1; end;
+	//Round 6
+	OnTimer100000:
+	mapannounce "quiz_01","Round 6!",0; end;
+	OnTimer105000:
+	monster "quiz_01",42,369,"Minion",1038,1; end;
+	OnTimer110000:
+	monster "quiz_01",42,369,"Minion",1112,1; end;
+	//Final round
+	OnTimer120000:
+	mapannounce "quiz_01","Final Round!",0; end;
+	OnTimer130000:
+	monster "quiz_01",42,369,"Master",1871,1; end;
+	
+
+	if ($@zvn_eventstate==0){
+		stopnpctimer;
+		sleep 1;
+		killmonsterall "quiz_01";
+		set $@zvn_playercount,0;
+		end;
+	}
+	end;
+OnPCDieEvent:
+	set .@mapcount, getareausers("quiz_01",23,377,61,361);
+	getmapxy (.@mapnvz$,.@xnvz,.@ynvz,0);
+	if ( .@mapnvz$ == "quiz_01") {
+	dispbottom "Sorry, but you were killed.";
+	sleep2 1000;
+	warp "prontera",156,191;
+	percentheal 100,100;
+	}
+	if (.@mapcount <= 1 && $@zvn_eventstate == 1){
+	stopnpctimer;
+	sleep 1;
+	killmonsterall "quiz_01";
+	enablenpc "Reward NPC";
+	mapannounce "quiz_01","You won! Talk to the Reward NPC to claim your prize.",0;
+	donpcevent "Reward NPC::OnWin";
+	set $@zvn_eventstate, 0;
+	
+	}
+OnPCLoadMapEvent:
+
+	getmapxy (.@mapnvz$,.@xnvz,.@ynvz,0);
+	if ( .@mapnvz$ == "quiz_01") {
+	sc_end sc_all;
+	percentheal 100,100;
+	end;
+	}
+	else if ( .@mapnvz$ == "guild_vs2") {
+	sc_end sc_all;
+	percentheal 100,100;
+	end;
+	}	
+	
+OnMapCheck:
+while($@zvn_eventstate == 1){
+		set .@mapcount, getareausers("quiz_01",23,377,61,361);
+		if (.@mapcount <= 1){
+		stopnpctimer;
+		sleep 1;
+		killmonsterall "quiz_01";
+		enablenpc "Reward NPC";
+		mapannounce "quiz_01","You won! Talk to the Reward NPC to claim your prize.",0;
+		donpcevent "Reward NPC::OnWin";
+		set $@zvn_eventstate,3;
+		
+		}
+		else if (.@mapcount > 1){
+			sleep 1;
+		}
+		}
+	
+	end;
+	}
+	}
+
+quiz_01,42,378,3	script	Reward NPC	72,{
+
+if(getgmlevel()>=20) {
+	mes "Nice try "+strcharinfo(0);
+	close;
+}
+	set .@amount, 5;
+	atcommand "@getcpoints "+.@amount;
+	dispbottom "You got "+.@amount+" points.";
+	announce "Reward NPC: We have a winner! "+strcharinfo(0)+" has won the Novice RFYL!",0;
+	getitem 7539,3;
+	warp "prontera",156,191;
+	disablenpc "Reward NPC";
+	stopnpctimer;
+	end;
+OnWin:
+	npctalk "Click me! Click me! Click me!";
+	initnpctimer;
+	OnTimer5000:
+	npctalk "Don't you want your prize?"; end;
+	OnTimer35000: end;
+	npctalk "Poofing like a ninja in 30 seconds desu~"; end;
+	OnTimer55000:
+	npctalk "Poofing like a ninja in 10 seconds desu desu~"; end;
+	OnTimer65000:
+	npctalk "Hiding no jutsu!"; end;
+	sleep 1;
+	disablenpc "Reward NPC";
+	set $@zvn_eventstate,0;
+	stopnpctimer;
+	end;
+
+}
+
+
+
+// Mapflags for the Map
+quiz_01	mapflag	nowarpto
+quiz_01	mapflag	nowarp
+quiz_01	mapflag	noteleport
+quiz_01	mapflag	nomemo
+quiz_01	mapflag	nosave	SavePoint
+quiz_01	mapflag	nobranch
+quiz_01	mapflag	noicewall
+quiz_01	mapflag	nopenalty
+quiz_01	mapflag	noexp
+quiz_01	mapflag	noreturn
+quiz_01	mapflag	noloot
+quiz_01	mapflag	pvp_noparty
+quiz_01	mapflag	restricted	1
+quiz_01	mapflag	loadevent
+guild_vs2	mapflag	loadevent

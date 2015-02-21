@@ -1,0 +1,6 @@
+function	script	addCovenPoints	{
+		set .@playerid, getarg(0);
+		set .@amount, getarg(1);
+		query_sql("UPDATE `char` SET points=(points+"+.@amount+") WHERE account_id='"+.@playerid+"'");
+		dispbottom "You got "+.@amount+" points.";
+}

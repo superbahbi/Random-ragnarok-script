@@ -7,20 +7,50 @@
 	OnInit:
 	set $@PoringEventChecker, 0;
 	set $@PoringEventPrizeChecker, 0;
-	set $PPEDefendingChampion$,"secret";
+	set $PPEDefendingChampion$,"...huh, Nobody won";
 	end;
 }
 
-prontera,130,205,5	script	Poring Punch Event	952,{
-
+prontera,123,208,5	script	Poring Punch#Ppunch::Ppunch	952,{
+set .@ppunch$,  "[Poring Punch Manager]";
 	mes "[ Poring Punch Event ]";
 	mes "Hello, I'm the Poring Punch Event Manager. My record says that the defending champion on this event was "+$PPEDefendingChampion$+". Anyways, what do you want to do?";
 	mes " ";
 	mes "Scripted by: ^777777ARTHistic^000000";
 	next;
+	if(getgmlevel() >= 40){
+				mes .@ppunch$;
+				mes "Hi GM do you want to host this event?";
+				switch(select("Yes:No")){
+					case 1:
+						if($@PoringEventChecker!=0){
+							mes "Event Status: ^ff0000Active^000000";
+							mes "Event is still running.";
+							close;
+						}
+						else {
+						mes "Event initiation successful.";
+						close2;
+						set $@PoringEventChecker, 1;
+						set $HighestPoringPoints, 0;
+						set $HighestPoringPointsName$, "";
+						set $PPEDefendingChampion$,"None";
+						set $gm_event_num, $gm_event_num + 1;
+						announce ""+strcharinfo(0)+" paid to host Poring Punch Event!", bc_all;
+						killmonsterall "pvp_n_1-2";
+						sleep2 10000;
+						initnpctimer;
+						end;
+						}
+					case 2:
+						close;
+				}
+			}
+	else {
 	menu "How does this work?",PPE_HowTo,"Host this Event",PPE_Host,"Join Event Now",PPE_Join,"Claim my reward",PPE_claim,"Nevermind",PPE_nvm;
 
 	PPE_HowTo:
+		next;
 		mes "[ Poring Punch Event ]";
 		mes "This is an event where everyone can join in. All you have to do is to punch the right monsters and to avoid the wrong ones. Each kind of monster has its corresponsing points. You only have 5 minutes to earn points as much as you can. The Highest Scorer at the end of this event shall win Poring Coins";
 		mes "Reminder: No weapons, cart, and pets is allowed in this event.";
@@ -31,13 +61,20 @@ prontera,130,205,5	script	Poring Punch Event	952,{
 	PPE_Host:
 
 		if ( $@PoringEventChecker != 0 ){
+			next;
 			mes "[ Poring Punch Event ]";
 			mes "There is Poring Punch Event on-going. You can host this event if it is still on-going.";
 			mes " ";
 			mes "Scripted by: ^777777ARTHistic^000000";
 			close;
 		}else{
+			next;
 			mes "[ Poring Punch Event ]";
+			if($@PoringEventPrizeChecker == 1) {
+				mes $HighestPoringPointsName$+" didn't claim his/her reward.";
+				menu "Continue",-,"Nevermind",PPE_nvm;
+				}
+			}
 			mes "You need to pay 1,500,000,000 z to host this event. Would you like to pay to host this event?";
 			next;
 			menu "Yes",PPE_HostYes,"No",-;
@@ -48,6 +85,7 @@ prontera,130,205,5	script	Poring Punch Event	952,{
 			close;
 				PPE_HostYes:
 					if ( Zeny >= 1500000000 ){
+						next;
 						mes "[ Poring Punch Event ]";
 						mes "Thanks "+strcharinfo(0)+", for hosting this event. It will start shortly.";
 						mes " ";
@@ -55,12 +93,16 @@ prontera,130,205,5	script	Poring Punch Event	952,{
 						set Zeny, Zeny-1500000000;
 						close2;
 						set $@PoringEventChecker, 1;
+						set $HighestPoringPoints, 0;
+						set $HighestPoringPointsName$, "";
+						set $PPEDefendingChampion$,"...huh, Nobody won";
 						announce ""+strcharinfo(0)+" paid to host Poring Punch Event!", bc_all;
 						killmonsterall "pvp_n_1-2";
 						sleep2 10000;
 						initnpctimer;
 						end;
 					}else{
+						next;
 						mes "[ Poring Punch Event ]";
 						mes "Sorry "+strcharinfo(0)+", you dont have enough zenies to host this event.";
 						mes " ";
@@ -72,32 +114,36 @@ prontera,130,205,5	script	Poring Punch Event	952,{
 	PPE_Join:
 		if ( $@PoringEventChecker != 0 ){
 			if (gethominfo(2) != "null"){
+				next;
 				mes "[ Poring Punch Event ]";
 				mes "No homunculus is allowed in this event! Sorry "+strcharinfo(0)+" but you can't join this event!";
 				close;
 			}
 			if (getpetinfo(2) != "null"){
+				next;
 				mes "[ Poring Punch Event ]";
 				mes "No pet is allowed in this event! Sorry "+strcharinfo(0)+" but you can't join this event!";
 				close;
 			}
 			if (checkcart()){
-				mes "[ Poring Punch Event ]";
+				next;
 				mes "[ Poring Punch Event ]";
 				mes "No cart is allowed! Sorry "+strcharinfo(0)+" but you can't join this event!";
 				close;
 			}
 			if (checkfalcon()){
+				next;
 				mes "[ Poring Punch Event ]";
 				mes "No falcon is allowed! Sorry "+strcharinfo(0)+" but you can't join this event!";
 				close;
 			}
 			if (checkriding()){
-				mes "[ Poring Punch Event ]";
+				next;
 				mes "[ Poring Punch Event ]";
 				mes "No riding is allowed! Sorry "+strcharinfo(0)+" but you can't join this event!";
 				close;
 			}
+			next;
 			mes "[ Poring Punch Event ]";
 			mes "Good luck "+strcharinfo(0)+".";
 			mes " ";
@@ -107,6 +153,7 @@ prontera,130,205,5	script	Poring Punch Event	952,{
 			warp "pvp_n_1-2.gat",0,0;
 			end;
 		}else{
+			next;
 			mes "[ Poring Punch Event ]";
 			mes "Sorry. No Poring Punch Event is held at the moment.";
 			mes " ";
@@ -116,22 +163,28 @@ prontera,130,205,5	script	Poring Punch Event	952,{
 
 	PPE_claim:
 		if ($HighestPoringPointsName$ == strcharinfo(0) && $@PoringEventPrizeChecker == 1) {
+			next;
 			mes "[Poring Punch Event]";
 			mes "Congragulations "+strcharinfo(0)+". Here is your reward.";
-			getitem 7227,1;
-			set $HighestPoringPointsName$,"";
+			set .@amount, 3;
+			set .@playerid, getcharid(3,$HighestPoringPointsName$);
+			query_sql("UPDATE `login` SET points=(points+"+.@amount+") WHERE account_id='"+.@playerid+"'");
+			dispbottom "You got "+.@amount+" points.";
+			getitem 677,1;
 			set $HighestPoringPoints,0;
 			set $@PoringEventPrizeChecker, 0;
 			close;
 		} else {
+			next;
 			mes "[ Poring Punch Event ]";
-			mes "Sorry "+strcharinfo(0)+". You're not the winner so you can't claim anything";
+			mes "Sorry "+strcharinfo(0)+". You're not the winner so you can't claim anything!";
 			mes " ";
 			mes "Scripted by: ^777777ARTHistic^000000";
 			close;
 		}end;
 
 	PPE_nvm:
+		next;
 		mes "[ Poring Punch Event ]";
 		mes "Okay. Maybe next time.";
 		mes " ";
@@ -150,7 +203,7 @@ prontera,130,205,5	script	Poring Punch Event	952,{
 			end;
 		}else {
 			dispbottom "You have to punch the monster without any weapon.";
-			warp "prontera",130,200;
+			warp "prontera",127,207;
 			end;
 		}
 
@@ -166,7 +219,7 @@ prontera,130,205,5	script	Poring Punch Event	952,{
 			end;
 		}else {
 			dispbottom "You have to punch the monster without any weapon.";
-			warp "prontera",130,200;
+			warp "prontera",127,207;
 			end;
 		}
 		
@@ -187,58 +240,58 @@ prontera,130,205,5	script	Poring Punch Event	952,{
 			warp "prontera",130,200;
 			end;
 		}
-		
 
-OnHour30:
-	if ( $@PoringEventChecker == 0 ) {
-		set $@PoringEventChecker, 1;
-		initnpctimer;
-		end;
-	}
 
 OnTimer10000:
 	announce "Poring Punch Event has started.",0;
-	monster "pvp_n_1-2",0,0,"1 Point",1002,50,"Poring Punch Event::OnPoringKill";
-	monster "pvp_n_1-2",0,0,"5 Points",1113,10,"Poring Punch Event::OnDropsKill";
-	monster "pvp_n_1-2",0,0,"-10 Ponts",1031,50,"Poring Punch Event::OnPoporingKill";
+	monster "pvp_n_1-2",0,0,"1 Point",1002,50,"Ppunch::OnPoringKill";
+	monster "pvp_n_1-2",0,0,"5 Points",1113,10,"Ppunch::OnDropsKill";
+	monster "pvp_n_1-2",0,0,"-10 Ponts",1031,50,"Ppunch::OnPoporingKill";
 	end;
 
 OnTimer70000:
 	mapannounce "pvp_n_1-2.gat","Poring Punch Event: 4 minutes left.",0;
-	monster "pvp_n_1-2",0,0,"1 Point",1002,50,"Poring Punch Event::OnPoringKill";
-	monster "pvp_n_1-2",0,0,"5 Points",1113,5,"Poring Punch Event::OnDropsKill";
-	monster "pvp_n_1-2",0,0,"-10 Ponts",1031,20,"Poring Punch Event::OnPoporingKill";
+	monster "pvp_n_1-2",0,0,"1 Point",1002,50,"Ppunch::OnPoringKill";
+	monster "pvp_n_1-2",0,0,"5 Points",1113,5,"Ppunch::OnDropsKill";
+	monster "pvp_n_1-2",0,0,"-10 Ponts",1031,20,"Ppunch::OnPoporingKill";
 	end;
 
 OnTimer130000:
 	mapannounce "pvp_n_1-2.gat","Poring Punch Event: 3 minutes left.",0;
-	monster "pvp_n_1-2",0,0,"1 Point",1002,30,"Poring Punch Event::OnPoringKill";
-	monster "pvp_n_1-2",0,0,"5 Points",1113,5,"Poring Punch Event::OnDropsKill";
-	monster "pvp_n_1-2",0,0,"-10 Ponts",1031,15,"Poring Punch Event::OnPoporingKill";
+	monster "pvp_n_1-2",0,0,"1 Point",1002,30,"Ppunch::OnPoringKill";
+	monster "pvp_n_1-2",0,0,"5 Points",1113,5,"Ppunch::OnDropsKill";
+	monster "pvp_n_1-2",0,0,"-10 Ponts",1031,15,"Ppunch::OnPoporingKill";
 	end;
 
 OnTimer190000:
 	mapannounce "pvp_n_1-2.gat","Poring Punch Event: 2 minutes left.",0;
-	monster "pvp_n_1-2",0,0,"1 Point",1002,30,"Poring Punch Event::OnPoringKill";
-	monster "pvp_n_1-2",0,0,"5 Points",1113,5,"Poring Punch Event::OnDropsKill";
-	monster "pvp_n_1-2",0,0,"-10 Ponts",1031,5,"Poring Punch Event::OnPoporingKill";
+	monster "pvp_n_1-2",0,0,"1 Point",1002,30,"Ppunch::OnPoringKill";
+	monster "pvp_n_1-2",0,0,"5 Points",1113,5,"Ppunch::OnDropsKill";
+	monster "pvp_n_1-2",0,0,"-10 Ponts",1031,5,"Ppunch::OnPoporingKill";
 	end;
 
 OnTimer250000:
 	mapannounce "pvp_n_1-2.gat","Poring Punch Event: 1 minute left.",0;
-	monster "pvp_n_1-2",0,0,"1 Point",1002,50,"Poring Punch Event::OnPoringKill";
-	monster "pvp_n_1-2",0,0,"5 Points",1113,5,"Poring Punch Event::OnDropsKill";
-	monster "pvp_n_1-2",0,0,"-10 Ponts",1031,5,"Poring Punch Event::OnPoporingKill";
+	monster "pvp_n_1-2",0,0,"1 Point",1002,50,"Ppunch::OnPoringKill";
+	monster "pvp_n_1-2",0,0,"5 Points",1113,5,"Ppunch::OnDropsKill";
+	monster "pvp_n_1-2",0,0,"-10 Ponts",1031,5,"Ppunch::OnPoporingKill";
 	end;
 
 OnTimer310000:
 	stopnpctimer;
+	if($HighestPoringPointsName$== ""){
+		announce "Poring Punch Event has ended. There is no winner.",0;
+		killmonsterall "pvp_n_1-2";
+		set $@PoringEventChecker, 0;
+		set $@PoringEventPrizeChecker, 1;
+		end;
+	}
 	announce "Poring Punch Event has ended and the event Winner is "+$HighestPoringPointsName$+".",0;
 	killmonsterall "pvp_n_1-2";
 	set $@PoringEventChecker, 0;
 	set $@PoringEventPrizeChecker, 1;
 	sleep2 5000;
-	mapannounce "pvp_n_1-2.gat","You'll be warp at prontera in a short while.",16;
+	mapannounce "pvp_n_1-2.gat","You'll be warped to Prontera in a short while.",16;
 	sleep2 10000;
 	mapwarp "pvp_n_1-2","prontera",155,166;
 	end;

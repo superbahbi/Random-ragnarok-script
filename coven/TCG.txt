@@ -1,7 +1,7 @@
-prontera,140,230,5	script	TCG Trader	62,{
+prontera,168,180,4	script	TCG Trader	62,{
 	mes "[Maila]";
 	mes "Im the TCG Trader here in town.";
-	mes "I can allow you to exchange your Platinum into useful TCG, which you can use to make trades between players, or just save them";
+	mes "I can allow you to exchange your Platinum into useful TCG, which you can use to make trades between players, or just save them.";
 	next;
 	mes "[Maila]";
 	mes "TCG Card worth 3 Platinum Coins.";
@@ -16,16 +16,16 @@ TCGT:
 		close;
 
 L_noItems:
-	mes "Hmmm You dont have Platinum coins needed to continue the Trading.";
+	mes "Hmmm you dont have Platinum Coins needed to continue trading.";
 	close;
 
 No:
-	mes "[TCG Trader]";
-	mes "Comeback at anytime.";
-	mes "Dont forget to Vote CovenRO.";
+	mes "[Maila]";
+	mes "Come back at anytime.";
+	mes "Dont forget to vote CovenRO.";
 	close;
 
 OnInit:
-	waitingroom "TCG TRADER.!",0;
+	waitingroom "S> TCG = 3 Plats.",0;
 	end;
 }

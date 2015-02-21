@@ -1,231 +1,542 @@
-//===== eAthena Script =======================================
-//= Warper Script
-//===== By: ==================================================
-//= Darkchild
-//===== Current Version: =====================================
-//= 2.1
-//===== Compatible With: =====================================
-//= Any eAthena Version;
-//===== Description: =========================================
-//= Generic warper...
-//===== Additional Comments: =================================
-//= 1.0 by Darkchild
-//= 1.1 by jabs
-//= 1.2 by Lupus (placement fixed in Amatsu)
-//= 1.3 fixed Louyang label typo, added warp and WARPRA into
-//= Nifleheim. Also sorted all names in alphabet order [Lupus]
-//= 1.4 fixed morroc warp npc overlaying kafra [Aria]
-//= 1.4a Added Ayothaya and Einbroch to list, and town Warpra's [Fredzilla]
-//= 1.4b fixed Izlude warp npc overlaying BBS [Justin84]
-//= 1.5 Added this NPC to more places [Lupus]
-//= 1.6 Rewrote a lot. Changed the sprite, some locations. [Poki#3]
-//= TODO Add an option for selecting the level of the dungeon. [Poki#3]
-//= 1.7 Temporary? Added F_ClearGarbage to clear unused/outdated variables [Lupus]
-//= 1.8 Removed Duplicates [Silent]
-//= 1.9 Optimized for the greater good. [Kisuka]
-//= 2.0 Fixed warp for AntHell and Yuno. [Kisuka]
-//= 2.1 Moved AntHell warp agent to the new anthell entrance. [brianluau]
-//============================================================
-//============================================================
-//= To allow selecting the Level of the Dungeon you want to
-//= Warp to set the @lvlselect variable to 1 (Not implemented yet!)
-//============================================================
+prontera,155,172,4	script	Warp Manager	828,{
+set $@eventmnpc$, "[^3333FFCovenRO Warper^000000]";
 
--	script	Warp Agent#01::warpra	859,{
-//	set @lvlselect,0;
-
-	callfunc "F_ClearGarbage"; //Clear outdated, unused variables
-
-	mes "[Warp Agent]";
-	mes "Hello " + strcharinfo(0) + ",";
-	mes "I can teleport you to any Town or Dungeon!";
-	mes "Where do you want to go?";
-	next;
-	switch(select("To a Town:To a Dungeon")) {
+//------------------GAME MASTER--------------------------------------------------------------
+if (getgmlevel()>=20)
+{
+Le_menu:
+	mes $@eventmnpc$;
+	mes "Current state: ^FF0000 "+$state+"^000000.";
+	switch(select("Nothing:Event:Warp:Cancel event"))
+	{
 		case 1:
-			mes "[Warp Agent]";
-			mes "Please select which town you would like to be teleported to.";
 			next;
-			switch(select("Alberta:Aldebaran:Amatsu:Ayothaya:Comodo:Einbroch:Einbech:Geffen:Gonryun:Hugel:Izlude:Lighthalzen:Louyang:Lutie:Morroc:Payon:Prontera:Umbala:Yuno")) {
+			mes $@eventmnpc$;
+			mes "Ok bye!";
+			close;
+		case 2:
+			callsub openevent;
+			break;
+		case 3:
+			callsub gm_warp;
+			break;
+		case 4:
+			next;
+			if($state != 0)
+			{
+				set $state,0;
+				mes $@eventmnpc$;
+				mes "Ok it is now turned ^FF0000OFF^000000.";
+				announce "The event is canceled.",bc_all;
+				delwaitingroom;
+				waitingroom "Event Warper.",0;
+				close;
+			}
+			else
+			{
+				mes $@eventmnpc$;
+				mes "Ok it is now turned ^FF0000OFF^000000.";
+				delwaitingroom;
+				waitingroom "Event Warper.",0;
+				close;
+			}
+	}
+	close;
+	
+gm_warp:
+	switch($state)
+	{
+		case 0:
+			next;
+			mes $@eventmnpc$;
+			mes "There's no active";
+			close;	
+		case 1:
+			warp "quiz_01",230,368;
+			break;
+		case 2:
+			warp "guild_vs2",45,49;
+			break;
+		case 3:
+			warp "poring_c01",104,107;
+			break;
+		case 4:
+			warp "quiz_02",350,368;
+			break;
+		case 5:
+			warp "guild_vs1-1",0,0;
+			break;
+		case 6:
+			warp "quiz_02",55,84;	 //dice
+			break;
+		case 7:
+			warp "quiz_01",322,368;	 //disguise
+			break;
+		case 8:
+			warp "quiz_01",322,368;	 //hangman
+			break;
+	}
+	return;
+
+openevent:
+			next;
+			mes $@eventmnpc$;
+			mes "Choose an event.";
+			
+			switch(select("Lucky Box:Disguise:Hangman"))
+			{
 				case 1:
-					warp "alberta",27,236;
+					next;
+					set $state,6;
+					announce "Lucky Box event is open.",bc_all;
+					delwaitingroom;
+					waitingroom "Event: Lucky Box",0;
 					break;
 				case 2:
-					warp "aldebaran",145,120;
+					set $state,7;
+					announce "Disguise event is open.",bc_all;
+					delwaitingroom;
+					waitingroom "Event: Disguise",0;
+					enablenpc "Disguise Event";
+					disablenpc "Hangman";
+					disablenpc "Auto Disguise Event";
 					break;
 				case 3:
-					warp "amatsu",197,86;
+					next;
+					set $state,8;
+					announce "Hangman event is open.",bc_all;
+					delwaitingroom;
+					waitingroom "Event: Hangman",0;
+					disablenpc "Disguise Event";
+					disablenpc "Auto Disguise Event";
+					enablenpc "Hangman";
 					break;
-				case 4:
-					warp "ayothaya",149,118;
+			}
+			mes $@eventmnpc$;
+			mes "Do you want to warp now?";
+			switch(select("Main menu:Warp"))
+			{
+				case 1:
+					next;
+					goto Le_menu;
 					break;
-				case 5:
-					warp "comodo",188,161;
+				case 2:
+					goto gm_warp;
 					break;
-				case 6:
-					warp "einbroch",64,200;
-					break;
-				case 7:
-					warp "einbech",70,95;
-					break;
-				case 8:
-					warp "geffen",119,66;
-					break;
-				case 9:
-					warp "gonryun",150,130;
-					break;
-				case 10:
-					warp "hugel",96,145;
-					break;
-				case 11:
-					warp "izlude",128,111;
-					break;
-				case 12:
-					warp "lighthalzen",158,92;
-					break;
-				case 13:
-					warp "louyang",210,108;
-					break;
-				case 14:
-					warp "xmas",150,133;
-					break;
-				case 15:
-					warp "morocc",159,93;
-					break;
-				case 16:
-					warp "payon",152,75;
-					break;
-				case 17:
-					warp "prontera",156,187;
-					break;
-				case 18:
-					warp "umbala",130,130;
-					break;
-				case 19:
-					warp "yuno",160,168;
-					break;
+			}
+			end;
+OnWhisperGlobal:
+	switch($state)
+	{
+		case 0:
+			mes $@eventmnpc$;
+			mes "There's no active event.";
+			delwaitingroom;
+			waitingroom "Event warper.",0;
+			close;	
+		case 6:
+			initnpctimer;
+			announce "Lucky Box is closing in 30seconds.",bc_all;
+			end;
+			OnLBTimer24000:
+			announce "Ok 5 seconds more.",bc_all;
+			end;
+			OnLBTimer25000:
+			announce "4.",bc_all;
+			end;
+			OnLBTimer26000:
+			announce "3.",bc_all;
+			end;
+			OnLBTimer27000:
+			announce "2.",bc_all;
+			end;
+			OnLBTimer28000:
+			announce "1.",bc_all;
+			end;
+			OnLBTimer29000:
+			stopnpctimer;
+			callsub reset_state;
+			break;
+		case 7:
+			initnpctimer;
+			announce "Disguise Event is closing in 30seconds.",bc_all;
+			end;
+			OnDISTimer24000:
+			announce "Ok 5 seconds more.",bc_all;
+			end;
+			OnDISTimer25000:
+			announce "4.",bc_all;
+			end;
+			OnDISTimer26000:
+			announce "3.",bc_all;
+			end;
+			OnDISTimer27000:
+			announce "2.",bc_all;
+			end;
+			OnDISTimer28000:
+			announce "1.",bc_all;
+			end;
+			OnDISTimer29000:
+			stopnpctimer;
+			callsub reset_state;
+			break;
+		case 8:
+			initnpctimer;
+			announce "Hangman is closing in 30seconds.",bc_all;
+			end;
+			OnTimer24000:
+			announce "Ok 5 seconds more.",bc_all;
+			end;
+			OnTimer25000:
+			announce "4.",bc_all;
+			end;
+			OnTimer26000:
+			announce "3.",bc_all;
+			end;
+			OnTimer27000:
+			announce "2.",bc_all;
+			end;
+			OnTimer28000:
+			announce "1.",bc_all;
+			end;
+			OnTimer29000:
+			stopnpctimer;
+			callsub reset_state;
+			break;
+	}
+	end;
+
+reset_state:
+	delwaitingroom;
+	waitingroom "Event warper.",0;
+	set $state,0;
+}
+
+
+//----------------------Normal Player---------------------------------
+else
+{
+	switch($state)
+	{
+		case 0:
+			mes $@eventmnpc$;
+			mes "Sorry. No events at this time.";
+			emotion 17;
+			close;
+		case 1: //rfyl
+			emotion 21;
+			if (checkriding())
+			{
+				mes $@eventmnpc$;
+				mes "No riding is allowed! Sorry "+strcharinfo(0)+" but you can't join this event!";
+				close;
+			else {
+			mes $@eventmnpc$;
+			mes "There is an active event!";
+			mes "Do you want to go to the event place?";
+			switch(select("Yes, please.:No, thanks."))
+			{
+				case 1:
+					warp "quiz_01",230,368;
+					sc_end SC_ALL;
+					end;
+				case 2:
+					close;
+			}
 			}
 			break;
 		case 2:
-			mes "[Warp Agent]";
-			mes "Please select which dungeon you would like to be teleported to.";
-			next;
-			switch(select("Abyss Lake:Amatsu Dungeon:Anthell:Ayothaya Dungeon:Bibilan Dungeon:Coal Mine (Dead Pit):Culvert:Einbech Dungeon:Glast Heim:Gonryun Dungeon:Juperos:Lighthalzen Bio Lab:Magma Dungeon:Niflheim:Odin Temple:Orc Dungeon:Payon Dungeon:Pyramids:Sphinx:Sunken Ship:Thanatos Tower:Turtle Dungeon")) {
+			emotion 21;
+			mes $@eventmnpc$;
+			mes "There is an active event!";
+			mes "Do you want to go to the event place?";
+			switch(select("Yes, please.:No, thanks."))
+			{
 				case 1:
-					warp "hu_fild05",189,207;
-					break;
+					warp "guild_vs2",45,49;
+					sc_end SC_ALL;
+					end;
 				case 2:
-					warp "ama_dun01",229,12;
-					break;
-				case 3:
-					warp "moc_fild20",164,145;
-					break;
-				case 4:
-					warp "ayo_fild02",280,149;
-					break;
-				case 5:
-					warp "izlu2dun",106,88;
-					break;
-				case 6:
-					warp "prt_sewb1",126,248;
-					break;
-				case 7:
-					warp "mjolnir_02",81,359;
-					break;
-				case 8:
-					warp "einbech",135,249;
-					break;
-				case 9:
-					warp "glast_01",368,303;
-					break;
-				case 10:
-					warp "gonryun",160,195;
-					break;
-				case 11:
-					warp "yuno_fild07",218,176;
-					break;
-				case 12:
-					warp "lighthalzen",158,285;
-					break;
-				case 13:
-					warp "yuno_fild03",39,140;
-					break;
-				case 14:
-					warp "niflheim",35,161;
-					break;
-				case 15:
-					warp "odin_tem01",98,144;
-					break;
-				case 16:
-					warp "gef_fild10",70,332;
-					break;
-				case 17:
-					warp "pay_arche",43,132;
-					break;
-				case 18:
-					warp "moc_ruins",62,162;
-					break;
-				case 19:
-					warp "moc_fild19",107,100;
-					break;
-				case 20:
-					warp "alb2trea",75,98;
-					break;
-				case 21:
-					warp "tha_scene01",131,223;
-					break;
-				case 22:
-					warp "tur_dun01",149,238;
+					close;
 			}
+			break;
+		case 3:
+			callsub dodge_warp;
+			break;
+		case 4:
+			emotion 21;
+			mes $@eventmnpc$;
+			mes "There is an active event!";
+			mes "Do you want to go to the event place?";
+			switch(select("Yes, please.:No, thanks."))
+			{
+				case 1:
+					warp "quiz_02",350,368;
+					sc_end SC_ALL;
+					end;
+				case 2:
+					close;
+			}
+			break;
+		case 5:
+			emotion 21;
+			mes $@eventmnpc$;
+			mes "There is an active event!";
+			mes "Do you want to go to the event place?";
+			switch(select("Yes, please.:No, thanks."))
+			{
+				case 1:
+					warp "guild_vs1-1",0,0;
+					sc_end SC_ALL;
+					end;
+				case 2:
+					close;
+			}
+			break;
+		case 6:
+			emotion 21;
+			mes $@eventmnpc$;
+			mes "There is an active event!";
+			mes "Do you want to go to the event place?";
+			switch(select("Yes, please.:No, thanks."))
+			{
+				case 1:
+					warp "quiz_02",55,84;
+					sc_end SC_ALL;
+					end;
+				case 2:
+					close;
+			}
+			break;
+		case 7:
+			emotion 21;
+			mes $@eventmnpc$;
+			mes "There is an active event!";
+			mes "Do you want to go to the event place?";
+			switch(select("Yes, please.:No, thanks."))
+			{
+				case 1:
+					switch(rand(1,2))
+					{
+					case 1:
+						warp "quiz_01",313,368;
+
+						sc_end SC_ALL;
+						end;
+					case 2:
+						warp "quiz_01",330,368;
+
+						sc_end SC_ALL;
+						end;
+
+					}
+				case 2:
+					close;
+			}
+			break;
+		case 8:
+			emotion 21;
+			mes $@eventmnpc$;
+			mes "There is an active event!";
+			mes "Do you want to go to the event place?";
+			switch(select("Yes, please.:No, thanks."))
+			{
+				case 1:
+					switch(rand(1,2))
+					{
+					case 1:
+						warp "quiz_01",313,368;
+
+						sc_end SC_ALL;
+						end;
+					case 2:
+						warp "quiz_01",330,368;
+
+						sc_end SC_ALL;
+						end;
+
+					}
+				case 2:
+					close;
+			}
+			break;
+		default:
 			break;
 	}
 	end;
 }
+dodge_warp:
+	mes $@eventmnpc$;
+	mes "Hello. How may I help you?";
+	next;
+	switch(select("Join the Event","Event Information")){
+		case 1:
+			if (checkriding())
+			{
+				mes $@eventmnpc$;
+				mes "No riding is allowed! Sorry "+strcharinfo(0)+" but you can't join this event!";
+				close;
+			}
 
-// --------- NPC Clones ------------
-// ---------------------------------
+			warp "poring_c01",104,107;
+			end;
+	
+		case 2:
+			mes $@eventmnpc$;
+			mes "Gameplay:";
+			mes "Exploding dodgeballs will be spawned randomly on the map. It is a one-hit KO to the players that get hit with the explosion.";
+			mes " ";
+			mes "How To Win:";
+			mes "Run away and don't get hit! Last one standing wins~";
+			close;
+	}
+OnInit:
+			delwaitingroom;
+			waitingroom "Event Warper.",0;
+			set $state,0;
+			end;
 
-// ----------- Towns -------------
-alberta,31,240,4	duplicate(warpra)	Warp Agent#02	859
-aldebaran,145,118,4	duplicate(warpra)	Warp Agent#03	859
-amatsu,192,81,1	duplicate(warpra)	Warp Agent#04	859
-ayothaya,144,117,6	duplicate(warpra)	Warp Agent#05	859
-comodo,194,158,4	duplicate(warpra)	Warp Agent#06	859
-einbroch,59,205,4	duplicate(warpra)	Warp Agent#07	859
-einbroch,243,189,2	duplicate(warpra)	Warp Agent#08	859
-einbech,135,249,4	duplicate(warpra)	Warp Agent#09	859
-geffen,115,66,4	duplicate(warpra)	Warp Agent#10	859
-gonryun,151,130,4	duplicate(warpra)	Warp Agent#11	859
-izlude,133,117,4	duplicate(warpra)	Warp Agent#12	859
-hugel,88,151,5	duplicate(warpra)	Warp Agent#13	859
-lighthalzen,155,79,6	duplicate(warpra)	Warp Agent#14	859
-louyang,210,106,4	duplicate(warpra)	Warp Agent#15	859
-morocc,156,95,4	duplicate(warpra)	Warp Agent#16	859
-prontera,161,192,4	duplicate(warpra)	Warp Agent#17	859
-payon,182,110,4	duplicate(warpra)	Warp Agent#18	859
-umbala,132,130,4	duplicate(warpra)	Warp Agent#19	859
-xmas,150,136,4	duplicate(warpra)	Warp Agent#20	859
-yuno,137,162,4	duplicate(warpra)	Warp Agent#21	859
+}
 
-// ------------ Dungeons ------------
-ama_dun01,233,9,1	duplicate(warpra)	Warp Agent#22	859
-moc_fild20,162,139,6	duplicate(warpra)	Warp Agent#23	859
-ayo_fild02,279,154,4	duplicate(warpra)	Warp Agent#24	859
-izlu2dun,104,82,4	duplicate(warpra)	Warp Agent#25	859
-prt_sewb1,125,253,4	duplicate(warpra)	Warp Agent#26	859
-mjolnir_02,85,363,4	duplicate(warpra)	Warp Agent#27	859
-einbech,81,101,1	duplicate(warpra)	Warp Agent#28	859
-glast_01,370,308,4	duplicate(warpra)	Warp Agent#29	859
-yuno_fild03,37,135,4	duplicate(warpra)	Warp Agent#30	859
-niflheim,32,161,4	duplicate(warpra)	Warp Agent#31	859
-gef_fild10,71,339,4	duplicate(warpra)	Warp Agent#32	859
-pay_arche,39,135,4	duplicate(warpra)	Warp Agent#33	859
-moc_ruins,64,166,4	duplicate(warpra)	Warp Agent#34	859
-moc_fild19,106,97,4	duplicate(warpra)	Warp Agent#35	859
-alb2trea,73,101,4	duplicate(warpra)	Warp Agent#36	859
-tur_dun01,148,239,4	duplicate(warpra)	Warp Agent#37	859
-lhz_dun01,157,285,4	duplicate(warpra)	Warp Agent#38	859
-hu_fild05,186,210,4	duplicate(warpra)	Warp Agent#39	859
-yuno_fild07,221,179,4	duplicate(warpra)	Warp Agent#40	859
-tha_scene01,139,194,1	duplicate(warpra)	Warp Agent#41	859
-odin_tem01,96,149,4	duplicate(warpra)	Warp Agent#42	859
+/////////////////////////////Fabre event////////////////////////////////////////////
+//pvp_n_1-2,0,0,0	script	Fabre Trainer	-1,{
+//
+//}
+//------------------------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------Lucky Box (Dice)-----------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------------
+quiz_02,55,85,4	script	Lucky Box Event Manager	402,{
+	if (getgmlevel()<2) goto OUT;
+	mes "[Lucky Box Event Manager]";
+	mes "What do you want to do?";
+	switch(select("Select Number")){
+	
+	case 1:
+		next;
+		mes "[Lucky Box Event Manager]";
+		mes "Select Number.";	
+		switch(select("1","2","3","4")){
+			case 1:
+				next;
+				mes "[Lucky Box Event Manager]";
+				mes "1?";
+				next;
+				mes "[Lucky Box Event Manager]";
+				mes "Sure?";
+				next;
+				switch(select("Yes","No")){
+				case 1:
+					areawarp "quiz_02",33,73,41,52, "prontera",155,166;	//#1
+					areawarp "quiz_02",45,73,53,52, "quiz_02",55,84;	//#2
+					areawarp "quiz_02",57,73,65,52, "quiz_02",55,84;	//#3
+					areawarp "quiz_02",69,73,77,52, "quiz_02",55,84;	//#4
+					close;
+				case 2:
+					close;
+				}
+			case 2:
+				next;
+				mes "[Lucky Box Event Manager]";
+				mes "2?";
+				next;
+				mes "[Lucky Box Event Manager]";
+				mes "Sure?";
+				next;
+				switch(select("Yes","No")){
+				case 1:
+					areawarp "quiz_02",33,73,41,52, "quiz_02",55,84;	//#1
+					areawarp "quiz_02",45,73,53,52, "prontera",155,166;	//#2
+					areawarp "quiz_02",57,73,65,52, "quiz_02",55,84;	//#3
+					areawarp "quiz_02",69,73,77,52, "quiz_02",55,84;	//#4
+					close;
+				case 2:
+					close;
+				}
+			case 3:
+				next;
+				mes "[Lucky Box Event Manager]";
+				mes "3?";
+				next;
+				mes "[Lucky Box Event Manager]";
+				mes "Sure?";
+				next;
+				switch(select("Yes","No")){
+				case 1:
+					areawarp "quiz_02",33,73,41,52, "quiz_02",55,84;	//#1
+					areawarp "quiz_02",45,73,53,52, "quiz_02",55,84;	//#2
+					areawarp "quiz_02",57,73,65,52, "prontera",155,166;	//#3
+					areawarp "quiz_02",69,73,77,52, "quiz_02",55,84;	//#4
+					close;
+				case 2:
+					close;
+				}
+			case 4:
+				next;
+				mes "[Lucky Box Event Manager]";
+				mes "4?";
+				next;
+				mes "[Lucky Box Event Manager]";
+				mes "Sure?";
+				next;
+				switch(select("Yes","No")){
+				case 1:
+					areawarp "quiz_02",33,73,41,52, "quiz_02",55,84;	//#1
+					areawarp "quiz_02",45,73,53,52, "quiz_02",55,84;	//#2
+					areawarp "quiz_02",57,73,65,52, "quiz_02",55,84;	//#3
+					areawarp "quiz_02",69,73,77,52, "prontera",155,166;	//#4
+					close;
+				case 2:
+					close;
+				}
+		}
+	}
+OUT:
+	end;
+}
+quiz_02,37,80,0	warp	warp1	0,0,quiz_02,37,73
+quiz_02,49,80,0	warp	warp2	0,0,quiz_02,49,73
+quiz_02,61,80,0	warp	warp3	0,0,quiz_02,61,73
+quiz_02,73,80,0	warp	warp4	0,0,quiz_02,73,73
+quiz_02	mapflag	noskill
+quiz_02	mapflag	nosave	SavePoint
+quiz_02	mapflag	noteleport
+quiz_02	mapflag	nowarp
+quiz_02	mapflag	nomemo
+quiz_02	mapflag	nodrop
+quiz_02	mapflag	notrade
+quiz_02	mapflag	noreturn
+quiz_01	mapflag	noskill
+quiz_01	mapflag	nosave	SavePoint
+quiz_01	mapflag	noteleport
+quiz_01	mapflag	nowarp
+quiz_01	mapflag	nomemo
+quiz_01	mapflag	nodrop
+quiz_01	mapflag	notrade
+quiz_01	mapflag	noreturn
+quiz_01	mapflag	restricted	6
+//06guild_01	mapflag	restricted	5
+06guild_01	mapflag	pvp_noparty
+06guild_01	mapflag	pvp_noguild
+06guild_01	mapflag	noskill
+06guild_01	mapflag	nosave	SavePoint
+06guild_01	mapflag	noteleport
+06guild_01	mapflag	nowarp
+06guild_01	mapflag	nomemo
+06guild_01	mapflag	noreturn
+06guild_01	mapflag	nodrop
+06guild_01	mapflag	notrade
+guild_vs1	mapflag	nosave	SavePoint
+guild_vs1	mapflag	noteleport
+guild_vs1	mapflag	nowarp
+guild_vs1	mapflag	nomemo
+guild_vs1	mapflag	noskill
+guild_vs1	mapflag	noreturn
+guild_vs5	mapflag	nowarp
+//prontera	mapflag	novending
+pvp_n_1-2	mapflag	noskill
+pvp_n_1-2	mapflag	nosave	SavePoint
+pvp_n_1-2	mapflag	noteleport
+pvp_n_1-2	mapflag	nowarp
+pvp_n_1-2	mapflag	nomemo
+pvp_n_1-2	mapflag	noreturn
+guild_vs5	mapflag	nosave	SavePoint

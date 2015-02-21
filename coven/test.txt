@@ -1,36 +1,12 @@
-//===== Scripted By: =======
-//= Bahbi
-//===== Compatible With:==
-//= Latest
-//===== Description: =====
-//= Test npc
-//========================
-//===================== Start From Here =====================================================
-moscovia,157,69,5	script	Bahbi	899,{
-	//
-	//mes "Test script";
-	//sc_start SC_FREEZE,60000000,10;	// Freeze
-	//if(!checkoption(Option_Misc_Ride))
-	//	sc_start SC_MISC_RIDE,18000000,0;
-	//else
-	//	sc_end SC_MISC_RIDE;
-	//setoption 0x40;	// Perfect Hide
-	//setoption 0x2000;	// Ruwach
-	//atcommand "@option 2 2 2";
-	//sc_start SC_FREEZE,60000000,10;	// Freeze
-	//close;
-	//set @numValue0,1;
-	//set @numValue1,1;
-	//set @query$, "replace into `bk_var` set `char_id` = " + getcharid(0) + ", `pname` = '" + strcharinfo(0) + "', `pvalue` = " + @numValue0;
-	//set @query$, "delete from `bk_var` where `char_id` = " + getcharid(0) + " and `pname` = '" + strcharinfo(0)+ "' and `pvalue` = " + @numValue1;
-	//query_sql @query$;
+//poring_c02,220,218,4	script	woe check	405,{
+//if (agitcheck() || agitcheck2()) {
+//	mes "On";
+//	close;
+//} else {
+//	mes "Off";
+//	close;
 //}
-//-	script	onLogin	-1,{
-//OnPCLoginEvent:
-	//query_sql "select `pvalue` from `bk_var` where `char_id` = " + getcharid(0) + " and `pname` = '" + strcharinfo(0)+ "'", @numValue;
-	//set @value, query_sql("select pvalue from `bk_var` where char_id = " + getcharid(0) + " and pname = "+ strcharinfo(0)" ", @val);
-	//query_sql "SELECT kills FROM pvpladder2 WHERE char_id = "+ .@char_id, .@kills;
-	//query_sql "SELECT pvalue FROM bk_var WHERE char_id = "+getcharid(0)+" and pname = "+strcharinfo(0)", @value;
-	//mes @value;
-	//close;
+//}
+poring_c02,18,220,6	script	quest test	549,{
+
 }

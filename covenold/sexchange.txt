@@ -1,0 +1,85 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Sexchange NPC
+// By: iamabean
+// Version 0.3
+// Tested on SVN 9650?
+// May work on a older svn BUT it can cause alot of problems on an older svn!!
+// Thanks spamrat for a little bit of help.
+// Changes-----------
+// 0.2 -Fixed it not changing you on newer svns .
+// 0.2 -Added a message after it changes you to inform them to wait for disconnect.
+// 0.3 -Added a customize the npc section.
+// 0.3 -Made the zeny stored in a variable at start of the npc. Makes it easier to customize.
+// 0.3 -Made the name stored in a variable.
+// 0.3 -Changed charcommand "#changesex " + strcharinfo(0); to atcommand "@changesex ";
+// 0.3 -Added a symbol var for the atcommand symbol. For anyone else who might use another symbol.
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//NPC map location/cordinates
+//It's recommended you change it.
+prontera,188,208,1	script	Dra. Vicky Belo	940,{
+
+//////////////////////////////////////////
+//Customize the npc!!			//
+set @CDname$,"[Dra. Vicky Belo]";		//Set NPCs name
+// Remember to set script header name as well!!//
+set @CDzeny,10000000;			//Set amount of zeny it costs
+set @CDsymbol$,"@";			//Set the atcommand(gm command) symbol you use
+//////////////////////////////////////////
+
+mes @CDname$;
+mes "Greetings my friend!";
+mes "What are you doing here?";
+mes "I can do something to make you look nicer!";
+next;
+mes @CDname$;
+mes "Do you wanna try being the opposite sex?";
+mes "I would make you a male if you are a female and vice versa.";
+mes "Do you want to try it?";
+next;
+mes @CDname$;
+mes "Can you feel the excitement?";
+mes "It excites me thinking about it!";
+next;
+menu "Ok lets do it!",CD_sexchange,"Maybe some other time.",CD_no;
+
+CD_sexchange:
+	mes @CDname$;
+	mes "Great then, let us continue!";
+	mes "You will not feel any pain.";
+	mes "I need 10 million Zenies and we can proceed.";
+	mes "Should we proceed?";
+	next;
+	menu "GO!",CD_go,"NO!",CD_no;
+
+CD_go:
+	mes @CDname$;
+	mes "Operating...";
+	mes "No pain at all e?";
+	next;
+	if (Zeny < @CDzeny) goto CD_zeny;
+	set Zeny, Zeny - @CDzeny;
+	atcommand  @CDsymbol$ + "changesex ";
+	mes @CDname$;
+	mes "Please wait for the server to disconect you and then log back in.";
+	end;
+
+CD_zeny:
+	mes @CDname$;
+	mes "You don't have enough money my friend.";
+	mes "Find some so we can continue with the operation.";
+	mes "I will wait here.";
+	close;
+
+CD_no:
+	mes @CDname$;
+	mes "Well, I thought you would love to try it being different.";
+	mes "When you change your mind, come back here.";
+	mes "I'll be waiting here for you.";
+	close;
+
+OnInit:
+	waitingroom "Sex Change!",0;
+	end;
+
+}

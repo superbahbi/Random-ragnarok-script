@@ -1,0 +1,31 @@
+prontera,140,230,5	script	TCG Trader	62,{
+	mes "[Maila]";
+	mes "Im the TCG Trader here in town.";
+	mes "I can allow you to exchange your Platinum into useful TCG, which you can use to make trades between players, or just save them";
+	next;
+	mes "[Maila]";
+	mes "TCG Card worth 3 Platinum Coins.";
+	next;
+	mes "[Maila]";
+	mes "What do you want to do then?";
+	Menu "Platinum Coin to TCG Card",TCGT,"Nevermind",No;
+TCGT:
+	if (countitem(677) < 3) goto L_noItems;
+		delitem 677,3;
+		getitem 7227,1;
+		close;
+
+L_noItems:
+	mes "Hmmm You dont have Platinum coins needed to continue the Trading.";
+	close;
+
+No:
+	mes "[TCG Trader]";
+	mes "Comeback at anytime.";
+	mes "Dont forget to Vote CovenRO.";
+	close;
+
+OnInit:
+	waitingroom "TCG TRADER.!",0;
+	end;
+}

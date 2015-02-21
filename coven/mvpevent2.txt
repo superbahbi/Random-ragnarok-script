@@ -1,149 +1,81 @@
 -	script	mvpevent	-1,{
-OnHour01:
-initnpctimer;
-	switch(rand(1,3)) {
+	
+	OnWhisperGlobal:
+	
+	if( getgmlevel() <= 80 ) end;
+	if (agitcheck() || agitcheck2()){
+		mes "A war is currently in progress";
+		close;
+	}
+	mes "Do you want to start Monster Invasion?";
+	switch(select("Yes:No")){
 		case 1:
-			announce "Guard : The evil monsters are about to attack the southern part of prontera. Were going to need all the help that we can have until we finished the preparations for megadoomer. Time limit: 15 Minutes.",0;
-			monster "prt_fild08.gat",0,0,"MVP",1038,2;
-			monster "prt_fild08.gat",0,0,"MVP",1039,2;
-			monster "prt_fild08.gat",0,0,"MVP",1046,2;
-			monster "prt_fild08.gat",0,0,"MVP",1059,2;
-			monster "prt_fild08.gat",0,0,"MVP",1086,2;
-			monster "prt_fild08.gat",0,0,"MVP",1087,2;
-			monster "prt_fild08.gat",0,0,"MVP",1096,2;
-			monster "prt_fild08.gat",0,0,"MVP",1115,2;
-			monster "prt_fild08.gat",0,0,"MVP",1157,2;
-			monster "prt_fild08.gat",0,0,"MVP",1159,2;
-			monster "prt_fild08.gat",0,0,"MVP",1190,2;
-			monster "prt_fild08.gat",0,0,"MVP",1251,2;
-			monster "prt_fild08.gat",0,0,"MVP",1272,2;
-			monster "prt_fild08.gat",0,0,"MVP",1252,2;
-			monster "prt_fild08.gat",0,0,"MVP",1312,2;
-			monster "prt_fild08.gat",0,0,"MVP",1373,2;
-			monster "prt_fild08.gat",0,0,"MVP",1388,2;
-			monster "prt_fild08.gat",0,0,"MVP",1389,2;
-			monster "prt_fild08.gat",0,0,"MVP",1418,2;
-			monster "prt_fild05.gat",0,0,"MVP",1492,2;
-			monster "prt_fild08.gat",0,0,"MVP",1511,2;
-			monster "prt_fild08.gat",0,0,"MVP",1582,2;
-			monster "prt_fild08.gat",0,0,"MVP",1583,2;
-			monster "prt_fild08.gat",0,0,"MVP",1623,2;
-			monster "prt_fild08.gat",0,0,"MVP",1630,2;
-			monster "prt_fild08.gat",0,0,"MVP",1685,2;
-			monster "prt_fild08.gat",0,0,"MVP",1734,2;
-			monster "prt_fild08.gat",0,0,"MVP",1768,2;
-			switch(rand(1,4)) {
-				case 1:
-					monster "prt_fild08.gat",0,0,"MVP",1751,1;
-					end;
-				case 2:
-					monster "prt_fild08.gat",0,0,"MVP",1751,2;
-					end;
-				case 3:
-					end;
-				case 4:
-					end;
-					}
-			end;
+		close2;
+		sleep2 1;
+		set $gm_event_num, $gm_event_num + 1;
+		goto L_startmvp;
 		case 2:
-			announce "Guard : The evil monsters are about to attack the easthern part of prontera. Were going to need all the help that we can have until we finished the preparations for megadoomer. Time limit: 15 Minutes.",0;
-			monster "prt_fild06.gat",0,0,"MVP",1038,2;
-			monster "prt_fild06.gat",0,0,"MVP",1039,2;
-			monster "prt_fild06.gat",0,0,"MVP",1046,2;
-			monster "prt_fild06.gat",0,0,"MVP",1059,2;
-			monster "prt_fild06.gat",0,0,"MVP",1086,2;
-			monster "prt_fild06.gat",0,0,"MVP",1087,2;
-			monster "prt_fild06.gat",0,0,"MVP",1096,2;
-			monster "prt_fild06.gat",0,0,"MVP",1115,2;
-			monster "prt_fild06.gat",0,0,"MVP",1157,2;
-			monster "prt_fild06.gat",0,0,"MVP",1159,2;
-			monster "prt_fild06.gat",0,0,"MVP",1190,2;
-			monster "prt_fild06.gat",0,0,"MVP",1251,2;
-			monster "prt_fild06.gat",0,0,"MVP",1272,2;
-			monster "prt_fild06.gat",0,0,"MVP",1252,2;
-			monster "prt_fild06.gat",0,0,"MVP",1312,2;
-			monster "prt_fild06.gat",0,0,"MVP",1373,2;
-			monster "prt_fild06.gat",0,0,"MVP",1388,2;
-			monster "prt_fild06.gat",0,0,"MVP",1389,2;
-			monster "prt_fild06.gat",0,0,"MVP",1418,2;
-			monster "prt_fild05.gat",0,0,"MVP",1492,2;
-			monster "prt_fild06.gat",0,0,"MVP",1511,2;
-			monster "prt_fild06.gat",0,0,"MVP",1582,2;
-			monster "prt_fild06.gat",0,0,"MVP",1583,2;
-			monster "prt_fild06.gat",0,0,"MVP",1623,2;
-			monster "prt_fild06.gat",0,0,"MVP",1630,2;
-			monster "prt_fild06.gat",0,0,"MVP",1685,2;
-			monster "prt_fild06.gat",0,0,"MVP",1734,2;
-			monster "prt_fild06.gat",0,0,"MVP",1768,2;
-			switch(rand(1,4)) {
-				case 1:
-					monster "prt_fild06.gat",0,0,"MVP",1751,1;
-					end;
-				case 2:
-					monster "prt_fild06.gat",0,0,"MVP",1751,2;
-					end;
-				case 3:
-					end;
-				case 4:
-					end;
-					}			
-			
+		close;
+	}
+	//Edit time to be initiated on time of day (runs once a day only.)
+	//Default : 5pm server time.
+	OnClock0205:
+	goto L_startmvp;
+	L_startmvp:
+	set .@mvpcount, 0;
+	removemapflag "payon",mf_noskill;
+	removemapflag "payon",mf_noteleport;
+	initnpctimer;
+			set .@biolabshuffle, rand(1646,1651);
+			announce "[ Monster Invasion ] : The vile monsters has launched a full-scale assault against Payon. We beckon all warriors to take up their stand and fight!",0;
+			//Add monsters if needed.
+			monster "payon",0,0,"MVP",1644,30,"mvpevent::OnMVPDeath";
+			monster "payon",0,0,"MVP",1645,20,"mvpevent::OnMVPDeath";
+			monster "payon",178,308,"MVP",1650,15,"mvpevent::OnMVPDeath";
+			monster "payon",178,308,"MVP",1751,5,"mvpevent::OnMVPDeath";
+			monster "payon",0,0,"MVP",.@biolabshuffle,5,"mvpevent::OnMVPDeath";
 			end;
-		case 3:
-			announce "Guard : The evil monsters are about to attack thew western part of prontera. Were going to need all the help that we can have until we finished the preparations for megadoomer. Time limit: 15 Minutes.",0;
-			monster "prt_fild05.gat",0,0,"MVP",1038,2;
-			monster "prt_fild05.gat",0,0,"MVP",1039,2;
-			monster "prt_fild05.gat",0,0,"MVP",1046,2;
-			monster "prt_fild05.gat",0,0,"MVP",1059,2;
-			monster "prt_fild05.gat",0,0,"MVP",1086,2;
-			monster "prt_fild05.gat",0,0,"MVP",1087,2;
-			monster "prt_fild05.gat",0,0,"MVP",1096,2;
-			monster "prt_fild05.gat",0,0,"MVP",1115,2;
-			monster "prt_fild05.gat",0,0,"MVP",1157,2;
-			monster "prt_fild05.gat",0,0,"MVP",1159,2;
-			monster "prt_fild05.gat",0,0,"MVP",1190,2;
-			monster "prt_fild05.gat",0,0,"MVP",1251,2;
-			monster "prt_fild05.gat",0,0,"MVP",1272,2;
-			monster "prt_fild05.gat",0,0,"MVP",1252,2;
-			monster "prt_fild05.gat",0,0,"MVP",1312,2;
-			monster "prt_fild05.gat",0,0,"MVP",1373,2;
-			monster "prt_fild05.gat",0,0,"MVP",1388,2;
-			monster "prt_fild05.gat",0,0,"MVP",1389,2;
-			monster "prt_fild05.gat",0,0,"MVP",1418,2;
-			monster "prt_fild05.gat",0,0,"MVP",1492,2;
-			monster "prt_fild05.gat",0,0,"MVP",1511,2;
-			monster "prt_fild05.gat",0,0,"MVP",1582,2;
-			monster "prt_fild05.gat",0,0,"MVP",1583,2;
-			monster "prt_fild05.gat",0,0,"MVP",1623,2;
-			monster "prt_fild05.gat",0,0,"MVP",1630,2;
-			monster "prt_fild05.gat",0,0,"MVP",1685,2;
-			monster "prt_fild05.gat",0,0,"MVP",1734,2;
-			monster "prt_fild05.gat",0,0,"MVP",1768,2;
-			switch(rand(1,4)) {
-				case 1:
-					monster "prt_fild05.gat",0,0,"MVP",1751,1;
-					end;
-				case 2:
-					monster "prt_fild05.gat",0,0,"MVP",1751,2;
-					end;
-				case 3:
-					end;
-				case 4:
-					end;
-					}		
-			
-			end;
-	}		
 
-OnTimer600000:
-announce "Guard: Hold on brave warriors. 5 minutes left till we launch the megadoomer.",0;
+			OnTimer180000:
+			set .@biolabshuffle, rand(1646,1651);
+			announce "[ Monster Invasion ] : Another group of monsters has appeared!",bc_map|bc_blue;
+			monster "payon",0,0,"MVP",1644,30,"mvpevent::OnMVPDeath";
+			monster "payon",0,0,"MVP",1645,20,"mvpevent::OnMVPDeath";
+			monster "payon",0,0,"MVP",1650,10,"mvpevent::OnMVPDeath";
+			monster "payon",0,0,"MVP",1648,1,"mvpevent::OnMVPDeath";
+			monster "payon",0,0,"MVP",1649,5,"mvpevent::OnMVPDeath";
+			monster "payon",0,0,"MVP",.@biolabshuffle,5,"mvpevent::OnMVPDeath";
+			end;
+
+			OnTimer360000:
+			set .@biolabshuffle, rand(1646,1651);
+			announce "[ Monster Invasion ] : The final legion of monsters has appeared! Summon all your strength and exterminate them all!",bc_map|bc_blue;
+			monster "payon",0,0,"MVP",1650,10,"mvpevent::OnMVPDeath";
+			monster "payon",178,308,"MVP",1648,3,"mvpevent::OnMVPDeath";
+			monster "payon",0,0,"MVP",.@biolabshuffle,5,"mvpevent::OnMVPDeath";
+			monster "payon",0,0,"MVP",1751,4,"mvpevent::OnMVPDeath";
+			monster "payon",0,0,"MVP",1751,3,"mvpevent::OnMVPDeath";
+			stopnpctimer;
+			
+			
+
+
+OnMVPDeath:
+set .@mvpcount, mobcount("payon","mvpevent::OnMVPDeath");
+if(.@mvpcount == 0){
+setmapflag "payon",mf_noskill;
+setmapflag "payon",mf_noteleport;
+end;
+}
+else {
+set .@mvpcount, .@mvpcount-1;
+	end;
+	}
 end;
 
-OnTimer900000:
-stopnpctimer;
-announce "Guard: Thank you for your help brave warriors. We've successfully defended prontera, but those evil monsters may come back at anytime. We would really appreciate it if you guys could give us a hand whenever they dared to attack our dearest city again, with the power of the megadoomer and your help, there's no doubt that we can set doom upon the filthy heads of those doomed monsters.",0;
-killmonsterall "prt_fild05";
-killmonsterall "prt_fild06";
-killmonsterall "prt_fild08";
-end;
+OnInit:
+	setmapflag "payon",mf_noskill;
+	setmapflag "payon",mf_noteleport;
+	setmapflag "payon",mf_nomemo;
+	end;	
 }

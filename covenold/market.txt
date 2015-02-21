@@ -1,0 +1,37 @@
+//===== eAthena Script =======================================
+//= Market Place
+//===== By ===================================================
+//= Lupus
+//===== Version ==============================================
+//= 1.1
+//===== Compatible With ======================================
+//= eAthena 5760+
+//===== Description ==========================================
+//= This script should move vending crowds from Prontera
+//= streets to a suitable market place. Save your traffic 8)
+//===== Comments =============================================
+//=1.0 unknown
+//=1.1 Optimized it, Removed labels. [Spre]
+//============================================================
+ 
+prontera,155,183,4	script	Maller	478,{
+	mes"[Maller]";
+	mes"Admin's order: ^FF0000Move all the private shops to a special Market Place^000000.";
+	next;
+		if (select("Yes Please:No") == 2) {
+		close;
+OnInit:
+	waitingroom "Maller!",0;
+	end;
+	}
+	// I didn't see the need to check and show venders.... Since it didnt even work
+	warp "turbo_room",100,100;
+	end;
+}
+
+//Market Place settings
+turbo_room	mapflag	noteleport
+turbo_room	mapflag	nomemo
+turbo_room	mapflag	nobranch
+
+

@@ -1,0 +1,559 @@
+ //===== eAthena Script =======================================
+//= <Food For The Gods>
+//===== By: ==================================================
+//= <CovenRO Team>
+//===== Current Version: =====================================
+//= <1.1?>
+//===== Compatible With: =====================================
+//= <Any>
+//===== Description: =========================================
+//= <WOE:SE out of the known castles?>
+//===== Additional Comments: =================================
+//= Edit HP of Barricade and Guardian stones
+//= Barricade ID : 1905
+//= Guardian Stone : 1907 and 1908
+//= Add Highjump skill and Tarot card of Fate skill to skill_nocast_db.txt
+//= 426,512 or 426,4 (High jump ID and bitmask) under Sealed shrine
+//= 489,512 or 489,512 (Tarot Card of Fate ID and bitmask)
+//============================================================
+//
+prontera,164,165,4	script	Tingwei#Main	967,{
+
+set .npcname$, "[Tingwei]";
+set .mapname$, "2@cata";
+
+//===============================================================
+//------<GM Menu>------------------------------------------------
+//===============================================================
+
+	if ( getgmlevel() >= 70 )
+	{
+		mes .npcname$;
+		mes "What is your command?";
+		next;
+		switch(select("Start Event:Player Panel:Exit")){
+		case 1:
+			if ( $status == 9 )
+			{
+				mes .npcname$;
+				mes "Event has already been started";
+				close;
+			}
+			else 
+			{
+				mes .npcname$;
+				mes "Event initiated.";
+				close2;
+				set $status, 9;
+				set .allow, 1;
+				disablenpc "Tingwei#Winner";
+				goto OnStart;
+			}
+		case 2:
+			callsub pmenu;
+		case 3:
+			callsub stop;
+			break;
+		
+		}
+	}
+
+//===============================================================
+//--------Player Menu--------------------------------------------
+//===============================================================
+
+else 
+{
+	
+pmenu:
+
+	if ( $status == 0 ) 
+	{
+		mes .npcname$;
+		mes "Sorry, the event is not active as of now.";
+		close;
+	}
+
+	else 
+	{
+		mes .npcname$;
+		mes "Mechanics : ";
+		mes "Participants must have a party consisting of 5 members,";
+		mes "Each of them must be in a guild as well.";
+		next;
+		mes .npcname$;
+		mes "The entire event map shall be protected by Guardians.";
+		mes "There are \"4 Guardian Stones\" on the 4 corners of the map.";
+		next;
+		mes .npcname$;
+		mes "These must be destroyed before the barricades can be breached.";
+		mes "After the guardian stones and barricades are destroyed,";
+		mes "a group of Guardians will be summoned as a defensive measure.";
+		next;
+		mes .npcname$;
+		mes "You can now enter the Emperium room and break the Emperium.";
+		mes "The party that deals the last hit to the Emperium wins!";
+		next;
+		mes .npcname$;
+		mes "Prize : 1 TCG per member of the winning party.";
+		mes " ";
+		if (.allow == 1)
+		mes "Event is now ^ff0000Open^000000.";
+		else 
+		mes "Event is now ^ff0000Closed^000000.";
+		next;
+		switch(select("Join Event:Exit"))
+		{
+		case 1:
+			if( .allow == 1 )
+			callsub verify;
+	
+		
+			else
+			{
+			mes .npcname$;
+			mes "The event is now closed. Please come back next time.";
+			close;
+			}
+			
+		case 2:
+			callsub stop;
+			
+			
+		}
+verify:
+	getpartymember(getcharid(1));
+	set @partymembercount, $@partymembercount;
+	if( (getcharid(1) == 0 ) || ( getcharid(2) == 0 ) || @partymembercount < 5 )
+	{
+		mes .npcname$;
+		mes "You must have a party and guild to join this event.";
+		close;
+	}
+	else 
+	{ 
+		set .AID, getcharid(3);
+		close2;
+		attachrid(.AID);
+		set .mapname$, "2@cata";
+		savepoint "prontera",156,191;
+		set $pid, getcharid(1);
+		set .mapname$, "2@cata";
+		switch(rand(4))
+		{
+		case 0:	
+			warpparty .mapname$,80,140,$pid,"prontera";	end;
+				
+		case 1:	
+		     warpparty .mapname$,115,65,$pid,"prontera";	end;
+				
+		case 2:	
+			warpparty .mapname$,80,30,$pid,"prontera";	end;
+				
+		case 3:	
+			warpparty .mapname$,44,66,$pid,"prontera";	end;		
+		}
+	}
+	
+stop:
+
+	next;
+	mes .npcname$;
+	mes "Farewell.";
+	close;
+
+//===============================================================
+//----------- Countdown (Denies entry till countdown ends)-------
+//===============================================================
+
+OnStart:
+
+	killmonsterall .mapname$;
+	donpcevent "Tingwei#Event::OnStart";
+	initnpctimer;
+	announce "[ Food For The Gods ] : The event will start in 3 minutes. You must be in a guild and party to join this event.",0;
+	end;
+	OnTimer120000:
+	announce "[ Food For The Gods ] : The event will start in 1 minute.",0;
+	end;
+	OnTimer150000:
+	announce "[ Food For The Gods ] : The event will start in 30 seconds.",0;
+	end;
+	OnTimer180000:
+	announce "[ Food For The Gods ] : 10",0;
+	end;
+	OnTimer181000:
+	announce "[ Food For The Gods ] : 9",0;
+	end;
+	OnTimer182000:
+	announce "[ Food For The Gods ] : 8",0;
+	end;
+	OnTimer183000:
+	announce "[ Food For The Gods ] : 7",0;
+	end;
+	OnTimer184000:
+	announce "[ Food For The Gods ] : 6",0;
+	end;
+	OnTimer185000:
+	announce "[ Food For The Gods ] : 5",0;
+	end;
+	OnTimer186000:
+	announce "[ Food For The Gods ] : 4",0;
+	end;
+	OnTimer187000:
+	announce "[ Food For The Gods ] : 3",0;
+	end;
+	OnTimer188000:
+	announce "[ Food For The Gods ] : 2",0;
+	end;
+	OnTimer189000:
+	announce "[ Food For The Gods ] : 1",0;
+	end;
+	OnTimer195000:
+	announce "Food For The Gods has begun!",0;
+	stopnpctimer;
+	set .allow, 0;
+	sleep 1000;
+	end;
+	}
+}	
+
+//===============================================================
+//------<Default Config>-----------------------------------------
+//===============================================================
+
+OnInIt:
+
+	set $status,0;
+	disablenpc "Tingwei#Winner";
+	set .allow, 0;
+	donpcevent "Barricade#westbarricade::OnReset";
+	donpcevent "Barricade#eastbarricade::OnReset";
+	donpcevent "Barricade#southbarricade::OnReset";
+	end;
+}
+
+//===============================================================
+//------<Event Start>--------------------------------------------
+//===============================================================
+
+-	script	Tingwei#Event	-1,{
+
+OnStart:
+
+	set .mapname$, "2@cata";
+	set .gstonekilled, 0;
+	set .empdead, 0;
+	sleep 1000;
+	donpcevent "Barricade#westbarricade::OnStart";
+	donpcevent "Barricade#eastbarricade::OnStart";
+	donpcevent "Barricade#southbarricade::OnStart";
+	monster .mapname$,123,22,"Guardian Stone",1908,1,"Tingwei#Event::OnGstoneDead";
+	monster .mapname$,123,109,"Guardian Stone",1907,1,"Tingwei#Event::OnGstoneDead";
+	monster .mapname$,36,109,"Guardian Stone",1908,1,"Tingwei#Event::OnGstoneDead";
+	monster .mapname$,36,22,"Guardian Stone",1907,1,"Tingwei#Event::OnGstoneDead";
+	monster .mapname$,80,66,"Emperium",1288,1,"Tingwei#Event::OnEmpDead";
+	donpcevent "Tingwei#Event::OnCheckWinner";
+
+
+		monster .mapname$,0,0,"Guardian",1899,35;
+		monster .mapname$,0,0,"Guardian",1829,35;
+		monster .mapname$,0,0,"Guardian",1287,35;
+		monster .mapname$,0,0,"Guardian",1286,35;
+		monster .mapname$,0,0,"Guardian",1285,35;
+		monster .mapname$,0,0,"Guardian",1830,35;
+		monster .mapname$,0,0,"Guardian",1949,35;
+		monster .mapname$,0,0,"Guardian",1950,35;
+	
+		
+	sleep 90000;
+	mapannounce .mapname$,"Destroy all 4 Guardian Stones and defeat the Emperium to win this event. Good luck!",bc_blue|bc_map;
+	end;
+	
+OnGstoneDead:
+
+	set .gstonekilled, .gstonekilled+1;
+	if(.gstonekilled == 1)
+		
+		{
+		mapannounce .mapname$, .gstonekilled+" Guardian Stone has been destroyed!",bc_blue|bc_map;
+		end;
+		}
+		
+	mapannounce .mapname$, .gstonekilled+" Guardian Stones have been destroyed!",bc_blue|bc_map;
+		
+	if (.gstonekilled == 4)
+	{
+		donpcevent "Barricade#westbarricade::OnDisableFirstWall";
+		donpcevent "Barricade#eastbarricade::OnDisableFirstWall";
+		donpcevent "Barricade#southbarricade::OnDisableFirstWall";
+		mapannounce .mapname$,"All the Guardian stones have been destroyed.",bc_blue|bc_map;
+		sleep 3000;
+		mapannounce .mapname$,"Destroy the barricades to be able to invade the Emperium room.",bc_blue|bc_map;
+		end;
+	}
+	end;
+		
+OnEmpDead:
+
+	set .empdead, 1;
+	mapannounce "2@cata","The emperium has been destroyed.",bc_map|bc_woe,"0x00CCFF",FW_NORMAL,12;
+	set .PID, getcharid(1);
+	killmonsterall .mapname$;
+	sleep 2000;
+	announce getpartyname(.PID)+" party has won the Food for the Gods event!",0;
+	enablenpc "Tingwei#Winner";
+	donpcevent "Tingwei#Winner";
+	set $status,0;
+	end;
+	
+		
+OnCheckWinner:
+
+	while( $status == 9 )
+		
+	{
+		if( .empdead == 1 )
+			
+		{
+			
+			enablenpc "Tingwei#Winner";
+			donpcevent "Tingwei#Winner";
+			killmonsterall "2@cata";
+			set $status, 0;
+			end;
+		}
+		else {
+		sleep 1000;
+	}
+	end;
+}
+end;
+}		
+	
+	
+//===============================================================
+//------<West Barricade>-----------------------------------------
+//===============================================================
+-	script	Barricade#westbarricade	-1,{
+	
+OnStart:
+
+	set .mapname$, "2@cata";
+	set .westbarcount,8;
+	setwall .mapname$,54,61,12,0,0,"west1";
+	setwall .mapname$,55,60,12,0,0,"west2";
+	setwall .mapname$,57,62,8,0,0,"west3";
+	monster .mapname$,56,69," ",1905,1,"Barricade#westbarricade::OnBarrierDestroyed1";
+	monster .mapname$,56,68," ",1905,1,"Barricade#westbarricade::OnBarrierDestroyed1";
+	monster .mapname$,56,67," ",1905,1,"Barricade#westbarricade::OnBarrierDestroyed1";
+	monster .mapname$,56,66," ",1905,1,"Barricade#westbarricade::OnBarrierDestroyed1";
+	monster .mapname$,56,65," ",1905,1,"Barricade#westbarricade::OnBarrierDestroyed1";
+	monster .mapname$,56,64," ",1905,1,"Barricade#westbarricade::OnBarrierDestroyed1";
+	monster .mapname$,56,63," ",1905,1,"Barricade#westbarricade::OnBarrierDestroyed1";
+	monster .mapname$,56,62," ",1905,1,"Barricade#westbarricade::OnBarrierDestroyed1";
+	end;
+	
+OnDisableFirstWall:
+
+	delwall "west1";
+	delwall "west2";
+	end;
+	
+OnBarrierDestroyed1:
+
+	set .westbarcount, .westbarcount - 1;
+	if ( .westbarcount == 0 )
+	{
+		mapannounce .mapname$,"The West Fortress Gate is destroyed.",bc_map|bc_blue;
+		sleep 3000;
+		mapannounce .mapname$,"Security breached, summoning defense arsenals.",bc_map|bc_blue;
+		delwall "west3";
+		monster .mapname$,80,60,"Guardian",1899,5;
+		monster .mapname$,80,60,"Guardian",1829,5;
+		monster .mapname$,80,60,"Guardian",1287,5;
+		monster .mapname$,80,60,"Guardian",1286,5;
+		monster .mapname$,80,60,"Guardian",1285,5;
+		monster .mapname$,80,60,"Guardian",1830,5;
+		monster .mapname$,80,60,"Guardian",1949,5;
+		monster .mapname$,80,60,"Guardian",1950,5;
+		end;
+	}
+	end;
+	
+OnReset:
+
+	delwall "west1";
+	delwall "west2";
+	delwall "west3";
+	end;
+}
+
+//===============================================================
+//------<East Barricade>-----------------------------------------
+//===============================================================
+
+-	script	Barricade#eastbarricade	-1,{
+
+OnStart:
+
+	set .mapname$, "2@cata";
+	set .eastbarcount,8;
+	setwall .mapname$,105,61,12,0,0,"east1";
+	setwall .mapname$,104,60,12,0,0,"east2";
+	setwall .mapname$,102,62,8,0,0,"east3";
+	monster .mapname$,103,69," ",1905,1,"Barricade#eastbarricade::OnBarrierDestroyed2";
+	monster .mapname$,103,68," ",1905,1,"Barricade#eastbarricade::OnBarrierDestroyed2";
+	monster .mapname$,103,67," ",1905,1,"Barricade#eastbarricade::OnBarrierDestroyed2";
+	monster .mapname$,103,66," ",1905,1,"Barricade#eastbarricade::OnBarrierDestroyed2";
+	monster .mapname$,103,65," ",1905,1,"Barricade#eastbarricade::OnBarrierDestroyed2";
+	monster .mapname$,103,64," ",1905,1,"Barricade#eastbarricade::OnBarrierDestroyed2";
+	monster .mapname$,103,63," ",1905,1,"Barricade#eastbarricade::OnBarrierDestroyed2";
+	monster .mapname$,103,62," ",1905,1,"Barricade#eastbarricade::OnBarrierDestroyed2";
+	end;
+	
+OnDisableFirstWall:
+
+	delwall "east1";
+	delwall "east2";
+	end;
+	
+OnBarrierDestroyed2:
+
+	set .eastbarcount, .eastbarcount - 1;
+	if ( .eastbarcount == 0 )
+	{
+		mapannounce .mapname$,"The East Fortress Gate is destroyed.",bc_map|bc_blue;
+		sleep 3000;
+		mapannounce .mapname$,"Security breached, summoning defense arsenals.",bc_map|bc_blue;
+		delwall "east3";
+		monster .mapname$,80,60,"Guardian",1899,10;
+		monster .mapname$,80,60,"Guardian",1829,10;
+		monster .mapname$,80,60,"Guardian",1287,10;
+		monster .mapname$,80,60,"Guardian",1286,10;
+		monster .mapname$,80,60,"Guardian",1285,10;
+		monster .mapname$,80,60,"Guardian",1830,10;
+		monster .mapname$,80,60,"Guardian",1949,10;
+		monster .mapname$,80,60,"Guardian",1950,10;
+		end;
+	}
+	end;
+	
+OnReset:
+
+	delwall "east1";
+	delwall "east2";
+	delwall "east3";
+	end;
+}
+
+//===============================================================
+//------<South Barricade>----------------------------------------
+//===============================================================	
+		
+-	script	Barricade#southbarricade	-1,{
+
+OnStart:
+
+	set .mapname$, "2@cata";
+	set .southbarcount,8;	
+	setwall .mapname$,84,40,12,2,0,"south1";
+	setwall .mapname$,85,41,12,2,0,"south2";
+	setwall .mapname$,83,43,8,2,0,"south3";
+	monster .mapname$,83,42," ",1905,1,"Barricade#southbarricade::OnBarrierDestroyed3";
+	monster .mapname$,82,42," ",1905,1,"Barricade#southbarricade::OnBarrierDestroyed3";
+	monster .mapname$,81,42," ",1905,1,"Barricade#southbarricade::OnBarrierDestroyed3";
+	monster .mapname$,80,42," ",1905,1,"Barricade#southbarricade::OnBarrierDestroyed3";
+	monster .mapname$,79,42," ",1905,1,"Barricade#southbarricade::OnBarrierDestroyed3";
+	monster .mapname$,78,42," ",1905,1,"Barricade#southbarricade::OnBarrierDestroyed3";
+	monster .mapname$,77,42," ",1905,1,"Barricade#southbarricade::OnBarrierDestroyed3";
+	monster .mapname$,76,42," ",1905,1,"Barricade#southbarricade::OnBarrierDestroyed3";
+	end;
+	
+OnDisableFirstWall:
+
+	delwall "south1";
+	delwall "south2";
+	end;
+	
+OnBarrierDestroyed3:
+
+	set .southbarcount, .southbarcount - 1;
+	if ( .southbarcount == 0 )
+	{
+		mapannounce .mapname$,"The South Fortress Gate is destroyed.",bc_map|bc_blue;
+		sleep 3000;
+		mapannounce .mapname$,"Security breached, summoning defense arsenals.",bc_map|bc_blue;
+		delwall "south3";
+		monster .mapname$,80,60,"Guardian",1899,10;
+		monster .mapname$,80,60,"Guardian",1829,10;
+		monster .mapname$,80,60,"Guardian",1287,10;
+		monster .mapname$,80,60,"Guardian",1286,10;
+		monster .mapname$,80,60,"Guardian",1285,10;
+		monster .mapname$,80,60,"Guardian",1830,10;
+		monster .mapname$,80,60,"Guardian",1949,10;
+		monster .mapname$,80,60,"Guardian",1950,10;
+		end;
+	}
+	end;
+	
+OnReset:
+
+	delwall "south1";
+	delwall "south2";
+	delwall "south3";
+	end;
+}
+	
+//===============================================================
+//------<Prize Giver>--------------------------------------------
+//===============================================================
+
+2@cata,80,83,4	script	Tingwei#Winner	904,{
+	
+
+	set .winparty, getvariableofnpc(.PID,"Tingwei#Event");
+	mapannounce .mapname$,"Event is now done. Please talk to the NPC to claim your prize and warp out. Thank you for joining.",bc_map|bc_blue;
+	if( playerattached() )
+	{
+		if (getcharid(1) == .winparty)
+		{
+			mes "[Prize Giver]";
+			getitem 7227,1;
+			mes "Congratulations!";
+			close2;
+			warp "prontera",156,191;
+			end;
+		}
+		else
+		
+			{
+			mes "[Prize Giver]";
+			mes "You are not the winning party.";
+			close2;
+			warp "prontera",156,191;
+			end;
+			}
+		end;
+		}
+	
+	end;
+	}
+
+
+//===============================================================
+//------<Mapflags>-----------------------------------------------
+//===============================================================
+
+2@cata	mapflag	noteleport
+2@cata	mapflag	nobranch
+2@cata	mapflag	nosave
+2@cata	mapflag	nomemo
+2@cata	mapflag	nowarp
+2@cata	mapflag	nowarpto
+2@cata	mapflag	noreturn
+2@cata	mapflag	nodrop
+2@cata	mapflag	gvg
+2@cata	mapflag	partylock
+2@cata	mapflag	noloot
+2@cata	mapflag	noexp

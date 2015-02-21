@@ -3,16 +3,10 @@
 //-----------------------------------------------//
 //-----------------------------------------------//
 //----------JaeRO - Home of Phoenix Pride--------//
-//-----------------------------------------------//
-
--	script	TOF#disable	-1,{
-
-OnInit:
-disablenpc "TOF Warper";
-end;
-}
+//-----------------------------------------------//@
 
 poring_c02,216,225,5	script	TOF Event	952,{
+//-	script	TOF Event#Tof::Tof	-1,{
 
 	if (getgmlevel() >= 20) goto TOF_Admin;
 	if ($@TOF_Ongoing == 1) {
@@ -58,10 +52,10 @@ TOF_Admin:
 		next;
 		goto TOF_Admin;
 	warp_TOF:
-		next;
-		mes "[Manager]";
-		mes "I will now warp you to the TOF Event map.";
-		next;
+		//next;
+		//mes "[Manager]";
+		//mes "I will now warp you to the TOF Event map.";
+		//next;
 		warp "quiz_02",350,368;
 		end;
 	endTOF:
@@ -74,6 +68,7 @@ TOF_Admin:
 		mes "Resetting Now.";
 		close2;
 		set $@TOF_Ongoing,0;
+		set $state, 0;
 		end;
 
 
@@ -124,7 +119,7 @@ TOF_Staff:
 		close2;
 		set $@TOF_Ongoing,0;
 		killmonsterall "guild_vs2";
-		disablenpc "Summoner";
+		//disablenpc "Summoner";
 		end;
 started_staff:
 	mes "[TOF Event]";
@@ -135,11 +130,11 @@ startTOFevent:
 announce "TOF Warper: Get Ready for True or False Event.",0;
 sleep2 10000;
 announce "TOF Warper: Warps opening in 1 minute..",0;
-initnpctimer;
+initnpctimer "Tof";
 end;
 OnTimer60000:
 announce "TOF Warper: Closing warps in 60 Seconds",0;
-enablenpc "TOF Warper";
+set $state, 4;
 end;
 
 OnTimer90000:
@@ -176,17 +171,10 @@ announce "TOF Warper: Warps are now closed.",0;
 end;
 
 OnTimer121000:
-disablenpc "TOF Warper";
+set $state, 0;
 end;
 }
-//---------TOF Registration---------------
-prontera,155,159,4	script	TOF Warper	952,{
-	mes "[Manager]";
-	mes "I will now warp you to the TOF Event map.";
-	next;
-	warp "quiz_02",350,368;
-	end;
-}
+
 //----------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------True or False Event-----------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------

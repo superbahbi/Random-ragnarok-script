@@ -1,0 +1,2202 @@
+// -o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o- \\
+//                          Bot Killer System #1                                 \\
+//              (c) 2006-2008, by Myzter (Raff - Pow4Ever.com)                   \\
+//                       special version for eAthena                             \\
+//                            Open Release 5.2                                   \\
+//                    Multi-Language Support - SQL ONLY                          \\
+// -o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o- \\
+// -o-                           INTRODUCTION                                -o- \\
+// -o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o- \\
+// BotKiller #1 stop Auto Bots asking random numbers / letters hidden with       \\
+// several methods, all of them very difficult to answer from a Bot Program.     \\
+// A player that fail the interrogatory is transported to the jailed for a while \\
+// and banned if fail 3 or more times.                                           \\
+// -o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o- \\
+// -o-                             LANGUAGES                                 -o- \\
+// -o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o- \\
+//  1. EspaÃ±ol:           by Myzter                 (dialogs/numbers/algorithm)  \\
+//  4. English:           by Myzter                 (dialogs/numbers/algorithm)  \\
+// -o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o- \\
+// -o-                        OPTIONAL LANGUAGE PACKS                        -o- \\
+// -o-           http://www.pow4ever.com/downloads2/botkiller/lang           -0- \\
+// -o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o- \\
+//  2. PortuguÃªs:         by Soul of Linkers        (dialogs/numbers)            \\
+//  3. FranÃ§ais:          by Marka / Darkalia       (dialogs/numbers)            \\
+//  5. Italiano:          by Au{R}oN                (dialogs/numbers)            \\
+//  6. Indonesian:        by Gilakunters            (dialogs/numbers)            \\
+//  7. German:            by RainDance              (dialogs/numbers)            \\
+//  8. Tagalog:           by BlazeDragoon           (dialogs/numbers)            \\
+//  9. Nederlands         by Wausser/rampie/Niktout (dialogs/numbers)            \\
+// 10. Bahasa Melayu      by Zepx         	    (dialogs/numbers)            \\
+//                                                                               \\
+//  If you create your own Lang Pack (or update a existent), SHARE IT ^__^!      \\
+//                                                                               \\
+// -o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o- \\
+// -o-                          INSTALLATION                                 -o- \\
+// -o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o- \\
+//   1. Copy this script file in your "custom" folder (inside NPC folder)        \\
+//   2. Update your "npc\scripts_custom.conf" adding the next line:              \\
+//      npc: npc/[your custom folder]/botkiller1.txt                             \\
+//   3. Download the loadmap mapflags file from:                                 \\
+//      http://www.pow4ever.com/downloads2/loadevent.txt                         \\
+//   4. Copy "loadevent.txt" into your "conf\mapflag" folder                     \\
+//   5. Update your "npc\scripts_mapflags.conf" adding this line:                \\
+//      conf/mapflag/loadevent.txt                                               \\
+//   6. To install more languages, download the query files and use any standard \\
+//      MySQL Query Tool to import into your Ragnarok database                   \\
+//                                                                               \\
+//   * To change the default language, set 1 to the desired "deflang" column in  \\
+//     bk_lang table, set 0 to the older one.                                    \\
+//                                                                               \\
+//   * To disable a language, just add 1 in the disable column (bk_lang table)   \\
+//                                                                               \\
+// -o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o- \\
+// -o-                         IMPLEMENTATIONS                               -o- \\
+// -o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o- \\
+//                                                                               \\
+// * To add BotKiller in NPCs, add this command in the top of any NPC            \\
+//	callfunc "BotKillerSys1";                                                \\
+//                                                                               \\
+// * To use BotKiller in usable items (like Potions) add this item_script:       \\
+//   { callfunc "xSet","BKWarnTime",3; callfunc "SecureItem","YourFunction"; }   \\
+//                                                                               \\
+//      "BKWarnTime" is the countdown after respond (seconds)                    \\
+//	"YourFunction" is the function name with the effects of that item.       \\
+//   Note: The frozen/hide status apply only when BKWarnTime=0                   \\
+//                                                                               \\
+// * To add BK in specific monsters, use the next label:                         \\
+//  map,0,0,0,0{tab}monster{tab}--ja--{tab}1002,1,0,0,BotKillerFnc1::OnStart     \\
+//      {tab} = tab separator                                                    \\
+//                                                                               \\
+// Defaut: all monsters can trigger a BK Window with probabilities of 1 in 100   \\
+// your players will be protected by the minimum time defined in "$@BK_IVM"      \\
+//                                                                               \\
+// * To manually use BK, whisp the suspected player name to "NPC:Police"         \\
+//                                                                               \\
+//   Note: If player name start with "/" add ?# before the player name:          \\
+//   NPC:Police      ?#/mike                                                     \\
+//                                                                               \\
+// -o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o- \\
+// -o-                           VERSION HISTORY                             -o- \\
+// -o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o- \\
+// 1.0: First open version.                                                      \\
+// 1.1: Added timer to give a max time to answer. (norbert request)              \\
+//      Changed command "jailfor" to "jail" (use Guards to exit from the Jail)   \\
+// 1.2: Protection (ChaseWalk) while BK is active (SpinCobra issue)              \\
+// 1.3: Added Manual Activation on suspect users  (Naked Jehuty request)         \\
+//        Use: whisper the username to "NPC:Police"                              \\
+// 1.4: Fix RID check in Manual Activation                                       \\
+//      Fix Timeout on NPC BK (thanks Taikumi for report)                        \\
+//      Add check when no function is given to Fnc BK                            \\
+// 1.5: Added missing functions xSet & xGet                                      \\
+//      Added realtime notifications for GMs using manual BK on users            \\
+//      Added aditional validation for triple input error + timeout issue        \\
+// 1.6: No more timers, now i'm using a better method to validate timeout        \\
+//      BK inform to players who is sending the BK system (manual mode)          \\
+// 2.0: BIG CHANGES: Lots of new configurations and fixes...                     \\
+//      Support to activate BK on all monsters of your server without labeling   \\
+//        custom probabilities (default 1 in 800 monsters aprox.)                \\
+//      Added setoption command to protect users while answer the questions      \\
+// 2.1: Multi-language: English / Spanish / Etc. now in one script (Taikumi req) \\
+//      Fixed HP/SP overflow exploit when players give HP+1, SP+1 after use BK   \\
+//      Allow more customizations (BK on ChangeMap, Cutin)                       \\
+//      Lots of optimizations                                                    \\
+// 2.2: Added NPC to set the BK Language (Prontera 136,171)                      \\
+//      Added "BanAfter" to convert Jail into Ban (.~Abism0~. request)           \\
+//      Added $@BK_CommonLvl to set blvl to use whisp mode (don't apply to GMs)  \\
+// 2.3: Fixed ChangeMap Event not reading current state of BK                    \\
+// 2.4: Added last time view check on MobKillEvent (Fix $@BK_IVM)                \\
+// 2.5: Added Brasilian Portuguese support (Translation by Soul of Linkers)      \\
+// 2.6: Added French support (Translation by Marka)                              \\
+//      Added Default Language Selection                                         \\
+//      Unhide player immediately after a right answer                           \\
+// 2.7: Default min. level to use BK now is 0 (everyone)                         \\
+//	Normal users can use BK only on users in the same map                    \\
+//      Normal users can use BK only in maps with monsters                       \\
+//      Fixed small bugs on some border conditions                               \\
+// 2.8: Added Bot/Hunter Ranking (eAthena Sql) (Arngrim / ~Pandora~ suggestion)  \\
+//      * To enable this function, read the global settings                      \\
+// 2.9: Added Min Mobs on Map to allow normal users to send BK                   \\
+//      Title window improved to protect innocent players (Chat/Vending)         \\
+// 3.0: Fixed Ranking System - New table and querys to gain performance          \\
+//      Fixed a top message displayed every time you make a wrong answer         \\
+// 3.1: Fixed Ranking System - Now sorting correctly (.~Abism0~. report)         \\
+// 3.2: Added BKMinGMLVL to set the min. GM Level. (biali suggestion)            \\
+// 3.3: Added BKUseNewATComm to set the compatibility with new atcommand syntax  \\
+// 3.4: Added Italian support (Translation by Au{R}oN)                           \\
+// 3.5: Added Indonesian support (Translation by Gilakunters)                    \\
+// 3.6: Important: Fixed continuation after logoff/logon (zephyrus_cr report)    \\
+//      Added the seconds in the global message timeout to detect "night boters" \\
+// 3.7: Added support to playernames with "/" like /mike\ (Arngrim request)      \\
+// 3.8: Added German support (Translation by RainDance)                          \\
+//      Added Noise Generator - Kick in the ass for advanced boters              \\
+// 3.9: Added Tagalog support (Translation by BlazeDragoon)                      \\
+//      All number names changed to lowercase (more secure)                      \\
+// 4.0: Added compatibility with Marka functions "checkvending/checkchatting"    \\
+//      For more information, read the next topic:                               \\
+//      http://www.eathena.ws/board/index.php?showtopic=126051                   \\
+// 4.01:Added petrify condition while answer BK (biali suggestion)               \\
+//      Fixed BK console warnings when players with Clones answer BK             \\
+//      New Ban System for big timeouts (bots) - See the comments to understand  \\
+//      Small fixes in Brasilian Language (biali suggestion)                     \\
+//      Added option to scramble the order of the question                       \\
+// 4.02:Fixed the messages to don't make noise in counters                       \\
+//      Fixed counter starting in 2                                              \\
+//      Added duplicates of Language Selector NPC (by BlazeDragoon)              \\
+//      Removed markers before number names, don't needed                        \\
+// 4.1: $@BK_IV was separated in 2 parameters, $@BK_IVA and $@BK_IVM, to manage  \\
+//       different time controls for manual and automatic activation of BK.      \\
+//      The interrogation uses the default language to send public and internal  \\
+//       bot hunter messages.                                                    \\
+//      BotKillerFnc1 was merged in BotKillerSys1, no more duplicated code.      \\
+//      Multilanguage system now is capable to use the default language if the   \\
+//      selected language is not full translated.                                \\
+//      Updated functions checkoption / setoption.                               \\
+//      Added report capabilities to the language NPC (eA request method)        \\
+//      Optimization of the debug numbers function.                              \\
+//      Marka functions checkvending/checkchatting activated by default          \\
+//      Using the new ATCommand by default.                                      \\
+//      Added $@BK_MsgGlobal to show or hide public messages from BK.            \\
+//      Merged the language NPC array with the main language array.              \\
+//      Optimized the positive / negative answers discount system.               \\
+//      Previous jails increase the probabilities to show BK when kill monsters  \\
+//      Added Nederlands support by Wausser/rampie/Niktout.                      \\
+//      Started Russian support, disabled by default because there are problems  \\
+//      using unicode characters.                                                \\
+// 4.2: No more show min. / sec. - now all is well formated (hh:mm / hh:mm:ss)   \\
+//      Removed static color array, using the new random color generator (nice)  \\
+//      When $@BK_MsgGlobal=0, show announces to the player only                 \\
+//      Adjustements to the new "restrictions" to call functions (Â¬Â¬)            \\
+//      More optimizations (number management and display)                       \\
+// 4.21:Fixed label name in the Report system when you select "Exit" option      \\
+// 4.22:Mob Kill Trigger probabilities adjustement - stronger (Supernova report) \\
+//      Completed - Send report to online GM's when $@BK_MsgGlobal = 0           \\
+// 4.23:Fixed old "PCLoadMapEvent" to the new "OnPCLoadMapEvent" (Â¬Â¬)            \\
+//      Added Image Number Support, see $@BK_PlugIn parameter (HPe suggestion)   \\
+// 4.24:Added MiniMap Number Support, see $@BK_PlugIn parameter                  \\
+// 4.25:Fixed timer information                                                  \\
+//      Optimized way to show images and minimap numbers                         \\
+//      Characters in the same account are BK intependient                       \\
+//      Added $@BK_EnableSound to enable or disable alert sounds                 \\
+// 4.26:Added Random Methods to interrogate (kirlein suggestion)                 \\
+//      Disabled BK in the Jail Map                                              \\
+// 4.27:Added Warn Time (kirlein suggestion)                                     \\
+//      BK don't change status Frozen/Hide on NPCs (kirlein suggestion)          \\
+//      * Check the changes on Usable Item activation (top of the script)        \\
+// 4.28:Added Bahasa Melayu support (Translation by Zepx)                        \\
+//      Fixed language selection NPC                                             \\
+//      Improved Word Number Debug                                               \\
+//      Fixed permanent frost status after logout in middle of warn timer        \\
+// 4.29:Fixed: Hidden/Frost status is enabled always (Darkalia report)           \\
+//      Warn timer now in 0 sec. by default                                      \\
+// 4.30:Fixed: When a dialog doesn't exists in the user selected language BL try \\
+//             to translate to the server default language, if that language is  \\
+//             still broken, get the english translation. (Darkalia report)      \\
+//      French language updated by Darkalia                                      \\
+// ***************************************************************************** \\
+// 5.00:NEW VERSION - PLEASE BE CAREFULL, THIS VERSION IS ONLY FOR eAthena-SQL   \\
+//      * No more dialogs arrays for translations, now directly from MySQL       \\
+//      * Added several tables for languages and variable storage                \\
+//      * New algorithm: ASCII Numbers (Strong & User Friendly)                  \\
+//      * New Language Selection NPC (Optimized & User Friendly)                 \\
+//      * Real Time Language blocking (directly in the lang table)               \\
+//      * Language Dialogs now work on demand                                    \\
+//      * New Variable Storage System (no more char variables)                   \\
+// 5.01:Improved ASCII Method: anti-plugin (pichet02 report)                     \\
+//      Fixed: Warn counter after reload / warp                                  \\
+// 5.02:Fixed: Replace !1 with parameters before send the dialogs                \\
+//      Fixed: Parameter $@TK_TimeBtwRep not included in the configuration       \\
+//             * Minimum time before report another player using the Police NPC \\
+// 5.03:Restored previows P. Hide status if present before talk with BK (NoBuo)  \\
+//      Fixed: BK Jail/Ban people after reboot (Darkalia Report)                 \\
+//      Fixed: ASCII Method don't show some information (seconds/try's)          \\
+//      Optimized: xSet function uses MySQL only when the value is changed       \\
+// 5.04:Updated ASCII Algorithm - More fun for Bots ^^                           \\
+//      Disable Items while BK is active ^^                                      \\
+// ***************************************************************************** \\
+//      Vacations, vacations and more vacations... OMG.. that was nice!          \\
+// ***************************************************************************** \\
+// 5.2: Added Alphabetic Method [4]                                              \\
+//      BK draw 4 characters with ASCII                                          \\
+//      This method allow almost unlimited pattern definitions in database       \\
+//      New Tool [ASCCII2Char by Myzter] to create your own patterns [Forum]     \\
+//      Added Monster Talk Method [5]                                            \\
+//      Four monsters talk with you, one of them say the number                  \\ 
+//      * Fixes *                                                                \\
+//      Infinite hidde status after recall, go and stuff                         \\
+//      No more "close" botton at finish [Homunculus / Clone Exploit]            \\
+//      Query Var %1 replaced with !1 [Compatibility issues]                     \\
+//      Automatic Table Creation + Default Data                                  \\
+//                                                                               \\
+// -o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o- \\
+// -o-                              IMPORTANT                                -o- \\
+// -o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o- \\
+//       This is a BASE version of BotKiller, CHANGE everything you can          \\
+//       to protect it of known Plug-ins. Don't reveal this configuration        \\
+// -o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o- \\
+
+-	script	BotKillerInit	-1,{
+OnInit:
+	// ************************************************************************
+	// *** Timeout -> Ban Rules                                             ***
+	// ************************************************************************
+	set $@BKUseBanTimeOut,1;	// Set to 1 to Ban accounts of players when answer with heavy timeout (Bots)
+		// In the next 2 arrays, define the rules to apply the Ban time
+		// Sample: If a player respond with 35 minutes of timeout get a rank "B" (> 24 && < 45 min.)
+		//         Player is Banned x 1 hour ("B" -> $@BKTOutBan[1] -> 60 (minutes))
+	setarray $@BKTOutRng[0],10,	// A. 10 minutes timeout
+	25,	// B. 25 minutes timeout
+	45,	// C. 45 minutes timeout
+	60,	// D. 1 hour timeout
+	90,	// E. 1 1/2 hours timeout
+	180,	// F. 3 hours timeout
+	240,	// G. 4 hours timeout
+	360;	// H. 6 or more hours timeout (add more conditions if you want, every new condition needs a new $@BKTOutBan time)
+		
+	setarray $@BKTOutBan[0],30,	// A. Ban x 30 m.
+	60,	// B. Ban x 1 h.
+	120,	// C. Ban x 2 h.
+	360,	// D. Ban x 6 h.
+	720,	// E. Ban x 12 h.
+	1440,	// F. Ban x 1 d.
+	2880,	// G. Ban x 2 d.
+	10080;	// H. Ban x 7 d. // Zully don't sleep now ^__^
+		
+	// ************************************************************************
+	// *** GLOBAL SETTINGS                                                  ***
+	// ************************************************************************
+	
+	setarray $@BK_ASCIIChars$[0],"Âµ","Â¼","*","x","Â¢","Â©","Â®","Ã¸","Ã—","Ã°"; // Characters to draw ASCII Numbers
+	
+	setarray $@BK_ASCIILetters$[0],"H","S","O"; // Characters to draw ASCII Letters
+	
+	set $@BK_DinamicHeigth,0;	// Set 1 to use dynamic heights numbers (ASCII)
+	set $@BK_ServerID,rand(100000000,999999999); // Server ID (To control started BK after reboot)
+	// Set the methods that you want to use in your server [default: 0,2,4,5]
+	setarray $@BK_PlugIn[0],5; // 0,3,4,5;	// Select the method to show the number (Words, Image, Minimap, AscII or CharAscII)
+		//  0 = Number Names (Strong)
+		//  1 = Image Numbers (require patch in the client side [http://www.pow4ever.com/downloads2/botkiller/imgs/BotKillerDigits.rar]) (Weak but very user friendly)
+		//  2 = MiniMap Numbers (be carefull, some maps don't have minimap) (Difficult for players, not recommended)
+		//  3 = Ascii Numbers (Strong & Friendly)
+		//  4 = Char Ascii (Strong)
+		//  5 = Monster Interrogatory
+		
+		// Repeat method code in the list to add priority, by example:
+		// setarray $@BK_PlugIn[0],0,0,0,0,2,2,1; // Method 0 with more probabilities, 2 as second chance and 1 with low probabilities
+		
+	set $@BKOnMobTimer,3;	// Add Counter after respond correctly before remove effects
+	set $@BK_EnableSound,1;	// Enable the alert sounds
+		
+	// ************************************************************************
+	// *** For Number Names
+	// ************************************************************************
+	   set $@BK_MixMsg,1;	// Set 1 to scramble the conversation
+	   set $@BK_NoiseStr,1;	// If you have smart boters, add noise into number names to avoid reverse algorithms (owned ^^)
+		// * Don't use to much noise because your users will hate you xDD, 1 is Ok, 2 or more only on heavy bot activity
+	   set $@BK_Sets,2;	// How many sets of numbers you have (one,0ne)
+		//  * if you change this value, you need to check the entire script
+		//    to include the new arrays for all languages
+		//  * 2 sets give you > 1 billion of different posibilities.
+		//    (but you can add more if you really need them)
+		//  * Don't share your real sets of numbers (never!)
+	   // Noise for numbers names (don't use special characters)
+	   setarray $@BK_Noise$[0], "b","c","d","f","g","h","j","k","l","m","n","p","q","r","s","t","v","w","x","y","z",".","-"," ","~","$","!","*","@","_";
+	// ************************************************************************
+	
+	set $@BK_MsgGlobal,0;	// Set 0 to send announces only to the interrogated player, 1 to send global announces
+	set $@BK_NewATComm,1;	// Set 0 if you are using the old model of atcommand
+	set $@BK_MinGMLvl,1;	// Set here the min. GM level in your server, default: 1
+	set $@BK_MinMobs,15;	// Min. monsters in a map to allow use BK (normal users)
+	set $@BK_MySQLRank,1;	// Set to 1 to enable Ranking (MySql)
+	set $@BK_RankLimit,50;	// Size of the ranking (max. 127) (max. recommended (50)
+	set $@BK_Cutin$,"mets_alpha.bmp"; 	// Fat guy - try to use a customized cutin
+	set $@BK_ChangeMap,0;	// Allow or not BK in change map event
+		//  * Only recommended if you have a lots of bots in your server
+	set $@BK_Try,5;	// Chances to answer the question
+	set $@BK_JailTime,30;	// How long your bad guy will rest in the jail (minutes)
+		//  * Players with previows jails with be arrested for more time ($@BK_JailTime + $@BK_JailTime * PrevJails)
+	set $@BK_Discount,10;	// Consecutive right answers to discount 1 Jail from the player history
+	set $@BK_BanAfter,0;	// After 3 jails (default) the 4th is changed by Ban, Set 0 to disable this function
+		
+	set $@BK_IVM,10;	// Minimum time to receive another MANUAL BK (minutes)
+	set $@BK_IVA,20;	// Minimum time to trigger AUTOMATIC BK again (minutes) (Only monster kill trigger)
+	
+	set $@BK_GMLvl,0;	// Min. level to manually activate BK on users
+		//  * Use: (whisper the username to 'NPC:Police')
+		// Note: Set 0 to activate the system to all players.
+		//  * Normal players (GM: 0) have this restrictions:
+		//   1. Can't send BK during WoE
+		//   2. Can't send BK to Admin Users (GM: >= $@BK_MinGMLvl)
+		//   3. Can't send BK if player was recently manually interrogated
+		//   4. Can't send BK in a map with monsters count < $@BK_MinMobs
+		//   5. Can't send BK to users in other maps
+	set $@BK_CommonLvl,50;	// Min. BaseLevel to allow send BK to another player (apply to normal players)
+	set $@BK_TimeOut,90;	// Timeout to respond (seconds)
+	set $@BK_ComSymb$,"@";	// at_command.conf -> command_symbol
+	set $@BK_AllMobs,1;	// Enable BK system on all monsters on your server
+		//  * Set 0 if you want use only labeled BK monsters
+	set $@BK_MobChance,100;	//  * Chance to send BK when kill a monster "1 on $@BK_MobChance"
+		//  * Works only with $@BK_AllMobs,1
+		//  * 1% is a good value if $@BK_IVA > 20
+		//    (use a bigger number when $@BK_IVA < 20)
+
+	set $@TK_TimeBtwRep,2;	// Minimum time to report another player using the Police NPC
+	
+	// Sounds - All this sounds are standard from Ragnarok
+	setarray $@BK_Sounds$[0],  "anolian_die.wav","se_scream_w01.wav","se_moaning01.wav","se_wolf1.wav",
+	  "se_wolf2.wav","solace_die.wav","glass.wav","guitar.wav","jupe_warning.wav",
+	  "obeaune_die.wav","taming_fail.wav";
+	
+	// Characters to construct random names
+	setarray $@AutoCharCons$[0],"b","c","d","f","g","h","j","k","l","m","n","p","r","s","t","v","w","x","y";
+	setarray $@AutoCharVoc$[0],"a","e","i","o","u";
+
+	// Monsters for Mode 5
+	setarray $@BKMobs[0],1002,1008,1073,1005,1010,1014,1021,1024,1025,1027,1030,1033,1034,1049,1053,1057,1063,1067,1070,1075,1078,1079,1080,1081,1082,1083,1084,1085,1095,1097,1103,1110,1113,1116,1128,1129,1155,1175,1176,1182,1209,1211,1215,1255,1256;
+
+	// ************************************************************************
+	// ***                 GLOBAL LANGUAGE CUSTOMIZATION                    ***
+	// ************************************************************************
+
+	// **** ENGLISH ****
+	// **** CUSTOM SET OF NUMBERS ****
+	// Set #1
+	setarray $@EN_SmallNm1$[0],"","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen";
+	setarray $@EN_BigNm1$[0],"","","twenty","thirty","forty","fifty","sixty","seventy","eighty","ninety";
+	// Set #2
+	setarray $@EN_SmallNm2$[0],"","one","two","thrÃªe","fÃ¶Ã»r","fÃ¯ve","sÃ¯x","sÃªvÃªn","eÃ¯ght","nÃ¯ne","tÃªn","elÃªvÃªn","twÃªlve","thÃ¯rtÃªÃªn","fÃ¶Ã»rtÃªÃªn","fÃ¯ftÃªÃªn","sÃ¯xtÃªÃªn","sÃªvÃªntÃªÃªn","eÃ¯ghtÃªÃªn","nÃ¯nÃªtÃªÃªn";
+	setarray $@EN_BigNm2$[0],"","","twÃªnty","thÃ¯rty","fÃ¶rty","fÃ¯fty","sÃ¯xty","sÃªvÃªntÃ¿","eightÃ¿","ninÃªtÃ¿";
+
+	// **** SPANISH ****
+	// **** CUSTOM NUMBERS ****
+	// Set #1
+	setarray $@SP_SmallNm1$[0],"","uno","dos","tres","cuatro","cinco","seis","siete","ocho","nueve","diez","once","doce","trece","catorce","quince","dieciseis","diecisiete","dieciocho","diecinueve";
+	setarray $@SP_BigNm1$[0],"","","veinte","treinta","cuarenta","cincuenta","sesenta","setenta","ochenta","noventa","cien","ciento","cientos ","veinti","do","tre","cuatro","quinientos","seis","sete","ocho","nove"," y ","cero";
+
+	// Set #2
+	setarray $@SP_SmallNm2$[0],"","uno","dos","tres","cuatro","cinco","seis","siete","ocho","nueve","diez","once","doce","trece","catorce","quince","dieciseis","diecisiete","dieciocho","diecinueve";
+	setarray $@SP_BigNm2$[0],"","","veinte","treinta","cuarenta","cincuenta","sesenta","setenta","ochenta","noventa","cien","ciento","cientos ","veinti","do","tre","cuatro","quinientos","seis","sete","ocho","nove"," y ","cero";
+
+	// **** BRASILIAN PORTUGUESE ****
+	// **** CUSTOM NUMBERS ****
+	// Set #1
+	setarray $@BR_SmallNm1$[0],"","um","dois","trÃªs","quatro","cinco","seis","sete","oito","nove","dez","onze","doze","treze","quatorze","quinze","dezesseis","dezessete","dezoito","dezenove";
+	setarray $@BR_BigNm1$[0],"","","vinte","trinta","quarenta","cinquenta","sessenta","setenta","oitenta","noventa";
+
+	// Set #2
+	setarray $@BR_SmallNm2$[0],"","Ã»m","dois","trÃ«s","qÃ¼atro","cÃ¯nco","sÃªis","sÃ«te","oÃ¯to","nÃ¶ve","dÃªz","oÃ±ze","dÃ´ze","trÃ«ze","qÃ¼Ã¢tÃ´rze","qÃ¼inze","dÃ«zÃ«ssÃªÃ®s","dÃªzÃ«ssÃªte","dÃªzÃ¶ito","dÃªzÃªnÃ¶ve";
+	setarray $@BR_BigNm2$[0],"","","vÃ®nte","trÃ®nta","qÃ»arÃ«nta","cinqÃ»enta","sÃªssÃ«nta","sÃªtÃ«nta","Ã´Ã¯tenta","nÃ¶vÃªnta";
+
+	// **** FRENCH ****
+	// **** CUSTOM NUMBERS ****
+	// Set #1
+	setarray $@FR_SmallNm1$[0],"","un","deux","trois","quatre","cinq","six","sept","huit","neuf","dix","onze","douze","treize","quatorze","quinze","seize","dix-sept","dix-huit","dix-neuf","-et-onze","-onze"," et un";
+	setarray $@FR_BigNm1$[0],"","","vingt","trente","quarante","cinquante","soixante","soixante","quatre-vingt","quatre-vingt","quatre-vingts";
+	// Set #2
+	setarray $@FR_SmallNm2$[0],"","un","dÃ«ux","troÃ¯s","quÃ¤tre","cÃ¯nq","sÃ¯x","sÃªpt","hÃ¹it","neÃ¹f","dÃ¯x","oÃ±ze","doÃ¹ze","treÃ¯ze","quÃ¢torze","qÃ¹Ã¯nze","seÃ®ze","dix-sept","dÃ®x-hÃ¹it","dÃ®x-neuf","-et-onze","-onze"," Ã«t Ã¼n";
+	setarray $@FR_BigNm2$[0],"","","vÃ®ngt","trente","quÃ¢rante","cÃ®nquÃ¢nte","sÃ¶Ã®xante","sÃ¶ixÃ¢nte","quatre-vingt","quatre-vingt","qÃ»atrÃ«-vÃ­ngts";
+
+	// **** ITALIANO ****
+	// **** CUSTOM SET OF NUMBERS ****
+	// Set #1
+	setarray $@IT_SmallNm1$[0],"","uno","due","tre","quattro","cinque","sei","sette","otto","nove","dieci","undici","dodici","tredici","quattordici","quindici","sedici","diciassette","diciotto","diciannove";
+	setarray $@IT_BigNm1$[0],"","","vent","trent","quarant","cinquant","sessant","settant","ottant","novant","i","a","cento";
+	// Set #2
+	setarray $@IT_SmallNm2$[0],"","uÃ±o","dÃ¹e","tÃŸÃ©","quÃ ttro","cÃ¬nque","sÃ¨i","sÃ¨tte","otto","nÃ²ve","dÃ¬Ãªci","undÃ¬ci","dÃ²dÃ¬ci","trÃ¨dÃ¬ci","qÃ¹Ã ttordÃ¬ci","qÃ¹Ã¬ndÃ¬ci","sÃ¨dÃ¬ci","dÃ¬cÃ¬Ã ssette","dicÃ¬Ã²tto","dÃ¬cÃ¬Ã nnÃ²ve";
+	setarray $@IT_BigNm2$[0],"","","vÃ¨nt","trÃ©nt","qÃ¹Ã rant","cinqÃ¹ant","sessÃ nt","sÃ¨ttÃ¤nt","ottÃ nt","nÃ²vÃ¢nt","i","a","cÃ«nto";
+
+	// **** INDONESIAN ****
+	// **** CUSTOM SET OF NUMBERS ****
+	// Set #1
+	setarray $@ND_SmallNm1$[0],"","satu","dua","tiga","empat","lima","enam","tujuh","delapan","sembilan","sepuluh","sebelas","duabelas","tigabelas","empatbelas","limabelas","enambelas","tujuhbelas","delapanbelas","sembilanbelas";
+	setarray $@ND_BigNm1$[0],"","","se","puluh","ratus";
+	// Set #2
+	setarray $@ND_SmallNm2$[0],"","sÃ¥tu","dÃ¼a","tÃ¬ga","empÃ¢t","lÃ¯ma","enÃ£m","tÃ¼jÃ»h","dÃªlÃ¢pÃ¥n","sÃ«mbÃ¯lÃ¡n","sÃªpÃ¼lÃ»h","sÃ«bÃªlÃ s","dÃ¼Ã¤bÃªlÃ¥s","tÃ®gÃ¤bÃ«lÃ¥s","empÃ¤tbÃªlÃ¥s","lÃ®mÃ¤bÃªlÃ¡s","enÃ¥mbÃ«lÃ¤s","tÃ¼jÃ»hbÃªlÃ¡s","dÃ«lÃ¥pÃ¢nbÃ«lÃ¤s","sÃªmbÃ¯lÃ£nbÃ«lÃ¤s";
+	setarray $@ND_BigNm2$[0],"","","se","pÃ¼lÃ»h","rÃ¤tÃ¼s";
+
+	// **** GERMAN ****
+	// **** CUSTOM SET OF NUMBERS ****
+	// Set #1
+	setarray $@DE_SmallNm1$[0],"","eins","zwÃ¨i","drÃ«i","viÃªr","fÃ¼nf","sÃ¨chs","siÃ©ben","aÃ§ht","neÃ¹n","zÃªhn","e1f","zwÃ¶lf","dreÃ®zehn","viÃ¨rzehn","fÃ¼nfzÃªhn","sechszÃ¨hn","sÃ¯ebzehn","aÃ§htzÃªhn","neÃ¼nzÃ¨hn";
+	setarray $@DE_BigNm1$[0],"","","zw@nzig","drÃ¨iÃŸig","vierzÃ¯g","fÃ¼nfzÃ­g","sÃªchzig","sÃ¯ebzig","achtzÃ¬g","neÃ¼nzig","eÃ¯n","uÃ±d","hÃ¹ndÃªrt";
+	// Set #2
+	setarray $@DE_SmallNm2$[0],"","eins","zwei","drei","vier","fÃ¼nf","sechs","sieben","acht","neun","zehn","elf","zwÃ¶lf","dreizehn","vierzehn","fÃ¼nfzehn","sechszehn","siebzehn","achtzehn","neunzehn";
+	setarray $@DE_BigNm2$[0],"","","zwanzig","dreiÃŸig","vierzig","fÃ¼nfzig","sechzig","siebzig","achtzig","neunzig","ein","und","hundert";
+
+	// **** TAGALOG ****
+	// **** CUSTOM SET OF NUMBERS ****
+	// Set #1
+	setarray $@TG_SmallNm1$[0],"","isa","dalawa","tatlo","apat","lima","anim","pito","walo","siyam","sampu","labingisa","labingdalawa","labingtatlo","labingapat","labinglima","labinganim","labingpito","labingwalo","labingsiyam";
+	setarray $@TG_BigNm1$[0],"","","dalawa","tatlo","apat","lima","anim","pitu","walo","siyam","ngdaan","mp","nap","u","o","'t";
+	// Set #2
+	setarray $@TG_SmallNm2$[0],"","iÂ§a","dalÃ¥wa","tÃ¢tlo","apÃ¤t","lÃ®ma","anÃ­m","pÃ¯to","wÃ¥lo","sÃ®yÃ¡m","sÃ¤mpu","laÃŸingÃ­sa","laÃŸingdÃ£lawa","labÃ¯ngtÃ¥tlo","labÃ¯ngÃ pat","labÃ­nglÃ¯ma","laÃŸingÃ¢nim","labÃ®ngpÃ®to","labÃ¬ngwÃ¥lo","lÃ¢bÃ¯ngsÃ®yam";
+	setarray $@TG_BigNm2$[0],"","","dÃ°lawa","tÃ£tlo","apÃ t","lÃ¯ma","anÃ­m","pÃ¯tu","wÃ¢lo","sÃ­yam","ngdÃ¤Ã¥n","mp","nÃ¤p","u","o","Â´t";
+	
+	// **** NEDERLANDS ****
+	// **** CUSTOM SET OF NUMBERS ****
+	// Set #1
+	setarray $@NL_SmallNm1$[0],"","Ã©Ã©n","twee","drie","vier","vijf","zes","zeven","acht","negen","tien","elf","twaalf","dertien","veertien","vijftien","zestien","zeventien","achttien","negentien";
+	setarray $@NL_BigNm1$[0],"","","twintig","dertig","veertig","vijftig","zestig","zeventig","tachtig","negentig","en","honderd";
+	// Set #2
+	setarray $@NL_SmallNm2$[0],"","Ã©Ã©n","twee","drie","vier","vijf","zes","zeven","acht","negen","tien","elf","twaalf","dertien","veertien","vijftien","zestien","zeventien","achttien","negentien";
+	setarray $@NL_BigNm2$[0],"","","twintig","dertig","veertig","vijftig","zestig","zeventig","tachtig","negentig","Ã«n","hÃ¸nderd";
+	
+	// **** BAHASA MELAYU (MALAY) ****
+	// Set #1
+	setarray $@BM_SmallNm1$[0],"","satu","dua","tiga","empat","lima","enam","tujuh","lapan","sembilan","sepuluh";
+	setarray $@BM_BigNm1$[0],"","belas","dua puluh","tiga puluh","empat puluh","lima puluh","enam puluh","tujuh puluh","lapan puluh","sembilan puluh","sepuluh puluh","ratus","sebelas","sifar";
+	// Set #2
+	setarray $@BM_SmallNm2$[0],"","satu","dua","tiga","empat","lima","enam","tujuh","lapan","sembilan","sepuluh";
+	setarray $@BM_BigNm2$[0],"","belas","dua puluh","tiga puluh","empat puluh","lima puluh","enam puluh","tujuh puluh","lapan puluh","sembilan puluh","sepuluh puluh","ratus","sebelas","sifar";
+
+	// **** RUSSIAN ****
+	// **** CUSTOM SET OF NUMBERS ****
+	// Set #1
+	setarray $@RU_SmallNm1$[0],"","Ã®Ã¤Ã¨Ã­","Ã¤Ã¢Ã ","Ã²Ã°Ã¨","Ã·Ã¥Ã²Ã»Ã°Ã¥","Ã¯Ã¿Ã²Ã¼","Ã¸Ã¥Ã±Ã²Ã¼","Ã±Ã¥Ã¬Ã¼","Ã¢Ã®Ã±Ã¥Ã¬Ã¼","Ã¤Ã¥Ã¢Ã¿Ã²Ã¼","Ã¤Ã¥Ã±Ã¿Ã²Ã¼","Ã®Ã¤Ã¨Ã­Ã Ã¤Ã¶Ã Ã²Ã¼","Ã¤Ã¢Ã¥Ã­Ã Ã¤Ã¶Ã Ã²Ã¼","Ã²Ã°Ã¨Ã­Ã Ã¤Ã¶Ã Ã²Ã¼","Ã·Ã¥Ã²Ã»Ã°Ã­Ã Ã¤Ã¶Ã Ã²Ã¼","Ã¯Ã¿Ã²Ã­Ã Ã¤Ã¶Ã Ã²Ã¼","Ã¸Ã¥Ã±Ã²Ã­Ã Ã¤Ã¶Ã Ã²Ã¼","Ã±Ã¥Ã¬Ã­Ã Ã¤Ã¶Ã Ã²Ã¼","Ã¢Ã®Ã±Ã¥Ã¬Ã­Ã Ã¤Ã¶Ã Ã²Ã¼","Ã¤Ã¥Ã¢Ã¿Ã²Ã­Ã Ã¤Ã¶Ã Ã²Ã¼";
+	setarray $@RU_BigNm1$[0],"","","Ã¤Ã¢Ã Ã¤Ã¶Ã Ã²Ã¼","Ã²Ã°Ã¨Ã¤Ã¶Ã Ã²Ã¼","Ã±Ã®Ã°Ã®Ãª","Ã¯Ã¿Ã²Ã¼Ã¤Ã¥Ã±Ã¿Ã²","Ã¸Ã¥Ã±Ã²Ã¼Ã¤Ã¥Ã±Ã¿Ã²","Ã±Ã¥Ã¬Ã¼Ã¤Ã¥Ã±Ã¿Ã²","Ã¢Ã®Ã±Ã¥Ã¬Ã¼Ã¤Ã¥Ã±Ã¿Ã²","Ã¤Ã¥Ã¢Ã¿Ã­Ã®Ã±Ã²Ã®";
+	// Set #2
+	setarray $@RU_SmallNm2$[0],"","Ã®Ã¤Ã¨Ã­","Ã¤Ã¢Ã ","Ã²Ã°Ã¨","Ã·Ã¥Ã²Ã»Ã°Ã¥","Ã¯Ã¿Ã²Ã¼","Ã¸Ã¥Ã±Ã²Ã¼","Ã±Ã¥Ã¬Ã¼","Ã¢Ã®Ã±Ã¥Ã¬Ã¼","Ã¤Ã¥Ã¢Ã¿Ã²Ã¼","Ã¤Ã¥Ã±Ã¿Ã²Ã¼","Ã®Ã¤Ã¨Ã­Ã Ã¤Ã¶Ã Ã²Ã¼","Ã¤Ã¢Ã¥Ã­Ã Ã¤Ã¶Ã Ã²Ã¼","Ã²Ã°Ã¨Ã­Ã Ã¤Ã¶Ã Ã²Ã¼","Ã·Ã¥Ã²Ã»Ã°Ã­Ã Ã¤Ã¶Ã Ã²Ã¼","Ã¯Ã¿Ã²Ã­Ã Ã¤Ã¶Ã Ã²Ã¼","Ã¸Ã¥Ã±Ã²Ã­Ã Ã¤Ã¶Ã Ã²Ã¼","Ã±Ã¥Ã¬Ã­Ã Ã¤Ã¶Ã Ã²Ã¼","Ã¢Ã®Ã±Ã¥Ã¬Ã­Ã Ã¤Ã¶Ã Ã²Ã¼","Ã¤Ã¥Ã¢Ã¿Ã²Ã­Ã Ã¤Ã¶Ã Ã²Ã¼";
+	setarray $@RU_BigNm2$[0],"","","Ã¤Ã¢Ã Ã¤Ã¶Ã Ã²Ã¼","Ã²Ã°Ã¨Ã¤Ã¶Ã Ã²Ã¼","Ã±Ã®Ã°Ã®Ãª","Ã¯Ã¿Ã²Ã¼Ã¤Ã¥Ã±Ã¿Ã²","Ã¸Ã¥Ã±Ã²Ã¼Ã¤Ã¥Ã±Ã¿Ã²","Ã±Ã¥Ã¬Ã¼Ã¤Ã¥Ã±Ã¿Ã²","Ã¢Ã®Ã±Ã¥Ã¬Ã¼Ã¤Ã¥Ã±Ã¿Ã²","Ã¤Ã¥Ã¢Ã¿Ã­Ã®Ã±Ã²Ã®";
+	
+	// Table Creation
+	callfunc "BKCheckTables";
+
+	// Get the default language from MySQL
+	query_sql "select langid from `bk_lang` where deflang=1 limit 1",$@BK_TMPLANG;
+	set $@BK_DEFLANG, $@BK_TMPLANG[0];
+	deletearray $@BK_TMPLANG[0],127;
+	if (!$@BK_DEFLANG) set $@BK_DEFLANG,4; // If not default language, set English
+}
+
+// ************************************************************************
+// ***               MAIN FUNCTIONS                                     ***
+// ************************************************************************
+
+// BK for NPCs, Change map and restored after cancel BK Window
+function	script	BotKillerSys1	{
+	disable_items;	// Disable items in scripts
+	getmapxy @mapname$,@mapx,@mapy,0;
+	set @SFStarted, callfunc("xGet","SFStarted");
+	set @SFErrCnt, callfunc("xGet","SFErrCnt");
+	set @SFCall$, callfunc("xTGet","pItemCall$");
+	set @SFMode, callfunc("xTGet","SFMode");
+	set @BKWarnTime, callfunc("xGet","BKWarnTime");
+	callfunc "xTSet","SFMode",0;
+	callfunc "xTSet","pItemCall$","";
+	callfunc "xSet","BKSID",$@BK_ServerID;
+	if (!@SFStarted) {
+		set @SFProb, 10;
+		if (GetTime(3) < 6) set @SFProb, @SFProb / 2;
+		set @SFProb, @SFProb - @SFErrCnt;
+		set @LV, gettimetick(2) / 60 - callfunc("xTGet","SFLViewM");
+		if ((rand(@SFProb) && @SFErrCnt < $@BK_Try) || @LV < $@BK_IVM) {
+			if (!@SFMode) return;
+			if (getstrlen(@SFCall$) > 0) callfunc @SFCall$;
+			end;
+		}
+		if (@BKWarnTime) set @SFStarted,5; else set @SFStarted,1;
+		callfunc "xSet","SFStarted",@SFStarted;
+	} else if (@SFStarted == 3) {
+		if (@LV < $@BK_IVM) {
+			if (getstrlen(@BKWho$) > 0) message @BKWho$,callfunc("BKDialog",0,1,"") + ": " + callfunc("BKDialog",15,1,"") + strcharinfo(0) + callfunc("BKDialog",16,1,"") + @LV + callfunc("BKDialog",3,1,"");
+			callfunc "xSet","SFStarted",0;
+			end;
+		}
+		if (getgmlevel() >= $@BK_MinGMLvl) {
+			if (getstrlen(@BKWho$) > 0) message @BKWho$,callfunc("BKDialog",0,1,"") + ": " + callfunc("BKDialog",17,1,"");
+			callfunc "xSet","SFStarted",0;
+			end;
+		}
+	}
+	callfunc "CheckLang";
+	set @BKWho$,getd("$@BKWho" + getcharid(3) + "$");
+	if (getstrlen(@BKWho$) > 0) message @BKWho$,callfunc("BKDialog",0,1,"") + ": " + callfunc("BKDialog",14,1,"") + strcharinfo(0) + "...";
+	// Make player invisible while answer the questions
+	callfunc "SetBKEffects";
+	set @SFErr, callfunc("xGet","SFErr");
+	set @SFErr, @SFErr + 1;
+	callfunc "xSet","SFErr",@SFErr;
+	if (@SFErr > 1) {
+		set @BKStart,callfunc("xGet","BKTimer");
+		announce callfunc("BKDialog",0,0,"") + ": " + callfunc("BKDialog",1,0,""),3;
+	} else {
+		set @BKStart,gettimetick(2);
+		if (@SFStarted == 2) announce callfunc("BKDialog",0,0,"") + ": " + callfunc("BKDialog",18,0,"") + strcharinfo(0) + ", " + @BKWho$ + callfunc("BKDialog",19,0,""),3;
+		if (@SFStarted == 3) announce callfunc("BKDialog",0,0,"") + ": " + callfunc("BKDialog",18,0,"") + strcharinfo(0) + ", " + @BKWho$ + callfunc("BKDialog",20,0,""),3;
+	}
+	callfunc "xSet","BKTimer",@BKStart;
+lStart:
+	cutin $@BK_Cutin$,2;
+	set @BKReqNum, Rand(1,999);
+	set @RepeatCnt,0;
+lRepeat:
+	if (!@RepeatCnt) set @BKAlgorithm, $@BK_PlugIn[rand(getarraysize($@BK_PlugIn))];
+	set @SFErr, callfunc("xGet","SFErr");
+	set @SFErrUsr, @SFErr;
+	set @BKTimer, gettimetick(2) - @BKStart;
+	set @BKRest,$@BK_TimeOut - @BKTimer;
+	if (@SFErr > $@BK_Try || @BKRest < 1) {
+		setd "$@BKWho" + getcharid(3) + "$","";
+		callfunc "ClearBKEffects";
+		cutin "", 255;
+		callfunc "xSet","BKTimer",0;
+		callfunc "xSet","SFStarted",0;
+		if ($@BK_EnableSound) soundeffect "chaos_of_eternity.wav",0;
+		set @SFErrCnt, callfunc("xGet","SFErrCnt") + 1;
+		callfunc "xSet","SFErr",0;
+		set @SFMinutes, @SFErrCnt * $@BK_JailTime;
+		callfunc "xSet","TIJ",gettimetick(2);
+		callfunc "xSet","TIT",@SFMinutes * 60;
+		callfunc "xSet","SFErrCnt", @SFErrCnt;
+		callfunc "xSet","SFOkCnt",0;
+		callfunc "UpdateRank",@BKWho$;
+		set @TMOut, ($@BK_TimeOut - @BKTimer * -1) / 60;
+		if ($@BKUseBanTimeOut && @TMOut >= $@BKTOutRng[0]) {
+			set @Total, getarraysize($@BKTOutRng);
+			for( set @i, 0; @i < @Total; set @i, @i + 1 ) {
+				if (@TMOut < $@BKTOutRng[@i]) break;
+				set @CurBan, $@BKTOutBan[@i];
+			}
+			set @SFMinutes, @CurBan;
+		}
+		if ($@BK_MsgGlobal) set @DPType,0; else set @DPType,3;
+		if (($@BK_BanAfter && @SFErrCnt > $@BK_BanAfter) || @CurBan) {
+			if (@BKRest < 1)
+				set @BKSM$, callfunc("BKDialog",0,1,"") + ": " + strcharinfo(0) + callfunc("BKDialog",37,1,"") + callfunc("Min2HH",@SFMinutes) + callfunc("BKDialog",4,1,"") + callfunc("Sec2HH",$@BK_TimeOut - @BKTimer * -1) + ")";
+			else
+				set @BKSM$, callfunc("BKDialog",0,1,"") + ": " + strcharinfo(0) + callfunc("BKDialog",37,1,"") + callfunc("Min2HH",@SFMinutes);
+			announce @BKSM$,@DPType;
+			if (!$@BK_MsgGlobal) {
+				if ($@BK_NewATComm)
+					atcommand $@BK_ComSymb$ + "request " + @BKSM$;
+				else
+					atcommand strcharinfo(0) + " " + $@BK_ComSymb$ + "request " + @BKSM$;
+			}
+			if ($@BK_NewATComm)
+				atcommand $@BK_ComSymb$ + "ban +" + @SFMinutes + "mn " +  strcharinfo(0);
+			else
+				atcommand strcharinfo(0) + " " + $@BK_ComSymb$ + "ban +" + @SFMinutes + "mn " +  strcharinfo(0);
+		} else {
+			if (@BKRest < 1)
+				set @BKSM$, callfunc("BKDialog",0,1,"") + ": " + strcharinfo(0) + callfunc("BKDialog",2,1,"") + callfunc("Min2HH",@SFMinutes) + callfunc("BKDialog",4,1,"") + callfunc("Sec2HH",$@BK_TimeOut - @BKTimer * -1) + ")";
+			else
+				set @BKSM$, callfunc("BKDialog",0,1,"") + ": " + strcharinfo(0) + callfunc("BKDialog",2,1,"") + callfunc("Min2HH",@SFMinutes);
+			announce @BKSM$,@DPType;
+			if (!$@BK_MsgGlobal) {
+				if ($@BK_NewATComm)
+					atcommand $@BK_ComSymb$ + "request " + @BKSM$;
+				else
+					atcommand strcharinfo(0) + " " + $@BK_ComSymb$ + "request " + @BKSM$;
+			}
+			if ($@BK_NewATComm)
+				atcommand $@BK_ComSymb$ + "jail " + strcharinfo(0);
+			else
+				atcommand strcharinfo(0) + " " + $@BK_ComSymb$ + "jail " + strcharinfo(0);
+		}
+		close;
+	}
+	if ($@BK_EnableSound) soundeffect $@BK_Sounds$[rand(getarraysize($@BK_Sounds$))],0;
+	if (@SFErrUsr == 1 && (!getstrlen(@BKWho$) || @SFStarted == 4)) announce callfunc("BKDialog",0,0,"") + ": " + callfunc("BKDialog",5,0,""),3;
+	deletearray @BKMessage$,127;
+	setarray @BKMessage$[0],callfunc("RndColor") + callfunc("BKShowNumber",@BKReqNum,1),
+	callfunc("RndColor") + callfunc("getCent",0,0,@SFErrUsr,0) + callfunc("BKDialog",7,0,"") + callfunc("getCent",0,0,$@BK_Try,0),
+	callfunc("RndColor") + callfunc("BKDialog",8,0,"") + callfunc("RndColor") + callfunc("BKShowNumber",@BKRest,0) + callfunc("RndColor") + callfunc("BKDialog",9,0,"");
+	if (getstrlen(@BKWho$))
+		set @BKTitle$, "[^0000FF" + callfunc("BKDialog",0,0,"") + "^000000] ^00FF00>>>^000000 [^FF0000" + @BKWho$ + "^000000]";
+	else
+		set @BKTitle$, "[^0000FF" + callfunc("BKDialog",0,0,"") + "^000000]";
+	mes @BKTitle$;
+	if (@BKAlgorithm < 4) mes callfunc("BKDialog",6,0,"");
+	switch (@BKAlgorithm) {
+		case 0:
+			if ($@BK_MixMsg) {
+				switch (rand(4)) {
+					case 0:
+						mes @BKMessage$[0];
+						mes @BKMessage$[1];
+						mes " ";
+						mes @BKMessage$[2];
+						break;
+					case 1:
+						mes @BKMessage$[0];
+						mes " ";
+						mes @BKMessage$[1];
+						mes @BKMessage$[2];
+						break;
+					case 2:
+						mes " ";
+						mes @BKMessage$[0];
+						mes @BKMessage$[1];
+						mes @BKMessage$[2];
+						break;
+					default:
+						mes @BKMessage$[0];
+						mes @BKMessage$[1];
+						mes @BKMessage$[2];
+				}
+			} else {
+				mes @BKMessage$[0];
+				mes " ";
+				mes @BKMessage$[1];
+				mes @BKMessage$[2];
+			}
+			break;
+		case 1:
+			set @RepeatCnt, @RepeatCnt + 1;
+			mes " ";
+			mes @BKMessage$[1];
+			mes @BKMessage$[2];
+			switch (@RepeatCnt) {
+				case 1:
+					set @DIG1, @BKReqNum / 100;
+					set @DIG2, (@BKReqNum - (@DIG1 * 100)) / 10;
+					set @DIG3, @BKReqNum - (@DIG1 * 100) - (@DIG2 * 10);
+					cutin "bkd" + @DIG1 + ".bmp",0;break;
+					break;
+				case 2: cutin "bkd" + @DIG2 + ".bmp",1;break;
+				case 3: cutin "bkd" + @DIG3 + ".bmp",2;
+			}
+			break;
+		case 2:
+			set @RepeatCnt, @RepeatCnt + 1;
+			mes " ";
+			mes @BKMessage$[1];
+			mes @BKMessage$[2];
+			switch (@RepeatCnt) {
+				case 1:
+					set @DIG1, @BKReqNum / 100;
+					set @DIG2, (@BKReqNum - (@DIG1 * 100)) / 10;
+					set @DIG3, @BKReqNum - (@DIG1 * 100) - (@DIG2 * 10);
+					callfunc "MiniMapNumber",@DIG1,1;
+					break;
+				case 2: callfunc "MiniMapNumber",@DIG1,2;callfunc "MiniMapNumber",@DIG2,1;break;
+				case 3: callfunc "MiniMapNumber",@DIG2,2;callfunc "MiniMapNumber",@DIG3,1;
+			}
+			break;
+		case 3:
+			mes " ";
+			mes @BKMessage$[1];
+			mes " ";
+			mes @BKMessage$[2];
+			next;
+			callfunc "MsgNum",@BKReqNum,0;
+			break;
+		case 4:
+			mes " ";
+			mes "^F51200" + callfunc("BKDialog",73,0,"") + "^000000";
+			mes " ";
+			mes @BKMessage$[2];
+			next;
+			if (callfunc("ShowCharAscII")) set @Answ, @BKReqNum; else set @Answ, 1000;
+			break;
+		case 5:
+			set @HT, rand(4);
+			set @HT2, rand(3);
+			for (set @bkm,0; @bkm < 4; set @bkm, @bkm + 1) {
+				set @mobname$,strmobinfo(2,$@BKMobs[rand(getarraysize($@BKMobs))]);
+				dispbottom @mobname$ + ": " + callfunc("GenString",rand(3,10),1) + " " + (@HT == @bkm ? @BKReqNum:callfunc("GenString",rand(3,7),1)) + " " + callfunc("GenString",rand(3,7),1);
+			}
+			mes " ";
+			mes "^F51200" + callfunc("BKDialog",74,0,"") + "^000000";
+			mes " ";
+			mes @BKMessage$[2];
+	}
+	deletearray @BKMessage$[0],127;
+	next;
+	if (@RepeatCnt && @RepeatCnt < 3) goto lRepeat;
+	set @RepeatCnt,0;
+	if (@BKAlgorithm == 2) callfunc "MiniMapNumber",@DIG3,2;
+	if (@BKAlgorithm != 4) {
+		input @Answ;
+	}
+	set @BKTimer,gettimetick(2) - @BKStart;
+	set @BKRest,$@BK_TimeOut - @BKTimer;
+	if (@BKRest < 1) goto lStart;
+	if (@Answ != @BKReqNum) {
+		emotion e_sob;
+		callfunc "xSet","SFErr", @SFErr + 1;
+		callfunc "xSet","ABError",@ABE + 1;
+		if (getstrlen(@BKWho$) > 0) message @BKWho$,callfunc("BKDialog",0,1,"") + ": " + strcharinfo(0) + callfunc("BKDialog",33,1,"") + " (" + @SFErrUsr + callfunc("BKDialog",7,1,"") + $@BK_Try + ")";
+		if (@SFErr < $@BK_Try - 1) {
+			mes @BKTitle$;
+			if (@BKAlgorithm != 4)
+				mes "^F51200" + callfunc("BKDialog",10,0,"") + "^00571E" + @BKReqNum + "^000000";
+			else
+				mes "^F51200" + callfunc("BKDialog",10,0,"") + "^00571E" + @numw$ + "^000000";
+			mes " ";
+			mes callfunc("BKDialog",11,0,"") + $@BK_Try + callfunc("BKDialog",12,0,"");
+			mes callfunc("BKDialog",8,0,"") + "^0000FF" + @BKRest + "^000000" + callfunc("BKDialog",9,0,"");
+			next;
+		}
+		goto lStart;
+	}
+	callfunc "xSet","SFErr",0;
+	set @SFOkCnt,callfunc("xGet","SFOkCnt") + 1;
+	if (@SFOkCnt >= $@BK_Discount && @SFErrCnt > 0) {
+		set @SFOkCnt, 0;
+		callfunc "xSet","SFErrCnt", @SFErrCnt - 1;
+	}
+	if (@SFErrCnt > 0) callfunc "xSet","SFOkCnt",@SFOkCnt;
+	callfunc "xSet","SFStarted",0;
+	if (@SFStarted == 4)
+		callfunc "xTSet","SFLViewA",gettimetick(2) / 60;
+	else
+		callfunc "xTSet","SFLViewM",gettimetick(2) / 60;
+	callfunc "xSet","BKTimer",0;
+	if (getstrlen(@BKWho$) > 0) {
+		message @BKWho$,callfunc("BKDialog",0,1,"") + ": " + strcharinfo(0) + callfunc("BKDialog",34,1,"");
+		setd "$@BKWho" + getcharid(3) + "$","";
+	}
+	emotion e_thx;
+	cutin "", 255;
+	if (@BKWarnTime && @SFStarted > 1) {
+		callfunc "xSet","BKWarnTime",@BKWarnTime;
+		addtimer 1000, "BKTimerEvt::OnTimer";
+		mes @BKTitle$;
+		mes callfunc("BKDialog",13,0,"");
+	} else {
+		callfunc "ClearBKEffects";
+		if (!@SFMode) {
+			mes @BKTitle$;
+			mes callfunc("BKDialog",13,0,"");
+			next;
+			return;
+		}
+	}
+	if (getstrlen(@SFCall$) > 0) {
+		close2;
+		callfunc @SFCall$;
+	} else {
+		atcommand "@refresh";
+	}
+	end;
+
+}
+
+// BK for items, monsters and everything without NPC
+-	script	BotKillerFnc1	-1,{
+OnStart:
+	callfunc "xTSet","SFMode",1;
+	callfunc "BotKillerSys1";
+	end;
+}
+
+// ************************************************************************
+// ***               MANUAL TRIGGER                                     ***
+// ************************************************************************
+
+// Manual BK activation for Admins - Change the script Name if you want (Guardia, Mike, etc), this name is used to manual mode
+// If you make any change in the name (Police), the new whisp name will be: NPC:NewName (use a short name o__O) (case sensitive)
+-	script	Police	-1,{
+OnWhisperGlobal:
+	if (getgmlevel() < $@BK_GMLvl) end;
+	getmapxy @mapname$,@mapx,@mapy,0;
+	if (@mapname$ == "sec_pri") {
+		dispbottom callfunc("BKDialog",0,0,"") + ": " + callfunc("BKDialog",38,0,"");
+		end;
+	}
+	set @suspectName$, @whispervar0$;
+	if (getstrlen(@whispervar1$) > 0) set @suspectName$, @whispervar1$;
+	if (getgmlevel() < $@BK_MinGMLvl) {
+		if (BaseLevel < $@BK_CommonLvl) {
+			dispbottom callfunc("BKDialog",0,0,"") + ": " + callfunc("BKDialog",36,0,$@BK_CommonLvl);
+			end;
+		}
+		if (agitcheck()) { // New version of eAthena raise errors when agitcheck have parameters, if you have a old version of eAthena use agitcheck(0)
+			dispbottom callfunc("BKDialog",0,0,"") + ": " + callfunc("BKDialog",23,0,"");
+			end;
+		}
+		// Marka Functions: Comment the next line / uncomment the second one if your eAthena version have not support for checkvending / checkchatting functions
+		if (@suspectName$ == strcharinfo(0) || checkvending(@suspectName$) || checkchatting(@suspectName$)) {
+		// if (@suspectName$ == strcharinfo(0)) {
+			dispbottom callfunc("BKDialog",0,0,"") + ": " + callfunc("BKDialog",38,0,"");
+			end;
+		}
+		if (getmapmobs(@mapname$) < $@BK_MinMobs) {
+			dispbottom callfunc("BKDialog",0,0,"") + ": " + callfunc("BKDialog",39,0,"");
+			end;
+		}
+	}
+	if (getstrlen(@suspectName$) < 4 || getstrlen(@suspectName$) > 24) {
+		dispbottom callfunc("BKDialog",0,0,"") + ": " + callfunc("BKDialog",21,0,"");
+		end;
+	}
+	set @RID, getcharid(3,@suspectName$);
+	if (@RID < 1) {
+		dispbottom callfunc("BKDialog",0,0,"") + ": " + callfunc("BKDialog",22,0,"");
+	} else {
+		setd "$@BKWho" + @RID + "$",strcharinfo(0);
+		setd "$@BKLvl" + @RID,getgmlevel();
+		setd "$@BKCMap" + @RID + "$",@mapname$;
+		setd "$@BKRID" + @RID,getcharid(3);
+		attachrid(@RID);
+		set @BKWho$,getd("$@BKWho" + getcharid(3) + "$");
+		set @BKLvl,getd("$@BKLvl" + getcharid(3));
+		set @BKCMap$,getd("$@BKCMap" + getcharid(3) + "$");
+		setd "$@BKLvl" + getcharid(3),0;
+		setd "$@BKCMap" + getcharid(3) + "$","";
+		if (@BKLvl < $@BK_MinGMLvl) {
+			getmapxy @mapname$,@mapx,@mapy,0;
+			if (@mapname$ != @BKCMap$) {
+				message @BKWho$,callfunc("BKDialog",0,0,"") + ": " + callfunc("BKDialog",40,0,"");
+				end;
+			}
+			if (getmapmobs(@mapname$) < $@BK_MinMobs) {
+				message @BKWho$,callfunc("BKDialog",0,0,"") + ": " + callfunc("BKDialog",39,0,"");
+				end;
+			}
+		}
+		if (@BKLvl < getgmlevel() && getgmlevel() >= $@BK_MinGMLvl) {
+			message @BKWho$,callfunc("BKDialog",0,0,"") + ": " + callfunc("BKDialog",17,0,"");
+			end;
+		}
+		message @BKWho$,callfunc("BKDialog",0,0,"") + ": " + callfunc("BKDialog",24,0,"") + strcharinfo(0) + callfunc("BKDialog",25,0,"");
+		if (@BKLvl < $@BK_MinGMLvl)
+			callfunc "xSet","SFStarted",3;
+		else
+			callfunc "xSet","SFStarted",2;
+		callfunc "xSet","BKWarnTime",$@BKOnMobTimer;
+		callfunc "SecureItem","";
+	}
+}
+
+// ************************************************************************
+// ***               NUMERIC FUNCTIONS                                  ***
+// ************************************************************************
+
+// Convert number into words
+function	script	getCent	{
+	if (!#BASE_LANG) set #BASE_LANG,$@BK_DEFLANG;
+	switch (#BASE_LANG) {
+		case 1:  return callfunc("SP_getCent",getarg(0),getarg(1),getarg(2),getarg(3));
+		case 2:  return callfunc("BR_getCent",getarg(0),getarg(1),getarg(2),getarg(3));
+		case 3:  return callfunc("FR_getCent",getarg(0),getarg(1),getarg(2),getarg(3));
+		case 4:  return callfunc("EN_getCent",getarg(0),getarg(1),getarg(2),getarg(3));
+		case 5:  return callfunc("IT_getCent",getarg(0),getarg(1),getarg(2),getarg(3));
+		case 6:  return callfunc("ND_getCent",getarg(0),getarg(1),getarg(2),getarg(3));
+		case 7:  return callfunc("DE_getCent",getarg(0),getarg(1),getarg(2),getarg(3));
+		case 8:  return callfunc("TG_getCent",getarg(0),getarg(1),getarg(2),getarg(3));
+		case 9:  return callfunc("NL_getCent",getarg(0),getarg(1),getarg(2),getarg(3));
+		case 10: return callfunc("BM_getCent",getarg(0),getarg(1),getarg(2),getarg(3));
+		case 11: return callfunc("RU_getCent",getarg(0),getarg(1),getarg(2),getarg(3));
+	}
+	return "err";
+}
+
+// ENGLISH NUMBER CONVERSION (Myzter)
+function	script	EN_getCent	{
+	set @A, getarg(2);
+	set @B, getarg(1);
+	set @C, getarg(0);
+	if (@A + @B * 10 < 20)
+		set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",0,@A + @B * 10,getarg(3));
+	else
+		set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",1,@B,getarg(3)) + " " + callfunc("RndColor") + callfunc("GetNumPart",0,@A,getarg(3));
+	if (@C > 0) set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",0,@C,getarg(3)) + " " + callfunc("RndColor") + "Hundred " + callfunc("RndColor") + @Numb$;
+	if (@A + @B + @C == 0) set @Numb$,callfunc("RndColor") + "cero";
+	return @Numb$ + "^000000";
+}
+
+// SPANISH NUMBER CONVERSION (Myzter)
+function	script	SP_getCent	{
+	set @A, getarg(2); // 3
+	set @B, getarg(1); // 2
+	set @C, getarg(0); // 1
+	if (@A + @B * 10 < 20)
+		set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",0,@A + @B * 10,getarg(3));
+	else
+		if (@A)
+			if (@B == 2)
+				set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",1,13,getarg(3)) + callfunc("RndColor") + callfunc("GetNumPart",0,@A,getarg(3));
+			else
+				set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",1,@B,getarg(3)) + callfunc("RndColor") + callfunc("GetNumPart",1,22,getarg(3)) + callfunc("RndColor") + callfunc("GetNumPart",0,@A,getarg(3));
+		else
+			set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",1,@B,getarg(3));
+		if (@C)
+			if (@C == 5)
+				set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",1,@C + 12,getarg(3)) + " " + callfunc("RndColor") + @Numb$;
+			else if (@C == 1)
+				if (@A + @B == 0)
+					set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",1,10,getarg(3));
+				else
+					set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",1,11,getarg(3)) + " " + callfunc("RndColor") + @Numb$;
+			else
+				set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",1,@C + 12,getarg(3)) + callfunc("RndColor") + callfunc("GetNumPart",1,12,getarg(3)) + callfunc("RndColor") + @Numb$;
+	if (@A + @B + @C == 0) set @Numb$,callfunc("RndColor") + callfunc("GetNumPart",1,23,getarg(3));
+	return @Numb$ + "^000000";
+}
+
+// BRASILIAN PORTUGUESE NUMBER CONVERSION (Myzter)
+function	script	BR_getCent	{
+	set @A, getarg(2);
+	set @B, getarg(1);
+	set @C, getarg(0);
+	if (@A + @B * 10 < 20)
+		set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",0,@A + @B * 10,getarg(3));
+	else
+		set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",1,@B,getarg(3)) + " e " + callfunc("RndColor") + callfunc("GetNumPart",0,@A,getarg(3));
+	if (@C > 1)
+		set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",0,@C,getarg(3)) + callfunc("RndColor") + " c(z)entos e " + callfunc("RndColor") + @Numb$;
+	else if (@C == 1)
+		if (@A + @B)
+			set @Numb$, callfunc("RndColor") + "cento e " + callfunc("RndColor") + @Numb$;
+		else
+			set @Numb$, callfunc("RndColor") + "cem";
+	if (@A + @B + @C == 0) set @Numb$,callfunc("RndColor") + "zero";
+	return @Numb$ + "^000000";
+}
+
+// FRENCH NUMBER CONVERSION - It was not easy ^__^ (Myzter)
+function	script	FR_getCent	{
+	set @A, getarg(2);
+	set @B, getarg(1);
+	set @C, getarg(0);
+	if (@A + @B * 10 < 20)
+		set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",0,@A + @B * 10,getarg(3));
+	else {
+		set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",1,@B,getarg(3)) + callfunc("GetNumPart",0,@A + @B * 10,getarg(3));
+		if (@B == 7 || @B == 9) {
+			if (@A == 1) {
+				if (@B == 7)
+					set @Numb$, @Numb$ + callfunc("RndColor") + callfunc("GetNumPart",0,20,getarg(3));
+				else
+					set @Numb$, @Numb$ + callfunc("RndColor") + callfunc("GetNumPart",0,21,getarg(3));
+			} else {
+				set @Numb$, @Numb$ + callfunc("RndColor") + "-" + callfunc("GetNumPart",0,10 + @A,getarg(3));
+			}
+		} else {
+			if (@A == 1)
+				set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",1,@B,getarg(3)) + callfunc("RndColor") + callfunc("GetNumPart",0,22,getarg(3));
+			else
+				if (!@A)
+					if (@B == 8)
+						set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",1,10,getarg(3));
+					else
+						set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",1,@B,getarg(3));
+				else
+ 					set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",1,@B,getarg(3)) + "-" + callfunc("RndColor") + callfunc("GetNumPart",0,@A,getarg(3));
+		}
+	}
+	if (@C > 1)
+		set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",0,@C,getarg(3)) + callfunc("RndColor") + " cent " + callfunc("RndColor") + @Numb$;
+	else if (@C == 1) {
+		if (@A + @B)
+			set @Numb$, callfunc("RndColor") + " cent " + callfunc("RndColor") + @Numb$;
+		else
+			set @Numb$, callfunc("RndColor") + " cent ";
+	}
+	if (@A + @B + @C == 0) set @Numb$,callfunc("RndColor") + "zero";
+	return @Numb$ + "^000000";
+}
+
+// ITALIAN NUMBER CONVERSION (Myzter)
+function	script	IT_getCent	{
+	set @A, getarg(2);
+	set @B, getarg(1);
+	set @C, getarg(0);
+	if (@A + @B * 10 < 20)
+		set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",0,@A + @B * 10,getarg(3));
+	else
+		if (@A == 1 || @A == 8)
+			set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",1,@B,getarg(3)) + callfunc("RndColor") + callfunc("GetNumPart",0,@A,getarg(3));
+		else
+			if (@B == 2)
+				set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",1,@B,getarg(3)) + callfunc("RndColor") + callfunc("GetNumPart",1,10,getarg(3)) + callfunc("RndColor") + callfunc("GetNumPart",0,@A,getarg(3));
+			else
+				set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",1,@B,getarg(3)) + callfunc("RndColor") + callfunc("GetNumPart",1,11,getarg(3)) + callfunc("RndColor") + callfunc("GetNumPart",0,@A,getarg(3));
+	if (@C > 0)
+		if (@C > 1)
+			set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",0,@C,getarg(3)) + callfunc("RndColor") + callfunc("GetNumPart",1,12,getarg(3)) + callfunc("RndColor") + @Numb$;
+		else
+			set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",1,12,getarg(3)) + callfunc("RndColor") + @Numb$;
+	if (@A + @B + @C == 0) set @Numb$,callfunc("RndColor") + "zero";
+	return @Numb$ + "^000000";
+}
+
+// INDONESIAN NUMBER CONVERSION (Myzter)
+function	script	ND_getCent	{
+	set @A, getarg(2);
+	set @B, getarg(1);
+	set @C, getarg(0);
+	if (@A + @B * 10 < 20)
+		set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",0,@A + @B * 10,getarg(3));
+	else
+		set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",0,@B,getarg(3)) + callfunc("RndColor") + callfunc("GetNumPart",1,3,getarg(3)) + " " + callfunc("RndColor") + callfunc("GetNumPart",0,@A,getarg(3));
+	if (@C > 0) {
+		if (@C == 1)
+			set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",1,2,getarg(3)) + callfunc("RndColor") + callfunc("GetNumPart",1,4,getarg(3)) + callfunc("RndColor") + " " + @Numb$;
+		else
+			set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",0,@C,getarg(3)) + callfunc("RndColor") + callfunc("GetNumPart",1,4,getarg(3)) + callfunc("RndColor") + " " + @Numb$;
+	}
+	if (@A + @B + @C == 0) set @Numb$,callfunc("RndColor") + "nol";
+	return @Numb$ + "^000000";
+}
+
+// GERMAN NUMBER CONVERSION (Myzter)
+function	script	DE_getCent	{
+	set @A, getarg(2);
+	set @B, getarg(1);
+	set @C, getarg(0);
+	if (@A + @B * 10 < 20)
+		set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",0,@A + @B * 10,getarg(3));
+	else
+		if (@A == 1)
+			set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",1,10,getarg(3)) + callfunc("RndColor") + callfunc("GetNumPart",1,11,getarg(3)) + callfunc("RndColor") + callfunc("GetNumPart",1,@B,getarg(3));
+		else
+			if (@A)
+				set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",0,@A,getarg(3)) + callfunc("RndColor") + callfunc("GetNumPart",1,11,getarg(3)) + callfunc("RndColor") + callfunc("GetNumPart",1,@B,getarg(3));
+			else
+				set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",1,@B,getarg(3));
+	if (@C > 0) set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",0,@C,getarg(3)) + callfunc("RndColor") + callfunc("GetNumPart",1,12,getarg(3)) + callfunc("RndColor") + @Numb$;
+	if (@A + @B + @C == 0) set @Numb$,callfunc("RndColor") + "cero";
+	return @Numb$ + "^000000";
+}
+
+// TAGALOG NUMBER CONVERSION (Myzter)
+function	script	TG_getCent	{
+	set @A, getarg(2);
+	set @B, getarg(1);
+	set @C, getarg(0);
+	if (@A + @B * 10 < 20)
+		set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",0,@A + @B * 10,getarg(3));
+	else {
+		if (@B == 1 || @B == 4 || @B == 6 || @B == 9) {
+			set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",1,@B,getarg(3)) + callfunc("RndColor") + callfunc("GetNumPart",1,12,getarg(3));
+			if (@B == 2 || @B == 3 || (@B == 5 && @A > 0) || (@B == 6 && @A > 0) || @B == 8 || @B == 9)
+				set @Numb$, @Numb$ + callfunc("GetNumPart",1,13,getarg(3));
+			else
+				set @Numb$, @Numb$ + callfunc("GetNumPart",1,14,getarg(3));
+			if (@A > 0) set @Numb$, @Numb$ + callfunc("GetNumPart",1,15,getarg(3)) + " " + callfunc("GetNumPart",0,@A,getarg(3));
+		} else {
+			set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",1,@B,getarg(3)) + callfunc("RndColor") + callfunc("GetNumPart",1,11,getarg(3));
+			if (@B == 2 || @B == 3 || (@B == 5 && @A > 0) || (@B == 6 && @A > 0) || @B == 8 || @B == 9)
+				set @Numb$, @Numb$ + callfunc("GetNumPart",1,13,getarg(3));
+			else
+				set @Numb$, @Numb$ + callfunc("GetNumPart",1,14,getarg(3));
+			if (@A > 0) set @Numb$, @Numb$ + callfunc("GetNumPart",1,15,getarg(3)) + " " + callfunc("GetNumPart",0,@A,getarg(3));
+		}
+	}
+	if (@C > 0) {
+		if (@A > 0)
+			set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",0,@C,getarg(3)) + callfunc("RndColor") + callfunc("GetNumPart",1,10,getarg(3)) + callfunc("RndColor") + callfunc("GetNumPart",1,15,getarg(3)) + callfunc("RndColor") + " " + @Numb$;
+		else
+			set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",0,@C,getarg(3)) + callfunc("RndColor") + callfunc("GetNumPart",1,10,getarg(3)) + " " + @Numb$;
+	}
+	if (@A + @B + @C == 0) set @Numb$,callfunc("RndColor") + "Sero";
+	return @Numb$ + "^000000";
+}
+
+// NEDERLANDS NUMBER CONVERSION (Myzter)
+function	script	NL_getCent	{
+	set @A, getarg(2);
+	set @B, getarg(1);
+	set @C, getarg(0);
+	if (@A + @B * 10 < 20)
+		set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",0,@A + @B * 10,getarg(3));
+	else
+		if (!@A)
+			set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",1,@B,getarg(3));
+		else
+			set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",0,@A,getarg(3)) + callfunc("RndColor") + callfunc("GetNumPart",1,10,getarg(3)) + callfunc("RndColor") + callfunc("GetNumPart",1,@B,getarg(3));
+	if (@C > 0) {
+		if (@A + @B * 10 < 20 && @A + @B) set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",1,10,getarg(3)) + @Numb$;
+		if (@C == 1)
+			set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",1,11,getarg(3)) + callfunc("RndColor") + @Numb$;
+		else
+			set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",0,@C,getarg(3)) + callfunc("RndColor") + callfunc("GetNumPart",1,11,getarg(3)) + callfunc("RndColor") + @Numb$;
+	}
+	if (@A + @B + @C == 0) set @Numb$,callfunc("RndColor") + "nul";
+	return @Numb$ + "^000000";
+}
+
+// BAHASA MELAYU NUMBER CONVERSION (Myzter)
+function	script	BM_getCent	{
+	set @A, getarg(2);
+	set @B, getarg(1);
+	set @C, getarg(0);
+	if (!@B && @A)
+		set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",0,@A,getarg(3));
+	else if (@B == 1) {
+		if (@A)
+			set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",0,@A,getarg(3)) + " " + callfunc("RndColor") + callfunc("GetNumPart",1,@B,getarg(3));
+		else
+			set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",0,10,getarg(3));
+	} else if (@B) {
+		if (@A)
+			set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",1,@B,getarg(3)) + " " + callfunc("RndColor") + callfunc("GetNumPart",0,@A,getarg(3));
+		else
+			set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",1,@B,getarg(3));
+	}
+	if (@C) {
+		if (!@A && !@B) {
+			if (@C == 1) {
+				set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",1,10,getarg(3));
+			} else {
+				set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",0,@C,getarg(3)) + " " + callfunc("RndColor") + callfunc("GetNumPart",1,11,getarg(3));
+			}
+		} else {
+			set @Numb$, callfunc("RndColor") + callfunc("GetNumPart",0,@C,getarg(3)) + " " + callfunc("RndColor") + callfunc("GetNumPart",1,11,getarg(3)) + " " + callfunc("RndColor") + @Numb$;
+		}
+	}
+	if (@A + @B + @C == 0) set @Numb$,callfunc("RndColor") + callfunc("GetNumPart",1,13,getarg(3));
+	return @Numb$ + "^000000";
+}
+
+// setarray $@BM_SmallNm1$[0],"","satu","dua","tiga","empat","lima","enam","tujuh","lapan","sembilan","sepuluh";
+// setarray $@BM_BigNm1$[0],"","belas","dua puluh","tiga puluh","empat puluh","lima puluh","enam puluh","tujuh puluh","lapan puluh","sembilan puluh","sepuluh puluh","ratus","sebelas","sifar";
+
+// RUSIAN NUMBER CONVERSION (Myzter) - Not implemented, there are issues with unicode that i can't handle
+function	script	RU_getCent	{
+	set @A, getarg(2);
+	set @B, getarg(1);
+	set @C, getarg(0);
+	return @C * 100 + @B * 10 + @A;
+}
+
+// GENERIC NUMBER GENERATION
+function	script	GetNumPart	{
+	if (!#BASE_LANG) set #BASE_LANG,$@BK_DEFLANG;
+	set @AR, getarg(0);
+	set @NP, getarg(1);
+	set @NPart$, "";
+	if (!@AR) {
+		switch(rand($@BK_Sets)) {
+			case 0:
+				switch (#BASE_LANG) {
+					case 1:  set @NPart$,$@SP_SmallNm1$[@NP];break;
+					case 2:  set @NPart$,$@BR_SmallNm1$[@NP];break;
+					case 3:  set @NPart$,$@FR_SmallNm1$[@NP];break;
+					case 4:  set @NPart$,$@EN_SmallNm1$[@NP];break;
+					case 5:  set @NPart$,$@IT_SmallNm1$[@NP];break;
+					case 6:  set @NPart$,$@ND_SmallNm1$[@NP];break;
+					case 7:  set @NPart$,$@DE_SmallNm1$[@NP];break;
+					case 8:  set @NPart$,$@TG_SmallNm1$[@NP];break;
+					case 9:  set @NPart$,$@NL_SmallNm1$[@NP];break;
+					case 10: set @NPart$,$@BM_SmallNm1$[@NP];break;
+					case 11: set @NPart$,$@RU_SmallNm1$[@NP];break;
+				}
+			case 1:
+				switch (#BASE_LANG) {
+					case 1:  set @NPart$,$@SP_SmallNm2$[@NP];break;
+					case 2:  set @NPart$,$@BR_SmallNm2$[@NP];break;
+					case 3:  set @NPart$,$@FR_SmallNm2$[@NP];break;
+					case 4:  set @NPart$,$@EN_SmallNm2$[@NP];break;
+					case 5:  set @NPart$,$@IT_SmallNm2$[@NP];break;
+					case 6:  set @NPart$,$@ND_SmallNm2$[@NP];break;
+					case 7:  set @NPart$,$@DE_SmallNm2$[@NP];break;
+					case 8:  set @NPart$,$@TG_SmallNm2$[@NP];break;
+					case 9:  set @NPart$,$@NL_SmallNm2$[@NP];break;
+					case 10: set @NPart$,$@BM_SmallNm2$[@NP];break;
+					case 11: set @NPart$,$@RU_SmallNm2$[@NP];break;
+				}
+		}
+	} else {
+		switch(rand($@BK_Sets)) {
+			case 0:
+				switch (#BASE_LANG) {
+					case 1:  set @NPart$,$@SP_BigNm1$[@NP];break;
+					case 2:  set @NPart$,$@BR_BigNm1$[@NP];break;
+					case 3:  set @NPart$,$@FR_BigNm1$[@NP];break;
+					case 4:  set @NPart$,$@EN_BigNm1$[@NP];break;
+					case 5:  set @NPart$,$@IT_BigNm1$[@NP];break;
+					case 6:  set @NPart$,$@ND_BigNm1$[@NP];break;
+					case 7:  set @NPart$,$@DE_BigNm1$[@NP];break;
+					case 8:  set @NPart$,$@TG_BigNm1$[@NP];break;
+					case 9:  set @NPart$,$@NL_BigNm1$[@NP];break;
+					case 10: set @NPart$,$@BM_BigNm1$[@NP];break;
+					case 11: set @NPart$,$@RU_BigNm1$[@NP];break;
+				}
+			case 1:
+				switch (#BASE_LANG) {
+					case 1:  set @NPart$,$@SP_BigNm2$[@NP];break;
+					case 2:  set @NPart$,$@BR_BigNm2$[@NP];break;
+					case 3:  set @NPart$,$@FR_BigNm2$[@NP];break;
+					case 4:  set @NPart$,$@EN_BigNm2$[@NP];break;
+					case 5:  set @NPart$,$@IT_BigNm2$[@NP];break;
+					case 6:  set @NPart$,$@ND_BigNm2$[@NP];break;
+					case 7:  set @NPart$,$@DE_BigNm2$[@NP];break;
+					case 8:  set @NPart$,$@TG_BigNm2$[@NP];break;
+					case 9:  set @NPart$,$@NL_BigNm2$[@NP];break;
+					case 10: set @NPart$,$@BM_BigNm2$[@NP];break;
+					case 11: set @NPart$,$@RU_BigNm2$[@NP];break;
+				}
+		}
+	}
+	if ($@BK_NoiseStr && getarg(2) == 1 && getstrlen(@NPart$) && @NPart$ != " ") {
+		for( set @n, 1; @n <= $@BK_NoiseStr; set @n, @n + 1 ) {
+			if (rand(2)) set @NPart$, $@BK_Noise$[rand(getarraysize($@BK_Noise$))] + @NPart$;
+			if (rand(2)) set @NPart$, @NPart$ + $@BK_Noise$[rand(getarraysize($@BK_Noise$))];
+		}
+	}
+	return @NPart$;
+}
+
+// ************************************************************************
+// ***                   MINIMAP NUMBER GENERATOR                       ***
+// ************************************************************************
+function	script	MiniMapNumber	{
+	deletearray @wnum[0],5;
+	switch(getarg(0)) {
+		case 0: setarray @wnum[0],15,9,9,9,15;	break;
+		case 1: setarray @wnum[0],15,4,4,5,6;	break;
+		case 2: setarray @wnum[0],15,1,15,8,15;	break;
+		case 3: setarray @wnum[0],15,8,15,8,15;	break;
+		case 4: setarray @wnum[0],8,8,15,9,9;	break;
+		case 5: setarray @wnum[0],15,8,15,1,15;	break;
+		case 6: setarray @wnum[0],15,9,15,1,15;	break;
+		case 7: setarray @wnum[0],1,2,4,8,15;	break;
+		case 8: setarray @wnum[0],15,9,15,9,15;	break;
+		default:setarray @wnum[0],15,8,15,9,15;
+	}
+	set @mmc, 0;
+	set @mmy, 0;
+	for (set @mmx, 6; @mmx > 0; set @mmx, @mmx - 1) {
+		if (@wnum[(@mmx-1)]&1) {
+			viewpoint getarg(1),110,(190 - @mmy),(@mmc + 1), 0x000000;
+			viewpoint getarg(1),120,(200 - @mmy),(@mmc + 2), 0x000000;
+			viewpoint getarg(1),110,(200 - @mmy),(@mmc + 3), 0x000000;
+			viewpoint getarg(1),120,(190 - @mmy),(@mmc + 4), 0x000000;
+			viewpoint getarg(1),115,(195 - @mmy),(@mmc + 5), 0xFF0000;
+		}
+		if (@wnum[(@mmx-1)]&2) {
+			viewpoint getarg(1),140,(190 - @mmy),(@mmc + 6) ,0x000000;
+			viewpoint getarg(1),150,(200 - @mmy),(@mmc + 7) ,0x000000;
+			viewpoint getarg(1),140,(200 - @mmy),(@mmc + 8) ,0x000000;
+			viewpoint getarg(1),150,(190 - @mmy),(@mmc + 9) ,0x000000;
+			viewpoint getarg(1),145,(195 - @mmy),(@mmc + 10),0xFF0000;
+		}
+		if (@wnum[(@mmx-1)]&4) {
+			viewpoint getarg(1),170,(190 - @mmy),(@mmc + 11),0x000000;
+			viewpoint getarg(1),180,(200 - @mmy),(@mmc + 12),0x000000;
+			viewpoint getarg(1),170,(200 - @mmy),(@mmc + 13),0x000000;
+			viewpoint getarg(1),180,(190 - @mmy),(@mmc + 14),0x000000;
+			viewpoint getarg(1),175,(195 - @mmy),(@mmc + 15),0xFF0000;
+		}
+		if (@wnum[(@mmx-1)]&8) {
+			viewpoint getarg(1),200,(190 - @mmy),(@mmc + 16),0x000000;
+			viewpoint getarg(1),210,(200 - @mmy),(@mmc + 17),0x000000;
+			viewpoint getarg(1),200,(200 - @mmy),(@mmc + 18),0x000000;
+			viewpoint getarg(1),210,(190 - @mmy),(@mmc + 19),0x000000;
+			viewpoint getarg(1),205,(195 - @mmy),(@mmc + 20),0xFF0000;
+		}
+		set @mmc, @mmc + 20;
+		set @mmy, @mmy + 30;
+	}
+	return;
+}
+
+// ************************************************************************
+// ***                    ASCII NUMBER GENERATOR                        ***
+// ************************************************************************
+function	script	MsgNum	{
+	set @mnum, getarg(0);
+	set @cdig, getarg(1);
+	set @D1, @mnum / 100;
+	set @D2, (@mnum - (@D1 * 100)) / 10;
+	set @D3, @mnum - (@D1 * 100) - (@D2 * 10);
+	switch (@cdig) {
+		case 0:
+			set @L00$, "";
+			set @L01$, "";
+			set @L02$, "";
+			set @L03$, "";
+			set @L04$, "";
+			set @L05$, "";
+			set @L06$, "";
+			set @cnum, @D1;
+			break;
+		case 1:
+			set @cnum, @D2;
+			break;
+		default:
+			set @cnum, @D3;
+	}
+	deletearray @wnum[0],127;
+	set @curstr$,$@BK_ASCIIChars$[rand(getarraysize($@BK_ASCIIChars$))];
+	if ($@BK_DinamicHeigth) set @lngnum,rand(1,2); else set @lngnum,2;
+	set @vertnum, rand(3);
+	switch(@cnum) {
+		case 0: setarray @wnum[0],15,9,9,9,15,6,9,9,9,6,6,13,9,11,6;	break;
+		case 1: setarray @wnum[0],6,5,4,4,15,6,4,4,4,15,4,4,4,15;	break;
+		case 2: setarray @wnum[0],15,8,15,1,15,7,8,14,1,15,6,9,4,2,15;	break;
+		case 3: setarray @wnum[0],15,8,15,8,15,6,9,12,9,6,7,8,6,8,7;	break;
+		case 4: setarray @wnum[0],9,9,15,8,8,8,12,10,15,8,12,10,9,15,8;	break;
+		case 5: setarray @wnum[0],15,1,15,8,15,14,1,7,8,7,15,1,14,8,15;	break;
+		case 6: setarray @wnum[0],15,1,15,9,15,4,2,15,9,6,6,1,15,9,6;	break;
+		case 7: setarray @wnum[0],15,8,4,2,1,15,8,8,8,8,15,8,14,4,2;	break;
+		case 8: setarray @wnum[0],15,9,15,9,15,6,9,6,9,6,15,9,6,9,15;	break;
+		default:setarray @wnum[0],15,9,15,8,15,15,9,14,4,3,6,9,14,4,2;
+	}
+	set @spaces$,callfunc("RndColor2") + callfunc("RepeatString",@curstr$,rand(1,2));
+	set @tmn, rand(getarraysize(@wnum) / 5) * 5;
+	for (set @mn, 0; @mn < 5; set @mn, @mn + 1) {
+		set @msgline$,@spaces$;
+		set @separator$, callfunc("RepeatString",@curstr$,rand(1,3));
+		if (@wnum[(@tmn + @mn)]&1) set @msgline$,@msgline$ + callfunc("RndColor") + callfunc("RepeatString",@curstr$,@lngnum); else set @msgline$,@msgline$ + callfunc("RndColor2") + callfunc("RepeatString",@curstr$,@lngnum);
+		if (@wnum[(@tmn + @mn)]&2) set @msgline$,@msgline$ + callfunc("RndColor") + callfunc("RepeatString",@curstr$,@lngnum); else set @msgline$,@msgline$ + callfunc("RndColor2") + callfunc("RepeatString",@curstr$,@lngnum);
+		if (@wnum[(@tmn + @mn)]&4) set @msgline$,@msgline$ + callfunc("RndColor") + callfunc("RepeatString",@curstr$,@lngnum); else set @msgline$,@msgline$ + callfunc("RndColor2") + callfunc("RepeatString",@curstr$,@lngnum);
+		if (@wnum[(@tmn + @mn)]&8) set @msgline$,@msgline$ + callfunc("RndColor") + callfunc("RepeatString",@curstr$,@lngnum); else set @msgline$,@msgline$ + callfunc("RndColor2") + callfunc("RepeatString",@curstr$,@lngnum);
+		set @CurVar$, "@L0" + (@vertnum + @mn) + "$";
+		setd @CurVar$,getd(@CurVar$) + @msgline$;
+	}
+	for (set @mn2, 0; @mn2 < 7; set @mn2, @mn2 + 1) {
+		if (@mn2 < @vertnum || @mn2 > @vertnum + 4) {
+			set @CurVar$, "@L0" + @mn2 + "$";
+			setd @CurVar$,getd(@CurVar$) + callfunc("RndColor2") + @spaces$ + callfunc("RepeatString",@curstr$,(4 * @lngnum));
+		}
+	}
+	if (@cdig < 2) {
+		callfunc "MsgNum",@mnum,@cdig + 1;
+	} else {
+		mes @L00$;
+		mes @L01$;
+		mes @L02$;
+		mes @L03$;
+		mes @L04$;
+		mes @L05$;
+		mes @L06$ + "^000000";
+	}
+	return;
+}
+
+// ************************************************************************
+// ***                    ASCII NUMBER GENERATOR II                     ***
+// ************************************************************************
+function	script	ShowCharAscII	{
+	// Redefine Number
+	set @lenstr, 4;
+	set @numw$, callfunc("GenString",@lenstr,0);
+	set @L00$, "";
+	set @L01$, "";
+	set @L02$, "";
+	set @L03$, "";
+	set @L04$, "";
+	set @L05$, "";
+	set @L06$, "";
+	set @curstr$,$@BK_ASCIILetters$[rand(getarraysize($@BK_ASCIILetters$))];
+	mes @BKTitle$;
+	for (set @ac,0; @ac < @lenstr; set @ac, @ac + 1) {
+		// Calculate the ASCII of the current @curstr$ character
+		query_sql "select ascii(ucase(mid('" + @numw$ + "'," + (@ac + 1) + ",1)))",@bklq;
+		
+		// Get a pattern for this ASCII [the bk_ascii table must have patterns for all ascii characters defined in $@AutoCharVoc$,$@AutoCharCons$]
+		if (!query_sql("select `pattern` from `bk_ascii` where ascii=" + @bklq[0] + " order by rand() limit 1",@BKPattern$)) {
+			atcommand $@BK_ComSymb$ + "request " + strcharinfo(0) + ": ASCII Pattern not found [" + @bklq[0] + "], please FIX IT!";
+			return 1; // If this pattern is not complete, simulate a right answer
+		}
+		cleararray @BKPat[0],0,5;
+		set @bkidx,1;
+		for (set @bkpt,0; @bkpt < 5; set @bkpt, @bkpt + 1) {
+			query_sql "select if(locate(',','" + @BKPattern$[0] + "'," + @bkidx + ")>0, mid('" + @BKPattern$[0] + "'," + @bkidx + ",locate(',','" + @BKPattern$[0] + "'," + @bkidx + ")-" + @bkidx + "), mid('" + @BKPattern$[0] + "'," + @bkidx + ")) A, locate(',','" + @BKPattern$[0] + "'," + @bkidx + ") B",@BKPTN,@BKPTL;
+			set @bkidx,@BKPTL[0] + 1;
+			set @BKPat[@bkpt],@BKPTN[0];
+		}
+		set @vertnum, rand(3);
+		for (set @ac2,0; @ac2 < 5; set @ac2, @ac2 + 1) {
+			set @msgline$, "";
+			if (@BKPat[@ac2] & 1 ) set @msgline$,@msgline$ + callfunc("RndColor") + callfunc("RepeatString",@curstr$,1); else set @msgline$,@msgline$ + callfunc("RndColor2") + callfunc("RepeatString",@curstr$,1);
+			if (@BKPat[@ac2] & 2 ) set @msgline$,@msgline$ + callfunc("RndColor") + callfunc("RepeatString",@curstr$,1); else set @msgline$,@msgline$ + callfunc("RndColor2") + callfunc("RepeatString",@curstr$,1);
+			if (@BKPat[@ac2] & 4 ) set @msgline$,@msgline$ + callfunc("RndColor") + callfunc("RepeatString",@curstr$,1); else set @msgline$,@msgline$ + callfunc("RndColor2") + callfunc("RepeatString",@curstr$,1);
+			if (@BKPat[@ac2] & 8 ) set @msgline$,@msgline$ + callfunc("RndColor") + callfunc("RepeatString",@curstr$,1); else set @msgline$,@msgline$ + callfunc("RndColor2") + callfunc("RepeatString",@curstr$,1);
+			if (@BKPat[@ac2] & 16) set @msgline$,@msgline$ + callfunc("RndColor") + callfunc("RepeatString",@curstr$,1); else set @msgline$,@msgline$ + callfunc("RndColor2") + callfunc("RepeatString",@curstr$,1);
+			setd "@L0" + @ac2 + "$",getd("@L0" + @ac2 + "$") + @msgline$ + callfunc("RndColor2") + callfunc("RepeatString",@curstr$,2) + "^000000";
+		}
+	}
+	mes @L00$;
+	mes @L01$;
+	mes @L02$;
+	mes @L03$;
+	mes @L04$;
+	mes @L05$;
+	mes @L06$;
+	next;
+	input @bkword$;
+	query_sql "select if(ucase('" + @bkword$ + "') = ucase('" + @numw$ + "'),1,0)",@bklq;
+	return @bklq[0];
+}
+
+function	script	GenString	{
+	// Create a random string
+	set @tot, getarg(0);
+	set @init, rand(1,2);
+	set @gstring$,"";
+	for (set @xd,0; @xd < @tot; set @xd, @xd + 1) {
+		set @init, @init + 1;
+		if (@init > 2) set @init, 1;
+		if (getarg(1) && getstrlen(@gstring$) > 1 && @xd < @tot -1 && !rand(15)) set @gstring$, @gstring$ + " ";
+		if (@init == 1) {
+			set @gstring$, @gstring$ + $@AutoCharVoc$[rand(getarraysize($@AutoCharVoc$))];
+		} else {
+			set @gstring$, @gstring$ + $@AutoCharCons$[rand(getarraysize($@AutoCharCons$))];
+		}
+	}
+	return @gstring$;
+}
+
+function	script	RepeatString	{
+	set @cs$,"";
+	for (set @rs,0; @rs < getarg(1); set @rs, @rs + 1) {
+		set @cs$,@cs$ + getarg(0);
+	}
+	return @cs$;
+}
+
+function	script	ClearBKEffects	{
+	// Restore visibility
+	if (checkoption(0x2000)) setoption 0x2000,0;	// Remove Ruwach
+	sc_end SC_FREEZE;	// Remove Freeze
+	setoption 0x40,0;
+	callfunc "xSet","BKHIDE",0;
+	// Restore original HP/SP
+	if (callfunc("xGet","BKHP")) {
+		set HP, callfunc("xGet","BKHP");
+		set SP, callfunc("xGet","BKSP");
+	}
+	callfunc "xSet","BKHP",0;
+	callfunc "xSet","BKSP",0;
+	
+	return;
+}
+
+function	script	SetBKEffects	{
+	// Save previows perfect hide status
+	if (checkoption(0x40) && getgmlevel() >= $@BK_MinGMLvl) callfunc "xSet","BKHIDE",1; else callfunc "xSet","BKHIDE",0;	// Perfect Hide (GM)
+
+	// Save health
+	callfunc "xSet","BKHP",HP;
+	callfunc "xSet","BKSP",SP;
+
+	// Recover health while answer the questions
+	percentheal 100,100;
+
+	// Set BK Status
+	setoption 0x40;	// Perfect Hide
+	setoption 0x2000;	// Ruwach
+	sc_start SC_FREEZE,60000000,10;	// Freeze
+	
+	return;
+}
+
+// ************************************************************************
+// ***               LANGUAGE FUNCTIONS                                 ***
+// ************************************************************************
+
+// Return the dialog in the right language
+function	script	BKDialog	{
+	if (!#BASE_LANG) set #BASE_LANG,$@BK_DEFLANG;
+	set @P1, getarg(0);
+	set @P2, getarg(1);
+	set @BKDPar$,getarg(2);
+	switch(@P2) {
+		case 0: set @BL,#BASE_LANG;break;	// User language
+		case 1: set @BL,$@BK_DEFLANG;break;	// Default language
+		case 2: set @BL,4;break;	// English language (last chance)
+		default: set @BL,@P2 - 2;	// Specified language
+	}
+	set @BKtxt$,getd("$@BKL" + @BL + "T" + @P1 + "$");
+	if (@BKtxt$ == "") {
+		deletearray @BKAnw$[0],1;
+		set @bkrec, query_sql("select replace(value,'!1','" + @BKDPar$ + "') from `bk_data` where idx=" + @P1 + " and lang=" + @BL,@BKAnw$);
+		if (!@bkrec) {
+			if (@P2 < 2) set @BKtxt$, callfunc("BKDialog",@P1,@P2 + 1,@BKDPar$); else set @BKtxt$, "ERR!";
+		} else {
+			set @BKtxt$, @BKAnw$[0];
+		}
+		if (@BKtxt$ != "ERR!") setd "$@BKL" + @BL + "T" + @P1 + "$",@BKtxt$;
+	}
+	return @BKtxt$;
+}
+
+// ************************************************************************
+// ***               GENERIC FUNCTIONS                                  ***
+// ************************************************************************
+
+// Function to use BK in Usable Items
+function	script	SecureItem	{
+	getmapxy @mapname$,@mapx,@mapy,0;
+	if (@mapname$ == "sec_pri") return; // Ignore in Jail
+	set @tmpFunc$,getarg(0);
+	callfunc "xTSet","pItemCall$",@tmpFunc$;
+	doevent "BotKillerFnc1::OnStart";
+	return;
+}
+
+// Convert minutes to HH:MM format (by Myzter)
+function	script	Min2HH	{
+	set @HH, getarg(0) / 60;
+	set @MM, getarg(0) - @HH * 60;
+	if (@HH < 10)
+		set @RT$, "0" + @HH;
+	else
+		set @RT$, @HH;
+	if (@MM < 10)
+		set @RT$, @RT$ + ":0" + @MM;
+	else
+		set @RT$, @RT$ + ":" + @MM;
+	return @RT$;
+}
+
+// Convert seconds to HH:MM:SS format (by Myzter)
+function	script	Sec2HH	{
+	set @HH, getarg(0) / 3600;
+	set @MM, (getarg(0) - @HH * 3600) / 60;
+	set @SS, getarg(0) - (@HH * 3600) - (@MM * 60);
+	if (@HH < 10)
+		set @RT$, "0" + @HH;
+	else
+		set @RT$, @HH;
+	if (@MM < 10)
+		set @RT$, @RT$ + ":0" + @MM;
+	else
+		set @RT$, @RT$ + ":" + @MM;
+	if (@SS < 10)
+		set @RT$, @RT$ + ":0" + @SS;
+	else
+		set @RT$, @RT$ + ":" + @SS;
+	return @RT$;
+}
+
+// Generate a random color rgb (0-200) (>200 can be difficult to see) (very usefull for any other script)
+// Sample:
+//   mes "Bring me " + callfunc("RndColor") + @TotalItems + "^000000 Items.";
+// (show the total items with different colors every time)
+function	script	RndColor	{
+	return "^" + callfunc("Int2Hex",0,200) + callfunc("Int2Hex",0,200) + callfunc("Int2Hex",0,200);
+}
+
+function	script	RndColor2	{
+	return "^" + callfunc("Int2Hex",190,255) + callfunc("Int2Hex",245,255) + callfunc("Int2Hex",210,255);
+}
+
+// Convert int to hex (by Myzter)
+function	script	Int2Hex	{
+	if (getarraysize(.hexbase$) < 2) setarray .hexbase$, "0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F","G";
+	set @num, rand(getarg(0),getarg(1));
+	set @hex$,"";
+	while (@num) {
+		set @r, @num % 16 + (1 / 2);
+		set @hex$, .hexbase$[@r] + @hex$;
+		set @num, @num / 16;
+	}
+	if (getstrlen(@hex$) < 1) set @hex$, "0";
+	if (getstrlen(@hex$) < 2) set @hex$, "0" + @hex$;
+	return @hex$;
+}
+
+// Transform 1 number into words (3 digits)
+function	script	BKShowNumber	{
+	set @BKRem, getarg(0);
+	set @SRD1, @BKRem / 100;
+	set @SRD2, (@BKRem - (@SRD1 * 100)) / 10;
+	set @SRD3, @BKRem - (@SRD1 * 100) - (@SRD2 * 10);
+	return callfunc("getCent",@SRD1,@SRD2,@SRD3,getarg(1));
+}
+
+// Get char vars
+function	script	xGet	{
+	if (getd("$@D" + getcharid(0) + "_" + getarg(0))) {
+		set @sGetRsp, getd("$@C" + getcharid(0) + "_" + getarg(0));
+	} else {
+		query_sql "select `pvalue` from `bk_var` where `char_id` = " + getcharid(0) + " and `pname` = '" + getarg(0) + "'", @sGetR;
+		set @sGetRsp, @sGetR[0];
+		deletearray @sGetR[0],1;
+		setd "$@C" + getcharid(0) + "_" + getarg(0),@sGetRsp;
+		setd "$@D" + getcharid(0) + "_" + getarg(0),1;
+	}
+	return @sGetRsp;
+}
+
+// Set char vars
+function	script	xSet	{
+	// Only works on changed values
+	set @BKVName$,getarg(0);
+	set @BKVvalue,getarg(1);
+	if (callfunc("xGet",@BKVName$) != @BKVvalue) {
+		if (@BKVvalue)
+			set @query$, "replace into `bk_var` set `char_id` = " + getcharid(0) + ", `pname` = '" + @BKVName$ + "', `pvalue` = " + @BKVvalue;
+		else
+			set @query$, "delete from `bk_var` where `char_id` = " + getcharid(0) + " and `pname` = '" + @BKVName$ + "'";
+		query_sql @query$;
+		setd "$@C" + getcharid(0) + "_" + @BKVName$,@BKVvalue;
+		setd "$@D" + getcharid(0) + "_" + @BKVName$,1;
+	}
+	return;
+}
+
+function	script	xTSet	{
+	setd "$@T" + getcharid(0) + "_" + getarg(0), getarg(1);
+	return;
+}
+
+function	script	xTGet	{
+	return getd("$@T" + getcharid(0) + "_" + getarg(0));
+}
+
+// ************************************************************************
+// ***               DATABASE RANKING FUNCTIONS                         ***
+// ************************************************************************
+
+// Update Bot/Bot Hunter Data
+function	script	UpdateRank	{
+	if (!$@BK_MySQLRank) return;
+	getmapxy @mapname$,@mapx,@mapy,0;
+	set @BKRID, getd("$@BKRID" + getcharid(3));
+	setd "$@BKRID" + getcharid(3),0;
+	query_sql "INSERT INTO `bk_rank` (bot_id, bot_name, hunt_id, hunt_name, bot_map, log_date) values (" + getcharid(3) + ",'" + strcharinfo(0) + "'," + @BKRID + ",'" + getarg(0) + "','" + @mapname$ + "',now())";
+	callfunc "RefreshRank";
+	return;
+}
+
+// Get BOT Statistics
+function	script	RefreshRank	{
+	if (!$@BK_MySQLRank) end;
+	deletearray $@BKRANKBOTS$[0],127;
+	deletearray $@BKRANKBOTST[0],127;
+	deletearray $@BKRANKHUNT$[0],127;
+	deletearray $@BKRANKHUNTT[0],127;
+	query_sql "SELECT bot_name,count(*) cnt FROM `bk_rank` group by bot_id order by cnt desc limit " + $@BK_RankLimit,$@BKRANKBOTS$,$@BKRANKBOTST;
+	query_sql "SELECT hunt_name,count(*) cnt FROM `bk_rank` where hunt_id > 0 group by hunt_id order by cnt desc limit " + $@BK_RankLimit,$@BKRANKHUNT$,$@BKRANKHUNTT;
+	return;
+}
+
+function	script	BKCheckTables	{
+	// Checking bk_lang
+	query_sql "show tables like 'bk_lang'",.BKTable$;
+	if (.BKTable$[0] == "") {
+		debugmes "BotKiller #1 - Creating `bk_lang` table";
+		query_sql "CREATE TABLE `bk_lang` (`langid` tinyint(3) NOT NULL DEFAULT '0',`langname` varchar(30) NOT NULL,`deflang` tinyint(1) NOT NULL DEFAULT '0',`disabled` tinyint(3) NOT NULL DEFAULT '0',PRIMARY KEY (`langid`)) ENGINE=MyISAM;";
+		
+		debugmes "BotKiller #1 - Creating base languages in table `bk_lang` (default EN)";
+		query_sql "INSERT INTO `bk_lang` (`langid`,`langname`,`deflang`,`disabled`) VALUES (4,'English',1,0);";
+		query_sql "INSERT INTO `bk_lang` (`langid`,`langname`,`deflang`,`disabled`) VALUES (1,'EspaÃ±ol',0,0);";
+	}
+	deletearray .BKTable$[0],1;
+	
+	// Checking bk_data
+	query_sql "show tables like 'bk_data'",.BKTable$;
+	if (.BKTable$[0] == "") {	
+		debugmes "BotKiller #1 - Creating table `bk_data` ...";
+		query_sql "CREATE TABLE `bk_data` ( `idx` tinyint(3) NOT NULL DEFAULT '0',`lang` tinyint(3) NOT NULL DEFAULT '0',`value` varchar(255) NOT NULL,PRIMARY KEY (`idx`,`lang`)) ENGINE=MyISAM;";
+		query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (0,0,'BK Ver. 5.2');";
+		
+		debugmes "BotKiller #1 - Creating dialogs [English]";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (0,4,\"Police\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (1,4,\"When you cancel this window, i count that as a Bad Answer.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (2,4,\" was sent to the jail for \");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (3,4,\" minutes\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (4,4,\" (timeout - \");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (5,4,\"I really sorry but i need to know if you are Playing or Boting.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (6,4,\"Input this number:\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (7,4,\" of \");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (8,4,\" \");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (9,4,\" seconds to respond\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (10,4,\"No, the right answer is: \");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (11,4,\"If you fail \");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (12,4,\" times... you will be jailed!\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (13,4,\"Thank you for your time.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (14,4,\"Interrogating \");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (15,4,\"I can\'t talk with \");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (16,4,\" right now.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (17,4,\"I\'m sorry, but you can\'t use this system on admin accounts.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (18,4,\"Sorry \");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (19,4,\" need to know if you are Playing or Boting.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (20,4,\" suspects that you are using Bot, please be faster.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (21,4,\"That doesn\'t seem to be a valid player name.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (22,4,\"There\'s no online player with that name.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (23,4,\"I\'m sorry, you cannot use my services during Guild War.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (24,4,\"Talking with \");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (25,4,\", wait a moment...\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (26,4,\"Hey!!!, don\'t make noise in the Jail.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (27,4,\"Â¿What??... let me review your arrest information...\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (28,4,\"Ok, go away!\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (29,4,\"... and do not use Bots in this server.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (30,4,\"Hey... you must remain here by:\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (31,4,\" answer out of time, take \");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (32,4,\" don\'t respond correctly\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (33,4,\" wrong answer \");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (34,4,\" passed the test\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (35,4,\"Exit\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (36,4,\"You must be Base Level !1 or higher to use this service.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (37,4,\" account was banned for: \");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (38,4,\"Please, don\'t play with this system!\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (39,4,\"You can\'t use the system on this map.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (40,4,\"You and the suspected player must be in the same map.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (41,4,\"Select the Ranking\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (42,4,\"Bots\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (43,4,\"Bot Hunters\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (44,4,\"Nobody in the list!\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (45,4,\" arrests\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (46,4,\" hunts\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (47,4,\"Language\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (48,4,\"English\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (49,4,\"Report Player\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (50,4,\"Warn Player\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (51,4,\"Jail Player\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (52,4,\"Ban Player\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (53,4,\"Please input the name of the player to report:\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (54,4,\"Please wait !1 minutes before report again.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (55,4,\"Unrecognized command\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (56,4,\"Reason\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (57,4,\"Please, give some reason to take this action.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (58,4,\"Please, select the reason why you report this user:\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (59,4,\"Please input your comments (max. length: 50)\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (60,4,\"Confirm\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (61,4,\"Cancel\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (62,4,\"Impersonation\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (63,4,\"Insult\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (64,4,\"Fraud\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (65,4,\"Spam\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (66,4,\"Mob Train\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (67,4,\"Skill/Bug Abuse\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (68,4,\"Steal\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (69,4,\"Exploit\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (70,4,\"Support Bot\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (71,4,\" second(s) to return...\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (72,4,\"Locked Language.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (73,4,\"Enter the following letters:\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (74,4,\"Enter the number who said one of the monsters:\");";
+
+			debugmes "BotKiller #1 - Creating dialogs [Spanish]";
+
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (0,1,\"PolicÃ­a\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (1,1,\"Cada vez que cancelas esta pantalla se cuenta como respuesta incorrecta.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (2,1,\" fue encarcelado(a) por \");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (3,1,\" minutos\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (4,1,\" (fuera de tiempo - \");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (5,1,\"Siento interrumpirte pero debo saber si estÃ¡s jugando o usando Bot.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (6,1,\"Ingresa este nÃºmero:\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (7,1,\" de \");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (8,1,\" Restan \");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (9,1,\" segundos\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (10,1,\"Error!, la respuesta era: \");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (11,1,\"Si fallas \");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (12,1,\" veces... te vas a la cÃ¡rcel!\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (13,1,\"Gracias por tu tiempo.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (14,1,\"Interrogando a \");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (15,1,\"No puedo interrogar a \");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (16,1,\", hablamos hace solo \");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (17,1,\"Lo lamento, no puedo interrogar a usuarios administradores.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (18,1,\"Disculpa \");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (19,1,\" me ordenÃ³ hacerte unas preguntas... responde rÃ¡pido.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (20,1,\" sospecha que usas Bot. Reporta cualquier abuso en tu contra.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (21,1,\"El dato indicado no parece ser un nombre de personaje vÃ¡lido.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (22,1,\"No hay ningÃºn jugador online con ese nombre.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (23,1,\"Lo siento, no puedo hacerlo durante Guild War.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (24,1,\"Hablando con \");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (25,1,\", espera un momento...\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (26,1,\"Hey!!!, no metas ruido en la cÃ¡rcel.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (27,1,\"Â¿Quee??... dÃ©jame revisar la informaciÃ³n de tu arresto...\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (28,1,\"Ok, vete de aquÃ­!\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (29,1,\"... y no uses Bots en este servidor.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (30,1,\"Hey!... debes permanecer aquÃ­ por:\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (31,1,\" respondiÃ³ fuera de tiempo, tardÃ³ \");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (32,1,\" no supo responder.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (33,1,\" respondiÃ³ mal\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (34,1,\" respondiÃ³ correctamente\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (35,1,\"Salir\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (36,1,\"Debes ser al menos nivel !1 para usar este servicio.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (37,1,\" fue baneado(a) por: \");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (38,1,\"Por favor, no juegues con este sistema!\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (39,1,\"No puedes usar el sistema en este mapa.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (40,1,\"TÃº y el sospechoso deben estar en el mismo mapa.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (41,1,\"Selecciona el Ranking\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (42,1,\"Bots\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (43,1,\"Caza Bots\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (44,1,\"Nadie en la lista!\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (45,1,\" arrestos\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (46,1,\" capturas\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (47,1,\"Lenguaje\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (48,1,\"EspaÃ±ol\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (49,1,\"Reportar jugador\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (50,1,\"Advertir\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (51,1,\"Encarcelar\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (52,1,\"Banear\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (53,1,\"Por favor digita el nombre del jugador que deseas reportar:\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (54,1,\"Espera !1 minutos antes de volver a reportar, gracias.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (55,1,\"Comando desconosido\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (56,1,\"RazÃ³n\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (57,1,\"Por favor, indica la razÃ³n que tienes para tomar esta medida.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (58,1,\"Por favor, selecciona la razÃ³n por la cual deseas reportar al jugador:\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (59,1,\"Ingresa tus comentarios (max: 50 caracteres)\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (60,1,\"Confirmar\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (61,1,\"Cancelar\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (62,1,\"PersonificaciÃ³n\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (63,1,\"Insulto\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (64,1,\"Fraude\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (65,1,\"Spam\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (66,1,\"Mob Train\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (67,1,\"Abuso de Skill/Bug\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (68,1,\"Robo\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (69,1,\"Trampa\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (70,1,\"Bot de Soporte\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (71,1,\" segundo(s) para volver...\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (72,1,\"Lenguaje bloqueado.\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (73,1,\"Ingresa las siguientes letras:\");";
+			query_sql "REPLACE INTO `bk_data` (`idx`,`lang`,`value`) VALUES (74,1,\"Un monstruo acaba de decir un nÃºmero (ver chat log)\");";
+	}
+	deletearray .BKTable$[0],1;
+
+	// Checking bk_rank
+	query_sql "show tables like 'bk_rank'",.BKTable$;
+	if (.BKTable$[0] == "") {
+		debugmes "BotKiller #1 - Creating table `bk_rank`";
+		query_sql "CREATE TABLE `bk_rank` (`bot_id` mediumint(9) unsigned NOT NULL DEFAULT '0',`bot_name` varchar(24) NOT NULL DEFAULT '',`hunt_id` mediumint(9) unsigned NOT NULL DEFAULT '0',`hunt_name` varchar(24) DEFAULT NULL,`bot_map` varchar(30) DEFAULT NULL,`log_date` datetime DEFAULT '0000-00-00 00:00:00',KEY `bot` (`bot_id`),KEY `hunt` (`hunt_id`)) ENGINE=MyISAM;";
+	}
+	deletearray .BKTable$[0],1;
+	
+	// Checking bk_var
+	query_sql "show tables like 'bk_var'",.BKTable$;
+	if (.BKTable$[0] == "") {
+		debugmes "BotKiller #1 - Creating table `bk_var`";
+		query_sql "CREATE TABLE `bk_var` (`char_id` mediumint(8) unsigned NOT NULL DEFAULT '0',`pname` varchar(30) NOT NULL,`pvalue` int(11) NOT NULL DEFAULT '0',PRIMARY KEY (`char_id`,`pname`)) ENGINE=MyISAM;";
+	}
+	deletearray .BKTable$[0],1;
+	
+	// Checking bk_ascii
+	query_sql "show tables like 'bk_ascii'",.BKTable$;
+	if (.BKTable$[0] == "") {
+		debugmes "BotKiller #1 - Creating table `bk_ascii`";
+		query_sql "CREATE TABLE `bk_ascii` (`ascii` int(11) unsigned NOT NULL DEFAULT '0',`pattern` varchar(340) NOT NULL,KEY `idx` (`ascii`)) ENGINE=MyISAM;";
+		
+		debugmes "BotKiller #1 - Creating patterns A-Z";
+		query_sql "INSERT INTO `bk_ascii` VALUES (65,'4,10,17,31,17');";
+		query_sql "INSERT INTO `bk_ascii` VALUES (66,'31,17,15,17,31');";
+		query_sql "INSERT INTO `bk_ascii` VALUES (67,'31,1,1,1,31');";
+		query_sql "INSERT INTO `bk_ascii` VALUES (68,'7,9,17,17,15');";
+		query_sql "INSERT INTO `bk_ascii` VALUES (69,'31,1,15,1,31');";
+		query_sql "INSERT INTO `bk_ascii` VALUES (70,'31,1,15,1,1');";
+		query_sql "INSERT INTO `bk_ascii` VALUES (71,'31,1,25,17,31');";
+		query_sql "INSERT INTO `bk_ascii` VALUES (72,'17,17,31,17,17');";
+		query_sql "INSERT INTO `bk_ascii` VALUES (73,'14,4,4,4,14');";
+		query_sql "INSERT INTO `bk_ascii` VALUES (74,'28,8,8,9,15');";
+		query_sql "INSERT INTO `bk_ascii` VALUES (75,'17,9,7,9,17');";
+		query_sql "INSERT INTO `bk_ascii` VALUES (76,'1,1,1,1,31');";
+		query_sql "INSERT INTO `bk_ascii` VALUES (77,'17,27,21,17,17');";
+		query_sql "INSERT INTO `bk_ascii` VALUES (78,'17,19,21,25,17');";
+		query_sql "INSERT INTO `bk_ascii` VALUES (79,'31,17,17,17,31');";
+		query_sql "INSERT INTO `bk_ascii` VALUES (80,'31,17,31,1,1');";
+		query_sql "INSERT INTO `bk_ascii` VALUES (81,'15,9,13,9,31');";
+		query_sql "INSERT INTO `bk_ascii` VALUES (82,'15,9,7,9,17');";
+		query_sql "INSERT INTO `bk_ascii` VALUES (83,'31,1,31,16,31');";
+		query_sql "INSERT INTO `bk_ascii` VALUES (84,'31,4,4,4,4');";
+		query_sql "INSERT INTO `bk_ascii` VALUES (85,'17,17,17,17,31');";
+		query_sql "INSERT INTO `bk_ascii` VALUES (86,'17,17,10,10,4');";
+		query_sql "INSERT INTO `bk_ascii` VALUES (87,'17,17,21,21,10');";
+		query_sql "INSERT INTO `bk_ascii` VALUES (88,'17,10,4,10,17');";
+		query_sql "INSERT INTO `bk_ascii` VALUES (89,'18,18,12,4,2');";
+		query_sql "INSERT INTO `bk_ascii` VALUES (90,'31,24,12,6,31');";
+	}
+	
+	return;
+}
+
+
+// ************************************************************************
+// ***               NPCS                                               ***
+// ************************************************************************
+
+// Ranking NPC - change the name if you want but ensure to set the same name in the "disablenpc" command at the bottom of this NPC
+prontera,138,171,3	script	Brgy.Tanod	953,{
+lStart:
+	mes "[^0000FF" + callfunc("BKDialog",42,0,"") + "/" + callfunc("BKDialog",43,0,"") + "^000000]";
+	mes callfunc("BKDialog",41,0,"");
+	next;
+	set @opc, select("^FF0000" + callfunc("BKDialog",42,0,""),"^0000FF" + callfunc("BKDialog",43,0,"") + "^000000",callfunc("BKDialog",35,0,""));
+	if (@opc == 3) close;
+	if (@opc == 1) {
+		if (getarraysize($@BKRANKBOTST) < 1) {
+		mes "[^0000FF" + callfunc("BKDialog",42,0,"") + "/" + callfunc("BKDialog",43,0,"") + "^000000]";
+		mes callfunc("BKDialog",44,0,"");
+		close;
+	}
+	mes "[^0000FFTOP " + $@BK_RankLimit + " " + callfunc("BKDialog",42,0,"") + "^000000]";
+	for( set @r, 1; @r <= getarraysize($@BKRANKBOTST); set @r, @r + 1 ) {
+		mes @r + ") ^FF0000" + $@BKRANKBOTS$[@r-1] + "^000000 [" + $@BKRANKBOTST[@r-1] + callfunc("BKDialog",45,0,"") + "]";
+	}
+	next;
+	goto lStart;
+	}
+	if (getarraysize($@BKRANKHUNTT) < 1) {
+		mes "[^0000FF" + callfunc("BKDialog",42,0,"") + "/" + callfunc("BKDialog",43,0,"") + "^000000]";
+		mes callfunc("BKDialog",44,0,"");
+		close;
+	}
+	mes "[^0000FFTOP " + $@BK_RankLimit + " " + callfunc("BKDialog",43,0,"") + "^000000]";
+	for( set @r, 1; @r <= getarraysize($@BKRANKHUNTT); set @r, @r + 1 ) {
+		mes @r + ") ^0000FF" + $@BKRANKHUNT$[@r-1] + "^000000 [" + $@BKRANKHUNTT[@r-1] + callfunc("BKDialog",46,0,"") + "]";
+	}
+	next;
+	goto lStart;
+OnInit:
+	if (!$@BK_MySQLRank) {
+		disablenpc "[...]";
+		end;
+	}
+	callfunc "RefreshRank";
+}
+
+// Guards
+sec_pri,24,63,4	script	Kengo::JailMan	795,{
+	set @TIJ,callfunc("xGet","TIJ");
+	set @TIT,callfunc("xGet","TIT");
+	set @TAJ,gettimetick(2);
+	if (!@TIJ) {
+		mes "[" + callfunc("BKDialog",0,0,"") + "]";
+		mes callfunc("BKDialog",26,0,""); 
+		close;
+	}
+	set @TIJ, @TAJ - @TIJ;
+	if (@TIJ >= @TIT) {
+		mes "[" + callfunc("BKDialog",0,0,"") + "]";
+		mes callfunc("BKDialog",27,0,"");
+		next;
+		mes "[" + callfunc("BKDialog",0,0,"") + "]";
+		mes callfunc("BKDialog",28,0,"");
+		mes " ";
+		mes callfunc("BKDialog",29,0,"");
+		close2;
+		callfunc "xSet","TIJ",0;
+		callfunc "xSet","TIT",0;
+		callfunc "xSet","BKTimer",0;
+		if ($@BK_NewATComm)
+			atcommand $@BK_ComSymb$ + "unjail " + strcharinfo(0);
+		else
+			atcommand strcharinfo(0) + " " + $@BK_ComSymb$ + "unjail " + strcharinfo(0);
+	} else {
+		set @TIT, @TIT - @TIJ;
+		mes "[" + callfunc("BKDialog",0,0,"") + "]";
+		mes callfunc("BKDialog",30,0,"");
+		mes " ";
+		mes "  -=[^FF0000" + callfunc("Sec2HH",@TIT) + "^000000]=-";
+		close;
+	}
+}
+sec_pri,50,63,4	duplicate(JailMan)	Akemi	795
+sec_pri,76,63,4	duplicate(JailMan)	Nomaru	795
+
+// NPC to change the BK Language
+prontera,136,171,4	script	Police::BKLNGNPC	966,{
+	if (!#BASE_LANG) set #BASE_LANG,$@BK_DEFLANG;
+lMainM:
+	switch (select(callfunc("BKDialog",35,0,"") + ":" + callfunc("BKDialog",47,0,"") + ":" + callfunc("BKDialog",49,0,""))) {
+		case 1:
+			close;
+		case 2:
+			deletearray @BKLangID[0],127;
+			deletearray @BKLangName$[0],127;
+			set @TLang,query_sql("select langid, langname from `bk_lang` where disabled=0 order by deflang desc, langname asc",@BKLangID,@BKLangName$);
+			set @CL,0;
+			set @opc,0;
+			lInit:
+			while (@opc != 4) {
+				mes "[Police]";
+				mes " ** " + callfunc("BKDialog",47,0,"") + ": ^0000FF" + callfunc("BKDialog",48,0,"") + "^000000 **";
+				next;
+				if (getgmlevel() > 98) {
+					set @opc,select(">>>>:^0000FF" + @BKLangName$[@CL] + "^000000 (" + (@CL + 1) + "/" + @TLang + "):<<<<:^FF0000" + callfunc("BKDialog",35,0,"") + "^000000:^0000FFDebug^000000");
+				} else {
+					set @opc,select(">>>>:^0000FF" + @BKLangName$[@CL] + "^000000 (" + (@CL + 1) + "/" + @TLang + "):<<<<:^FF0000" + callfunc("BKDialog",35,0,"") + "^000000");
+				}
+				switch (@opc) {
+					case 1: set @CL, @CL + 1;break;
+					case 2: 
+						set #BASE_LANG, @BKLangID[@CL];
+						if (!callfunc("CheckLang")) {
+							mes "[Police]";
+							mes " ** ^0000FF" + callfunc("BKDialog",72,0,"") + "^000000 **";
+							next;
+							goto lInit;
+						} else {
+							mes "[Police]";
+							mes " ** " + callfunc("BKDialog",47,0,"") + ": ^0000FF" + callfunc("BKDialog",48,0,"") + "^000000 **";
+							next;
+						}
+						goto lMainM;
+						case 3: set @CL, @CL - 1;break;
+					case 4: goto lMainM;
+					case 5:
+						set @ty,1;
+						set @tx,0;
+						while (@ty) { 
+							for(set @tz,0; @tz < 11; set @tz,@tz + 1) {
+								if (@tx + @tz > 999) break;
+								mes ">" + (@tx + @tz) + ": " + callfunc("BKShowNumber",@tx + @tz,#BASE_LANG);
+							}
+							next;
+							switch (select("+ 10","+ 100","- 10","- 100",callfunc("BKDialog",35,0,""))) {
+								case 1: set @tx, @tx + 10;break;
+								case 2: set @tx, @tx + 100;break;
+								case 3: set @tx, @tx - 10;break;
+								case 4: set @tx, @tx - 100;break;
+								case 5: goto lMainM;
+							}
+							if (@tx > 999) set @tx, 0;
+							if (@tx < 0) set @tx, 990;
+						}
+						goto lInit;
+				}
+				if (@CL < 0) set @CL, @TLang - 1;
+				if (@CL >= @TLang) set @CL, 0;
+			}
+			break;
+		case 3:
+			set @TKLastUse, callfunc("xTGet","TKLU");
+			set @TKNow,gettimetick(2) / 60;
+			set @TKTPas,@TKNow - @TKLastUse;
+			mes "[Police]";
+			if (@TKTPas < $@TK_TimeBtwRep) {
+				mes callfunc("BKDialog",54,0,$@TK_TimeBtwRep);
+				close;
+			}
+			mes callfunc("BKDialog",53,0,"");
+			next;
+			input @TKPlayer$;
+			if (getstrlen(@TKPlayer$) < 4 || getstrlen(@TKPlayer$) > 24) {
+				mes callfunc("BKDialog",21,0,"");
+				close;
+			}
+			mes "[Police]";
+			set @RID, getcharid(3,@TKPlayer$);
+			if (@RID < 1) {
+				mes callfunc("BKDialog",22,0,"");
+				close;
+			}
+			mes callfunc("BKDialog",58,0,"");
+			next;
+			set @TK_Reason, select(	callfunc("BKDialog",35,0,"") + ":" + callfunc("BKDialog",62,0,"") + ":" +
+				callfunc("BKDialog",63,0,"") + ":" + callfunc("BKDialog",64,0,"") + ":" +
+				callfunc("BKDialog",65,0,"") + ":" + callfunc("BKDialog",66,0,"") + ":" +
+				callfunc("BKDialog",67,0,"") + ":" + callfunc("BKDialog",68,0,"") + ":" +
+				callfunc("BKDialog",69,0,"") + ":" + callfunc("BKDialog",70,0,"") + ":");
+			if (@TK_Reason == 1) goto lMainM;
+			set @TK_Reason, @TK_Reason + 60;
+
+			lInputComments:
+			mes "[Police]";
+			mes callfunc("BKDialog",59,0,"");
+			next;
+			input @TK_Comments$;
+			if (getstrlen(@TK_Comments$) > 50) goto lInputComments;
+			mes "[Police]";
+			mes callfunc("BKDialog",49,0,"") + " " + @TKPlayer$;
+			mes callfunc("BKDialog",56,0,"") + ": " + callfunc("BKDialog",@TK_Reason,0,"");
+			mes "> " + @TK_Comments$ + "<";
+			next;
+			if (select(callfunc("BKDialog",60,0,"") + ":" + callfunc("BKDialog",61,0,"")) == 2) goto lMainM;
+			callfunc "xTSet","TKLU",gettimetick(2) / 60;
+			mes "[Police]";
+			mes callfunc("BKDialog",13,0,"");
+			close2;
+			if ($@BK_NewATComm)
+				atcommand $@BK_ComSymb$ + "request " + strcharinfo(0) + ": " + @TKPlayer$ + " " + callfunc("BKDialog",@TK_Reason,0,"") + " - " + @TK_Comments$;
+			else
+				atcommand strcharinfo(0) + " " + $@BK_ComSymb$ + "request " + strcharinfo(0) + ": " + @TKPlayer$ + " " + callfunc("BKDialog",@TK_Reason,0,"") + " - " + @TK_Comments$;
+			end;
+	}
+	goto lMainM;
+}
+
+// ************************************************************************
+// ***               LOAD MAP TRIGGER                                   ***
+// ************************************************************************
+-	script	OnPCLoadMapEvent	-1,{
+OnPCLoadMapEvent:
+	//callfunc "ClearBKEffects";
+	set @SFStarted, callfunc("xGet","SFStarted");
+
+	if (callfunc("xGet","BKSID") != $@BK_ServerID) {
+		// Set the new Server Id
+		callfunc "xSet","BKSID",$@BK_ServerID;
+		// Reboot Protection (clear the counter and discount 1 bad answer)
+		if (callfunc("xGet","SFStarted")) {
+			callfunc "xSet","BKTimer",gettimetick(2);
+			if (callfunc("xGet","SFErr")) callfunc "xSet","SFErr",callfunc("xGet","SFErr") - 1;
+		}
+	}
+	if ($@BK_ChangeMap) {
+		set @sflast_map$, callfunc("xTGet","SFLastMap$");
+		getmapxy @sfini_map$,@ini_x,@ini_y,0;
+		callfunc "xTSet","SFLastMap$", @sfini_map$;
+	}
+
+	if (($@BK_ChangeMap && @sflast_map$ != @sfini_map$) || @SFStarted > 0) {
+
+		callfunc "SecureItem","";
+	} else {
+		if (callfunc("xGet","BKWarnTime") > 0) {
+			callfunc "xSet","BKWarnTime",0;
+			callfunc "ClearBKEffects";
+		}
+	}
+}
+
+// ************************************************************************
+// ***               KILL MONSTER TRIGGER                               ***
+// ************************************************************************
+-	script	OnNPCKillEvent	-1,{
+OnNPCKillEvent:
+	callfunc "CheckStartBK"; // Add this function call in any custom kill monster event to enable BK on that mobs
+}
+
+function	script	CheckStartBK	{
+	if ($@BK_AllMobs) {
+		if (callfunc("xGet","SFStarted")) end;
+		if (gettimetick(2) / 60 - callfunc("xTGet","SFLViewA") < $@BK_IVA) end;
+		set @BKChance, $@BK_MobChance - callfunc("xGet","SFErrCnt") * 3;
+		if (@BKChance < 10) set @BKChance,10;
+		if (!rand(@BKChance)) {
+			callfunc "xSet","SFStarted",4;
+			callfunc "xSet","BKWarnTime",$@BKOnMobTimer;
+			callfunc "SecureItem","";
+		}
+	}
+	return;
+}
+
+-	script	BKTimerEvt	-1,{
+OnTimer:
+	set @BKWarnTime, callfunc("xGet","BKWarnTime") - 1;
+	callfunc "xSet","BKWarnTime",@BKWarnTime;
+	if (@BKWarnTime < 1) {
+		callfunc "ClearBKEffects";
+		announce callfunc("BKDialog",13,0,""),3;
+	} else {
+		announce @BKWarnTime + callfunc("BKDialog",71,0,""),3;
+		addtimer 1000, "BKTimerEvt::OnTimer";
+	}
+}
+
+function	script	CheckLang	{
+	if (#BASE_LANG == $@BK_DEFLANG) return 1;
+	deletearray @LockLang[0],1;
+	set @BKExist, query_sql("select disabled from `bk_lang` where langid = " + #BASE_LANG,@LockLang);
+	if (!@BKExist || @LockLang[0] == 1) {
+		set #BASE_LANG,$@BK_DEFLANG;
+		return 0;
+	} else {
+		return 1;
+	}
+}
+
+// Duplicates by BlazeDragoon
+p_track01,37,41,5	duplicate(BKLNGNPC)	Police#001	966
+morocc,152,97,5	duplicate(BKLNGNPC)	Police#002	966
+geffen,114,64,5	duplicate(BKLNGNPC)	Police#003	966
+payon,176,106,5	duplicate(BKLNGNPC)	Police#004	966
+alberta,195,41,5	duplicate(BKLNGNPC)	Police#005	966
+izlude,123,116,5	duplicate(BKLNGNPC)	Police#006	966
+aldebaran,143,123,5	duplicate(BKLNGNPC)	Police#007	966
+xmas,143,136,5	duplicate(BKLNGNPC)	Police#008	966
+comodo,196,149,5	duplicate(BKLNGNPC)	Police#009	966
+yuno,137,175,5	duplicate(BKLNGNPC)	Police#010	966
+amatsu,203,91,5	duplicate(BKLNGNPC)	Police#011	966
+gonryun,163,122,5	duplicate(BKLNGNPC)	Police#012	966
+umbala,117,136,5	duplicate(BKLNGNPC)	Police#013	966
+niflheim,186,179,5	duplicate(BKLNGNPC)	Police#014	966
+louyang,221,107,5	duplicate(BKLNGNPC)	Police#015	966
+jawaii,250,127,5	duplicate(BKLNGNPC)	Police#016	966
+ayothaya,143,154,5	duplicate(BKLNGNPC)	Police#017	966
+einbroch,162,303,5	duplicate(BKLNGNPC)	Police#018	966
+lighthalzen,162,102,5	duplicate(BKLNGNPC)	Police#019	966
+einbech,171,124,5	duplicate(BKLNGNPC)	Police#020	966
+hugel,92,153,5	duplicate(BKLNGNPC)	Police#021	966

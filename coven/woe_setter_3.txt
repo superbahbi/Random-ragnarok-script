@@ -18,7 +18,7 @@
 //=	added whisperglobal system [[GM]Xeon]
 //===========================================================================
 
-prontera,167,217,5	script	CovenRO WOE	429,{ //If you wish to change the name, search for all 'JaeRO WOE' and replace them with the desired name.
+prontera,150,193,5	script	CovenRO WOE	429,{ //If you wish to change the name, search for all 'JaeRO WOE' and replace them with the desired name.
 //To do:
 //GM:
 //Player: Warp to treasury when WoE isn't active?

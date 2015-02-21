@@ -1,0 +1,44 @@
+//===== Scripted By: =======
+//= Bahbi
+//===== Compatible With:==
+//= Latest
+//===== Description: =====
+//= Test npc
+//========================
+//===================== Start From Here =====================================================
+sec_pri,48,63,5	script	Warden	429,{
+
+	mes "[^FF0000CovenRO Police^000000]";
+	mes "Welcome Prisoners.";
+	mes "You are here because you did something bad or you disobey the law.";
+	mes "[Admin]-Ric declare that the Minimum Jail Time is 1 Month.";
+	mes "So if you want to get out of this jail look for the Jail Warden.";
+	mes "and Vail 10 TCG's so you can get our of here.";
+	mes "You must follow the CovenRO Rules.";	
+	next;
+	mes "Do you want to pay 10 TCG?";
+	switch(select("Yes","No")) {
+	case 1:
+		if ( countitem(7227) < 10) goto L_NO;
+		delitem 7227,10;
+		next;
+		atcommand "@unjail "+strcharinfo(0);
+		break;
+
+	case 2:
+		next;
+		mes "Enjoy you stay!";
+		break;
+	}
+	close;
+	end;
+L_NO:
+	next;
+	mes "You don't have enough TCG.";
+	close;
+
+}
+sec_pri,22,63,5	duplicate(Warden)	Warden#h1-2	429
+sec_pri,74,63,5	duplicate(Warden)	Warden#h1-3	948
+//mapflag
+sec_pri	mapflag	notrade

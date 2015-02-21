@@ -47,6 +47,7 @@ OnInit:
 	OnMinute00:
 	switch(rand(1,4)) {
 	case 1:
+		if (agitcheck() || agitcheck2()) end;
 		initnpctimer;
 		OnTimer0:
 		enablenpc "Gate";
@@ -82,12 +83,12 @@ OnInit:
 
 //	id of each mvp. you can add more
 	setarray .mvpid[1],
-		2534,//	Tao Gunka			70
-		2535,//	Mistress			74
-		2536,//	Orc Lord			74
-		2537,//	Orc Hero			77
-		2538,//	Knight of Windstorm	77
-		2539,//	Osiris				78
+		1785,//	Tao Gunka			70
+		1059,//	Mistress			74
+		1190,//	Orc Lord			74
+		1159,//	Orc Hero			77
+		1251,//	Knight of Windstorm	77
+		1658,//	Osiris				78
 		1768,//	Gloom Under Night	78
 		2540,//	Dark Lord			80
 		//2541,//	Fallen Bishop		80
@@ -96,10 +97,10 @@ OnInit:
 		2544,//	Atroce				82
 		2544,//	Bacsojin			85
 		2540,//	Gorynych			85
-		2534,//	Lady Tanee			89
-		rand(1646,1651),//	Lord Knight Seyren 99 || Assassin Cross Eremes 99 || Whitesmith Harword 99 || High Priest Magaleta 99 || Sniper Shecil 99 || High Wizard Katrinn 99
+		1832,//	Lady Tanee			89
+		rand(1646,1650),//	Lord Knight Seyren 99 || Assassin Cross Eremes 99 || Whitesmith Harword 99 || High Priest Magaleta 99 || Sniper Shecil 99 || High Wizard Katrinn 99
 		2539,//	Thanatos			99
-		1751,//	Valkyrie Randgris	99
+		1502,//	Valkyrie Randgris	99
 		1847;//	Eviling				99
 
 //	total rounds - Default has 18 rounds
@@ -292,7 +293,7 @@ function	script	int__	{
 	return .@num$;
 }
 
-prontera,127,213,6	script	Gate	421,{
+prontera,127,212,6	script	Gate	421,{
 
 	if ( getcharid(1) == 0 ) {
 		mes "[^FF0000Monster Hunt^000000]";

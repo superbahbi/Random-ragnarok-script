@@ -3,56 +3,56 @@
 //===== By: ==================================================
 //= waixiew
 //============================================================
-prontera,171,183,6	script	Stat Seller	831,{
+prontera,171,183,4	script	Stat Seller	831,{
 	mes "[Stat Seller]";
-	mes "I am a Stat Seller.";
-	mes "How can i help you?";
+	mes "I am the Stat Seller.";
+	mes "How can I help you?";
 	next;
 	mes "[Stat Seller]";
-	mes "I can sell u some stat points or skill points";
+	mes "I can sell you some stat points or skill points.";
 	next;
 	mes "[Stat Seller]";
-	mes "100k for 10 statpoints";
-	mes "1m for 1 skillpoints";
+	mes "100k for 10 Stat Points";
+	mes "1m for 1 Skill Points";
 	next;
-	menu "Yes I want stats",L0,"Yes I want skills",L1,"No thanks",LEnd;
+	menu "Yes I want stats.",L0,"Yes I want skills.",L1,"No.",LEnd;
 
 L0:
-mes "Type in the amount PLEASE! ";
+mes "Type in the amount please.";
 set @stamount,"0";
 input @stamount;
-if(@stamount < 1) goto DD;
+if(@stamount < 1 || @stamount > 90000) goto DD;
 if(zeny < (100000* @stamount)) goto NO;
 set Zeny,(zeny - (100000* @stamount));
 set StatusPoint,(StatusPoint +(10* @stamount));
 goto TY;
 
 L1:
-mes "Type in the amount PLEASE! ";
+mes "Type in the amount please.";
 set @skamount,"0";
 input @skamount;
-if(@skamount < 1) goto DD;
+if(@skamount < 1 || @stamount > 90000) goto DD;
 if(zeny < (1000000* @skamount)) goto NO;
 set Zeny,(zeny - (1000000* @skamount));
 set SkillPoint,(SkillPoint +(1* @skamount));	
 goto TY;
 
 TY:
-mes "Thanks a lot";
-mes "Please come again!";
+mes "Thanks a lot.";
+mes "Please come again if you need more.";
 close;
 
 DD:
-mes "Go away you idiot!";
-mes "Don't disturb me!";
+mes "That is too much.";
+mes "Go away. Don't disturb me!";
 close;
 
 NO:
-mes "Please come with the zeny!";
+mes "Please come with enough money.";
 close;
 
 LEnd:
-mes "Come back when u change your mind!";
+mes "Come back when you change your mind.";
 close;
 
 OnInit:
@@ -60,22 +60,22 @@ OnInit:
 	end;	
 }
 
-prontera,180,191,6	script	Points Buyer	903,{
+prontera,180,191,4	script	Points Buyer	903,{
 	mes "[Points Buyer]";
-	mes "I am a Points Buyer.";
-	mes "How can i help you?";
+	mes "I am the points buyer.";
+	mes "How can I help you?";
 	next;
 	mes "[Points Buyer]";
-	mes "I can buy stat points or skill points only";
+	mes "I can buy stat points or skill points only.";
 	mes "What kind of points would you like to sell?";
 	next;
-	menu "Status Points",L1Stats,"Skill Points",L1Skill,"Nothing..",L1End;
+	menu "Status Points",L1Stats,"Skill Points",L1Skill,"Nothing.",L1End;
 
 L1Stats:
 	mes "[Points Buyer]";
-	mes "Ok, now put in the Amount of Statpoints you would like to sell";
+	mes "Ok, now put in the amount of stat points you would like to sell.";
 	input .@statamount;
-	if(StatusPoint < .@statamount) goto NoPoints;
+	if(StatusPoint < .@statamount) goto L1NoPoints;
 	set .@statprice, 100 * .@statamount;
 	set zeny, zeny +.@statprice;
 	set StatusPoint,StatusPoint -.@statamount;
@@ -83,7 +83,7 @@ L1Stats:
 
 L1Skill:
 	mes "[Points Buyer]";
-	mes "Ok, now put in the Amount of Skillpoints you would like to sell";
+	mes "Ok, now put in the amount of skill points you would like to sell.";
 	input .@skillamount;
 	if(SkillPoint < .@skillamount) goto L1NoPoints;
 	set .@skillprice, 1000 * .@skillamount;
@@ -105,4 +105,3 @@ OnInit:
 	waitingroom "Points Buyer!",0;
 	end;
 }
-

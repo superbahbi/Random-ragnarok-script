@@ -5,16 +5,8 @@
 //----------JaeRO - Home of Phoenix Pride--------//
 //-----------------------------------------------//
 
--	script	LMS#disable	-1,{
-
-OnInit:
-disablenpc "LMS Warper";
-disablenpc "LMS Warper#2";
-disablenpc "LMS Warper#3";
-end;
-}
-
-poring_c02,218,225,5	script	LMS Event	483,{
+poring_c02,218,225,5	script	LMS Event#Lms::Lms	483,{
+//-	script	LMS Event#Lms::Lms	-1,{
 
 	if (getgmlevel() >= 20) goto LMS_Admin;
 	if ($@LMS_Ongoing == 1) {
@@ -60,10 +52,10 @@ LMS_Admin:
 		next;
 		goto LMS_Admin;
 	warp_LMS:
-		next;
-		mes "[LMS Manager]";
-		mes "I will now warp you to the LMS Event map.";
-		next;
+		//next;
+		//mes "[LMS Manager]";
+		//mes "I will now warp you to the LMS Event map.";
+		//next;
 		warp "guild_vs2",45,49;
 		end;
 	endLMS:
@@ -76,8 +68,9 @@ LMS_Admin:
 		mes "Resetting Now.";
 		close2;
 		set $@LMS_Ongoing,0;
-		killmonsterall "guild_vs2";
-		disablenpc "Summoner";
+		set $state, 0;
+		killmonsterall "quiz_01";
+		//disablenpc "Summoner";
 		end;
 
 
@@ -137,13 +130,11 @@ startlmsevent:
 announce "LMS Warper: Get ready for Last Man Standing.",0;
 sleep2 10000;
 announce "LMS Warper: Warps opening in 1 minute..",0;
-initnpctimer;
+initnpctimer "Lms";
 end;
 OnTimer60000:
 announce "LMS Warper: Closing warps in 60 Seconds.",0;
-enablenpc "LMS Warper";
-enablenpc "LMS Warper#2";
-enablenpc "LMS Warper#3";
+set $state, 2;
 end;
 
 OnTimer90000:
@@ -180,23 +171,10 @@ announce "LMS Warper: Warps are now closed.",0;
 end;
 
 OnTimer121000:
-disablenpc "LMS Warper";
-disablenpc "LMS Warper#2";
-disablenpc "LMS Warper#3";
+set $state, 0;
 end;
 }
-//---------LMS Registration---------------
-prontera,155,165,5	script	LMS Warper	811,{
-	
-	mes "[LMS Manager]";
-	mes "I will now warp you to the LMS Event map.";
-	next;
-	warp "guild_vs2",45,49;
-	end;
-}
-//----------Clone NPC------------------
-morocc,159,83,5	duplicate(LMS Warper)	LMS Warper#2	811
-payon,155,220,5	duplicate(LMS Warper)	LMS Warper#3	811
+
 // ----Manager Setting------------
 
 // == Mapflags

@@ -1,0 +1,126 @@
+//Porint Catch
+-	script	PoringEvent	-1,{
+OnMinute15:
+if (agitcheck() || agitcheck2()) end;
+	switch(rand(1,5)){
+		
+	case 1:
+
+announce "Poring: Hi guys! Are you bored? Find me in Izlude and win 25 Coven Points!",0;
+initnpctimer;
+monster "izlude",0,0,"Poring",1002,1,strnpcinfo(0)+"::OnMobKilled";
+monster "izlude",0,0,"Pouring",1002,20,strnpcinfo(0)+"::OnWrongKilled";
+monster "izlude",0,0,"Proing",1002,20,strnpcinfo(0)+"::OnWrongKilled";
+monster "izlude",0,0,"Poirng",1002,20,strnpcinfo(0)+"::OnWrongKilled";
+monster "izlude",0,0,"Poing",1002,20,strnpcinfo(0)+"::OnWrongKilled";
+monster "izlude",0,0,"Gnirop",1002,15,strnpcinfo(0)+"::OnWrongKilled";
+monster "izlude",0,0,"Poring",1113,1,strnpcinfo(0)+"::OnWrongKilled";
+monster "izlude",0,0,"Poring",1062,1,strnpcinfo(0)+"::OnWrongKilled";
+monster "izlude",0,0,"Por|ng",1002,15,strnpcinfo(0)+"::OnWrongKilled";
+monster "izlude",0,0,"Por1ng",1002,15,strnpcinfo(0)+"::OnWrongKilled";
+monster "izlude",0,0,"Porong",1002,15,strnpcinfo(0)+"::OnWrongKilled";
+monster "izlude",0,0,"P0ring",1002,15,strnpcinfo(0)+"::OnWrongKilled";
+monster "izlude",0,0,"P@ring",1002,15,strnpcinfo(0)+"::OnWrongKilled";
+monster "izlude",0,0,"Porng",1002,15,strnpcinfo(0)+"::OnWrongKilled";
+monster "izlude",0,0,"Poring",1031,1,strnpcinfo(0)+"::OnWrongKilled";
+monster "izlude",0,0,"Poring",1857,1,strnpcinfo(0)+"::OnWrongKilled";
+set .poringcatch,1;
+end;
+
+OnTimer180000:
+stopnpctimer;
+announce "Poring: Sorry guys, no one found me. Till next time!",0;
+set .poringcatch,0;
+killmonsterall "izlude";
+end;
+
+OnMobKilled:
+stopnpctimer;
+announce "Poring: "+strcharinfo(0)+" found me. Congratulations! +25 Coven points.",0;
+dispbottom "Congrats, You found me.";
+set .@playerid, getcharid(3,strcharinfo(0));
+set .@amount, 25;
+query_sql("UPDATE `login` SET points=(points+"+.@amount+") WHERE account_id='"+.@playerid+"'");
+dispbottom "You got "+.@amount+" points.";
+killmonsterall "izlude";
+set .poringcatch,0;
+end;
+
+OnWrongKilled:
+	dispbottom "Oops wrong guy :(";
+	//percentheal -99,-99;
+	warp "prontera",155,175;
+	end;
+
+	case 2:
+		end;
+	case 3:
+		end;
+	case 4:
+		end;
+
+}
+}
+//Kukre Catch
+-	script	KukreEvent	-1,{
+OnMinute45:
+if (agitcheck() || agitcheck2()) end;
+	switch(rand(1,5)){
+		
+	case 1:
+
+announce "Kukre: Hi guys! Are you bored? Find me in Archer Village and win 25 Coven Points!",0;
+initnpctimer;
+monster "pay_arche",0,0,"Kukre",1070,1,strnpcinfo(0)+"::OnMobKilled";
+monster "pay_arche",0,0,"Kukree",1070,15,strnpcinfo(0)+"::OnWrongKilled";
+monster "pay_arche",0,0,"Kukrie",1070,15,strnpcinfo(0)+"::OnWrongKilled";
+monster "pay_arche",0,0,"Kuker",1070,15,strnpcinfo(0)+"::OnWrongKilled";
+monster "pay_arche",0,0,"Kukkre",1070,15,strnpcinfo(0)+"::OnWrongKilled";
+monster "pay_arche",0,0,"Kure",1070,15,strnpcinfo(0)+"::OnWrongKilled";
+monster "pay_arche",0,0,"Kuckre",1070,15,strnpcinfo(0)+"::OnWrongKilled";
+monster "pay_arche",0,0,"Kurkre",1070,15,strnpcinfo(0)+"::OnWrongKilled";
+monster "pay_arche",0,0,"Kukrre",1070,15,strnpcinfo(0)+"::OnWrongKilled";
+monster "pay_arche",0,0,"Kurkre",1070,15,strnpcinfo(0)+"::OnWrongKilled";
+monster "pay_arche",0,0,"Kikre",1070,15,strnpcinfo(0)+"::OnWrongKilled";
+monster "pay_arche",0,0,"Kokre",1070,15,strnpcinfo(0)+"::OnWrongKilled";
+monster "pay_arche",0,0,"Kakre",1070,15,strnpcinfo(0)+"::OnWrongKilled";
+monster "pay_arche",0,0,"Kekre",1070,15,strnpcinfo(0)+"::OnWrongKilled";
+monster "pay_arche",0,0,"Kurke",1070,15,strnpcinfo(0)+"::OnWrongKilled";
+monster "pay_arche",0,0,"Kukcre",1070,15,strnpcinfo(0)+"::OnWrongKilled";
+set .kukrecatch,1;
+end;
+
+OnTimer180000:
+stopnpctimer;
+announce "Kukre: Sorry guys, no one found me. Till next time!",0;
+set .kukrecatch,0;
+killmonsterall "pay_arche";
+end;
+
+OnMobKilled:
+stopnpctimer;
+announce "Kukre: "+strcharinfo(0)+" found me. Congratulations! +25 Coven points.",0;
+dispbottom "Congrats, You found me.";
+set .@playerid, getcharid(3,strcharinfo(0));
+set .@amount, 25;
+query_sql("UPDATE `login` SET points=(points+"+.@amount+") WHERE account_id='"+.@playerid+"'");
+dispbottom "You got "+.@amount+" points.";
+killmonsterall "pay_arche";
+set .kukrecatch,0;
+end;
+
+OnWrongKilled:
+	dispbottom "Oops wrong guy :(";
+	//percentheal -99,-99;
+	warp "prontera",155,175;
+	end;
+
+	case 2:
+		end;
+	case 3:
+		end;
+	case 4:
+		end;
+
+}
+}

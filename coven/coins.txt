@@ -1,4 +1,4 @@
-prontera,168,177,6	script	Coin Exchanger	872,{
+prontera,187,209,4	script	Coin Exchanger	872,{
 	
 	mes "[Coin Exchanger]";
 	mes "Im the Coin Exchanger here in town.";
@@ -107,7 +107,4 @@ prontera,168,177,6	script	Coin Exchanger	872,{
 			mes "I'm Sorry, but you dont have enough Zeny.";
 			close;
 	}
-OnInit:
-	waitingroom "Coins Exchanger!",0;
-	end;
 }

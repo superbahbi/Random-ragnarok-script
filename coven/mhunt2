@@ -1,0 +1,542 @@
+//===== eAthena Script ======================================
+//= Monster Hunt Event Script
+//===== By: ===============================================
+//= by aftermath (1.0)
+//= by ~AnnieRuru~ (2.0)
+//= Modified by -Jaerobb-
+//===== Current Version: ======================================
+//= 3.3a
+//===== Compatible With: ===================================== 
+//= eAthena 12766 Trunk
+//===== Description: ========================================= 
+//= This script warps you to an arena where you have to kill all MvP bosses in
+//= accending or more like from weakest to strongest. 
+//===== Additional Comments: ================================== 
+//= 1.0 by aftermath
+//= 1.1 Fixed exploit where 2 or more users can get it by pressing "Yes, lets get it on."
+//=	  at the same time.
+//= 2.0 ~by AnnieRuru~
+//= rewrite everything with new MVPs
+//= 3.0 party mode
+//= 3.1 added feature & fix various bugs
+//= 3.2 fix 2 party register at same time will make 2 MVPs in the map
+//= 3.3 big updates -> copy everything from 2.4a
+//========================================================
+
+// Configure Mapflags ------------------------
+pvp_n_1-3	mapflag	nobranch
+pvp_n_1-3	mapflag	nomemo
+//pvp_n_1-3	mapflag	nopenalty	// disable exp loss
+pvp_n_1-3	mapflag	noreturn
+pvp_n_1-3	mapflag	nosave	SavePoint
+pvp_n_1-3	mapflag	noteleport
+pvp_n_1-3	mapflag	nowarp
+pvp_n_1-3	mapflag	nowarpto
+pvp_n_1-3	mapflag	nomobloot	// disable monster drop loots,
+pvp_n_1-3	mapflag	nomvploot	// 2 of these
+pvp_n_1-3	mapflag	loadevent
+pvp_n_1-3	mapflag	partylock
+pvp_n_1-3	mapflag	pvp	off
+pvp_n_1-3	mapflag	gvg	on
+
+prontera,0,0,0	script	mh_announce	-1,{
+end;
+OnInit:
+
+//Time to be happening annons.
+OnClock0100:
+OnClock0300:
+OnClock0500:
+OnClock0900:
+OnClock1200:
+OnClock1500:
+OnClock1600:
+OnClock2000:
+OnClock2200:
+OnClock0000:
+
+initnpctimer;
+OnTimer0:
+enablenpc "Gate";
+announce "JaeRO: Monster Hunt Gate is now open for registration.",0;
+end;
+
+OnTimer300000:
+stopnpctimer; //disable the timer.
+//disablenpc "Gate";
+disablenpc "Gate";
+stopnpctimer; //disable the timer.
+end;
+}
+
+pvp_n_1-3,0,0,0	script	Monster Hunt	-1,{
+OnInit:
+//	Configurations -----------------------------------------------------
+
+//	distance check. Default is ON ... however ... some people complain it bug ...
+	set .distancecheck, 1;
+
+//	set entrance fee. Note: Only choose zeny OR item. If item amount if specify, the script will use item
+	//set .entryitemid, 671; // 671 - Gold coin
+	//set .entryitemamount, 5; // by default is using zeny
+	//set .entryzeny, 1500000000;
+
+//	id of each mvp. you can add more
+	setarray .mvpid[1],
+		1583,//	Tao Gunka			70
+		1789,//	Mistress			74
+		1190,//	Orc Lord			74
+		1627,//	Orc Hero			77
+		1251,//	Knight of Windstorm	77
+		1627,//	Osiris				78
+		1272,//	Dark Lord			80
+		1871,//	Fallen Bishop		80
+		1039,//	Baphomet			81
+		1147,//	Maya				81
+		1785,//	Atroce				82
+		1630,//	Bacsojin			85
+		1885,//	Gorynych			85
+		1688,//	Lady Tanee			89
+		rand(1646,1651),//	Lord Knight Seyren 99 || Assassin Cross Eremes 99 || Whitesmith Harword 99 || High Priest Magaleta 99 || Sniper Shecil 99 || High Wizard Katrinn 99
+		1708,//	Thanatos			99
+		1751,//	Valkyrie Randgris	99
+		1847;//	Eviling				99
+
+//	total rounds - Default has 18 rounds
+	set .totalround, getarraysize(.mvpid) -1;
+
+//	Time attack. The party has to beat all MVPs within # minutes. When the time is up, all party members still inside the map will warp to respawn point. Do Not set this as 0
+	set .timeout, 60;
+
+//	set item reward on completing each round. Every party member still alive inside the room will get this. STACK with zeny reward
+	set .itemid, 608; // 608 - Yggdrasil Seed
+	set .itemamount, 0;
+
+//	item reward on completion whole ladder. Every party members inside the map ( survive or not ) will get this.
+	set .lastitemid, 7227; // 7227 - TCG Card
+	set .lastitemamount, 1;
+
+//	item reward when beaten the best record. It will only give to the player who register the game, if doesn't online will give to the member who land the last hit on last MVP
+	set .topitemid, 677;
+	set .topitemamount, 1;
+
+//	time delay for next round, in seconds. Default is 3
+	set .delay, 5;
+
+//	minimum amount of party members to participate this game
+	set .amount, 10;
+
+//	set respawn point after finished the Monster Hunt Event
+	set .respawnmap$, "SavePoint";
+	set .respawnx, 0;
+	set .respawny, 0;
+
+//	set this to disallow all party members use the room for # MINUTES after registering, prevent same player go in again and again
+	set .usagedeny_player, 0; // deny that character each time register
+	set .usagedeny_account, 0; // deny whole account each time register
+
+//	make announcement when a party join MVP ladder
+	set .joinann, 2; // 0 - disable announcement, 1- announce to server, 2- announce to town where Monster Hunt located
+//	make announcement when a party finished MVP ladder
+	set .quitann, 2; // 0 - disable announcement, 1- announce to server, 2- announce to town where Monster Hunt located
+
+//	minimum GM level in your server consider as Support GM, to allow these GMs get into this map
+//	in the case player complain this script bug again ...
+//	please tell them to use @jumpto or @warp
+	set .mingmlvl, 20;
+
+//	minimum gm level can reset the deny usage, to allow that player can play this game for 1 more time without waiting
+//	this setting also allow the GM himself can play this ladder without the deny usage
+	set .gmcandeny, 80;
+
+//	minimum gm level can reset the best record.
+	set .gmlvlreset, 99;
+
+//	Config Ends --------------------------------------------------------------
+
+	getmapxy .eventmap$, .@x, .@y, 1;
+	if ( .joinann < 0 || .joinann > 2 ) set .joinann, 0;
+	set .usagedeny_player, .usagedeny_player * 60;
+	set .usagedeny_account, .usagedeny_account * 60;
+	end;
+
+OnEvent:
+	set .originaid, getcharid(3);
+	set .origincid, getcharid(0);
+	set .inuseid, getcharid(1);
+	set .round, 0;
+	killmonsterall .eventmap$;
+	announce "You have "+ .timeout +" minutes to complete total "+ .totalround +" Rounds.", 1;
+	getpartymember .inuseid, 1;
+	getpartymember .inuseid, 2;
+	deletearray .members$, 128;
+	set .memberstotal, 0;
+	for ( set .@i, 0; .@i < $@partymembercount; set .@i, .@i +1 ) {
+		if ( !isloggedin( $@partymemberaid[.@i], $@partymembercid[.@i] ) ) continue;
+		attachrid $@partymemberaid[.@i];
+		set .members$[ .memberstotal ], strcharinfo(0);
+		set .memberstotal, .memberstotal +1 ;
+	}
+	attachrid .originaid;
+OnMvpDead:
+	if ( getcharid(1) != .inuseid ) {
+		mapannounce .eventmap$, "An Intruder !! "+ strcharinfo(0) +" attempt to interrupt your Monster Hunt Event !", 0;
+	}
+	set .round, .round + 1;
+	set .@origin, getcharid(3);
+	if ( .round >= 2 ) {
+		getpartymember .inuseid, 1;
+		getpartymember .inuseid, 2;
+		for ( set .@i, 0; .@i < $@partymembercount; set .@i, .@i +1 ) {
+			if ( !isloggedin( $@partymemberaid[.@i], $@partymembercid[.@i] ) ) continue;
+			attachrid $@partymemberaid[.@i];
+			getmapxy .@map$, .@x, .@y, 0;
+			if ( .@map$ != .eventmap$ || hp == 0 ) continue;
+			set .@onlineaid[ getarraysize(.@onlineaid) ], getcharid(3);
+		}
+		set .@online, getarraysize(.@onlineaid);
+		if ( .reward[.round-1] )
+			set .@reward, .reward[.round-1] / .@online;
+		for ( set .@i, 0; .@i < .@online; set .@i, .@i +1 ) {
+			attachrid .@onlineaid[.@i];
+			if ( .reward[.round-1] ) {
+				message strcharinfo(0), "You have rewarded "+ callfunc("int__", .@reward) +" zeny";
+				set zeny, zeny + .@reward;
+			}
+			if ( .itemamount && .round != .totalround +1 )
+				getitem .itemid, .itemamount;
+		}
+		attachrid .@origin;
+	}
+	if ( .round == .totalround +1 ) {
+		announce "Amazing ... Your Party able to beat all the MVPs !",1;
+		getpartymember .inuseid, 1;
+		getpartymember .inuseid, 2;
+		for ( set .@i, 0; .@i < $@partymembercount; set .@i, .@i +1 ) {
+			if ( !isloggedin( $@partymemberaid[.@i], $@partymembercid[.@i] ) ) continue;
+			attachrid $@partymemberaid[.@i];
+			getmapxy .@map$, .@x, .@y, 0;
+			if ( .@map$ != .eventmap$ ) continue;
+			getitem .lastitemid, .lastitemamount;
+		}
+		attachrid .@origin;
+		set .@timeused, .timeout * 60 - ( .hour * 60*60 + .min * 60 + .sec );
+		if ( $mvpladp_time == 0 || .@timeused < $mvpladp_time ) {
+			announce "And your party beat the RECORD !!! [ "+( .@timeused / 60 )+" min "+( .@timeused % 60 )+" sec ]", 1;
+			if ( isloggedin( .originaid, .origincid ) ) {
+				attachrid .originaid;
+				getmapxy .@map$, .@x, .@y, 0;
+				if ( .@map$ == .eventmap$ ) {
+					announce "The Special Reward goes to "+ strcharinfo(0) +" because "+( (sex)?"he":"she" )+" register this game.", 1;
+					getitem .topitemid, .topitemamount;
+					set .@already, 1;
+				}
+				attachrid .@origin;
+			}
+			if ( .@already == 0 ) {
+				announce "The Special Reward goes to "+ strcharinfo(0) +" because "+( (sex)?"he":"she" )+" kills the last MVP.", 1;
+				getitem .topitemid, .topitemamount;
+			}
+			deletearray $mvpladp_name$, 128;
+			set $mvpladp_name$, strcharinfo(1);
+			copyarray $mvpladp_name$[1], .members$[0], .memberstotal;
+			set $mvpladp_time, .@timeused;
+		}
+		else
+			announce "Time used [ "+( .@timeused / 60 )+" min "+( .@timeused % 60 )+" sec ]", 1;
+		set .@inuseid, .inuseid;
+		sleep 10000;
+		getpartymember .@inuseid, 1;
+		getpartymember .@inuseid, 2;
+		for ( set .@i, 0; .@i < $@partymembercount; set .@i, .@i +1 ) {
+			if ( !isloggedin( $@partymemberaid[.@i], $@partymembercid[.@i] ) ) continue;
+			attachrid $@partymemberaid[.@i];
+			getmapxy .@map$, .@x, .@y, 0;
+			if ( .@map$ != .eventmap$ ) continue;
+			warp .respawnmap$, .respawnx, .respawny;
+		}
+		if ( .quitann == 1 )
+			announce getpartyname(.@inuseid) +" party has finished the Monster Hunt Event !", 0;
+		else if ( .quitann == 2 )
+			mapannounce .npcmap$, getpartyname(.@inuseid) +" has finished the Monster Hunt Event !", 0;
+		end;
+	}
+	else if ( .round == .totalround )
+		announce "Final Round will begin in "+ .delay +" sec.", 1;
+	else
+		announce "Round "+ .round +" will begin in "+ .delay +" sec.", 1;
+	sleep .delay * 1000;
+	if ( .mvpid[.round] >= 1646 && .mvpid[.round] <= 1651 )
+		monster .eventmap$,0,0,"--ja--",rand(1646,1651),1,"Monster Hunt::OnMvpDead";
+	else
+		monster .eventmap$,0,0,"--ja--",.mvpid[.round],1,"Monster Hunt::OnMvpDead";
+	end;
+
+OnPCLoadMapEvent:
+	sleep2 1;
+	getmapxy .@map$, .@x, .@y, 0;
+	if ( .@map$ != .eventmap$ ) end;
+	if ( getcharid(1) == .inuseid || getgmlevel() >= .mingmlvl ) end;
+	warp .respawnmap$, .respawnx, .respawny;
+	announce "You are forbidden to enter Party Monster Hunt Event without registration.", 3, 0xFF0000;
+	end;
+}
+function	script	int__	{
+	set .@num, atoi(getarg(0));
+	if ( .@num == 0 || .@num >= 2147483647 ) return getarg(0);
+	set .@l, getstrlen(.@num);
+	for ( set .@i,0; .@i < .@l; set .@i, .@i + 1 ) {
+	set .@num$, .@num % pow(10,.@i+1) / pow(10,.@i) + .@num$;
+	if ( (.@i+1) % 3 == 0 && .@i+1 != .@l ) set .@num$, ","+ .@num$;
+}
+	return .@num$;
+}
+
+prontera,127,213,6	script	Gate	421,{
+	mes "[^FF0000Monster Hunt^000000]";
+	mes "Welcome to Monster Hunt.";
+	mes "I will be gone in 5 minutes so hurry up and register your parties.";
+	mes "You will need to wait random hours for me to appear.";
+	if ( getvariableofnpc(.lastitemamount,"Monster Hunt") )
+		mes "If you can finish the Monster Hunt, everyone of you will earn "+ getvariableofnpc(.lastitemamount,"Monster Hunt") +" "+ getitemname(getvariableofnpc(.lastitemid,"Monster Hunt")) +".";
+	if ( getvariableofnpc(.entryitemamount,"Monster Hunt") )
+		mes "But the person who ask me to start the game must pay me "+ getvariableofnpc(.entryitemamount,"Monster Hunt") +" "+ getitemname(getvariableofnpc(.entryitemid,"Monster Hunt")) +".";
+	else if ( getvariableofnpc(.entryzeny,"Monster Hunt") )
+		mes "But the person who ask me to start the game must pay me "+ callfunc("int__", getvariableofnpc(.entryzeny,"Monster Hunt") ) +" zeny";
+	next;
+	mes "[^FF0000Monster Hunt^000000]";
+	mes "So... do you want to play the game?";
+	next;
+	if ( select("Yes, lets get it on.","Show me the best record.","No.",( getgmlevel() >= getvariableofnpc(.gmcandeny,"Monster Hunt") && ( getvariableofnpc(.usagedeny_player,"Monster Hunt") || getvariableofnpc(.usagedeny_account,"Monster Hunt") ) )?"Reset a party deny usage":"") == 3 ) {
+		mes "[^FF0000Monster Hunt^000000]";
+		mes "When your party are strong enough to complete the game, please come back.";
+		close;
+	}
+	else if ( @menu == 2 ) {
+		mes "[^FF0000Monster Hunt^000000]";
+		if ( $mvpladp_time == 0 ) {
+			mes "Nobody finish this game before.";
+			close;
+		}
+		else {
+			mes "The best record is";
+			mes "[ "+( $mvpladp_time / 60 )+" min "+( $mvpladp_time % 60 )+" sec ]";
+			mes "By the party ^EE8800"+ $mvpladp_name$ +"^000000.";
+			for ( set .@i, 1; .@i < getarraysize($mvpladp_name$); set .@i, .@i +1 )
+				mes .@i +". ^0000FF"+ $mvpladp_name$[.@i] +"^000000";
+			if ( getgmlevel() < getvariableofnpc(.gmlvlreset,"Monster Hunt") ) close;
+			next;
+			if ( select("Close.", "Reset it.") == 1 ) close;
+			if ( select("Nevermind.", "I really want to reset it.") == 1 ) close;
+			mes "[^FF0000Monster Hunt^000000]";
+			mes "Record reset successfully.";
+			deletearray $mvpladp_name$, 128;
+			set $mvpladp_time, 0;
+			close;
+		}
+	}
+	else if ( @menu == 4 ) {
+		if ( getgmlevel() < getvariableofnpc(.gmcandeny,"Monster Hunt") ) end;
+		mes "[^FF0000Monster Hunt^000000]";
+		mes "Enter any player name of that party, every online party member will be reset.";
+		next;
+		input .@name$;
+		set .@aid, getcharid(3, .@name$);
+		set .@pid, getcharid(1, .@name$);
+		mes "[^FF0000Monster Hunt^000000]";
+		if ( .@aid == 0 ) {
+			mes "That player is not online or not exist.";
+			close;
+		}
+		else if ( .@pid == 0 ) {
+			mes rid2name(.@aid) +" doesn't has a party.";
+			close;
+		}
+		set .@origin, getcharid(3);
+		getpartymember .@pid, 1;
+		getpartymember .@pid, 2;
+		for ( set .@i, 0; .@i < $@partymembercount; set .@i, .@i +1 ) {
+			if ( !isloggedin( $@partymemberaid[.@i], $@partymembercid[.@i] ) ) continue;
+			attachrid $@partymemberaid[.@i];
+			set mvpladp_deny, 0;
+			set #mvpladp_deny, 0;
+		}
+		attachrid .@origin;
+		mes rid2name(.@aid) +"'s party can play this game now.";
+		close;
+	}
+	else if ( getcharid(1) == 0 ) {
+		mes "[^FF0000Monster Hunt^000000]";
+		mes "You don't have a party";
+		close;
+	}
+	getpartymember getcharid(1), 1;
+	getpartymember getcharid(1), 2;
+	if ( $@partymembercount < getvariableofnpc(.amount,"Monster Hunt") ) {
+		mes "[^FF0000Monster Hunt^000000]";
+		mes "Your party has too few members.";
+		mes "You must form a party at least "+ getvariableofnpc(.amount,"Monster Hunt") +" members and at least has "+ getvariableofnpc(.amount,"Monster Hunt") +" party members online to start Monster Hunt Event.";
+		close;
+	}
+	set .@origin, getcharid(3);
+	for ( set .@i, 0; .@i < $@partymembercount; set .@i, .@i +1 ) {
+		if ( !isloggedin( $@partymemberaid[.@i], $@partymembercid[.@i] ) ) continue;
+		attachrid $@partymemberaid[.@i];
+		if ( gettimetick(2) < mvpladp_deny + getvariableofnpc(.usagedeny_player,"Monster Hunt") )
+			set .@denytime[ .@deny ], mvpladp_deny + getvariableofnpc(.usagedeny_player,"Monster Hunt") - gettimetick(2);
+		if ( gettimetick(2) < #mvpladp_deny + getvariableofnpc(.usagedeny_account,"Monster Hunt") ) {
+			set .@denytime2[ .@deny ], #mvpladp_deny + getvariableofnpc(.usagedeny_account,"Monster Hunt") - gettimetick(2);
+			if ( .@denytime2[ .@deny ] > .@denytime[ .@deny ] )
+				set .@denytime[ .@deny ], .@denytime2[ .@deny ];
+		}
+		if ( .@denytime[ .@deny ] ) {
+			set .@denyname$[ .@deny ], strcharinfo(0);
+			set .@deny, .@deny +1 ;
+		}
+		if ( getvariableofnpc(.distancecheck,"Monster Hunt") ) {
+			getmapxy .@map$, .@x, .@y, 0;
+			if ( distance ( .@x, .@y, .x, .y ) > 15 || .@map$ != getvariableofnpc(.npcmap$,"Monster Hunt") ) {
+				set .@awayname$[ .@away ], strcharinfo(0);
+				set .@away, .@away +1 ;
+			}
+		}
+		set .@online, .@online +1;
+	}
+	attachrid .@origin;
+	if ( .@deny ) {
+		mes "[^FF0000Monster Hunt^000000]";
+		mes "I'm sorry, but the following party members are not allow to participate in this game.";
+		mes " ";
+		for ( set .@i, 0; .@i < .@deny; set .@i, .@i +1 ) {
+			mes "^0000FF"+ .@denyname$[.@i] +"^000000";
+			set .@day,  .@denytime[.@i] / (24*60*60);
+			set .@hour, .@denytime[.@i] % (24*60*60) / (60*60);
+			set .@min,  .@denytime[.@i] % (24*60*60) % (60*60) / (60);
+			set .@sec,  .@denytime[.@i] % (24*60*60) % (60*60) % (60);
+			mes ( (.@day)?(.@day +" day "):"" )+( (.@hour||.@day)?(.@hour +" hour "):"" )+( (.@min||.@hour||.@day)?(.@min +" min "):"")+ .@sec +" sec";
+			mes " ";
+		}
+		mes "You have to either form a new party, or kick these members out.";
+		close;
+	}
+	else if ( .@online < getvariableofnpc(.amount,"Monster Hunt") ) {
+		mes "[^FF0000Monster Hunt^000000]";
+		mes "Your party has too few members online.";
+		mes "At least "+ getvariableofnpc(.amount,"Monster Hunt") +" party members must online to start Monster Hunt Event.";
+		close;
+	}
+	else if ( .@away ) {
+		mes "[^FF0000Monster Hunt^000000]";
+		mes "The following players is away from me.";
+		for ( set .@i, 0; .@i < .@away; set .@i, .@i +1 )
+			mes "^0000FF"+ .@awayname$[.@i] +"^000000";
+		mes "All party members must gather around me in order for me to warp your party members to Monster Hunt Event.";
+		close;
+	}
+	if ( countitem( getvariableofnpc(.entryitemid,"Monster Hunt") ) < getvariableofnpc(.entryitemamount,"Monster Hunt") ) {
+		mes "[^FF0000Monster Hunt^000000]";
+		mes "You don't have enough "+ getitemname(getvariableofnpc(.entryitemid,"Monster Hunt")) +", please come back when you do.";
+		close;
+	}
+	else if ( getvariableofnpc(.entryitemamount,"Monster Hunt") == 0 && zeny < getvariableofnpc(.entryzeny,"Monster Hunt") ) {
+		mes "[^FF0000Monster Hunt^000000]";
+		mes "You don't have enough zeny, please come back when you do.";
+		close;
+	}
+	else if ( .inuse || getmapusers( getvariableofnpc(.eventmap$,"Monster Hunt") ) >= 1 ) {
+		mes "[^FF0000Monster Hunt^000000]";
+		mes "I'm sorry but a party is currently playing the game. Please standby until the party finishes the game or gets killed.";
+		mes "Thank You.";
+		close;
+	}
+	if ( getvariableofnpc(.joinann,"Monster Hunt") )
+		announce strcharinfo(1) +" party has started the Monster Hunt Event.",(getvariableofnpc(.joinann,"Monster Hunt") -1);
+	for ( set .@i, 0; .@i < $@partymembercount; set .@i, .@i +1 ) {
+		if ( !isloggedin( $@partymemberaid[.@i], $@partymembercid[.@i] ) ) continue;
+		attachrid $@partymemberaid[.@i];
+		if ( getgmlevel() < getvariableofnpc(.gmcandeny,"Monster Hunt") ) {
+			if ( getvariableofnpc(.usagedeny_player,"Monster Hunt") ) set mvpladp_deny, gettimetick(2);
+			if ( getvariableofnpc(.usagedeny_account,"Monster Hunt") ) set #mvpladp_deny, gettimetick(2);
+		}
+		percentheal 100,100;
+		warp getvariableofnpc( .eventmap$, "Monster Hunt" ), 0, 0;
+	}
+	attachrid .@origin;
+	set .inuse, 1;
+	set .inuseid, getcharid(1);
+	set .inusename$, strcharinfo(1);
+	if ( getvariableofnpc(.entryitemamount,"Monster Hunt") )
+		delitem getvariableofnpc(.entryitemid,"Monster Hunt"), getvariableofnpc(.entryitemamount,"Monster Hunt");
+	else 
+		set zeny, zeny - getvariableofnpc(.entryzeny,"Monster Hunt");
+	initnpctimer;
+	doevent "Monster Hunt::OnEvent";
+	end;
+
+OnTimer20:
+	set getvariableofnpc(.min,"Monster Hunt"), getvariableofnpc(.timeout,"Monster Hunt");
+	while ( getvariableofnpc(.min,"Monster Hunt") >= 60 ) {
+		set getvariableofnpc(.hour,"Monster Hunt"), getvariableofnpc(.hour,"Monster Hunt") +1 ;
+		set getvariableofnpc(.min,"Monster Hunt"), getvariableofnpc(.min,"Monster Hunt") - 2 ;
+	}
+	while ( getvariableofnpc(.hour,"Monster Hunt") || getvariableofnpc(.min,"Monster Hunt") || getvariableofnpc(.sec,"Monster Hunt") ) {
+		set getvariableofnpc(.sec,"Monster Hunt"), getvariableofnpc(.sec,"Monster Hunt") -1 ;
+		if ( getvariableofnpc(.sec,"Monster Hunt") < 0 && ( getvariableofnpc(.min,"Monster Hunt") > 0 || getvariableofnpc(.hour,"Monster Hunt") > 0 ) ) {
+			set getvariableofnpc(.sec,"Monster Hunt"), getvariableofnpc(.sec,"Monster Hunt") + 60;
+			set getvariableofnpc(.min,"Monster Hunt"), getvariableofnpc(.min,"Monster Hunt") - 1 ;
+		}
+		if ( getvariableofnpc(.min,"Monster Hunt") < 0 && getvariableofnpc(.hour,"Monster Hunt") > 0 ) {
+			set getvariableofnpc(.min,"Monster Hunt"), getvariableofnpc(.min,"Monster Hunt") + 60;
+			set getvariableofnpc(.hour,"Monster Hunt"), getvariableofnpc(.hour,"Monster Hunt") - 1;
+		}
+	delwaitingroom strnpcinfo(0);
+	waitingroom "Time Left = "+( ( getvariableofnpc(.hour,"Monster Hunt") )?( getvariableofnpc(.hour,"Monster Hunt") +":"):"" )+( ( getvariableofnpc(.min,"Monster Hunt") < 10 )?"0"+ getvariableofnpc(.min,"Monster Hunt"): getvariableofnpc(.min,"Monster Hunt") )+":"+( ( getvariableofnpc(.sec,"Monster Hunt") < 10 )?"0"+ getvariableofnpc(.sec,"Monster Hunt"): getvariableofnpc(.sec,"Monster Hunt") ), 0;
+		if ( getmapusers( getvariableofnpc(.eventmap$,"Monster Hunt") ) == 0 && .inuse == 0 ) break;
+		else if ( getvariableofnpc(.sec,"Monster Hunt") == 0 ) {
+			switch ( getvariableofnpc(.min,"Monster Hunt") ) {
+				case 30:
+				case 20:
+				case 10:
+				case 5:
+				case 3:
+				case 2:
+				case 1:
+					mapannounce getvariableofnpc(.eventmap$,"Monster Hunt"), "You have "+ getvariableofnpc(.min,"Monster Hunt") +" min left to complete Monster Hunt Event.", 0;
+				default:
+			}
+		}
+		sleep 999;
+	}
+	if ( getvariableofnpc(.round,"Monster Hunt") != getvariableofnpc(.totalround,"Monster Hunt") +1 ) {
+		killmonsterall getvariableofnpc(.eventmap$,"Monster Hunt");
+		mapannounce getvariableofnpc(.eventmap$,"Monster Hunt"), "You failed to kill all MVPs in time.", 0;
+		if ( getvariableofnpc(.quitann,"Monster Hunt") == 1 )
+			announce .inusename$ +" party failed to finish the Monster Hunt Event !", 0;
+		else if ( getvariableofnpc(.quitann,"Monster Hunt") == 2 )
+			mapannounce getvariableofnpc(.npcmap$,"Monster Hunt"), .inusename$ +" party failed to finish the Monster Hunt Event!", 0;
+		getpartymember .inuseid, 1;
+		getpartymember .inuseid, 2;
+		for ( set .@i, 0; .@i < $@partymembercount; set .@i, .@i +1 ) {
+			if ( !isloggedin( $@partymemberaid[.@i], $@partymembercid[.@i] ) ) continue;
+			attachrid $@partymemberaid[.@i];
+			getmapxy .@map$, .@x, .@y, 0;
+			if ( .@map$ == getvariableofnpc(.eventmap$,"Monster Hunt") )
+				warp getvariableofnpc(.respawnmap$,"Monster Hunt"), getvariableofnpc(.respawnx,"Monster Hunt"), getvariableofnpc(.respawny,"Monster Hunt");
+		}
+	}
+	set getvariableofnpc(.hour,"Monster Hunt"), 0;
+	set getvariableofnpc(.min,"Monster Hunt"), 0;
+	set getvariableofnpc(.sec,"Monster Hunt"), 0;
+	delwaitingroom strnpcinfo(0);
+	end;
+
+OnTimer20000:
+	set .inuse, 0;
+	end;
+
+OnInit:
+	sleep 1;
+	getmapxy .@map$, .x, .y, 1;
+	set getvariableofnpc(.npcmap$,"Monster Hunt"), .@map$;
+	end;
+}

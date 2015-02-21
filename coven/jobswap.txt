@@ -1,540 +1,190 @@
-prontera,169,199,5	script	Job Swapper	956,{
+prontera,158,232,5	script	Job Swapper	1681,{
 set @name$, "[Job Swapper]";
-if(Class == 4008 || Class == 4009 || Class == 4010 || Class == 4011 || Class == 4012 || Class == 4013 || Class == 4014 || Class == 4015 || Class == 4016 || Class == 4017 || Class == 4018 || Class == 4019 || Class == 4020 || Class == 4021){
-if(Sex == 0)goto L_female;
-if(Sex == 1);
+
+if ( Class == 24   || Class == 25   || Class == 4047 || Class == 4049 || Class == 4008 ||
+	Class == 4009 || Class == 4010 || Class == 4011 || Class == 4012 || Class == 4013 ||
+	Class == 4014 || Class == 4015 || Class == 4016 || Class == 4017 || Class == 4018 ||
+	Class == 4019 || Class == 4020 || Class == 4021 || 
+	Class == 4030 || Class == 4031 || Class == 4032 || Class == 4033 || Class == 4034 ||
+	Class == 4035 || Class == 4037 || Class == 4038 || Class == 4039 || Class == 4040 || 
+	Class == 4041 || Class == 4042 || Class == 4043 ) goto chk_pass;
+	
+else {	
+	mes @name$;
+	mes "I only lend my services to Transcendent, Expanded, and Baby 2nd Classes.";
+	mes "Please come back when you're stronger~";
+	close;
+}	
+
+chk_pass:
 mes @name$;
-mes "What do you want Gay??";
-mes "Give me TCG card so can i change your class Gay!";
-if(select("No","Yes")==1){
-next; mes @name$; mes "Okay, goodbye."; close;
-} else {
-next;
-mes @name$;
-mes "Please choose a job.";
+mes "^00aa001 TCG Card^000000 is my service fee.";
+mes "Please choose a job~";
+menu "Transcendent Class",trans_Class,"Expanded Class",expand_Class,"Baby Class",baby_Class;
+
+//------------------------------------------------------------------------------------------
+//-------Transcendent-----------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+trans_Class:
+
+if (	Class == 4008 || Class == 4009 || Class == 4010 || Class == 4011 || Class == 4012 ||
+     Class == 4013 || Class == 4014 || Class == 4015 || Class == 4016 || Class == 4017 ||
+     Class == 4018 || Class == 4019 || Class == 4020 || Class == 4021 ){
+	
 switch(select("Lord Knight","High Priest","High Wizard","Whitesmith","Sniper","Assassin Cross","Paladin","Champion","Professor","Stalker","Creator","Clown")){
+
+//LK
 Case 1:
-	if(Class == 4008){
-	next;
-	mes @name$;
-	mes "That's already your current job.";
-	close;
-	} else {
-	next;
-	mes @name$;
-	mes "Let me check if you have";
-	if(countitem(7227)<1){mes @name$; mes "Sorry, you don't have enough TCG."; close;}
-	if(countitem(7227)>=1);
-	mes @name$;
-	mes "Job Swapping Successful";
-	delitem 7227,1;
-	jobchange 4008;
-	set JobLevel, 120;
-	close;
-	}
-	break;
-
+	callsub class_chk,4008,7227,120;
+//HP
 Case 2:
-	if(Class == 4009){
-	next;
-	mes @name$;
-	mes "That's already your current job.";
-	close;
-	} else {
-	next;
-	mes @name$;
-	mes "Let me check if you have";
-	if(countitem(7227)<1){mes @name$; mes "Sorry, you don't have enough TCG."; close;}
-	if(countitem(7227)>=1);
-	mes @name$;
-	mes "Job Swapping Successful";
-	delitem 7227,1;
-	jobchange 4009;
-	set JobLevel, 120;
-	close;
-	}
-	break;
-
+	callsub class_chk,4009,7227,120;
+//HW
 Case 3:
-	if(Class == 4010){
-	next;
-	mes @name$;
-	mes "That's already your current job.";
-	close;
-	} else {
-	next;
-	mes @name$;
-	mes "Let me check if you have";
-	if(countitem(7227)<1){mes @name$; mes "Sorry, you don't have enough TCG."; close;}
-	if(countitem(7227)>=1);
-	mes @name$;
-	mes "Job Swapping Successful";
-	delitem 7227,1;
-	jobchange 4010;
-	set JobLevel, 120;
-	close;
-	}
-	break;
-
+	callsub class_chk,4010,7227,120;
+//WS
 Case 4:
-	if(Class == 4011){
-	next;
-	mes @name$;
-	mes "That's already your current job.";
-	close;
-	} else {
-	next;
-	mes @name$;
-	mes "Let me check if you have";
-	if(countitem(7227)<1){mes @name$; mes "Sorry, you don't have enough TCG."; close;}
-	if(countitem(7227)>=1);
-	mes @name$;
-	mes "Job Swapping Successful";
-	delitem 7227,1;
-	jobchange 4011;
-	set JobLevel, 120;
-	close;
-	}
-	break;
-
+	callsub class_chk,4011,7227,120;
+//Snipe
 Case 5:
-	if(Class == 4012){
-	next;
-	mes @name$;
-	mes "That's already your current job.";
-	close;
-	} else {
-	next;
-	mes @name$;
-	mes "Let me check if you have";
-	if(countitem(7227)<1){mes @name$; mes "Sorry, you don't have enough TCG."; close;}
-	if(countitem(7227)>=1);
-	mes @name$;
-	mes "Job Swapping Successful";
-	delitem 7227,1;
-	jobchange 4012;
-	set JobLevel, 120;
-	close;
-	}
-	break;
-
+	callsub class_chk,4012,7227,120;
+//SinX
 Case 6:
-	if(Class == 4013){
-	next;
-	mes @name$;
-	mes "That's already your current job.";
-	close;
-	} else {
-	next;
-	mes @name$;
-	mes "Let me check if you have";
-	if(countitem(7227)<1){mes @name$; mes "Sorry, you don't have enough TCG."; close;}
-	if(countitem(7227)>=1);
-	mes @name$;
-	mes "Job Swapping Successful";
-	delitem 7227,1;
-	jobchange 4013;
-	set JobLevel, 120;
-	close;
-	}
-	break;
-
+	callsub class_chk,4013,7227,120;
+//Pally
 Case 7:
-	if(Class == 4015){
-	next;
-	mes @name$;
-	mes "That's already your current job.";
-	close;
-	} else {
-	next;
-	mes @name$;
-	mes "Let me check if you have";
-	if(countitem(7227)<1){mes @name$; mes "Sorry, you don't have enough TCG."; close;}
-	if(countitem(7227)>=1);
-	mes @name$;
-	mes "Job Swapping Successful";
-	delitem 7227,1;
-	jobchange 4015;
-	set JobLevel, 120;
-	close;
-	}
-	break;
-
+	callsub class_chk,4015,7227,120;
+//Champ
 Case 8:
-	if(Class == 4016){
-	next;
-	mes @name$;
-	mes "That's already your current job.";
-	close;
-	} else {
-	next;
-	mes @name$;
-	mes "Let me check if you have";
-	if(countitem(7227)<1){mes @name$; mes "Sorry, you don't have enough TCG."; close;}
-	if(countitem(7227)>=1);
-	mes @name$;
-	mes "Job Swapping Successful";
-	delitem 7227,1;
-	jobchange 4016;
-	set JobLevel, 120;
-	close;
-	}
-	break;
-
+	callsub class_chk,4016,7227,120;
+//Prof
 Case 9:
-	if(Class == 4017){
-	next;
-	mes @name$;
-	mes "That's already your current job.";
-	close;
-	} else {
-	next;
-	mes @name$;
-	mes "Let me check if you have";
-	if(countitem(7227)<1){mes @name$; mes "Sorry, you don't have enough TCG."; close;}
-	if(countitem(7227)>=1);
-	mes @name$;
-	mes "Job Swapping Successful";
-	delitem 7227,1;
-	jobchange 4017;
-	set JobLevel, 120;
-	close;
-	}
-	break;
-
+	callsub class_chk,4017,7227,120;
+//Stalk
 Case 10:
-	if(Class == 4018){
-	next;
-	mes @name$;
-	mes "That's already your current job.";
-	close;
-	} else {
-	next;
-	mes @name$;
-	mes "Let me check if you have";
-	if(countitem(7227)<1){mes @name$; mes "Sorry, you don't have enough TCG."; close;}
-	if(countitem(7227)>=1);
-	mes @name$;
-	mes "Job Swapping Successful";
-	delitem 7227,1;
-	jobchange 4018;
-	set JobLevel, 120;
-	close;
-	}
-	break;
-
+	callsub class_chk,4018,7227,120;
+//Creator
 Case 11:
-	if(Class == 4019){
-	next;
-	mes @name$;
-	mes "That's already your current job.";
-	close;
-	} else {
-	next;
-	mes @name$;
-	mes "Let me check if you have";
-	if(countitem(7227)<1){mes @name$; mes "Sorry, you don't have enough TCG."; close;}
-	if(countitem(7227)>=1);
-	mes @name$;
-	mes "Job Swapping Successful";
-	delitem 7227,1;
-	jobchange 4019;
-	set JobLevel, 120;
-	close;
-	}
-	break;
-
+	callsub class_chk,4019,7227,120;
+//Clown/Gypsy
 Case 12:
-	if(Class == 4020){
-	next;
-	mes @name$;
-	mes "That's already your current job.";
-	close;
-	} else {
-	next;
-	mes @name$;
-	mes "Let me check if you have";
-	if(countitem(7227)<1){mes @name$; mes "Sorry, you don't have enough TCG."; close;}
-	if(countitem(7227)>=1);
-	mes @name$;
-	mes "Job Swapping Successful";
-	delitem 7227,1;
-	jobchange 4020;
-	set JobLevel, 120;
-	close;
-	}
-	break;
+if ( Sex == 1 )
+{
+	callsub class_chk,4020,7227,120;
 }
+else {
+	callsub class_chk,4021,7227,120;	
+}
+}
+}	
+else {
+	next;
+	mes @name$;
+	mes "Please make sure you are of the ^ff0000Transcendent^000000 to avail of this service.";
+	close;
 }
 
-L_female:
-mes @name$;
-mes "What do you want, Sexy?";
-mes "Give me TCG Card so i can change your Class Sexy";
-if(select("No","Yes")==1){
-next; mes @name$; mes "Okay, goodbye."; close;
-} else {
-next;
+//------------------------------------------------------------------------------------------
+//-------Expanded---------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+expand_Class:
+if ( Class == 23   || Class == 24   || Class == 25   || Class == 4047 || Class == 4049 ) {
+switch(select("Gunslinger:Ninja:Star Gladiator:Soul Linker")){
+//GS
+case 1:
+	callsub class_chk,24,7227,120;
+//Ninja
+case 2:
+	callsub class_chk,25,7227,120;
+//SG
+case 3:
+	callsub class_chk,4047,7227,120;
+//SL
+case 4:
+	callsub class_chk,4049,7227,120;
+}
+}
+else {	
+	next;
+	mes @name$;
+	mes "Please make sure you are of the ^ff0000Expanded Class^000000 to avail of this service.";
+	close;
+}
+
+
+//------------------------------------------------------------------------------------------
+//------Baby--------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+baby_Class:
+if ( Class == 4030 || Class == 4031 || Class == 4032 || Class == 4033 || Class == 4034 ||
+	Class == 4035 || Class == 4037 || Class == 4038 || Class == 4039 || Class == 4040 || 
+	Class == 4041 || Class == 4042 || Class == 4043 ) 
+{
 mes @name$;
 mes "Please choose a job.";
-switch(select("Lord Knight","High Priest","High Wizard","Whitesmith","Sniper","Assassin Cross","Paladin","Champion","Professor","Stalker","Creator","Gypsy")){
+switch(select("Baby Knight","Baby Priest","Baby Wizard","Baby Blacksmith","Baby Hunter","Baby Assassin","Baby Crusader","Baby Monk","Baby Sage","Baby Rogue","Baby Alchemist","Baby Bard")){
+//knight
 Case 1:
-	if(Class == 4008){
-	next;
-	mes @name$;
-	mes "That's already your current job.";
-	close;
-	} else {
-	next;
-	mes @name$;
-	mes "Let me check if you have";
-	if(countitem(7227)<1){mes @name$; mes "Sorry, you don't have enough TCG."; close;}
-	if(countitem(7227)>=1);
-	mes @name$;
-	mes "Job Swapping Successful";
-	delitem 7227,1;
-	jobchange 4008;
-	set JobLevel, 120;
-	close;
-	}
-	break;
-
+	callsub class_chk,4030,7227,120;
+//priest
 Case 2:
-	if(Class == 4009){
-	next;
-	mes @name$;
-	mes "That's already your current job.";
-	close;
-	} else {
-	next;
-	mes @name$;
-	mes "Let me check if you have";
-	if(countitem(7227)<1){mes @name$; mes "Sorry, you don't have enough TCG."; close;}
-	if(countitem(7227)>=1);
-	mes @name$;
-	mes "Job Swapping Successful";
-	delitem 7227,1;
-	jobchange 4009;
-	set JobLevel, 120;
-	close;
-	}
-	break;
-
+	callsub class_chk,4031,7227,120;
+//wiz
 Case 3:
-	if(Class == 4010){
-	next;
-	mes @name$;
-	mes "That's already your current job.";
-	close;
-	} else {
-	next;
-	mes @name$;
-	mes "Let me check if you have";
-	if(countitem(7227)<1){mes @name$; mes "Sorry, you don't have enough TCG."; close;}
-	if(countitem(7227)>=1);
-	mes @name$;
-	mes "Job Swapping Successful";
-	delitem 7227,1;
-	jobchange 4010;
-	set JobLevel, 120;
-	close;
-	}
-	break;
-
+	callsub class_chk,4032,7227,120;
+//bs
 Case 4:
-	if(Class == 4011){
-	next;
-	mes @name$;
-	mes "That's already your current job.";
-	close;
-	} else {
-	next;
-	mes @name$;
-	mes "Let me check if you have";
-	if(countitem(7227)<1){mes @name$; mes "Sorry, you don't have enough TCG."; close;}
-	if(countitem(7227)>=1);
-	mes @name$;
-	mes "Job Swapping Successful";
-	delitem 7227,1;
-	jobchange 4011;
-	set JobLevel, 120;
-	close;
-	}
-	break;
-
+	callsub class_chk,4033,7227,120;
+//hunt		
 Case 5:
-	if(Class == 4012){
-	next;
-	mes @name$;
-	mes "That's already your current job.";
-	close;
-	} else {
-	next;
-	mes @name$;
-	mes "Let me check if you have";
-	if(countitem(7227)<1){mes @name$; mes "Sorry, you don't have enough TCG."; close;}
-	if(countitem(7227)>=1);
-	mes @name$;
-	mes "Job Swapping Successful";
-	delitem 7227,1;
-	jobchange 4012;
-	set JobLevel, 120;
-	close;
-	}
-	break;
-
+	callsub class_chk,4034,7227,120;
+//sin
 Case 6:
-	if(Class == 4013){
-	next;
-	mes @name$;
-	mes "That's already your current job.";
-	close;
-	} else {
-	next;
-	mes @name$;
-	mes "Let me check if you have";
-	if(countitem(7227)<1){mes @name$; mes "Sorry, you don't have enough TCG."; close;}
-	if(countitem(7227)>=1);
-	mes @name$;
-	mes "Job Swapping Successful";
-	delitem 7227,1;
-	jobchange 4013;
-	set JobLevel, 120;
-	close;
-	}
-	break;
-
+	callsub class_chk,4035,7227,120;
+//crus
 Case 7:
-	if(Class == 4015){
-	next;
-	mes @name$;
-	mes "That's already your current job.";
-	close;
-	} else {
-	next;
-	mes @name$;
-	mes "Let me check if you have";
-	if(countitem(7227)<1){mes @name$; mes "Sorry, you don't have enough TCG."; close;}
-	if(countitem(7227)>=1);
-	mes @name$;
-	mes "Job Swapping Successful";
-	delitem 7227,1;
-	jobchange 4015;
-	set JobLevel, 120;
-	close;
-	}
-	break;
-
+	callsub class_chk,4037,7227,120;
+//monk
 Case 8:
-	if(Class == 4016){
-	next;
-	mes @name$;
-	mes "That's already your current job.";
-	close;
-	} else {
-	next;
-	mes @name$;
-	mes "Let me check if you have";
-	if(countitem(7227)<1){mes @name$; mes "Sorry, you don't have enough TCG."; close;}
-	if(countitem(7227)>=1);
-	mes @name$;
-	mes "Job Swapping Successful";
-	delitem 7227,1;
-	jobchange 4016;
-	set JobLevel, 120;
-	close;
-	}
-	break;
-
+	callsub class_chk,4038,7227,120;
+//sage
 Case 9:
-	if(Class == 4017){
-	next;
-	mes @name$;
-	mes "That's already your current job.";
-	close;
-	} else {
-	next;
-	mes @name$;
-	mes "Let me check if you have";
-	if(countitem(7227)<1){mes @name$; mes "Sorry, you don't have enough TCG."; close;}
-	if(countitem(7227)>=1);
-	mes @name$;
-	mes "Job Swapping Successful";
-	delitem 7227,1;
-	jobchange 4017;
-	set JobLevel, 120;
-	close;
-	}
-	break;
-
+	callsub class_chk,4039,7227,120;
+//rogue
 Case 10:
-	if(Class == 4018){
-	next;
-	mes @name$;
-	mes "That's already your current job.";
-	close;
-	} else {
-	next;
-	mes @name$;
-	mes "Let me check if you have";
-	if(countitem(7227)<1){mes @name$; mes "Sorry, you don't have enough TCG."; close;}
-	if(countitem(7227)>=1);
-	mes @name$;
-	mes "Job Swapping Successful";
-	delitem 7227,1;
-	jobchange 4018;
-	set JobLevel, 120;
-	close;
-	}
-	break;
-
+	callsub class_chk,4040,7227,120;
+//alche
 Case 11:
-	if(Class == 4019){
-	next;
-	mes @name$;
-	mes "That's already your current job.";
-	close;
-	} else {
-	next;
-	mes @name$;
-	mes "Let me check if you have";
-	if(countitem(7227)<1){mes @name$; mes "Sorry, you don't have enough TCG."; close;}
-	if(countitem(7227)>=1);
-	mes @name$;
-	mes "Job Swapping Successful";
-	delitem 7227,1;
-	jobchange 4019;
-	set JobLevel, 120;
-	close;
-	}
-	break;
-
+	callsub class_chk,4041,7227,120;
 Case 12:
-	if(Class == 4021){
-	next;
-	mes @name$;
-	mes "That's already your current job.";
-	close;
-	} else {
-	next;
-	mes @name$;
-	mes "Let me check if you have";
-	if(countitem(7227)<1){mes @name$; mes "Sorry, you don't have enough TCG."; close;}
-	if(countitem(7227)>=1);
-	mes @name$;
-	mes "Job Swapping Successful";
-	delitem 7227,1;
-	jobchange 4021;
-	set JobLevel, 120;
-	close;
+	if ( Sex == 1 ) {
+	callsub class_chk,4042,7227,120;
 	}
-	break;
+	else {
+	callsub class_chk,4043,7227,120;
+	}
 }
 }
-} else {
-mes @name$;
-mes "Sorry I only work for Transcendant classes.";
-mes "Just come back when you are at your right level and class";
-close;
+
+else {
+	next;
+	mes @name$;
+	mes "Please make sure you're of the ^0000ffBaby 2nd Class^000000 to avail of this service.";
+	close;
 }
+
+class_chk:
+	if ( Class == getarg(0)){ mes ""; mes "Same job detected. Exiting..."; close;}
+	else {
+		next;
+		if(countitem(getarg(1)) < 1){mes @name$; mes "Please have 1 TCG card ready in your inventory next time we meet.."; close;} 
+		else {
+			delitem getarg(1),1;
+			jobchange getarg(0);
+			set JobLevel, getarg(2);
+			close;
+		}
+	}
 }
+	

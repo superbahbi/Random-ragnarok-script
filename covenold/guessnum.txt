@@ -1,0 +1,107 @@
+prontera,125,210,4	script	Guess the Numbers	81,{
+//set @numbergm,0;
+//set $guessevent,0;
+//set @var1,@var3;
+if(getgmlevel()==20) goto G_GMCHK;
+if(getgmlevel()==70) goto G_GMCHK;
+if(getgmlevel()==80) goto G_GMCHK2;
+if(getgmlevel()>=90) goto G_GMCHK2;
+if($guessevent==1) goto G_GAME;
+	mes"[Ash]";
+	mes"Sorry there's no event at this moment.";
+	close;
+OnMinute15:
+	switch(rand(1,5)) {
+
+	case 1:
+	set $var1,rand (100,350);
+	announce "Guess the numbers is now open. Join and win 1 pc. of Gold Coin. Clue: Between 100-350.",0;
+	set $guessevent,1;
+	end;
+
+	case 2:
+	set $var1,rand (350,700);
+	announce "Guess the numbers is now open. Join and win 1 pc. of Gold Coin. Clue: Between 350-700.",0;
+	set $guessevent,1;
+	end;
+
+	case 3:
+	set $var1,rand (700,999);
+	announce "Guess the numbers is now open. Join and win 1 pc. of Gold Coin. Clue: Between 700-999.",0;
+	set $guessevent,1;
+	end;
+
+	case 4:
+	end;
+
+	case 5:
+	end;
+
+}
+
+G_GMCHK:
+	if($guessevent==1) {
+	mes"[Ash]";
+	mes"Event still on going.";
+	close;
+	}
+	else {
+	goto G_GM;
+	}
+
+G_GMCHK2:
+	if($guessevent==1) {
+	mes"[Ash]";
+	mes"Event still on going.";
+	mes"Answer: "+$var1+".";
+	close;
+	}
+	else {
+	goto G_GM;
+	}
+
+G_GM:
+	mes"[Ash]";
+	mes"Input any number from 100-999";
+	next;
+	input $var1;
+	next;
+	mes"[Ash]";
+	mes"You choose "+$var1+".";
+	next;
+	mes"[Ash]";
+	mes"You want to open this event?";
+	menu"Yes",G_OPEN,"No, I want to other numbers.",G_GM;
+	next;
+G_OPEN:
+	mes"[Ash]";
+	mes"Okay here we go.";
+	set $guessevent,1;
+	announce "Guess the numbers is open. Join and win 1 pc. of Gold Coin.Located in prontera,125,210",0;
+	close;
+	
+
+G_GAME:
+	input $var2;
+	if($guessevent==0) goto G_ALR;
+	if($var1==$var2) {
+	announce "Ash : Arf!.. "+strcharinfo(0)+" luckily guessed the numbers.",0;
+	getitem 671,1;
+	detachrid;
+	set $guessevent,0;
+	}
+	else {
+	mes"[Ash]";
+	mes"Sorry try again";
+	close;
+	}
+	
+G_ALR:
+	mes"[Ash]";
+	mes"Someone already won.";
+	close;
+
+OnInit:
+	waitingroom "Guess The Number.",0;
+	end;
+}

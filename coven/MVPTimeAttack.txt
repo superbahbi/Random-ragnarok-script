@@ -1,0 +1,146 @@
+//===== rAthena Script ======================================= 
+//= MVP Time Attack
+//===== By: ================================================== 
+//= Bahmut 
+//= Freecs => http://rathena.org/board/user/949-jin-freecs/
+//===== Current Version: ===================================== 
+//= 1.0 Initial Release
+//============================================================ 
+
+quiz_02,303,248,4	script	BTA	97,{
+
+// You may want to use this mapflag if you want give the players only your prices and no monster loot
+
+
+	
+// - NPC Config
+// ---------------------------------------------------------------------------
+	set .@mapName$,"quiz_02";		// On which map should the event be
+	set .@spawnCordX,303;			// X-Cordinate where the mob spawns
+	set .@spawnCordY,245;			// Y-Cordinate where the mob spawns
+	set .@minGmRank,20;				// Minimal GM level to use this script
+	set .@globalAnnounce,0;			// Should the script announce kills global
+// ---------------------------------------------------------------------------
+
+	if (getgmlevel() < .@minGmRank) end;
+
+	mes "[MVP Time Attack]";
+	mes "Hello " + strcharinfo(0) + ", what do you want to do?";
+	menu "Choose Monster",L_Start,"Kill all Monsters",L_End,"Cancel",-;
+	close;
+		
+	L_Start:
+		next;
+		mes "[MVP Time Attack]";
+		mes "Choose a monster to spawn.";
+		next;
+		// Also add new monsters to this menu
+		menu strmobinfo(1,1039),L_Mob_bapho,
+			 strmobinfo(1,1511),L_Mob_amon,
+			 strmobinfo(1,1832),L_Mob_ifrit,
+			 strmobinfo(1,1751),L_Mob_vr,
+			 strmobinfo(1,1650),L_Mob_sniper,
+		//	 "<Monster Name>,<label>,		<= Template
+			 "Cancel",-;
+		
+		close;
+
+	
+// - Start Monster Labels (add new Monsters here)
+// ---------------------------------------------------------------------------
+// Template:
+//	<label>:								<= Same as used in the menu
+//		set .mobName$,"<Monster Name>";	<= Will be shown in the broadcasts
+//		set .mobId,<Monster ID>;			<= Monster ID from your Database
+//		goto L_execute;						<= Never remove this line
+// ---------------------------------------------------------------------------
+	L_Mob_bapho:
+		set .mobName$, strmobinfo(1,1039);
+		set .mobId,1039;
+		goto L_execute;
+		
+	L_Mob_amon:
+		set .mobName$, strmobinfo(1,1511);
+		set .mobId,1511;
+		goto L_execute;
+		
+	L_Mob_ifrit:
+		set .mobName$, strmobinfo(1,1832);
+		set .mobId,1832;
+		goto L_execute;
+		
+	L_Mob_vr:
+		set .mobName$, strmobinfo(1,1751);
+		set .mobId,1751;
+		goto L_execute;
+		
+	L_Mob_sniper:
+		set .mobName$, strmobinfo(1,1650);
+		set .mobId,1650;
+		goto L_execute;
+// ---------------------------------------------------------------------------
+// - End Monster Labels ------------------------------------------------------
+// ---------------------------------------------------------------------------
+	
+	L_execute:
+		mes "[MVP Time Attack]";
+		mes "The monster " + .mobName$ + " will be spawned.";
+		set $gm_event_num, $gm_event_num + 1;
+		close2;
+		if (.@globalAnnounce == 1) {
+			announce "Boss Time Attack: " + .mobName$,0;
+		} else {
+			mapannounce .@mapName$,"Boss Time Attack: " + .mobName$ + " in 5",0;
+		}
+		sleep2 1500;
+		if (.@globalAnnounce == 1) {
+			announce "Boss Time Attack: 4",0;
+		} else {
+			mapannounce .@mapName$,"Boss Time Attack: 4",0;
+		}
+		sleep2 1500;
+		if (.@globalAnnounce == 1) {
+			announce "Boss Time Attack: 3",0;
+		} else {
+			mapannounce .@mapName$,"Boss Time Attack: 3",0;
+		}
+		sleep2 1500;
+		if (.@globalAnnounce == 1) {
+			announce "Boss Time Attack: 2",0;
+		} else {
+			mapannounce .@mapName$,"Boss Time Attack: 2",0;
+		}
+		sleep2 1500;
+		if (.@globalAnnounce == 1) {
+			announce "Boss Time Attack: 1",0;
+		} else {
+			mapannounce .@mapName$,"Boss Time Attack: 1",0;
+		}
+		sleep2 1500;
+		if (.@globalAnnounce == 1) {
+			announce "Boss Time Attack: GO!",0;
+		} else {
+			mapannounce .@mapName$,"Boss Time Attack: GO!",0;
+		}
+		sleep2 1000;
+		set .MOBStartTick, gettimetick(2);
+		set .MOBKillTime, 0;
+		monster .@mapName$,.@spawnCordX,.@spawnCordY,.mobName$ + " - MVP Time Attack",.mobId,1,"BTA::OnMVPTAKilled";
+		end;
+		
+	L_End:
+		next;
+		killmonster .@mapName$,"All";
+		mes "[MVP Time Attack]";
+		mes "All monster(s) on the map " + .@mapName$ + " have been killed";
+		close;
+		
+	OnMVPTAKilled:
+		set .MOBKillTime, gettimetick(2) - .MOBStartTick;
+		announce "Boss Time Attack '" + .mobName$ + "': Time " + (.MOBKillTime / 60)+ "min " + (.MOBKillTime % 60) + "sec",0;
+		end;
+}
+quiz_02	mapflag	noloot
+quiz_02	mapflag	nowarp
+quiz_02	mapflag	nomemo
+

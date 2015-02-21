@@ -7,55 +7,134 @@
 //========================
 //===================== Start From Here =====================================================
 -	script	reward	-1,{
+set .@npc$, "[^FF0000Reward^000000]";
 
-OnWhisperGlobal:
 	if(getgmlevel()<20) goto OUT;
-	input .reciever$;
 	
-	mes "[^FF0000GM-Armscor^000000]";
+	mes .@npc$;
+	mes "Input name  of the winner";
+	input .@reciever$;
+	set .@playerid,getcharid(3,.@reciever$);
+	if(!isloggedin(.@playerid))
+	{
+		mes .@reciever$+" is offline.";
+		mes "Please, try again.";
+		close;
+	}
+	if( .@playerid > 2000001 && .@playerid < 2000020)
+	{
+		mes "No.";
+		close;
+	}
+//		mes "Input amount.";
+//		input .@amount;
+//		mes "Enter item id.";
+//		mes "Note: only "+getitemname(7227)+"(7227), "+getitemname(677)+"(677), "+getitemname(7539)+"(7539) and points.";
+//		mes "enter 0 for points";
+//		input .@itemid;
+//		if(.@itemid == 7227)
+//			getitem .@itemid, .@amount;
+//		if(.@itemid == 677)
+//			getitem .@itemid, .@amount;
+//		if(.@itemid == 7539)
+//			getitem .@itemid, .@amount;
+//		if(.@itemid == 0)
+//			query_sql("UPDATE `login` SET points=(points+"+.@amount+") WHERE account_id='"+.@playerid+"'");
+//		close;
+//			
+//	}
+	next;
+	mes .@npc$;
 	mes "TCG Card price can only be rewarded to players who won PVP and Party Events.";
 	mes "5v5 / 8v8 / 10v10 / GVG / LMS / FFA / WOE Events";
-	mes "Please do take note to this, Let's keep JaeRO Server in balance.";
+	mes "Please do take note to this, Let's keep CovenRO Server in balance.";
 	mes "[^FF0000Implementing Anti Spam Event^000000].";
 	mes "Thank You...! ^_^";
-	menu "TCG Card(1)",BCHIP,"Platinum Coin(1)",BLCHIP,"Poring Coin(3)",PCOIN,"Poring Coin(5)",PCOINS,"Poring Coin(10)",YCHIP,"Poring Coin(20)",BTIX,"Poring Coin (40)",BBRANCH;
-	close2;
+	
+	next;
+	mes .@npc$;
+	mes "Input amount of reward";
+	input .@amount;
 
-BCHIP:	
-	charcommand "#item "+.reciever$+" 7227 1 " ;
-	announce ""+strcharinfo(0)+": "+.reciever$+" received 1 TCG for winning the event.",bc_all;
-	close;
-
-BLCHIP:
-	charcommand "#item "+.reciever$+" 677 1 " ;
-	announce ""+strcharinfo(0)+": "+.reciever$+" received 1 Platinum Coin for winning the event.",bc_all;
-	close;
-
-PCOIN:
-	charcommand "#item "+.reciever$+" 7539 3 " ;
-	announce ""+strcharinfo(0)+": "+.reciever$+" received 3pcs Poring Coin for winning the event.",bc_all;
-	close;
-PCOINS:
-	charcommand "#item "+.reciever$+" 7539 5 " ;
-	announce ""+strcharinfo(0)+": "+.reciever$+" received 5pcs Poring Coin for winning the event.",bc_all;
-	close;
-
-YCHIP:
-	charcommand "#item "+.reciever$+" 7539 10 " ;
-	announce ""+strcharinfo(0)+": "+.reciever$+" received 10pcs Poring Coin for winning the event.",bc_all;
-	close;
-
-BTIX:
-	charcommand "#item "+.reciever$+" 7539 20 " ;
-	announce ""+strcharinfo(0)+": "+.reciever$+" received 20pcs Poring Coin for winning the event.",bc_all;
-	close;
-
-
-BBRANCH:
-	charcommand "#item "+.reciever$+" 7539 40 " ;
-	announce ""+strcharinfo(0)+": "+.reciever$+" received 40pcs Poring Coin for winning the event.",bc_all;
-	close;
-
-OUT:
-	end;
+	mes .@npc$;
+	mes "Select reward.";
+	switch(select("TCG:Platinum Coin:Poring coin:Points"))
+	{
+		case 1:
+			if(.@amount < 1 || .@amount > 10)
+			{
+				mes "Enter an amount between 1 and 10";
+				close;
+			}
+			callsub give_reward, 7227, .@amount, .@reciever$;
+			break;
+		case 2:
+			if(.@amount < 1 || .@amount > 10)
+			{
+				mes "Enter an amount between 1 and 10";
+				close;
+			}
+			callsub give_reward, 677, .@amount, .@reciever$;
+			break;
+		case 3:
+			if(.@amount < 1 || .@amount > 10)
+			{
+				mes "Enter an amount between 1 and 10";
+				close;
+			}
+			callsub give_reward, 7539, .@amount, .@reciever$;
+			break;
+		case 4:
+			if(.@amount < 1 || .@amount > 50)
+			{
+				mes "Enter an amount between 1 and 50";
+				close;
+			}
+			callsub give_point, .@amount, .@reciever$, .@playerid;
+			break;
+		default:
+			break;
+	}
+give_reward:
+	set .@itemid, getarg(0);
+	set .@amount, getarg(1);
+	set .@temp$, getarg(2);
+	set .@reciever$, .@temp$;
+	set .@gm_amount, 1;
+	set .@gm_id, getcharid(3,strcharinfo(0));
+	
+	mes "Are you sure you want to give";
+	mes .@reciever$+" "+.@amount+" "+getitemname(.@itemid);
+	switch(select("Yes:No") )
+	{
+		case 1:
+			charcommand "#item \""+.@reciever$+"\" "+.@itemid+" "+.@amount;
+			query_sql("UPDATE `gm_points` SET points=(points+"+.@gm_amount+") WHERE account_id='"+.@gm_id+"'");
+			announce ""+strcharinfo(0)+": "+.@reciever$+" received "+.@amount+" "+getitemname(.@itemid)+" for winning the event.",bc_all;
+			close;
+		case 2:
+			close;
+	}
+give_point:
+	set .@amount, getarg(0);
+	set .@reciever$, getarg(1);
+	set .@playerid, getarg(2);
+	set .@gm_amount, 1;
+	set .@gm_id, getcharid(3,strcharinfo(0));
+	
+	mes "Are you sure you want to give";
+	mes .@reciever$+" "+.@amount+" points";
+	switch(select("Yes:No") )
+	{
+		case 1:
+			query_sql("UPDATE `login` SET points=(points+"+.@amount+") WHERE account_id='"+.@playerid+"'");
+			query_sql("UPDATE `gm_points` SET points=(points+"+.@gm_amount+"), amount=(amount+"+.@amount+")  WHERE account_id='"+.@gm_id+"'");
+			announce ""+strcharinfo(0)+": "+.@reciever$+" received "+.@amount+" points for winning the event.",bc_all;
+			set $gm_event_num, $gm_event_num + 1;
+			close;
+		case 2:
+			close;
+	}	
 }
+
+

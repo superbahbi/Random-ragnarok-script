@@ -1,68 +1,64 @@
 /////////////////////////////////////////////
-//By Jaerobb for jaeRo///////////////////////
+//By Kenny for jaeRo///////////////////////
 ////////////////////////////////////////////
 
 prontera,0,0,0	script	mvp_announce	-1,{
 end;
-OnInit:
+
 
 //Time to be happening annons.
 OnClock0200:
 OnClock1000:
 OnClock1800:
 OnClock2200:
-
+if (agitcheck() || agitcheck2()) end;
 
 initnpctimer;
 OnTimer0:
-announce "Jaerobb: Mvp Event is now Open",0;
-enablenpc "Kenny";
-enablenpc "Kenny#2";
-enablenpc "Kenny#3";
+set $mvpstate, 1;
+announce "Kenny: Mvp Event is now Open. Type @go 34 to join the event.",0;
 killmonsterall "guild_vs1-1";
 end;
 
 OnTimer60000:
-announce "Jaerobb: Mvp Event Closing in 60 seconds",0;
+announce "Kenny: Mvp Event Closing in 60 seconds",0;
 end;
 
 OnTimer90000:
-announce "Jaerobb: Mvp Event Closing warps in 30 seconds.",0;
+announce "Kenny: Mvp Event Closing warps in 30 seconds.",0;
 sleep2 5000;
 end;
 
 OnTimer110000:
-announce "Jaerobb: Mvp Event: Last 10 seconds.",0;
+announce "Kenny: Mvp Event: Last 10 seconds.",0;
 end;
 
 OnTimer115000:
-announce "Jaerobb: Mvp Event: 5.",0;
+announce "Kenny: Mvp Event: 5.",0;
 end;
 
 OnTimer116000:
-announce "Jaerobb: Mvp Event: 4.",0;
+announce "Kenny: Mvp Event: 4.",0;
 end;
 
 OnTimer117000:
-announce "Jaerobb: Mvp Event: 3.",0;
+announce "Kenny: Mvp Event: 3.",0;
 end;
 
 OnTimer118000:
-announce "Jaerobb: Mvp Event: 2.",0;
+announce "Kenny: Mvp Event: 2.",0;
 end;
 
 OnTimer119000:
-announce "Jaerobb: Mvp Event: 1.",0;
+announce "Kenny: Mvp Event: 1.",0;
 end;
 
 OnTimer120000:
-announce "Jaerobb: Mvp Event Warps are now closed.",0;
+announce "Kenny: Mvp Event Warps are now closed.",0;
+set $mvpstate, 0;
 end;
 
 OnTimer121000:
-disablenpc "Kenny";
-disablenpc "Kenny#2";
-disablenpc "Kenny#3";
 stopnpctimer;
 sleep 2000;
 mapannounce "guild_vs1-1","The first invasion of monsters in 10 seconds",0,0x00ff00;
@@ -106,34 +102,30 @@ monster "guild_vs1-1",0,0,""+getmonsterinfo(1272,0)+"",1272,3;//
 monster "guild_vs1-1",0,0,""+getmonsterinfo(1115,0)+"",1115,1;//
 monster "guild_vs1-1",0,0,""+getmonsterinfo(1251,0)+"",1251,1;//
 sleep 110000;
-mapannounce "guild_vs1-1","Jaerobb: Thank you for participating. The event is done. Have a nice day.",0,0x00ff00;
-//disablenpc "Kenny";
+mapannounce "guild_vs1-1","Kenny: Thank you for participating. The event is done. Have a nice day.",0,0x00ff00;
+killmonsterall "guild_vs1-1";
 stopnpctimer; //disable the timer.
+end;
+
+OnInit:
+	set $mvpstate, 0;
+	end;
+	
+OnPCLoadMapEvent:
+getmapxy(.@map$, .@x, .@y, 0 ) ;
+
+  if ( .@map$ == "guild_vs1-1" ) { 
+	if($mvpstate == 0) {
+		warp "SavePoint", 0,0; 
+		end; 
+	}
+  }
 end;
 }
 
-prontera,156,147,5	script	Kenny	403,{
-	mes "Event will begin after all participants will be registered.";
-	mes "You want to participate?";
-	next;
-	mes "Well, you are registered";
-	mes "Want to get to locations of event?";
-	next;
-	menu "Go",case1,"Noo 8)",case2;
-case1:
-	warp "guild_vs1-1",0,0;
-	close;
-case2:
-	mes "[Kenny]";
-	mes "Well, come whenever you want.";
-close;
-}
-//--------NPC CLONE-----------------
-payon,155,211,5	duplicate(Kenny)	Kenny#2	403
-morocc,159,74,5	duplicate(Kenny)	Kenny#3	403
 //-----------Mapflag------------------
 guild_vs1-1	mapflag	nowarp
-guild_vs1-1	mapflag	nowarpto
+//guild_vs1-1	mapflag	nowarpto
 guild_vs1-1	mapflag	noteleport
 guild_vs1-1	mapflag	nosave
 guild_vs1-1	mapflag	nomemo

@@ -1,73 +1,94 @@
 prontera,140,196,5	script	Emperium Ladder	467,{
-	mes "[^FF0000Top5 Emperium Ladder^000000]";
-	mes "Top 1: ^0000FF" +$top1emp$ +"^000000 With: ^FF0000" +$top1emp +"^000000 Emperium Breaks.";
-	mes "Top 2: ^0000FF" +$top2emp$ +"^000000 With: ^FF0000" +$top2emp +"^000000 Emperium Breaks.";
-	mes "Top 3: ^0000FF" +$top3emp$ +"^000000 With: ^FF0000" +$top3emp +"^000000 Emperium Breaks.";
-	mes "Top 4: ^0000FF" +$top4emp$ +"^000000 With: ^FF0000" +$top4emp +"^000000 Emperium Breaks.";
-	mes "Top 5: ^0000FF" +$top5emp$ +"^000000 With: ^FF0000" +$top5emp +"^000000 Emperium Breaks.";
-close;
-} // End Script
+if(getgmlevel() == 0)
+{
+L_Main:
+	if (!query_sql("show tables like 'woe_pbreaks'",@ignore) || !query_sql("show tables like 'woe_gbreaks'",@ignore)) { mes "There was a critical database error. Please report this to a GM!"; return; }
+	query_sql("select `breaks` from `woe_pbreaks` where `char_id` = '"+getcharid(0)+"'",@player);
+	query_sql("select `breaks` from `woe_gbreaks` where `guild_id` = '"+getcharid(2)+"'",@guild);
+	mes "[Emperium Ladder]";
+	mes "You have broke emperium "+@player+" times.";
+	mes "Your guild has broke emperium "+@guild+" times.";
+	deletearray @name$[0], 128; deletearray @breaks[0], 128;
+	next;
+	switch(select("View top 10 players","View top 10 guilds","Close")) {
+		case 1:
+			mes "[Emperium Ladder]";
+			mes "The top 10 players:";
+			query_sql("select `name`,`breaks` from `woe_pbreaks` order by `breaks` DESC limit 10",@name$,@breaks);
+			for (set @i, 0; @i < getarraysize(@breaks); set @i, @i+1) {
+				mes (@i+1)+":"+@name$[@i]+", "+@breaks[@i];
+			}
+			break;
+		case 2:
+			mes "[Emperium Ladder]";
+			mes "The top 10 guilds:";
+			query_sql("select `name`,`breaks` from `woe_gbreaks` order by `breaks` DESC limit 10",@name$,@breaks);
+			for (set @i, 0; @i < getarraysize(@breaks); set @i, @i+1) {
+				mes (@i+1)+":"+@name$[@i]+", "+@breaks[@i];
+			}
+			break;
+		case 3: close;
+	}
+	next;
+	goto L_Main;
+}
+else
+{
+	mes "[Emperium Ladder]";
+	mes "Yo!";
+	switch(select("Show ladder","Reset")) 
+	{
+	case 1:
+		goto L_Main;
+	case 2:
+		next;
+		if ( getgmlevel() < 80) end;
+		mes "Do you want to reset le ladder?";
+		switch(select("Yes","No")) 
+		{
+			case 1:
+				next;
+				mes "[Emperium Ladder]";
+				mes "Are you really sure?";
+				switch(select("Yes","No")) 
+				{
+				case 1:
+					next;
+					mes "[Emperium Ladder]";
+					mes "Okay";
+					mes "Here we go!!!!1!!one!1!!";
+					mes "Kaboom, nigger";
+					if(getgmlevel() >= 99)
+						goto Le_delete;
+					else
+						goto Le_laugh;
+		
+				case 2:
+					close;
+				}
+			case 2:
+				close;
+		}
+	}
+}
+Le_delete:
+	next;
+	mes "[Emperium Ladder]";
+	mes "Deleted";
+	query_sql "DELETE FROM jaero_ragnarok.`woe_gbreaks`";
+	query_sql "DELETE FROM jaero_ragnarok.`woe_pbreaks`";
+	close;
+Le_laugh:
+	mes "NOPE.JPEG";
+	mes "HAHAHAHAHAHAHA";
+	mes "HAHAHAHAHAHAHA";
+	mes "HAHAHAHAHAHAHA";
+	mes "HAHAHAHAHAHAHA";
+	mes "HAHAHAHAHAHAHA";
+	close;
 
-function	script	EmpeLadder	{
-set @emptotal, getarg(0);
-set @nomb$, getarg(1);
+OnInit:
+	waitingroom "Emperium Ladder",0;
+	end;
+}
 
-if (@emptotal > $top1emp) {
-	if ($top1emp$ == strcharinfo(0)) {
-		set $top1emp, @emptotal;
-		set $top1emp$, @nomb$;
-	} else {
-		set @aux, $top1emp;
-		set @aux$, $top1emp$;
-		set $top1emp, @emptotal;
-		set $top1emp$, @nomb$;
-		set $top2emp, @aux;
-		set $top2emp$, @aux$;
-	} // End if
-} else if (@emptotal > $top2emp) {
-	if ($top2emp$ == strcharinfo(0)) {
-		set $top2emp, @emptotal;
-		set $nomb2, @nomb$;
-	} else {
-		set @aux, $top2emp;
-		set @aux$, $top2emp$;
-		set $top2emp, @emptotal;
-		set $top2emp$, @nomb$;
-		set $top3emp, @aux;
-		set $top3emp$, @aux$;
-	} // End if
-} else if (@emptotal > $top3emp) {
-	if ($top3emp$ == strcharinfo(0)) {
-		set $top3emp, @emptotal;
-		set $top3emp$, @nomb$;
-	} else {
-		set @aux, $top3emp;
-		set @aux$, $top3emp$;
-		set $top3emp, @emptotal;
-		set $top3emp$, @nomb$;
-		set $top4emp, @aux;
-		set $top4emp$, @aux$;
-	} // End if
-} else if (@emptotal > $top4emp) {
-	if ($top4emp$ == strcharinfo(0)) {
-		set $top4emp, @emptotal;
-		set $top4emp$, @nomb$;
-	} else {
-		set @aux, $top4emp;
-		set @aux$, $top4emp$;
-		set $top4emp, @emptotal;
-		set $top4emp$, @nomb$;
-		set $top5emp, @aux;
-		set $top5emp$, @aux$;
-	} // End if
-} else if (@emptotal > $top5emp) {
-	if ($top5emp$ == strcharinfo(0)) {
-		set $top5emp, @emptotal;
-		set $nomb5, @nomb$;
-	} else {
-		set $top5emp, @emptotal;
-		set $top5emp$, @nomb$;
-	} // End if
-} // End if
-return;
-} // End function

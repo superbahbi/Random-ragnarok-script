@@ -1,4 +1,4 @@
-prontera,156,227,4	script	Baby Job Master#01::jbmaster	922,{
+prontera,154,232,4	script	Baby Job Master#01::jbmaster	922,{
 if (class == 0) goto makebaby;
 if (class == 4023) goto Go1st;
 if (class == 4024 || class == 4025 || class == 4026 || class == 4027 || class == 4028 || class == 4029) goto Go2nd;
@@ -9,14 +9,14 @@ close;
 
 ur2nd:
 mes "[ ^0065DFBaby Job Master^000000 ]";
-mes "What do you want from me? You have allready reached a baby secondclass job.";
+mes "What do you want from me? You have already reached a baby second class job.";
 close;
 
 makebaby:
 if(joblevel>1) goto Lbabyjobone;
 if(baselevel>1) goto Lbabybaseone;
 mes "[ ^0065DFBaby Job Master^000000 ]";
-mes "I'm a baby jobchanger for Titan! You want to become a baby?";
+mes "I'm a baby job changer for Titan! You want to become a baby?";
 menu "Yeah, sure!",Lyes,"No!",Lno;
 
 Lbabyjobone:
@@ -270,9 +270,4 @@ mes "[ ^0065DFBaby Job Master^000000 ]";
 mes "Blah.. be that way.. >_>..";
 cutin "kafra_01",255;
 close;
-
-OnInit:
-	waitingroom "BABY JOB.!",0;
-	end;
 }
-

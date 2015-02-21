@@ -1,48 +1,77 @@
 prontera,125,210,4	script	Guess the Numbers	81,{
-//set @numbergm,0;
-//set $guessevent,0;
-//set @var1,@var3;
+
+set .@npc$, "[Ash]";
 if(getgmlevel()==20) goto G_GMCHK;
-if(getgmlevel()==70) goto G_GMCHK;
-if(getgmlevel()==80) goto G_GMCHK2;
-if(getgmlevel()>=90) goto G_GMCHK2;
+if(getgmlevel()>=70) goto G_GMCHK2;
+
 if($guessevent==1) goto G_GAME;
-	mes"[Ash]";
+	mes .@npc$;
 	mes"Sorry there's no event at this moment.";
 	close;
+	
 OnMinute15:
+goto gtn;
+gtn:
 	switch(rand(1,5)) {
 
 	case 1:
-	set $var1,rand (100,350);
-	announce "Guess the numbers is now open. Join and win 1 pc. of Gold Coin. Clue: Between 100-350.",0;
+	set $var1,rand (1,200);
+	set $clue1, 1;
+	set $clue2, 200;
+	delwaitingroom;
+	waitingroom "Clue:"+$clue1+"-"+$clue2,0;
+	announce "Guess the numbers is now open. Join and win 10 points. Clue: Between 1-200.",0;
 	set $guessevent,1;
 	end;
-
+	
 	case 2:
-	set $var1,rand (350,700);
-	announce "Guess the numbers is now open. Join and win 1 pc. of Gold Coin. Clue: Between 350-700.",0;
+	set $var1,rand (201,400);
+	set $clue1, 201;
+	set $clue2, 400;
+	delwaitingroom;
+	waitingroom "Clue:"+$clue1+"-"+$clue2,0;
+	announce "Guess the numbers is now open. Join and win 10 points. Clue: Between 201-400.",0;
 	set $guessevent,1;
 	end;
 
 	case 3:
-	set $var1,rand (700,999);
-	announce "Guess the numbers is now open. Join and win 1 pc. of Gold Coin. Clue: Between 700-999.",0;
+	set $var1,rand (401,600);
+	set $clue1, 401;
+	set $clue2, 600;
+	delwaitingroom;
+	waitingroom "Clue:"+$clue1+"-"+$clue2,0;
+	announce "Guess the numbers is now open. Join and win 10 points. Clue: Between 401-600.",0;
 	set $guessevent,1;
 	end;
 
 	case 4:
+	set $var1,rand (601,800);
+	set $clue1, 601;
+	set $clue2, 800;
+	delwaitingroom;
+	waitingroom "Clue:"+$clue1+"-"+$clue2,0;
+	announce "Guess the numbers is now open. Join and win 10 points. Clue: Between 601-800.",0;
+	set $guessevent,1;
 	end;
 
 	case 5:
+	set $var1,rand (801,999);
+	set $clue1, 801;
+	set $clue2, 999;
+	delwaitingroom;
+	waitingroom "Clue:"+$clue1+"-"+$clue2,0;
+	announce "Guess the numbers is now open. Join and win 10 points. Clue: Between 801-999.",0;
+	set $guessevent,1;
 	end;
+	
 
 }
 
+
 G_GMCHK:
 	if($guessevent==1) {
-	mes"[Ash]";
-	mes"Event still on going.";
+	mes .@npc$;
+	mes "Event still on going.";
 	close;
 	}
 	else {
@@ -51,9 +80,9 @@ G_GMCHK:
 
 G_GMCHK2:
 	if($guessevent==1) {
-	mes"[Ash]";
-	mes"Event still on going.";
-	mes"Answer: "+$var1+".";
+	mes .@npc$;
+	mes "Event still on going.";
+	mes "Answer: "+$var1+".";
 	close;
 	}
 	else {
@@ -61,47 +90,40 @@ G_GMCHK2:
 	}
 
 G_GM:
-	mes"[Ash]";
-	mes"Input any number from 100-999";
-	next;
-	input $var1;
-	next;
-	mes"[Ash]";
-	mes"You choose "+$var1+".";
-	next;
-	mes"[Ash]";
-	mes"You want to open this event?";
-	menu"Yes",G_OPEN,"No, I want to other numbers.",G_GM;
-	next;
-G_OPEN:
-	mes"[Ash]";
-	mes"Okay here we go.";
-	set $guessevent,1;
-	announce "Guess the numbers is open. Join and win 1 pc. of Gold Coin.Located in prontera,125,210",0;
-	close;
+	mes .@npc$;
+	mes "Just say woof and I'll randomly pick a number for chu!";
+	switch(select("Woof:Exit")){
+	case 1:
+	close2;
+	goto gtn;
+	case 2: 
+	close;		
+	}
 	
 
 G_GAME:
 	input $var2;
 	if($guessevent==0) goto G_ALR;
 	if($var1==$var2) {
-	announce "Ash : Arf!.. "+strcharinfo(0)+" luckily guessed the numbers.",0;
-	getitem 671,1;
-	detachrid;
+	announce "Ash : Arf! "+strcharinfo(0)+" luckily guessed the right number. +10 points.",0;
+	delwaitingroom;
+	set .@amount, 10;
 	set $guessevent,0;
+	atcommand "@getcpoints "+.@amount;
+	end;
 	}
 	else {
-	mes"[Ash]";
-	mes"Sorry try again";
+	mes .@npc$;
+	mes "Sorry try again.";
 	close;
 	}
 	
 G_ALR:
-	mes"[Ash]";
-	mes"Someone already won.";
+	mes .@npc$;
+	mes "Someone already won.";
 	close;
 
 OnInit:
-	waitingroom "Guess The Number.",0;
+	set $guessevent,0;
 	end;
 }

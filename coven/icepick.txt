@@ -1,0 +1,222 @@
+//===== eAthena Script =======================================
+//= <Ice Pick Quest>
+//===== By: ==================================================
+//= <Coven Ragnarok>
+//===== Current Version: =====================================
+//= <v1>
+//===== Compatible With: =====================================
+//= <any>
+//===== Description: =========================================
+//= 1 Ice Pick Quest per player.
+//===== Additional Comments: =================================
+//= Finalized Required Items
+//============================================================
+lou_dun03,258,260,5	script	Mysterious Forger	739,{
+	mes "[^00ff00Mysterious Forger^000000]";
+	mes "Greetings, traveler.";
+	mes "In what way may I help you?";
+	next;
+	mes "[^00ff00Mysterious Forger^000000]";
+	mes "Ah, perhaps you have heard";
+	mes "about the legends...."; 
+	next;
+	mes "[^00ff00Mysterious Forger^000000]";
+	mes "Rumor has it that a";
+	mes "godly weapon has existed.";
+	mes "A weapon so strong it slayed thousands of souls";
+	mes "and spilled blood throughout history.";
+	next; 
+	mes "[^00ff00Mysterious Forger^000000]";
+	mes "It brought peace and order to those";
+	mes "who use it for good.";
+	next;
+	mes "[^00ff00Mysterious Forger^000000]";
+	mes "But to the hands of evil, brought about chaos and fear";
+	mes "amongst the denizens of Midgard.";
+	next;
+	mes "[^00ff00Mysterious Forger^000000]";
+	mes "It has been locked away in another dimension,";
+	mes "never to be seen nor used again.";
+	next;
+	mes "[^00ff00Mysterious Forger^000000]";
+	mes "In fact, the people were too afraid to speak of it,";
+	mes "for they might be punished for doing so.";
+	next;
+	mes "[^00ff00Mysterious Forger^000000]";
+	mes "Many have sought of its power, and traveled far and wide";
+	mes "A few didn't come back alive,";
+	mes "the others came back empty-handed.";
+	next;
+	mes "[^00ff00Mysterious Forger^000000]";
+	mes "But during one of my travels, I found a secret passage to some pyramid.";
+	next;
+	mes "[^00ff00Mysterious Forger^000000]";
+	mes "I came upon a strange wall with ancient symbols written upon it.";
+	next;
+	mes "[^00ff00Mysterious Forger^000000]";
+	mes "Somehow, they didn't seem unfamiliar to me.";
+	next;
+	mes "[^00ff00Mysterious Forger^000000]";
+	mes "I found a crevice upon that wall and of course,";
+	mes "being the clever and smart person I am,";
+	mes "I managed to decipher it";
+	mes "and unleashed something foreboding.";
+	next;
+	mes "[^00ff00Mysterious Forger^000000]";
+	mes "There it was, locked in a box..the daunting ^0022ffIce Pick^000000!";
+	 
+	next;
+	mes "[^00ff00Mysterious Forger^000000]";
+	mes "And here's the best part, I can forge one for you.";
+	emotion e_gg;
+	mes "Just bring me the things I need.";
+	next;
+	mes "[^00ff00Mysterious Forger^000000]";
+	mes "But let me warn you beforehand that it's not that easy...";
+	next;
+	mes "[^00ff00Mysterious Forger^000000]";
+	mes "From now on you're not only on a quest for experience,";
+	mes "Encountering the arduous perils, obstacles and adversaries.";
+	next;
+	mes "[^00ff00Mysterious Forger^000000]";	 
+	mes "To be the best, you must conquer vast territories and claim the treasure it holds.";
+	next;
+	mes "[^00ff00Mysterious Forger^000000]";
+	mes "Now listen carefully and give me these:";
+	mes "^0000ff1^000000 ^ff55ffTwin Edge of Naght Sieger Water^000000 acquired from ^ff5500Naght Sieger^000000.";
+	mes "^0000ff1^000000 ^ff55ffTwin Edge of Naght Sieger Fire^000000 acquired from ^ff5500Naght Sieger^000000.";
+	next;
+	mes "^0000ff1^000000 ^ff55ffSwordbreaker^000000 acquired from ^ff5500Swordbreaker Quest^000000.";
+	mes "^0000ff10^000000 ^ff55ffBloody Edge^000000 acquired from ^ff5500Valkyrie Randgris^000000.";
+	mes "^0000ff5^000000 ^ff55ffBreath of Spirit^000000 acquired from ^ff5500Bamboo Grove Hill Castle(Payon)^000000.";
+	next;
+	mes "^0000ff5^000000 ^ff55ffFeather of Angel Wing^000000 acquired from ^ff5500Eeyolbriggar Castle(Geffen)^000000.";
+	mes "^0000ff5^000000 ^ff55ffEmblem of the Sun God^000000 acquired from ^ff5500Sacred Altar Castle(Payon)^000000.";
+	mes "^0000ff5^000000 ^ff55ffWheel of the Unknown^000000 acquired from ^ff5500Wuerzburg Castle(Aldebaran)^000000.";
+	mes "^0000ff5^000000 ^ff55ffRoot of Stone^000000 acquired from ^ff5500Mersetzdeitz Castle(Geffen)^000000.";
+	next;
+	mes "^0000ff5^000000 ^ff55ffCat Tread^000000 acquired from ^ff5500Yesnelph Castle(Geffen)^000000.";
+	mes "^0000ff5^000000 ^ff55ffFreya's Jewel^000000 acquired from ^ff5500Neuschwanstein Castle(Aldebaran)^000000.";
+	mes "^0000ff5^000000 ^ff55ffWrath of Valkyrie^000000 acquired from ^ff5500Bamboo Grove Hill Castle(Payon)^000000.";
+	next;
+	mes "^0000ff5^000000 ^ff55ffOmen of Tempest^000000 acquired from ^ff5500Swanhild Castle(Prontera)^000000.";
+	mes "^0000ff5^000000 ^ff55ffSilver Ornament^000000 acquired from ^ff5500Rothenburg Castle(Aldebaran)^000000.";
+	mes "^0000ff5^000000 ^ff55ffWoman's Moustache^000000 acquired from ^ff5500Bergel Castle(Geffen)^000000.";
+	mes "^0000ff5^000000 ^ff55ffRipple^000000 acquired from ^ff5500Fadhgridh Castle(Prontera)^000000.";
+	next;
+	mes "^0000ff5^000000 ^ff55ffThor's Gauntlets^000000 acquired from ^ff5500Hohenschwangau Castle(Aldebaran)^000000.";
+	mes "^0000ff5^000000 ^ff55ffSinew of Bear^000000 acquired from ^ff5500Holy Shadow Castle(Payon)^000000.";
+	mes "^0000ff5^000000 ^ff55ffSputum of Bird^000000 acquired from ^ff5500Scarlet Palace Castle(Payon)^000000.";
+	next;
+	mes "^0000ff5^000000 ^ff55ffSnow Crystal^000000 acquired from ^ff5500Kriemhild Castle(Prontera)^000000.";
+	mes "^0000ff5^000000 ^ff55ffDrifting Air^000000 acquired from ^ff5500Gondul Castle(Prontera)^000000.";
+	mes "^0000ff5^000000 ^ff55ffSpirit of Fish^000000 acquired from ^ff5500Bright Arbor Castle(Payon)^000000.";
+	mes "^0000ff5^000000 ^ff55ffBillow^000000 acquired from ^ff5500Skoegul Castle(Prontera)^000000.";
+	mes "^0000ff5^000000 ^ff55ffIron Maiden^000000 acquired from ^ff5500Nuenberg Castle(Aldebaran)^000000.";
+	next;
+	mes "[^00ff00Mysterious Forger^000000]";
+	mes "Remember those items are only obtained through the ^ff0000Treasure Boxes^000000 the castle possesses.";
+	next;
+	mes "[^00ff00Mysterious Forger^000000]";
+	mes "^ff0000*stares*^000000";
+	next;
+	mes "[^00ff00Mysterious Forger^000000]";
+	mes "Why are your eyes showing disbelief and cowardice?";
+	mes "Do you think I'm crazy?"; 
+	next;
+	mes "[^00ff00Mysterious Forger^000000]";
+	mes "Are you ready to witness the creation of this formidable masterpiece?";
+	emotion e_what;
+	next;
+	menu "I was born ready!",-,"I think this is impossible!",LGiveUp;
+
+	
+	if(checkweight(1230,1) == 0) goto LOverweight;
+	if(countitem(13412) < 1 
+	|| countitem(13413) < 1 
+	|| countitem(1224) < 1 
+	|| countitem(7024) < 7	
+	|| countitem(7087) < 5 
+	|| countitem(7079) < 5 
+	|| countitem(7086) < 5 
+	|| countitem(7076) < 5	
+	|| countitem(7082) < 5 
+	|| countitem(7080) < 5 
+	|| countitem(7073) < 5 
+	|| countitem(7078) < 5	
+	|| countitem(7089) < 5 
+	|| countitem(7077) < 5 
+	|| countitem(7081) < 5 
+	|| countitem(7090) < 5
+	|| countitem(7074) < 5 
+	|| countitem(7085) < 5 
+	|| countitem(7084) < 5 
+	|| countitem(7088) < 5	
+	|| countitem(7092) < 5 
+	|| countitem(7083) < 5 
+	|| countitem(7091) < 5
+	|| countitem(7075) < 5) goto LIncompleteItems;
+	delitem 13412,1;
+	delitem 13413,1;
+	delitem 1224,1;
+	delitem 7024,7;
+	delitem 7087,5;
+	delitem 7079,5;
+	delitem 7086,5;
+	delitem 7076,5;
+	delitem 7082,5;
+	delitem 7080,5;
+	delitem 7073,3;
+	delitem 7078,5;
+	delitem 7089,5;
+	delitem 7077,5;
+	delitem 7081,5;
+	delitem 7090,5;
+	delitem 7074,5;
+	delitem 7085,5;
+	delitem 7084,5;
+	delitem 7088,5;
+	delitem 7092,5;
+	delitem 7083,5;
+	delitem 7091,5;
+	delitem 7075,5;	
+	getitem 1230,1;	
+	next;		
+	mes "[^00ff00Mysterious Forger^000000]";	
+	mes "^aa00ff*clink clink*^000000";
+	next;
+	mes "[^00ff00Mysterious Forger^000000]";
+	mes "^aa00ff*clang clang*^000000";
+	next;
+	mes "[^00ff00Mysterious Forger^000000]";
+	mes "Impressive, your will and determination is beyond I imagined.";
+		next;
+	mes "[^00ff00Mysterious Forger^000000]";
+	mes ".....";
+	mes "Triumph on your newfound power!";
+	emotion e_no1;
+	close;
+
+	LIncompleteItems:
+		mes "[^00ff00Mysterious Forger^000000]";
+		mes "....";
+		emotion e_sry;
+		mes "My apologies, but you do not have everything I have entasked you to bring...";
+		mes "I urge you to strive harder for you are one step closer to dominance.";
+		close;
+		
+	LOverweight:
+		mes "[^00ff00Mysterious Forger^000000]";
+		mes "Sorry, I think you're carrying too much items at the moment";
+		mes "Please make sure you don't have alot of different item types";
+		mes "and that your weight is not over 50%";
+		close;
+
+	LGiveUp:
+		mes "[^00ff00Mysterious Forger^000000]";
+		emotion e_flash;
+		mes "I saw something in you, a thirst for zeal and power.";
+		mes "If you must know, you are the only person I have shared this secret with,";
+		mes "So go forth and do not disappoint me!";
+		close;
+}

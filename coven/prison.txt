@@ -3,7 +3,7 @@
 //===== Compatible With:==
 //= Latest
 //===== Description: =====
-//= Test npc
+//= Bail 
 //========================
 //===================== Start From Here =====================================================
 sec_pri,48,63,5	script	Warden	429,{

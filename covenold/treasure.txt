@@ -1,0 +1,16 @@
+//===================================
+//===========Scripted By=============
+//===================================
+//==============JaeRO================
+//===================================
+-	script	treasure	-1,{
+OnMinute00:
+		killmonsterall "prontera";
+		announce "A rare Treasure Box has been spawned somewhere in Prontera.",bc_all;
+		monster "prontera",0,0,"Treasure Box",1798,1,"treasure::OnBoxKilled";
+		end;
+
+OnBoxKilled:
+	announce ""+strcharinfo(0)+" found and destroyed the Treasure Box.",bc_all;
+	end;
+}

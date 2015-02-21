@@ -1,0 +1,149 @@
+-	script	mvpevent	-1,{
+OnHour01:
+initnpctimer;
+	switch(rand(1,3)) {
+		case 1:
+			announce "Guard : The evil monsters are about to attack the southern part of prontera. Were going to need all the help that we can have until we finished the preparations for megadoomer. Time limit: 15 Minutes.",0;
+			monster "prt_fild08.gat",0,0,"MVP",1038,2;
+			monster "prt_fild08.gat",0,0,"MVP",1039,2;
+			monster "prt_fild08.gat",0,0,"MVP",1046,2;
+			monster "prt_fild08.gat",0,0,"MVP",1059,2;
+			monster "prt_fild08.gat",0,0,"MVP",1086,2;
+			monster "prt_fild08.gat",0,0,"MVP",1087,2;
+			monster "prt_fild08.gat",0,0,"MVP",1096,2;
+			monster "prt_fild08.gat",0,0,"MVP",1115,2;
+			monster "prt_fild08.gat",0,0,"MVP",1157,2;
+			monster "prt_fild08.gat",0,0,"MVP",1159,2;
+			monster "prt_fild08.gat",0,0,"MVP",1190,2;
+			monster "prt_fild08.gat",0,0,"MVP",1251,2;
+			monster "prt_fild08.gat",0,0,"MVP",1272,2;
+			monster "prt_fild08.gat",0,0,"MVP",1252,2;
+			monster "prt_fild08.gat",0,0,"MVP",1312,2;
+			monster "prt_fild08.gat",0,0,"MVP",1373,2;
+			monster "prt_fild08.gat",0,0,"MVP",1388,2;
+			monster "prt_fild08.gat",0,0,"MVP",1389,2;
+			monster "prt_fild08.gat",0,0,"MVP",1418,2;
+			monster "prt_fild05.gat",0,0,"MVP",1492,2;
+			monster "prt_fild08.gat",0,0,"MVP",1511,2;
+			monster "prt_fild08.gat",0,0,"MVP",1582,2;
+			monster "prt_fild08.gat",0,0,"MVP",1583,2;
+			monster "prt_fild08.gat",0,0,"MVP",1623,2;
+			monster "prt_fild08.gat",0,0,"MVP",1630,2;
+			monster "prt_fild08.gat",0,0,"MVP",1685,2;
+			monster "prt_fild08.gat",0,0,"MVP",1734,2;
+			monster "prt_fild08.gat",0,0,"MVP",1768,2;
+			switch(rand(1,4)) {
+				case 1:
+					monster "prt_fild08.gat",0,0,"MVP",1751,1;
+					end;
+				case 2:
+					monster "prt_fild08.gat",0,0,"MVP",1751,2;
+					end;
+				case 3:
+					end;
+				case 4:
+					end;
+					}
+			end;
+		case 2:
+			announce "Guard : The evil monsters are about to attack the easthern part of prontera. Were going to need all the help that we can have until we finished the preparations for megadoomer. Time limit: 15 Minutes.",0;
+			monster "prt_fild06.gat",0,0,"MVP",1038,2;
+			monster "prt_fild06.gat",0,0,"MVP",1039,2;
+			monster "prt_fild06.gat",0,0,"MVP",1046,2;
+			monster "prt_fild06.gat",0,0,"MVP",1059,2;
+			monster "prt_fild06.gat",0,0,"MVP",1086,2;
+			monster "prt_fild06.gat",0,0,"MVP",1087,2;
+			monster "prt_fild06.gat",0,0,"MVP",1096,2;
+			monster "prt_fild06.gat",0,0,"MVP",1115,2;
+			monster "prt_fild06.gat",0,0,"MVP",1157,2;
+			monster "prt_fild06.gat",0,0,"MVP",1159,2;
+			monster "prt_fild06.gat",0,0,"MVP",1190,2;
+			monster "prt_fild06.gat",0,0,"MVP",1251,2;
+			monster "prt_fild06.gat",0,0,"MVP",1272,2;
+			monster "prt_fild06.gat",0,0,"MVP",1252,2;
+			monster "prt_fild06.gat",0,0,"MVP",1312,2;
+			monster "prt_fild06.gat",0,0,"MVP",1373,2;
+			monster "prt_fild06.gat",0,0,"MVP",1388,2;
+			monster "prt_fild06.gat",0,0,"MVP",1389,2;
+			monster "prt_fild06.gat",0,0,"MVP",1418,2;
+			monster "prt_fild05.gat",0,0,"MVP",1492,2;
+			monster "prt_fild06.gat",0,0,"MVP",1511,2;
+			monster "prt_fild06.gat",0,0,"MVP",1582,2;
+			monster "prt_fild06.gat",0,0,"MVP",1583,2;
+			monster "prt_fild06.gat",0,0,"MVP",1623,2;
+			monster "prt_fild06.gat",0,0,"MVP",1630,2;
+			monster "prt_fild06.gat",0,0,"MVP",1685,2;
+			monster "prt_fild06.gat",0,0,"MVP",1734,2;
+			monster "prt_fild06.gat",0,0,"MVP",1768,2;
+			switch(rand(1,4)) {
+				case 1:
+					monster "prt_fild06.gat",0,0,"MVP",1751,1;
+					end;
+				case 2:
+					monster "prt_fild06.gat",0,0,"MVP",1751,2;
+					end;
+				case 3:
+					end;
+				case 4:
+					end;
+					}			
+			
+			end;
+		case 3:
+			announce "Guard : The evil monsters are about to attack thew western part of prontera. Were going to need all the help that we can have until we finished the preparations for megadoomer. Time limit: 15 Minutes.",0;
+			monster "prt_fild05.gat",0,0,"MVP",1038,2;
+			monster "prt_fild05.gat",0,0,"MVP",1039,2;
+			monster "prt_fild05.gat",0,0,"MVP",1046,2;
+			monster "prt_fild05.gat",0,0,"MVP",1059,2;
+			monster "prt_fild05.gat",0,0,"MVP",1086,2;
+			monster "prt_fild05.gat",0,0,"MVP",1087,2;
+			monster "prt_fild05.gat",0,0,"MVP",1096,2;
+			monster "prt_fild05.gat",0,0,"MVP",1115,2;
+			monster "prt_fild05.gat",0,0,"MVP",1157,2;
+			monster "prt_fild05.gat",0,0,"MVP",1159,2;
+			monster "prt_fild05.gat",0,0,"MVP",1190,2;
+			monster "prt_fild05.gat",0,0,"MVP",1251,2;
+			monster "prt_fild05.gat",0,0,"MVP",1272,2;
+			monster "prt_fild05.gat",0,0,"MVP",1252,2;
+			monster "prt_fild05.gat",0,0,"MVP",1312,2;
+			monster "prt_fild05.gat",0,0,"MVP",1373,2;
+			monster "prt_fild05.gat",0,0,"MVP",1388,2;
+			monster "prt_fild05.gat",0,0,"MVP",1389,2;
+			monster "prt_fild05.gat",0,0,"MVP",1418,2;
+			monster "prt_fild05.gat",0,0,"MVP",1492,2;
+			monster "prt_fild05.gat",0,0,"MVP",1511,2;
+			monster "prt_fild05.gat",0,0,"MVP",1582,2;
+			monster "prt_fild05.gat",0,0,"MVP",1583,2;
+			monster "prt_fild05.gat",0,0,"MVP",1623,2;
+			monster "prt_fild05.gat",0,0,"MVP",1630,2;
+			monster "prt_fild05.gat",0,0,"MVP",1685,2;
+			monster "prt_fild05.gat",0,0,"MVP",1734,2;
+			monster "prt_fild05.gat",0,0,"MVP",1768,2;
+			switch(rand(1,4)) {
+				case 1:
+					monster "prt_fild05.gat",0,0,"MVP",1751,1;
+					end;
+				case 2:
+					monster "prt_fild05.gat",0,0,"MVP",1751,2;
+					end;
+				case 3:
+					end;
+				case 4:
+					end;
+					}		
+			
+			end;
+	}		
+
+OnTimer600000:
+announce "Guard: Hold on brave warriors. 5 minutes left till we launch the megadoomer.",0;
+end;
+
+OnTimer900000:
+stopnpctimer;
+announce "Guard: Thank you for your help brave warriors. We've successfully defended prontera, but those evil monsters may come back at anytime. We would really appreciate it if you guys could give us a hand whenever they dared to attack our dearest city again, with the power of the megadoomer and your help, there's no doubt that we can set doom upon the filthy heads of those doomed monsters.",0;
+killmonsterall "prt_fild05";
+killmonsterall "prt_fild06";
+killmonsterall "prt_fild08";
+end;
+}

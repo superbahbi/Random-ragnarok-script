@@ -1,0 +1,42 @@
+prontera,147,232,4	script	Drasil#h1-1::Drasil	822,{
+	mes "[Drasil]";
+	mes "What would you like to do?";
+	switch(select("Ygg Berry to Poring Coin","Poring Coin to Ygg Berry","Information")) {
+	
+	case 1:
+		if (countitem(607) < 200) goto L_NOTENOUGH;
+		delitem 607,200;
+		getitem 7539,1;
+		close;
+	L_NOTENOUGH:
+		mes "I'm Sorry but you don't have enough Ygg Berry.";
+		close;
+
+	case 2:
+		if (checkweight(607,200) == 0 ) goto L_Overweight;
+		if (countitem(7539) < 1) goto L_NOITEMS;
+		delitem 7539,1;
+        		getitem 607,200;
+        		close;
+	case 3:
+		next;
+		mes "[Drasil]";
+		mes "I can convert your 'Poring Coin' into 200pcs Ygg Berry and vice versa.";
+		close;
+	L_NOITEMS:
+		mes "[Drasil]";
+		mes "Sorry you don't have Poring Coin";
+		close;
+    	L_OverWeight:
+		mes "[Drasil]";
+        		mes "Sorry your overweight";
+        		close;
+
+	}
+
+}
+// --------- NPC Clones ---------
+morocc,149,104,5	duplicate(Drasil)	Drasil#h1-2	822
+payon,172,226,5	duplicate(Drasil)	Drasil#h1-3	822
+aldebaran,147,119,5	duplicate(Drasil)	Drasil#h1-4	822
+izlude,134,190,5	duplicate(Drasil)	Drasil#h1-5	822

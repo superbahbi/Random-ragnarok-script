@@ -4,14 +4,17 @@ OnPCLoginEvent:
 	if (getgmlevel()<20) goto NOR;
 
 		if (getcharid(0) == 150975 // GM-Extinction
-		||  getcharid(0) == 150426 // GM-Pentium
 		||  getcharid(0) == 150338 // GM-Tim
 		||  getcharid(0) == 150007 // GM-Hades
-		||  getcharid(0) == 150017 // GM-Serene
+		||  getcharid(0) == 150017 // GM-Anya
 		||  getcharid(0) == 150706 // GM-Persephone
-		||  getcharid(0) == 151405 // GM-Flux
+		||  getcharid(0) == 151405 // GM-Erebus
 		||  getcharid(0) == 151406 // GM-Carlisle
-		||  getcharid(0) == 151751) // GM-Calintz
+		||  getcharid(0) == 152190 // GM-Helios
+		||  getcharid(0) == 151751 // GM-Barnacle
+		||  getcharid(0) == 153747 // GM-Reaper
+		||  getcharid(0) == 153895 // GM-Thorphil
+		||  getcharid(0) == 154956) // GM-Cyberdoll
 		{
 			atcommand "@hide";
 			atcommand "@speed 1";
@@ -25,7 +28,7 @@ OnPCLoginEvent:
 		}
 	
 NOR:
-	announce "Welcome! For all your comments and suggestions, post them at Coven Ragnarok Online Forum and the team will be looking to it right away. Thank you!",bc_self|bc_all;
+	announce "We are here not to compete but to provide everyone the gaming experience you never experienced before. Invite your friends! Thank you!",bc_self|bc_all;
 	end;
 
 ADMIN:
@@ -33,4 +36,65 @@ ADMIN:
 	atcommand "@speed 1";
 	atcommand "@monsterignore";
 	end;
+}
+
+//Highest Peak
+-	script	Highest Peak	-,{
+
+OnPCLoginEvent:
+	
+
+	set .currentUsersOL,getusers(1); //Current Online Users
+	
+	//Query for the highest peak in the database
+	query_sql("SELECT `num_users` FROM `cp_highest_peak` ORDER BY `num_users` LIMIT 1",.@numUsers);
+	//Get the date
+	set .date$,gettime(7)+"-"+gettime(6)+"-"+gettime(5);	
+	
+	set .highestPeak,.@numUsers[0]; //Highest Peak
+	if(getarraysize(.@numUsers) == 0)
+	{
+		//If not data found Insert statement
+		set .highestPeak,.currentUsersOL;
+		query_sql("INSERT INTO `cp_highest_peak`(num_users,peak_date) VALUES("+.highestPeak+",'"+.date$+"')"); //Insert new highest Peak
+	}
+	else
+	{
+		if(.currentUsersOL>.highestPeak)
+		{
+			set .highestPeak,.currentUsersOL;		
+			query_sql("UPDATE `cp_highest_peak`SET num_users='"+.highestPeak+"',peak_date='"+.date$+"'"); //Insert new highest Peak
+		}
+	}
+end;
+
+}
+
+-	script	AGIT_STATUS	-,{
+OnInit:
+// check if `agit_status` column exists
+if (query_sql("SHOW COLUMNS FROM ragsrvinfo LIKE 'agit_status'", .@dummy$,.@dummy$,.@dummy$,.@dummy$,.@dummy$,.@dummy$) == 0) {
+  // Or... if we have the ALTER privilege, try to add the column
+  query_sql "SELECT DATABASE()", .@rag_db$;
+  query_sql "SHOW GRANTS", .@grants$;
+  for (set .@i,0; .@i<getarraysize(.@grants$); set .@i,.@i+1)
+   if (compare(.@grants$[.@i], "`"+.@rag_db$+"`")) {
+	if (compare(.@grants$[.@i], "ALTER,") || compare(.@grants$[.@i], "ALTER ON"))
+	 query_sql "ALTER TABLE `ragsrvinfo` ADD `agit_status` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER `drop`;";
+	break;
+   }
+
+  // verify
+  if (query_sql("SHOW COLUMNS FROM ragsrvinfo LIKE 'agit_status'", .@dummy$,.@dummy$,.@dummy$,.@dummy$,.@dummy$,.@dummy$) == 0) {
+   debugmes strnpcinfo(3)+" : unable to modify SQL table (needs ALTER privilege)";
+   atcommand "@unloadnpc " + strnpcinfo(3);
+   end;
+  }
+}
+OnAgitStart:
+OnAgitStart2:
+OnAgitEnd:
+OnAgitEnd2:
+query_sql "UPDATE ragsrvinfo SET agit_status = " + (agitcheck() || agitcheck2());
+end;
 }

@@ -1,5 +1,5 @@
-prontera,147,232,4	script	Drasil#h1-1::Drasil	822,{
-	mes "[Drasil]";
+prontera,158,326,4	script	Elvis#h1-1::Elvis	822,{
+	mes "[Elvis]";
 	mes "What would you like to do?";
 	switch(select("Ygg Berry to Poring Coin","Poring Coin to Ygg Berry","Information")) {
 	
@@ -9,7 +9,7 @@ prontera,147,232,4	script	Drasil#h1-1::Drasil	822,{
 		getitem 7539,1;
 		close;
 	L_NOTENOUGH:
-		mes "I'm Sorry but you don't have enough Ygg Berry.";
+		mes "I'm sorry but you don't have enough Ygg Berry.";
 		close;
 
 	case 2:
@@ -20,23 +20,41 @@ prontera,147,232,4	script	Drasil#h1-1::Drasil	822,{
         		close;
 	case 3:
 		next;
-		mes "[Drasil]";
-		mes "I can convert your 'Poring Coin' into 200pcs Ygg Berry and vice versa.";
+		mes "[Elvis]";
+		mes "I can convert your 'Poring Coin' into 200 pcs. Ygg Berry and vice versa.";
 		close;
 	L_NOITEMS:
-		mes "[Drasil]";
-		mes "Sorry you don't have Poring Coin";
+		mes "[Elvis]";
+		mes "Sorry you don't have any Poring Coin.";
 		close;
     	L_OverWeight:
-		mes "[Drasil]";
-        		mes "Sorry your overweight";
+		mes "[Elvis]";
+        		mes "Sorry you're overweight.";
         		close;
 
 	}
 
 }
 // --------- NPC Clones ---------
-morocc,149,104,5	duplicate(Drasil)	Drasil#h1-2	822
-payon,172,226,5	duplicate(Drasil)	Drasil#h1-3	822
-aldebaran,147,119,5	duplicate(Drasil)	Drasil#h1-4	822
-izlude,134,190,5	duplicate(Drasil)	Drasil#h1-5	822
+morocc,149,104,5	duplicate(Elvis)	Elvis#h1-2	822
+payon,172,226,5	duplicate(Elvis)	Elvis#h1-3	822
+aldebaran,147,119,5	duplicate(Elvis)	Elvis#h1-4	822
+izlude,124,121,5	duplicate(Elvis)	Elvis#h1-5	822
+pay_arche,36,128,5	duplicate(Elvis)	Elvis#h1-6	822
+geffen,115,72,5	duplicate(Elvis)	Elvis#h1-7	822
+alberta,184,146,5	duplicate(Elvis)	Elvis#h1-8	822
+xmas,141,127,5	duplicate(Elvis)	Elvis#h1-9	822
+comodo,193,160,5	duplicate(Elvis)	Elvis#h1-10	822
+amatsu,205,92,5	duplicate(Elvis)	Elvis#h1-11	822
+gonryun,155,125,5	duplicate(Elvis)	Elvis#h1-12	822
+umbala,133,131,5	duplicate(Elvis)	Elvis#h1-13	822
+niflheim,206,179,5	duplicate(Elvis)	Elvis#h1-14	822
+alberta,252,127,5	duplicate(Elvis)	Elvis#h1-15	822
+ayothaya,157,111,5	duplicate(Elvis)	Elvis#h1-16	822
+einbroch,75,203,5	duplicate(Elvis)	Elvis#h1-17	822
+lighthalzen,198,320,5	duplicate(Elvis)	Elvis#h1-18	822
+hugel,90,158,5	duplicate(Elvis)	Elvis#h1-19	822
+rachel,134,117,5	duplicate(Elvis)	Elvis#h1-20	822
+einbroch,211,137,5	duplicate(Elvis)	Elvis#h1-21	822
+brasilis,191,222,5	duplicate(Elvis)	Elvis#h1-22	822
+veins,211,137,5	duplicate(Elvis)	Elvis#h1-23	822

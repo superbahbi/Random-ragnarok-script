@@ -14,7 +14,7 @@ prontera,164,175,4	script	Donation Staff	790,{
 	mes "I pay for server hosting.";
 	mes "I pay for hosting renews for the hosting website.";
 	mes "And since we are using the best plan from our hosting site to give you a less lag server,";
-	mes "We need your help to keep the server run forever as well as to give you a better gaming experience.";
+	mes "we need your help to keep the server run forever as well as to give you a better gaming experience.";
 	mes "[^FF0000Here are the list of donations^000000].";
 	mes "[^FF0000Thank You...! ^_^^000000]";
 	next;

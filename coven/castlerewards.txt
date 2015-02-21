@@ -1,0 +1,53 @@
+//===== eAthena/rAthena Script ===============================
+//= Guild Prize Giveaway
+//===== By: ================================================== 
+//= AnnieRuru / Mysterious
+//===== Current Version: =====================================
+//= 1.4
+//===== Description: =========================================
+//= Rewards guild masters of castle owners after each
+//= War of Emperium session.
+//===== Additional Comments: =================================
+//= v1.0 - Intitial Re-release [Mysterious]
+//= v1.1 - Language structures [Mysterious]
+//= v1.2 - Added divisions [Mysterious]
+//= v1.3 - Added proper information [Mysterious]
+//= v1.4 - Optimized! [Euphy]
+//============================================================
+
+prontera,143,196,4	script	Castle Rewards	871,{
+	mes "[Castle Rewards]";
+	if (agitcheck() || agitcheck2()) {
+		mes "WOE is still ongoing."; close; }
+	mes "Select a castle.";
+	next;
+	for(set .@i,1; .@i<31; set .@i,.@i+1)
+		set .@menu$, .@menu$+getcastlename(.Castles$[.@i])+":";
+	set .@i, select(.@menu$);
+	mes "[Castle Rewards]";
+	if (getcastledata(.Castles$[.@i],1) != getcharid(2)) {
+		mes "You aren't the owner of this castle."; close; }
+	if (getguildmasterid(getcharid(2)) != getcharid(0)) {
+		mes "Only the guild master can claim the reward."; close; }
+	if ($castle_claimed&(1<<.@i)) {
+		mes "You've already claimed this castle's reward!"; close; }
+	mes "Here's your reward for conquering "+getcastlename(.Castles$[.@i])+".";
+	set $castle_claimed, $castle_claimed | (1<<.@i);
+	set .@amount, 200;
+	atcommand "@getcpoints "+.@amount;	// Set your prize here!
+	dispbottom "You got "+.@amount+" cpoints.";
+	close;
+OnAgitEnd:
+	set $castle_claimed, 0;
+	end;
+OnInit:
+	waitingroom "Castle Rewards",0;
+	setarray .Castles$[1],
+		"aldeg_cas01","aldeg_cas02","aldeg_cas03","aldeg_cas04","aldeg_cas05",
+		"gefg_cas01","gefg_cas02","gefg_cas03","gefg_cas04","gefg_cas05",
+		"payg_cas01","payg_cas02","payg_cas03","payg_cas04","payg_cas05",
+		"prtg_cas01","prtg_cas02","prtg_cas03","prtg_cas04","prtg_cas05",
+		"arug_cas01","arug_cas02","arug_cas03","arug_cas04","arug_cas05",
+		"schg_cas01","schg_cas02","schg_cas03","schg_cas04","schg_cas05";
+	end;
+}

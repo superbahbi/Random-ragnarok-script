@@ -1,0 +1,210 @@
+//-----------------------------------------------//
+//-----------------LMS Event--------------------//
+//-----------------------------------------------//
+//-----------------------------------------------//
+//----------JaeRO - Home of Phoenix Pride--------//
+//-----------------------------------------------//
+
+-	script	LMS#disable	-1,{
+
+OnInit:
+disablenpc "LMS Warper";
+disablenpc "LMS Warper#2";
+disablenpc "LMS Warper#3";
+end;
+}
+
+poring_c02,218,225,5	script	LMS Event	483,{
+
+	if (getgmlevel() >= 20) goto LMS_Admin;
+	if ($@LMS_Ongoing == 1) {
+	mes "[LMS Event]";
+	mes "LMS Event is still ongoing.";
+	close;
+	}
+	mes "[LMS Event]";
+	mes "Hello " + strcharinfo(0) + ", this NPC is for Event GMs use only.";
+	close;
+	
+LMS_Admin:
+	mes "[LMS Event]";
+	mes "Hello GM " + strcharinfo(0) + ", would you like me to start LMS Event?";
+	menu "Start Event",lms_check,"Reset",reset_lms,"Warp",warp_LMS,"No Thanks",endLMS;
+	lms_check:
+		next;
+		if ($@LMS_Ongoing == 1) goto al_started;
+		mes "[LMS Event]";
+		mes "Ok, starting Event.";
+		set $@LMS_Ongoing,1;
+		close2;
+		goto startlmsevent;
+	checkprize:
+		next;
+		mes "[LMS Event]";
+		mes "The current prize is ^008000"+ $LMS_item_amount +" "+ getitemname($LMS_item_id) +"^000000";
+		next;
+		goto LMS_Admin;
+	setprize:
+		next;
+		if ($@LMS_Ongoing == 1) goto cant_set;
+		mes "[LMS Event]";
+		mes "What should the prize for winning be? Please input the ID";
+		input $LMS_item_id;
+		next;
+		mes "[LMS Event]";
+		mes "How many of this item should we give away?";
+		input $LMS_item_amount;
+		next;
+		mes "[LMS Event]";
+		mes "So, the prize is ^008000"+ $LMS_item_amount +" "+ getitemname($LMS_item_id) +"^000000? Wonderful dear.";
+		next;
+		goto LMS_Admin;
+	warp_LMS:
+		next;
+		mes "[LMS Manager]";
+		mes "I will now warp you to the LMS Event map.";
+		next;
+		warp "guild_vs2",45,49;
+		end;
+	endLMS:
+		next;
+		mes "[LMS Event]";
+		mes "Ok darling, nice seeing you.";
+		close;
+	reset_lms:
+		mes "[LMS Event]";
+		mes "Resetting Now.";
+		close2;
+		set $@LMS_Ongoing,0;
+		killmonsterall "guild_vs2";
+		disablenpc "Summoner";
+		end;
+
+
+cant_set:
+	mes "[LMS Event]";
+	mes "You can't set the Prize while the event is Running";
+	close;
+
+al_started:
+	mes "[LMS Event]";
+	mes "The event is still running";
+	close;
+
+
+LMS_Staff:
+	mes "[LMS Event]";
+	mes "Hello GM " + strcharinfo(0) + ", would you like me to start LMS Event?";
+	menu "Start Event",staff_startLMS,"Warp",join_LMS,"Reset",staff_reset,"No Thanks",staff_cancel;
+	staff_startLMS:
+		next;
+		if ($@LMS_Ongoing == 1) goto started_staff;
+		mes "[LMS Event]";
+		mes "Ok, starting Event.";
+		set $@LMS_Ongoing,1;
+		close2;
+		goto startlmsevent;
+	staff_checkprize:
+		next;
+		mes "[LMS Event]";
+		mes "The current prize is ^008000"+ $LMS_item_amount +" "+ getitemname($LMS_item_id) +"^000000";
+		next;
+		goto LMS_Staff;
+	join_LMS:
+		next;
+		mes "[LMS Manager]";
+		mes "I will now warp you to the LMS Event map.";
+		next;
+		warp "guild_vs2",45,49;
+		end;
+	staff_cancel:
+		next;
+		mes "[LMS Event]";
+		mes "Ok, see you later.";
+		close;
+	staff_reset:
+		mes "[LMS Event]";
+		mes "Resetting Now.";
+		close2;
+		set $@LMS_Ongoing,0;
+		end;
+started_staff:
+	mes "[LMS Event]";
+	mes "The event is still running";
+	close;
+
+startlmsevent:
+announce "LMS Warper: Get ready for Last Man Standing.",0;
+sleep2 10000;
+announce "LMS Warper: Warps opening in 1 minute..",0;
+initnpctimer;
+end;
+OnTimer60000:
+announce "LMS Warper: Closing warps in 60 Seconds.",0;
+enablenpc "LMS Warper";
+enablenpc "LMS Warper#2";
+enablenpc "LMS Warper#3";
+end;
+
+OnTimer90000:
+announce "LMS Warper: Closing warps in 30 seconds.",0;
+sleep2 5000;
+end;
+
+OnTimer110000:
+announce "LMS Warper: Last 10 seconds.",0;
+end;
+
+OnTimer115000:
+announce "LMS Warper: 5.",0;
+end;
+
+OnTimer116000:
+announce "LMS Warper: 4.",0;
+end;
+
+OnTimer117000:
+announce "LMS Warper: 3.",0;
+end;
+
+OnTimer118000:
+announce "LMS Warper: 2.",0;
+end;
+
+OnTimer119000:
+announce "LMS Warper: 1.",0;
+end;
+
+OnTimer120000:
+announce "LMS Warper: Warps are now closed.",0;
+end;
+
+OnTimer121000:
+disablenpc "LMS Warper";
+disablenpc "LMS Warper#2";
+disablenpc "LMS Warper#3";
+end;
+}
+//---------LMS Registration---------------
+prontera,155,165,5	script	LMS Warper	811,{
+	
+	mes "[LMS Manager]";
+	mes "I will now warp you to the LMS Event map.";
+	next;
+	warp "guild_vs2",45,49;
+	end;
+}
+//----------Clone NPC------------------
+morocc,159,83,5	duplicate(LMS Warper)	LMS Warper#2	811
+payon,155,220,5	duplicate(LMS Warper)	LMS Warper#3	811
+// ----Manager Setting------------
+
+// == Mapflags
+guild_vs2	mapflag	nowarp
+guild_vs2	mapflag	nowarpto
+guild_vs2	mapflag	noteleport
+guild_vs2	mapflag	nosave
+guild_vs2	mapflag	nomemo
+guild_vs2	mapflag	nobranch
+guild_vs2	mapflag	restricted	8
+

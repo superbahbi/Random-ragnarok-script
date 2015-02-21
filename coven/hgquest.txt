@@ -1,146 +1,206 @@
-prontera,169,207,4	script	Quest Headgear Warper	857,{
+prontera,170,226,4	script	Quest Headgear Warper	857,{
 	mes "[Quest Headgear Guide]";
 	mes "NPC locations in CovenRO";
 	next;
-	menu "Uno",uno,"Ric",ric,"Baby Jam",baby,"Yuki",yuki,"sHaNs02",shan,"Krisleene Dee",kris,"Wengskie",weng,"Angel",ange,"The M v P",jest,"Ryan",ryan,"Eunice",euni,"Mary Anne",mary,"Pamela",pame,"Marie Kim",mari,"Krizia",kriz,"Jeku",jeku,"Jaymel",jaym,"Ivan",ivan,"Fidel",fide,"Totie",toti,"Thor",thor,"Sweetest Velvet",swee,"Timo",tim,"Cancel",H_Close;
+	menu "Uno",uno,"Ric",ric,"Rictoy",rictoy,"Yuki",yuki,"Kim",kim,"Yumi",kris,"Lhady",weng,"Jenny",ange,"Reag",jest,"Chris",ryan,"Eunice",euni,"Mary Anne",mary,"Pamela",pame,"Marie Kim",mari,"Krizia",kriz,"Jeku",jeku,"Jaymel",jaym,"Ralp",ivan,"Fidel",fide,"Kratos",toti,"Thor",thor,"Sweetest Velvet",swee,"AnDee",and,"Bahbi",bah,"Lablee",lab,"Baloy",bal,"Rovi",rov,"Jurel",jur,"Rhon",rho,"Diane",dia,"Ic",icy,"Luigi",igi,"Michael",kel,"Cancel",H_Close;
 	uno:
 		mes "[Quest Headgear Guide]";
 		mes "Location:louyang,113,173";
-		mes "do you want to go in that place?";
+		mes "Do you want to go there?";
 		next;
-	menu "Uno",wrpuno;	
+	menu "Uno",wrpuno;
 	ric:
 		mes "[Quest Headgear Guide]";
 		mes "Location:moscovia,266,208";
-		mes "do you want to go in that place?";
+		mes "Do you want to go there?";
 		next;
 	menu "Ric",wrpric;
-	baby:
+	rictoy:
 		mes "[Quest Headgear Guide]";
 		mes "Location:jawaii,203,294";
-		mes "do you want to go in that place?";
+		mes "Do you want to go there?";
 		next;
-	menu "Baby Jam",wrpbaby;
+	menu "Rictoy",wrprictoy;
 	yuki:
 		mes "[Quest Headgear Guide]";
 		mes "Location:payon,267,158";
-		mes "do you want to go in that place?";
+		mes "Do you want to go there?";
 		next;
 	menu "Yuki",wrpyuki;
-	shan:
+	kim:
 		mes "[Quest Headgear Guide]";
 		mes "Location:new_1-1,66,108";
-		mes "do you want to go in that place?";
+		mes "Do you want to go there?";
 		next;
-	menu "sHaNs02",wrpshan;
+	menu "Kim",wrpkim;
 	kris:
 		mes "[Quest Headgear Guide]";
 		mes "Location:gonryun,46,255";
-		mes "do you want to go in that place?";
+		mes "Do you want to go there?";
 		next;
-	menu "Krisleene Dee",wrpkris;
+	menu "Yumi",wrpkris;
 	weng:
 		mes "[Quest Headgear Guide]";
 		mes "Location:gonryun,48,255";
-		mes "do you want to go in that place?";
+		mes "Do you want to go there?";
 		next;
-	menu "Wengskie",wrpweng;
+	menu "Lhady",wrpweng;
 	ange:
 		mes "[Quest Headgear Guide]";
 		mes "Location:amatsu,278,254";
-		mes "do you want to go in that place?";
+		mes "Do you want to go there?";
 		next;
-	menu "Angel",wrpange;
+	menu "Jenny",wrpange;
 	jest:
 		mes "[Quest Headgear Guide]";
 		mes "Location:prontera,164,162";
-		mes "do you want to go in that place?";
+		mes "Do you want to go there?";
 		next;
-	menu "The M v P",wrpjest;
+	menu "Reag",wrpjest;
 	ryan:
 		mes "[Quest Headgear Guide]";
-		mes "Location:ayothaya,78,173";
-		mes "do you want to go in that place?";
+		mes "Location:prontera,268,112";
+		mes "Do you want to go there?";
 		next;
-	menu "Ryan",wrpryan;
+	menu "Chris",wrpryan;
 	euni:
 		mes "[Quest Headgear Guide]";
 		mes "Location:aldebaran,101,160";
-		mes "do you want to go in that place?";
+		mes "Do you want to go there?";
 		next;
 	menu "Eunice",wrpeuni;
 	mary:
 		mes "[Quest Headgear Guide]";
 		mes "Location:aldebaran,103,162";
-		mes "do you want to go in that place?";
+		mes "Do you want to go there?";
 		next;
 	menu "Mary Anne",wrpmary;
 	pame:
 		mes "[Quest Headgear Guide]";
 		mes "Location:aldebaran,105,160";
-		mes "do you want to go in that place?";
+		mes "Do you want to go there?";
 		next;
 	menu "Pamela",wrppame;
 	mari:
 		mes "[Quest Headgear Guide]";
 		mes "Location:aldebaran,103,158";
-		mes "do you want to go in that place?";
+		mes "Do you want to go there?";
 		next;
 	menu "Marie Kim",wrpmari;
 	kriz:
 		mes "[Quest Headgear Guide]";
 		mes "Location:aldebaran,105,163";
-		mes "do you want to go in that place?";
+		mes "Do you want to go there?";
 		next;
 	menu "Krizia",wrkriz;
 	jeku:
 		mes "[Quest Headgear Guide]";
 		mes "Location:geffen,147,132";
-		mes "do you want to go in that place?";
+		mes "Do you want to go there?";
 		next;
 	menu "Jeku",wrpjeku;
 	jaym:
 		mes "[Quest Headgear Guide]";
 		mes "Location:niflheim,317,68";
-		mes "do you want to go in that place?";
+		mes "Do you want to go there?";
 		next;
 	menu "Jaymel",wrpjaym;
 	ivan:
 		mes "[Quest Headgear Guide]";
 		mes "Location:prontera,111,246";
-		mes "do you want to go in that place?";
+		mes "Do you want to go there?";
 		next;
-	menu "Ivan",wrpivan;
+	menu "Ralp",wrpivan;
 	fide:
 		mes "[Quest Headgear Guide]";
 		mes "Location:alberta,108,172";
-		mes "do you want to go in that place?";
+		mes "Do you want to go there?";
 		next;
 	menu "Fidel",wrpfide;
 	toti:
 		mes "[Quest Headgear Guide]";
 		mes "Location:umbala,79,240";
-		mes "do you want to go in that place?";
+		mes "Do you want to go there?";
 		next;
-	menu "Totie",wrptoti;
+	menu "Kratos",wrptoti;
 	thor:
 		mes "[Quest Headgear Guide]";
 		mes "Location:prontera,35,84";
-		mes "do you want to go in that place?";
+		mes "Do you want to go there?";
 		next;
 	menu "Thor",wrpthor;
 	swee:
 		mes "[Quest Headgear Guide]";
 		mes "Location:veins,221,141";
-		mes "do you want to go in that place?";
+		mes "Do you want to go there?";
 		next;
 	menu "Sweetest Velvet",wrpswee;
-	tim:
+	and:
 		mes "[Quest Headgear Guide]";
 		mes "Location:amatsu,25,170";
-		mes "do you want to go in that place?";
+		mes "Do you want to go there?";
 		next;
-	menu "Timo",wrptim;
+	menu "AnDee",wrpand;
+	bah:
+		mes "[Quest Headgear Guide]";
+		mes "Location:lighthalzen,220,206";
+		mes "Do you want to go there?";
+		next;
+	menu "Bahbi",wrpbah;
+	lab:
+		mes "[Quest Headgear Guide]";
+		mes "Location:niflheim,318,69";
+		mes "Do you want to go there?";
+		next;
+	menu "Lablee",wrplab;
+	bal:
+		mes "[Quest Headgear Guide]";
+		mes "Location:einbroch,250,211";
+		mes "Do you want to go there?";
+		next;
+	menu "Baloy",wrpbal;
+	rov:
+		mes "[Quest Headgear Guide]";
+		mes "Location:rachel,179,176";
+		mes "Do you want to go there?";
+		next;
+	menu "Rovi",wrprov;
+	jur:
+		mes "[Quest Headgear Guide]";
+		mes "Location:moscovia,228,229";
+		mes "Do you want to go there?";
+		next;
+	menu "Jurel",wrpjur;
+	rho:
+		mes "[Quest Headgear Guide]";
+		mes "Location:comodo,200,184";
+		mes "Do you want to go there?";
+		next;
+	menu "Rhon",wrprho;
+	dia:
+		mes "[Quest Headgear Guide]";
+		mes "Location:einbech,154,221";
+		mes "Do you want to go there?";
+		next;
+	menu "Diane",wrpdia;
+	icy:
+		mes "[Quest Headgear Guide]";
+		mes "Location:morocc,242,150";
+		mes "Do you want to go there?";
+		next;
+	menu "Ic",wrpicy;
+	igi:
+		mes "[Quest Headgear Guide]";
+		mes "Location:brasilis,291,246";
+		mes "Do you want to go there?";
+		next;
+	menu "Luigi",wrpigi;
+	kel:
+		mes "[Quest Headgear Guide]";
+		mes "Location:prontera,199,162";
+		mes "Do you want to go there?";
+		next;
+	menu "Michael",wrpkel;
 	H_Close:
 		mes "[Quest Headgear Guide]";
 		mes "Always vote CovenRO every 12 hours!";
@@ -153,29 +213,39 @@ prontera,169,207,4	script	Quest Headgear Warper	857,{
 //		Warps		  //
 //----------------------------//
 
-wrpuno:		warp "louyang",113,173;		close;
-wrpric:		warp "moscovia",266,208;	close;
-wrpbaby:	warp "jawaii",203,294;		close;
+wrpuno:	warp "louyang",113,173;	close;
+wrpric:	warp "moscovia",266,208;	close;
+wrprictoy:	warp "jawaii",203,294;		close;
 wrpyuki:	warp "payon",267,158;		close;
-wrpshan:	warp "new_1-1",66,108;		close;
-wrpkris:	warp "gonryun",46,255;		close;
-wrpweng:	warp "gonryun",48,255;		close;
-wrpange:	warp "amatsu",278,254;		close;
-wrpjest:	warp "prontera",164,162;	close;
-wrpryan:	warp "ayothaya",78,173;		close;
+wrpkim:	warp "new_1-1",66,108;	close;
+wrpkris:	warp "gonryun",46,255;	close;
+wrpweng:	warp "gonryun",48,255;	close;
+wrpange:	warp "amatsu",278,254;	close;
+wrpjest:	warp "prontera",268,112;	close;
+wrpryan:	warp "ayothaya",78,173;	close;
 wrpeuni:	warp "aldebaran",101,160;	close;
 wrpmary:	warp "aldebaran",103,162;	close;
 wrppame:	warp "aldebaran",105,160;	close;
 wrpmari:	warp "aldebaran",103,158;	close;
-wrkriz:		warp "aldebaran",105,163;	close;
+wrkriz:	warp "aldebaran",105,163;	close;
 wrpjeku:	warp "geffen",147,132;		close;
 wrpjaym:	warp "niflheim",317,68;		close;
 wrpivan:	warp "prontera",111,246;	close;
-wrpfide:	warp "alberta",108,172;		close;
+wrpfide:	warp "alberta",108,172;	close;
 wrptoti:	warp "umbala",79,240;		close;
 wrpthor:	warp "prontera",35,84;		close;
 wrpswee:	warp "veins",221,141;		close;
-wrptim:		warp "amatsu",25,170;		close;
+wrpand:	warp "amatsu",25,170;		close;
+wrpbah:	warp "lighthalzen",220,206;	close;
+wrplab:	warp "niflheim",318,69;		close;
+wrpbal:	warp "einbroch",250,211;	close;
+wrprov:	warp "rachel",179,176;		close;
+wrpjur:	warp "moscovia",228,229;	close;
+wrprho:	warp "comodo",200,184;	close;
+wrpdia:	warp "einbech",154,221;	close;
+wrpicy:	warp "morocc",252,150;	close;
+wrpigi:	warp "brasilis",291,246;	close;
+wrpkel:	warp "prontera",199,162;	close;
 
 OnInit:
 	waitingroom "Head Gear Quest Warper!",0;

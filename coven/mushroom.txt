@@ -1,80 +1,54 @@
-//Created by Mysterious
-//Topic: http://eathena.net/board/topic/53564-find-the-mushroom/#entry55172
-//Please do not take this script as your own.
+-	script	Mushroom	-1,{
 
-poring_c02,225,223,4	script	Find the Mushroom	1084,{
+if( getgmlevel() > 40 ) goto L_startshroom;
+if( getgmlevel() < 40 )  end;
+OnMinute01:
+if (agitcheck() || agitcheck2()) end;
+set .DelayMin,rand(60);
+sleep ( .DelayMin * 60000 );
+L_startshroom:
 
-mes "[ Find The Mushroom ]";
-if(getgmlevel() < 99) {
-	if(.Event==0) mes "There is no Find the Mushroom event.";
-	else {
-		mes "There is a Find the Mushroom event on now!";
-		mes "Location: "+ .Map$;
-		mes "Prize: " + getitemname(.ItemID);
-		mes "Number of Mushrooms: " + .Mushrooms;
+	set .Spawn,rand(1,10);
+	set .mob,rand(1084,1085);
+	setarray .Map$[0],
+			"prontera",
+			"geffen",
+			"payon",
+			"alberta",
+			"morocc",
+			"aldebaran",
+			"izlude",
+			"comodo",
+			"umbala",
+			"yuno",
+			"hugel",
+			"rachel",
+			"veins",
+			"einbroch";
+	set .s, rand(getarraysize(.Map$));
+	killmonster .Map$[.s],"Mushroom::OnMobKilled";
+	monster .Map$[.s],0,0,"Plz don't kill me!",.mob,.Spawn,"Mushroom::OnMobKilled";
+	// Message to Announce when Event start
+	setarray .Message$[0],
+		"Total of "+.Spawn+" Mushroom has been Spawned in "+.Map$[.s],
+		"Find all the  "+getmonsterinfo(.mob,0)+"(s) and kill it.",
+		"Each " + getmonsterinfo(.mob,0) + " you kill gives you 1 poring coin.",
+		"Hurry up and go now";
+	for( set .i,0; .i < getarraysize( .Message$ ); set .i,.i + 1 ){
+		announce .Message$[.i],0;
+		sleep 1000;
 	}
-	close;
-}
-	mes "Hello "+strcharinfo(0)+"! Please customize this event:";
-Main:
-next;
-mes "[ Find The Mushroom ]";
-	switch(select("Item [" + getitemname(.ItemID) + "]:Start Event:End Event")) {
-		case 1:
-			mes "Which item would you like the Mushroom to drop?";
-			mes "Please input the item ID:";
-			input .ItemID;
-			goto Main;
-		case 2:
-			mes "Starting the event now...";
-			set .Event,1;
-			close2;
-			goto OnStart;
-		
-		case 3:
-			mes "Ending the event now...";
-			if(.Event) announce ""+strcharinfo(0)+" ended Find the Mushroom Event!",bc_all;
-			killmonster  .Map$,"All";
-			set .Event,0;
-		close;
-}
-
-OnMinute51: //CHANGE THIS TO THE MINUTE YOU WOULD LIKE THIS EVENT TO LOAD!
-OnMinute20:
-OnStart:
-	announce "Find the Mushroom : It's time to play Find the Mushroom!",0;
-	sleep2 1000;
-	set $@ran, rand(1,11);
-	if ($@ran == 11) set .Map$,"splendide";
-	if ($@ran == 10) set .Map$,"hugel";
-	if ($@ran == 9) set .Map$,"yuno";
-	if ($@ran == 8) set .Map$,"comodo";
-	if ($@ran == 7) set .Map$,"xmas";
-	if ($@ran == 6) set .Map$,"aldebaran";
-	if ($@ran == 5) set .Map$,"izlude";
-	if ($@ran == 4) set .Map$,"payon";
-	if ($@ran == 3) set .Map$,"geffen";
-	if ($@ran == 2) set .Map$,"morocc";
-	if ($@ran == 1) set .Map$,"prontera";
-	sleep2 1000;
-	set $@ran2, rand(1,5);
-	if ($@ran2 == 5) set .Mushrooms,"5";
-	if ($@ran2 == 4) set .Mushrooms,"4";
-	if ($@ran2 == 3) set .Mushrooms,"3";
-	if ($@ran2 == 2) set .Mushrooms,"2";
-	if ($@ran2 == 1) set .Mushrooms,"1";
-	announce "Find the Mushroom : The Mushroom has spawned in "+ .Map$ +"!",0;
-	sleep2 10000;
-	announce "Find the Mushroom : " + .Mushrooms + " Mushrooms have spawned in "+ .Map$ +"!",0;
-	sleep2 10000;
-	monster .Map$,0,0,"Don't kill me please!",1084,.Mushrooms,strnpcinfo(0)+"::OnMobKilled";
-	end;
+end;
 
 OnMobKilled:
-	mapannounce .Map$,"["+strcharinfo(0)+"] killed a Mushroom, Left "+( mobcount( strcharinfo(3),strnpcinfo(0)+"::OnMobKill" ))+" Mushroom now..!",0;
-	//set zeny,zeny+10000000;
-	getitem .ItemID,1;
-	set .Event,0;
-	end;
-
+set .Spawn,.Spawn - 1;
+//set .@amount, 2;
+//atcommand "@getcpoints "+.@amount;
+//dispbottom "You got "+.@amount+" coven points.";
+getitem 7539,1;
+if( .Spawn ) announce "[ "+strcharinfo(0)+" ] Killed 1 Mushroom, Left "+.Spawn+" Mushroom",bc_map;
+else{
+	announce "[ Find the Mushroom ] : Event has ended. All the mushrooms has been killed.",bc_map;
+}
+end;
 }

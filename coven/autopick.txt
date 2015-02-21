@@ -1,5 +1,6 @@
 -	script	autopick	-1,{
 OnMinute00:
+if (agitcheck() || agitcheck2()) end;
 set .DelayMin,rand(60);
 sleep ( .DelayMin * 60000 );
 
@@ -11,10 +12,15 @@ while(1){
    		DetachRID();
    		continue;
    	}
+
 	if(getgmlevel() == 0)
 	{
-  		announce strcharinfo(0) +" won in Lucky Pick Event.", 0;
-  		getitem 7227,1;
+  		announce strcharinfo(0) +" won in Lucky Pick Event. +10 points.", 0;
+		set .@amount, 10;
+		set .@playerid, getcharid(3,strcharinfo(0));
+		query_sql("UPDATE `login` SET points=(points+"+.@amount+") WHERE account_id='"+.@playerid+"'");
+		dispbottom "You got "+.@amount+" points.";
+		
 	}
   break;
 }

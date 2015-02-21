@@ -1,22 +1,209 @@
-//===================================
-//===========Scripted By=============
-//===================================
-//==============JaeRO================
-//===================================
-poring_c02,225,225,4	script	Soccer Payon	912,{
-	if (getgmlevel() >= 20);
-	mes "[Soccer Boy]";
-	mes "Do you want to spawn Soccer Ball?";
-	next;
-	menu "Yes i want",soccer,"No Thanks",no;
+//==========================================]
+//---------- Scripted By -------------------]
+//------------------------------------------]
+//----------- CovenRO ----------------------]
+//==========================================]
+//change map name and coords to poring_c02,x,y
+//add strtoupper on announce e.g. strtoupper(.@map$[0])
+poring_c02,223,225,4	script	Soccer	912,{
+//-	script	Soccer	-1,{
 
-soccer:
+setarray .@map$[0],"alberta","prontera","payon";
+set .@npc$, "[Soccer Boy]";
+set .@npc2$, "[Soccer Ball Scout]";
+
+//-----------------------------------------------------------------------------------------------------------------------------------
+//-- GM Menu ------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------
+	if (getgmlevel() >= 40)
+	{
+		switch(select("Spawn Soccer Balls:Check map for Soccer Balls:Exit"))
+		{
+		case 1:
+		soccer:
+			mes .@npc$;
+			mes "How many \"balls\" do you want?";
+			input .amount;
+			if(.amount== 0) close;
+			//Make sure number input is less than 5. Check "toomany" label.
+			if(.amount > 5) goto toomany;
+			next;
+			set .count, .amount;
+			mes .@npc2$;
+			mes "Select map.";
+			switch(select("alberta:prontera:payon"))
+				{
+					case 1:
+					set $gm_event_num, $gm_event_num + 1;
+					callsub L_Spawn1, .@map$[0];
+						break;
+					case 2:
+					set $gm_event_num, $gm_event_num + 1;
+					callsub L_Spawn2, .@map$[1];
+						break;
+					case 3:
+					set $gm_event_num, $gm_event_num + 1;
+					callsub L_Spawn3, .@map$[2];
+						break;
+					default:
+						break;
+				}
+				close;
+			break;
+		case 2:
+			goto player_check;
+			break;
+		case 3:
+			mes .@npc$;
+			mes "Ok come back at any time!";
+			close;	
+			break;
+		default:
+			break;
+		}
+	}
+	else
+	{
+//-----------------------------------------------------------------------------------------------------------------------------------
+//-- Player Menu --------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------
+//Checks maps for soccer balls on map chosen.
+player_check:
+		setarray .@map$[0],"alberta","prontera","payon";
+		set .@sbcount1, mobcount(.@map$[0],"Soccer::OnMobKilledWin1");
+		set .@sbcount2, mobcount(.@map$[1],"Soccer::OnMobKilledWin2");
+		set .@sbcount3, mobcount(.@map$[2],"Soccer::OnMobKilledWin3");
+		if(.@sbcount1 > 0 || .@sbcount2 > 0 || .@sbcount3 > 0){
+		mes "# of Soccer Ball(s) per Map:";
+		mes "[ ^ff0000Alberta^000000 ] : " + " ^00aaff "+.@sbcount1+" ^000000";
+		mes "[ ^ff0000Prontera^000000 ] : " + " ^00aaff "+.@sbcount2+" ^000000";
+		mes "[ ^ff0000Payon^000000 ] : " + " ^00aaff "+.@sbcount3+" ^000000";
+		close;
+		}
+		else
+			{
+				mes .@npc2$;
+				mes "I'm sorry there are currently no soccer balls spawned.";
+			}
+			close;
+		
+		}
+
+
+	
+L_Spawn1:
+	if (.amount == 1) {
+		announce "1 Soccer Ball has been spawned in "+getarg(0)+".",bc_all; close2;
+		monster getarg(0),0,0,"Event",1792,.amount,"Soccer::OnMobKilledWin1"; end;		
+	}
+	else {	
+	announce .amount+" Soccer Balls has been spawned in "+getarg(0)+".",bc_all;
+	monster getarg(0),0,0,"Event",1792,.amount,"Soccer::OnMobKilledWin1";
+	close;
+	}
+L_Spawn2:
+	if (.amount == 1) {
+		announce "1 Soccer Ball has been spawned in "+getarg(0)+".",bc_all; close2;
+		monster getarg(0),0,0,"Event",1792,.amount,"Soccer::OnMobKilledWin2"; end;		
+	}
+	else {	
+	announce .amount+" Soccer Balls has been spawned in "+getarg(0)+".",bc_all;
+	monster getarg(0),0,0,"Event",1792,.amount,"Soccer::OnMobKilledWin2";
+	close;
+	}
+L_Spawn3:
+	if (.amount == 1) {
+		announce "1 Soccer Ball has been spawned in "+getarg(0)+".",bc_all; close2;
+		monster getarg(0),0,0,"Event",1792,.amount,"Soccer::OnMobKilledWin3"; end;		
+	}
+	else {	
+	announce .amount+" Soccer Balls has been spawned in "+getarg(0)+".",bc_all;
+	monster getarg(0),0,0,"Event",1792,.amount,"Soccer::OnMobKilledWin3";
+	close;
+	}
+
+toomany:
 	next;
-	announce "Soccer Ball in Payon.",bc_all;
-	monster "payon",0,0,"Event",1792,1;
-	close;
-no:
-	mes "[Soccer Boy]";
-	mes "Ok come back at any time!!";
-	close;
+	mes .@npc$;
+	mes "That's too many!";
+	mes "Please input a number";
+	mes "Less than ^ff00005^000000";
+	mes "Or input ^ff00000^000000 to Exit.";
+	next;
+	goto soccer;
+	
+OnMobKilledWin1:
+	setarray .@map$[0],"alberta","prontera","payon";
+	set .@sbcount1, mobcount(.@map$[0],"Soccer::OnMobKilledWin1");
+	if (.@sbcount1 == 1)
+		announce "1 Soccer Ball remaining in "+.@map$[0]+"!",0; 
+	if (.@sbcount1 == 0)
+		announce "All Soccer Balls have been killed in "+.@map$[0]+"!",0;
+	set .@socReward, rand(1,2);
+	switch(.@socReward){
+		case 1:
+			set .@amount, rand(10,20);
+			atcommand "@getcpoints "+.@amount;
+			dispbottom "You got "+.@amount+ " points";
+       		end;
+		case 2:
+			set .@amount, rand(30,50);
+			atcommand "@getcpoints "+.@amount;
+			dispbottom "You got "+.@amount+ " points";
+     			end;
+		default:
+				dispbottom "Error! please submit an Issue Report through the ticket system.";
+      			end;
+	}
+OnMobKilledWin2:
+	setarray .@map$[0],"alberta","prontera","payon";
+	set .@sbcount2, mobcount(.@map$[1],"Soccer::OnMobKilledWin2");
+	if (.@sbcount2 == 1)
+		 announce "1 Soccer Ball remaining in "+.@map$[1]+"!",0;
+ 	if (.@sbcount2 == 0)
+		 announce "All Soccer Balls have been killed in "+.@map$[1]+"!",0;
+	set .@socReward, rand(1,2);
+	switch(.@socReward){
+		case 1:
+			set .@amount, rand(10,20);
+			atcommand "@getcpoints "+.@amount;
+			dispbottom "You got "+.@amount+ " points";
+       		end;
+		case 2:
+			set .@amount, rand(30,50);
+			atcommand "@getcpoints "+.@amount;
+			dispbottom "You got "+.@amount+ " points";
+			end;
+		default:
+				dispbottom "Error! please submit an Issue Report through the ticket system.";
+      			end;
+	}
+OnMobKilledWin3:
+	setarray .@map$[0],"alberta","prontera","payon";
+	set .@sbcount3, mobcount(.@map$[2],"Soccer::OnMobKilledWin3");
+	if (.@sbcount3 == 1)
+		 announce "1 Soccer Ball remaining in "+.@map$[2]+"!",0;
+	if (.@sbcount3 == 0)
+		 announce "All Soccer Balls have been killed in "+.@map$[2]+"!",0;
+	set .@socReward, rand(1,2);
+	switch(.@socReward){
+		case 1:
+			set .@amount, rand(10,20);
+			atcommand "@getcpoints "+.@amount;
+			dispbottom "You got "+.@amount+ " points";
+       		end;
+		case 2:
+			set .@amount, rand(30,50);
+			atcommand "@getcpoints "+.@amount;
+			dispbottom "You got "+.@amount+ " points";
+     			end;
+		default:
+				dispbottom "Error! please submit an Issue Report through the ticket system.";
+      			end;
+	}
+
 }
+
+payon,156,231,3	duplicate(Soccer)	Soccer Ball Checker#pay	912
+alberta,195,142,3	duplicate(Soccer)	Soccer Ball Checker#alb	912
+prontera,146,170,5	duplicate(Soccer)	Soccer Ball Checker#prt	912

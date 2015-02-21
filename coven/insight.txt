@@ -1,0 +1,26 @@
+//insight data
+-	script	insight	-,{
+
+OnInit:
+	set .user_online,0;
+	set .user_login, 0;
+	set $gm_event_num, 0;
+	end;
+	
+OnMinute10:
+OnWhisperGlobal:
+	if (agitcheck() || agitcheck2())
+	{
+		set $gm_event_num, $gm_event_num + 100;
+	}
+	set .user_online, getusers(1);
+	query_sql("INSERT INTO `cp_insight`(user_online,user_login, gm_event_num) VALUES("+.user_online+", "+.user_login+", "+$gm_event_num+")");
+	set .user_login, 0;
+	set $gm_event_num, 0;
+	set $gm_event_num, $gm_event_num + 1;
+	end;
+	
+OnPCLoginEvent:
+	set .user_login, .user_login+1;
+	end;
+}

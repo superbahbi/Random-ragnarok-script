@@ -1,0 +1,86 @@
+prontera,146,173,5	script	God Item and MVP Card	412,{
+set .@npc$, "[^0065DFCoven^000000]";
+
+	mes .@npc$;
+	if (getgmlevel()==80)
+	{
+	mes "Greetings GameMaster! Today it sold: ^FF0000" + $@buycnt + "^000000 God items.";
+	}
+	mes "Hello "+strcharinfo(0)+"! I sell God items and MVP cards. Please take a look and buy what you need.";
+	switch(select("GOD items:MVP cards"))
+	{
+		case 1:
+			callsub goditem_coven, 5013, 2629, 2410, 2541, 2383, 2630, 25, 25, 25 ,25, 20, 15, .@npc$;
+			close;
+		case 2:
+			callsub mvpcard_coven, 4305, 4399, 4174, 4047, 4121, 4128, 4302, 4135, 4143, 4168, 4198, 4146, 4131, 4263, 3, 3, 2, 2, 2, 2, 3, 1, 2, 1, 2, 1, 1, 2, .@npc$;
+			close;
+	}
+goditem_coven:
+	setarray .@god_id[1], getarg(0), getarg(1), getarg(2), getarg(3), getarg(4), getarg(5);
+	setarray .@god_price[1], getarg(6), getarg(7), getarg(8), getarg(9), getarg(10), getarg(11);
+	set .@npc$, getarg(10);
+	set .@num, select(			getitemname(.@god_id[1]),
+											getitemname(.@god_id[2]),
+											getitemname(.@god_id[3]),
+											getitemname(.@god_id[4]),
+											getitemname(.@god_id[5]),
+											getitemname(.@god_id[6]));
+
+	callsub buyitem_coven, .@god_id[.@num], .@god_price[.@num], .@npc$;
+	close;
+	
+mvpcard_coven:
+	setarray .@god_id[1], getarg(0), getarg(1), getarg(2), getarg(3), getarg(4), getarg(5), getarg(6), getarg(7), getarg(8), getarg(9), getarg(10), getarg(11), getarg(12), getarg(13);
+	setarray .@god_price[1], getarg(14), getarg(15), getarg(16), getarg(17), getarg(18), getarg(19), getarg(20), getarg(21), getarg(22), getarg(23), getarg(24), getarg(25), getarg(26), getarg(27);
+	set .@npc$, getarg(28);
+	set .@num, select(			getitemname(.@god_id[1]),
+											getitemname(.@god_id[2]),
+											getitemname(.@god_id[3]),
+											getitemname(.@god_id[4]),
+											getitemname(.@god_id[5]),
+											getitemname(.@god_id[6]),
+											getitemname(.@god_id[7]),
+											getitemname(.@god_id[8]),
+											getitemname(.@god_id[9]),
+											getitemname(.@god_id[10]),
+											getitemname(.@god_id[11]),
+											getitemname(.@god_id[12]),
+											getitemname(.@god_id[13]),
+											getitemname(.@god_id[14]));
+	
+	callsub buyitem_coven, .@god_id[.@num], .@god_price[.@num], .@npc$;
+	close;
+buyitem_coven:
+	set .@god_id, getarg(0);
+	set  .@god_price, getarg(1);
+	set .@npc$, getarg(2);
+	set .@amount, 1;
+	set .@tradeitem, 7227;
+	
+	next;
+	mes .@npc$;
+	mes "This item cost:";
+	mes "^0000FFTCG: ^000000" + .@god_price+ ".";
+	
+	menu "Buy the item.", -, "Nevermind.", M_CANCEL;
+	
+	if(.@god_price <= countitem(.@tradeitem))
+	{
+		delitem .@tradeitem,.@god_price; 
+		getitem .@god_id, .@amount;
+		set $@buycnt, $@buycnt+1;
+		close;
+	} else {
+		mes "Sorry, you don't have enough money.";
+		close;
+	}
+	
+	
+M_CANCEL:
+	close;
+	
+OnInit:
+	waitingroom "GOD and MVP Card Seller!",0;
+	end;
+}
